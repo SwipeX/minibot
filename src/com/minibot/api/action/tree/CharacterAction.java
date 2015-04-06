@@ -4,10 +4,11 @@ package com.minibot.api.action.tree;
 //though normally the default is 0,0
 public abstract class CharacterAction extends EntityAction {
 
-    public CharacterAction(int opcode, int entity_id) {
-        super(opcode, entity_id, 0, 0);
+    public CharacterAction(int opcode, int entityId) {
+        super(opcode, entityId, 0, 0);
     }
 
+    @Override
     public final int significantArgs() {
         return ARG0;
     }

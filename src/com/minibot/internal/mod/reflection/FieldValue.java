@@ -31,7 +31,8 @@ public class FieldValue {
 
     public void set(Object parent, Object value) {
         try {
-            field().set(parent, value);
+            if (field() != null)
+                field().set(parent, value);
         } catch (Exception e) {
             e.printStackTrace();
         }

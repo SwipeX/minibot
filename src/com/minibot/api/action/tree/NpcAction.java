@@ -6,6 +6,8 @@ import com.minibot.api.wrapper.def.NpcDefinition;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.internal.def.DefinitionLoader;
 
+import java.util.Arrays;
+
 public class NpcAction extends CharacterAction {
 
     public NpcAction(int opcode, int npcIndex) {
@@ -45,6 +47,7 @@ public class NpcAction extends CharacterAction {
         String[] actions = NpcDefinition.actions(definition());
         if (actions == null)
             return null;
+        System.out.println(Arrays.toString(actions));
         int actionIndex = actionIndex();
         return actionIndex >= 0 && actionIndex < actions.length ? actions[actionIndex] : null;
     }

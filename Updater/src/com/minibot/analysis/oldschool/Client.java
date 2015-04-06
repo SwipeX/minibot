@@ -10,10 +10,9 @@ import org.objectweb.asm.commons.cfg.Block;
 import org.objectweb.asm.commons.cfg.BlockVisitor;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.*;
-import org.objectweb.asm.commons.cfg.tree.util.TreeBuilder;
 import org.objectweb.asm.tree.*;
 
-@VisitorInfo(hooks = {"doAction", "players", "npcs", "canvas", "player", "region", "widgets", "objects",
+@VisitorInfo(hooks = {"processAction", "players", "npcs", "canvas", "player", "region", "widgets", "objects",
         "groundItems", "cameraX", "cameraY", "cameraZ", "cameraPitch", "cameraYaw", "mapScale", "mapOffset",
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices",
@@ -32,7 +31,7 @@ public class Client extends GraphVisitor {
 
     @Override
     public void visit() {
-        visitDoAction();
+        visitProcessAction();
         visitMouseIdleTime();
         visitDefLoader("loadObjectDefinition", "ObjectDefinition", false);
         visitDefLoader("loadNpcDefinition", "NpcDefinition", false);
@@ -76,10 +75,10 @@ public class Client extends GraphVisitor {
         }
     }
 
-    private void visitDoAction() {
+    private void visitProcessAction() {
         for (ClassNode cn : updater.classnodes.values()) {
             cn.methods.stream().filter(mn -> mn.desc.startsWith("(IIIILjava/lang/String;Ljava/lang/String;II") &&
-                    mn.desc.endsWith(")V")).forEach(mn -> addHook(new InvokeHook("doAction", mn)));
+                    mn.desc.endsWith(")V")).forEach(mn -> addHook(new InvokeHook("processAction", mn)));
         }
     }
 

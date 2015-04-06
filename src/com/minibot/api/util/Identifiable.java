@@ -9,9 +9,9 @@ package com.minibot.api.util;
  */
 public interface Identifiable {
 
-    int id();
+    public int id();
 
-    default String name() {
+    public default String name() {
         throw new UnsupportedOperationException();
     }
 }
