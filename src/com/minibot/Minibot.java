@@ -2,7 +2,6 @@ package com.minibot;
 
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.*;
-import com.minibot.api.method.projection.Minimap;
 import com.minibot.api.method.projection.Projection;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -103,8 +102,9 @@ public class Minibot extends JFrame implements Runnable, Renderable {
         while (Game.state() < Game.STATE_CREDENTIALS)
             Time.sleep(100);
         DefinitionLoader.loadDefinitions();
-        canvas.addKeyListener(new KeyAdapter() {
+        canvas.original.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
+                System.out.println("srs..");
                 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_1) {
                     if (Bank.viewing()) {
                         Item iron = Bank.findByFilter(i -> {
@@ -164,7 +164,8 @@ public class Minibot extends JFrame implements Runnable, Renderable {
                         }
                     }).start();
                 } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_4) {
-
+                    System.out.println("cmon..");
+                    Npcs.loaded();
                 }
             }
         });
