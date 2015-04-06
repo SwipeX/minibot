@@ -1,7 +1,11 @@
 package com.minibot.api.wrapper;
 
+import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.action.tree.TableItemAction;
 import com.minibot.api.method.Bank;
+import com.minibot.api.method.Inventory;
 import com.minibot.api.method.RuneScape;
+import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Identifiable;
 import com.minibot.api.util.Random;
 import com.minibot.api.wrapper.def.ItemDefinition;
@@ -92,17 +96,32 @@ public class Item implements Identifiable {
         return type;
     }
 
-    public void doAction(int packetId, String action) {
+    public void processAction(int opcode, String action) {
         String itemName = name();
         if (itemName == null)
             return;
         Rectangle bounds = bounds();
         if (bounds == null)
             return;
-        Point p = new Point(bounds.x + (bounds.width / 2) + Random.nextInt(-4, 4),
-                bounds.y + (bounds.height / 2) + Random.nextInt(-4, 4));
-        int type = type() == ItemType.BANK ? 786442 : (Bank.viewing() ? 983043 : 9764864);
-        RuneScape.doAction(component() != null ? component().id() : index(), type, packetId, index(), action,
+        Point p = Random.nextPoint(bounds);
+        int widgetParent, widgetChild;
+        if (type == ItemType.BANK) {
+            widgetParent = Bank.BANK_PARENT;
+            widgetChild = Bank.SLOT_CONTAINER;
+        } else {
+            if (Bank.viewing()) {
+                widgetParent = Inventory.INVENTORY_PARENT;
+                widgetChild = Inventory.INVENTORY_CONTAINER;
+            } else {
+                widgetParent = Inventory.BANK_PARENT;
+                widgetChild = Inventory.BANK_CONTAINER;
+            }
+        }
+        WidgetComponent component = Widgets.get(widgetParent, widgetChild);
+        if (component == null)
+            return;
+        int widgetUid = component.uid();
+        RuneScape.processAction(new TableItemAction(opcode, id(), index(), widgetUid), action,
                 "<col=ff9040>" + itemName + "</col>", p.x, p.y);
     }
 

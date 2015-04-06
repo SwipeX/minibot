@@ -1,5 +1,6 @@
 package com.minibot.api.wrapper.locatable;
 
+import com.minibot.api.action.tree.NpcAction;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.method.projection.Projection;
 import com.minibot.api.util.Identifiable;
@@ -10,7 +11,6 @@ import com.minibot.internal.mod.ModScript;
 import com.minibot.internal.mod.hooks.ReflectionData;
 
 import java.awt.*;
-import java.lang.*;
 
 /**
  * @author Tyler Sedlar
@@ -55,14 +55,14 @@ public class Npc extends Character implements Identifiable {
         return NpcDefinition.transformIndex(definition);
     }
 
-    public void doAction(int packetId, String action) {
+    public void processAction(int opcode, String action) {
         String name = name();
         if (name == null)
             return;
         Point p = Projection.toScreen(fineX(), fineY());
         if (p == null)
             return;
-        RuneScape.doAction(0, 0, packetId, index(), action, "<col=ffff00>" + name,
+        RuneScape.processAction(new NpcAction(opcode, index), action, "<col=ffff00>" + name,
                 p.x + Random.nextInt(-4, 4), p.y + Random.nextInt(-4, 4));
     }
 

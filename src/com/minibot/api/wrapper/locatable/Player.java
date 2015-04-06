@@ -2,8 +2,6 @@ package com.minibot.api.wrapper.locatable;
 
 import com.minibot.internal.mod.hooks.ReflectionData;
 
-import java.lang.*;
-
 /**
  * @author Tyler Sedlar
  * @since 4/4/15.

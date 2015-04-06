@@ -11,8 +11,8 @@ import com.minibot.api.wrapper.WidgetComponent;
  */
 public class Bank {
 
-    private static final int BANK_PARENT = 12;
-    private static final int SLOT_CONTAINER = 6;
+    public static final int BANK_PARENT = 12;
+    public static final int SLOT_CONTAINER = 6;
 
     public static boolean viewing() {
         WidgetComponent component = Widgets.get(BANK_PARENT, 0);

@@ -1,5 +1,7 @@
 package com.minibot.api.method;
 
+import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.action.tree.TableItemAction;
 import com.minibot.api.util.Array;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
@@ -13,8 +15,8 @@ import java.awt.*;
  */
 public class Inventory {
 
-    private static final int INVENTORY_PARENT = 149, BANK_PARENT = 15;
-    private static final int INVENTORY_CHILD = 0, BANK_CHILD = 3;
+    public static final int INVENTORY_PARENT = 149, BANK_PARENT = 15;
+    public static final int INVENTORY_CONTAINER = 0, BANK_CONTAINER = 3;
 
     public static boolean viewing() {
         return GameTab.INVENTORY.viewing();
@@ -22,7 +24,7 @@ public class Inventory {
 
     public static Item[] items(Filter<Item> filter) {
         boolean bank = Bank.viewing();
-        WidgetComponent inventory = Widgets.get(bank ? BANK_PARENT : INVENTORY_PARENT, bank ? BANK_CHILD : INVENTORY_CHILD);
+        WidgetComponent inventory = Widgets.get(bank ? BANK_PARENT : INVENTORY_PARENT, bank ? BANK_CONTAINER : INVENTORY_CONTAINER);
         Item[] array = new Item[0];
         if (inventory != null && inventory.valid()) {
             if (bank) {
@@ -85,11 +87,15 @@ public class Inventory {
     }
 
     public static boolean dropAll(Filter<Item> filter) {
+        boolean bank = Bank.viewing();
+        WidgetComponent container = Widgets.get(bank ? BANK_PARENT : INVENTORY_PARENT, bank ?
+                BANK_CONTAINER : INVENTORY_CONTAINER);
+        int widgetUid = container.uid();
         for (Item item : Inventory.items(filter)) {
             Point p = item.screen();
             if (p == null)
                 continue;
-            RuneScape.doAction(item.index(), 9764864, 37, 436, "Drop", item.name(), p.x, p.y);
+            item.processAction(ActionOpcodes.ITEM_ACTION_4, "Drop");
         }
         return empty();
     }

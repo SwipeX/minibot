@@ -112,11 +112,11 @@ public class Minibot extends JFrame implements Runnable, Renderable {
                             return name != null && name.equals("Iron ore");
                         });
                         if (iron != null)
-                            iron.doAction(ActionOpcodes.WIDGET_ACTION, "Withdraw-1");
+                            iron.processAction(ActionOpcodes.WIDGET_ACTION, "Withdraw-1");
                     } else {
                         Npc banker = Npcs.nearest("Banker");
                         if (banker != null) {
-                            banker.doAction(ActionOpcodes.NPC_ACTION_2, "Bank");
+                            banker.processAction(ActionOpcodes.NPC_ACTION_2, "Bank");
                         }
                     }
                 } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_2) {
@@ -124,21 +124,19 @@ public class Minibot extends JFrame implements Runnable, Renderable {
                         System.out.println("starting 1337 copper powerminer");
                         while (true) {
                             if (Widgets.validate(15269890 >> 16)) {
-                                Widgets.get(15269890 >> 16, 15269890 & 0xfff).doAction("Continue");
+                                Widgets.get(15269890 >> 16, 15269890 & 0xfff).processAction("Continue");
                             } else if (Inventory.count() != 0) {
                                 for (final Item item : Inventory.items()) {
                                     final Point p = item.screen();
                                     if (p == null)
                                         continue;
-                                    //arg1 = item index, arg2 = widget uid, opcode = 37 (item action),
-                                    //arg0 = item id, action = Drop, name = Copper ore
-                                    RuneScape.doAction(item.index(), 9764864, 37, 436, "Drop", "Copper ore", p.x, p.y);
+                                    item.processAction(ActionOpcodes.ITEM_ACTION_1, "Drop");
                                 }
                             } else if (Players.local() != null && Players.local().animation() == -1) {
                                 final Point p = Projection.toScreen(53 << 7, 49 << 7);
                                 if (p == null)
                                     continue;
-                                RuneScape.doAction(53, 49, 3, 1294129333, "Mine", "Rocks", p.x, p.y);
+                                RuneScape.processAction(53, 49, 3, 1294129333, "Mine", "Rocks", p.x, p.y);
                             }
                             Time.sleep(2000);
                         }
@@ -148,7 +146,7 @@ public class Minibot extends JFrame implements Runnable, Renderable {
                         System.out.println("starting 1337 cow killer");
                         while (true) {
                             if (Widgets.validate(15269890 >> 16)) {
-                                Widgets.get(15269890 >> 16, 15269890 & 0xfff).doAction("Continue");
+                                Widgets.get(15269890 >> 16, 15269890 & 0xfff).processAction("Continue");
                             } else if (Players.local() != null && Players.local().interactingIndex() == -1) {
                                 final Npc npc = Npcs.nearestByFilter(n -> {
                                     final String name = n.name();
@@ -157,7 +155,7 @@ public class Minibot extends JFrame implements Runnable, Renderable {
                                 });
                                 if (npc == null)
                                     continue;
-                                npc.doAction(ActionOpcodes.NPC_ACTION_1, "Attack");
+                                npc.processAction(ActionOpcodes.NPC_ACTION_1, "Attack");
                             }
                             Game.resetMouseIdleTime();
                             Time.sleep(2000);
