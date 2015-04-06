@@ -48,7 +48,7 @@ public class DefinitionLoader {
         start = System.nanoTime();
         loadItemDefinitions();
         end = System.nanoTime();
-        System.out.println(String.format("loaded %s item definitions in %.2f seconds", OBJECT_DEFINITIONS.size(),
+        System.out.println(String.format("loaded %s item definitions in %.2f seconds", ITEM_DEFINITIONS.size(),
                 (end - start) / 1e9));
     }
 
