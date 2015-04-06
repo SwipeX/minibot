@@ -1,9 +1,9 @@
 package com.minibot.api.wrapper;
 
-import com.minibot.api.Packet;
 import com.minibot.api.method.Bank;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Random;
+import com.minibot.api.wrapper.def.ItemDefinition;
 import com.minibot.internal.def.DefinitionLoader;
 
 import java.awt.*;
@@ -43,6 +43,10 @@ public class Item {
         this.index = index;
     }
 
+    private Object definition() {
+        return DefinitionLoader.findObjectDefinition(id);
+    }
+
     public WidgetComponent component() {
         return comp;
     }
@@ -80,7 +84,7 @@ public class Item {
     }
 
     public String name() {
-        return DefinitionLoader.findItemName(id());
+        return ItemDefinition.name(definition());
     }
 
     public ItemType type() {

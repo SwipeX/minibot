@@ -4,6 +4,7 @@ import com.minibot.api.method.RuneScape;
 import com.minibot.api.method.projection.Projection;
 import com.minibot.api.util.Random;
 import com.minibot.api.wrapper.def.NpcDefinition;
+import com.minibot.internal.def.DefinitionLoader;
 import com.minibot.internal.mod.hooks.ReflectionData;
 
 import java.awt.*;
@@ -17,37 +18,42 @@ import java.lang.*;
 public class Npc extends Character {
 
     private final int index;
-    private final NpcDefinition definition;
+    private final int id;
+    private final Object definition;
 
     public Npc(Object raw, int index) {
         super(raw);
         this.index = index;
-        Object def = hook("definition").get(get());
-        NpcDefinition definition = null;
-        if (def != null) {
-            definition = new NpcDefinition(def);
-            if (definition.id() == -1) {
-                definition = null;
-            } else {
-                if (definition.transformed())
-                    definition.fix();
-            }
-        }
-        this.definition = definition;
+        this.id = NpcDefinition.id(raw);
+        this.definition = DefinitionLoader.findNpcDefinition(id);
     }
 
     public int index() {
         return index;
     }
 
-    public NpcDefinition definition() {
-        return definition;
+    public int id() {
+        return id;
+    }
+
+    public String name() {
+        return NpcDefinition.name(definition);
+    }
+
+    public String[] actions() {
+        return NpcDefinition.actions(definition);
+    }
+
+    public int[] transformIds() {
+        return NpcDefinition.transformIds(definition);
+    }
+
+    public int transformIndex() {
+        return NpcDefinition.transformIndex(definition);
     }
 
     public void doAction(int packetId, String action) {
-        if (definition == null)
-            return;
-        String name = definition.name();
+        String name = name();
         if (name == null)
             return;
         Point p = Projection.toScreen(fineX(), fineY());
@@ -59,9 +65,6 @@ public class Npc extends Character {
 
     @Override
     public boolean valid() {
-        if (!super.valid())
-            return false;
-        NpcDefinition def = definition();
-        return def != null && def.id() != -1;
+        return super.valid() && id() != -1;
     }
 }

@@ -4,6 +4,7 @@ import com.minibot.api.util.Array;
 import com.minibot.api.util.Filter;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.node.RSHashTable;
+import com.minibot.api.wrapper.node.RSNode;
 import com.minibot.internal.mod.ModScript;
 
 import java.awt.*;
@@ -14,6 +15,13 @@ import java.util.HashMap;
  * @since 4/4/15.
  */
 public class Widgets {
+
+    public static final int BUTTON_INPUT = 24;
+    public static final int  BUTTON_SPELL = 25;
+    public static final int BUTTON_CLOSE = 26;
+    public static final int  BUTTON_VAR_FLIP = 28;
+    public static final int  BUTTON_VAR_SET = 29;
+    public static final int   BUTTON_DIALOG = 30;
 
     public static Object[][] raw() {
         return (Object[][]) ModScript.hook("Client#widgets").get();
@@ -152,5 +160,19 @@ public class Widgets {
     public static boolean validate(int parent) {
         Object[][] widgets = raw();
         return widgets != null && widgets.length >= parent && widgets[parent] != null;
+    }
+
+    public static int findParentIndex(int uid) {
+        Object node = Widgets.table().iterator().findByWidgetId(uid);
+        if (node != null)
+            uid = (int) RSNode.uid(node);
+        return uid >> 16;
+    }
+
+    public static int findChildIndex(int uid) {
+        Object node = Widgets.table().iterator().findByWidgetId(uid);
+        if (node != null)
+            uid = (int) RSNode.uid(node);
+        return uid & 0xFFFF;
     }
 }
