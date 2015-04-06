@@ -36,9 +36,19 @@ public class DefinitionLoader {
 
     public static void loadDefinitions() {
         long start = System.nanoTime();
-        loadItemDefinitions();
+        loadObjectDefinitions();
         long end = System.nanoTime();
-        System.out.println(String.format("loaded %s item definitions in %.2f seconds", ITEM_DEFINITIONS.size(),
+        System.out.println(String.format("loaded %s object definitions in %.2f seconds", OBJECT_DEFINITIONS.size(),
+                (end - start) / 1e9));
+        start = System.nanoTime();
+        loadNpcDefinitions();
+        end = System.nanoTime();
+        System.out.println(String.format("loaded %s npc definitions in %.2f seconds", NPC_DEFINITIONS.size(),
+                (end - start) / 1e9));
+        start = System.nanoTime();
+        loadItemDefinitions();
+        end = System.nanoTime();
+        System.out.println(String.format("loaded %s item definitions in %.2f seconds", OBJECT_DEFINITIONS.size(),
                 (end - start) / 1e9));
     }
 
