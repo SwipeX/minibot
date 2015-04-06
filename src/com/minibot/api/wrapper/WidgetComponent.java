@@ -1,8 +1,7 @@
 package com.minibot.api.wrapper;
 
-import com.minibot.api.method.Widgets;
-import com.minibot.api.util.Array;
-import com.minibot.api.util.Filter;
+import com.minibot.api.method.*;
+import com.minibot.api.util.*;
 import com.minibot.api.wrapper.node.RSNode;
 import com.minibot.internal.mod.hooks.ReflectionData;
 
@@ -204,5 +203,14 @@ public class WidgetComponent extends Wrapper {
             } catch (Exception ignored) {}
         }
         return null;
+    }
+
+    //TODO confirm if this works for other widgets. only tested on Click here to continue
+    public void doAction(String action) {
+        final Rectangle bounds = bounds();
+        if (bounds == null || bounds.x < 0 || bounds.y < 0 || bounds.width < 0 || bounds.height < 0)
+            return;
+        final Point p = Random.nextPoint(bounds);
+        RuneScape.doAction(-1, id(), 30, 0, action, "", x(), y());
     }
 }

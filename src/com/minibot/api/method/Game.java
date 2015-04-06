@@ -45,4 +45,9 @@ public class Game {
         int[] settings = settings();
         return settings.length == 0 || index >= settings.length ? -1 : settings[index];
     }
+
+    public static void resetMouseIdleTime() {
+        hook("mouseIdleTime").set(null, 0);
+        System.out.println("Mouse idle: " + hook("mouseIdleTime").getInt());
+    }
 }

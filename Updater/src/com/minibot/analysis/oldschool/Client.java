@@ -10,13 +10,14 @@ import org.objectweb.asm.commons.cfg.Block;
 import org.objectweb.asm.commons.cfg.BlockVisitor;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.*;
+import org.objectweb.asm.commons.cfg.tree.util.TreeBuilder;
 import org.objectweb.asm.tree.*;
 
 @VisitorInfo(hooks = {"doAction", "players", "npcs", "canvas", "player", "region", "widgets", "objects",
         "groundItems", "cameraX", "cameraY", "cameraZ", "cameraPitch", "cameraYaw", "mapScale", "mapOffset",
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices",
-        "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState"})
+        "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime"})
 public class Client extends GraphVisitor {
 
     @Override
@@ -32,6 +33,7 @@ public class Client extends GraphVisitor {
     @Override
     public void visit() {
         visitDoAction();
+        visitMouseIdleTime();
         visitDefLoader("loadObjectDefinition", "ObjectDefinition", false);
         visitDefLoader("loadNpcDefinition", "NpcDefinition", false);
         visitDefLoader("loadItemDefinition", "ItemDefinition", false);
@@ -50,6 +52,28 @@ public class Client extends GraphVisitor {
         visitAll(new NpcIndices());
         visitAll(new Plane());
         visitAll(new GameState());
+    }
+
+    private void visitMouseIdleTime() {
+        for (ClassNode cn : updater.classnodes.values()) {
+            if (!cn.interfaces.contains("java/awt/event/MouseListener"))
+                continue;
+            for (MethodNode meth : cn.methods) {
+                if (!meth.name.equals("mouseExited"))
+                    continue;
+                updater.graphs().get(cn).get(meth).forEach(b -> b.tree().accept(new NodeVisitor() {
+                    @Override
+                    public void visitField(FieldMemberNode fmn) {
+                        if (fmn.opcode() != PUTSTATIC || fmn.children() != 1)
+                            return;
+                        NumberNode iconst_0 = fmn.firstNumber();
+                        if (iconst_0 == null || iconst_0.number() != 0)
+                            return;
+                        addHook(new FieldHook("mouseIdleTime", fmn.fin()));
+                    }
+                }));
+            }
+        }
     }
 
     private void visitDoAction() {

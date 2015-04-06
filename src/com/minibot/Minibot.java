@@ -1,9 +1,9 @@
 package com.minibot;
 
 import com.minibot.api.Packet;
-import com.minibot.api.method.Bank;
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Npcs;
+import com.minibot.api.method.*;
+import com.minibot.api.method.projection.Projection;
+import com.minibot.api.util.Filter;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.Npc;
@@ -81,13 +81,58 @@ public class Minibot extends JFrame implements Runnable {
                             return name != null && name.equals("Iron ore");
                         });
                         if (iron != null)
-                            iron.doAction(Packet.INTERFACE, "Withdraw-9");
+                            iron.doAction(Packet.INTERFACE, "Withdraw-1");
                     } else {
                         Npc banker = Npcs.nearest("Banker");
                         if (banker != null) {
                             banker.doAction(Packet.NPC_ACTION_2, "Bank");
                         }
                     }
+                } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_2) {
+                    new Thread(() -> {
+                        System.out.println("starting 1337 copper powerminer");
+                        while (true) {
+                            if (Widgets.validate(15269890 >> 16)) {
+                                Widgets.get(15269890 >> 16, 15269890 & 0xfff).doAction("Continue");
+                            } else if (Inventory.count() != 0) {
+                                for (final Item item : Inventory.items()) {
+                                    final Point p = item.screen();
+                                    if (p == null)
+                                        continue;
+                                    //arg1 = item index, arg2 = widget uid, opcode = 37 (item action),
+                                    //arg0 = item id, action = Drop, name = Copper ore
+                                    RuneScape.doAction(item.index(), 9764864, 37, 436, "Drop", "Copper ore", p.x, p.y);
+                                }
+                            } else if (Players.local() != null && Players.local().animation() == -1) {
+                                final Point p = Projection.toScreen(53 << 7, 49 << 7);
+                                if (p == null)
+                                    continue;
+                                RuneScape.doAction(53, 49, 3, 1294129333, "Mine", "Rocks", p.x, p.y);
+                            }
+                            Time.sleep(2000);
+                        }
+                    }).start();
+                } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_3) {
+                    new Thread(() -> {
+                        System.out.println("starting 1337 cow killer");
+                        while (true) {
+                            if (Widgets.validate(15269890 >> 16)) {
+                                Widgets.get(15269890 >> 16, 15269890 & 0xfff).doAction("Continue");
+                            } else if (Players.local() != null && Players.local().interactingIndex() == -1) {
+                                final Npc npc = Npcs.nearestByFilter(n -> {
+                                    final String name = n.definition().name();
+                                    if (name == null || n.maxHealth() < 1 || n.health() <= 0)
+                                        return false;
+                                    return n.interactingIndex() == -1 && (name.equals("Cow") || name.equals("Cow calf"));
+                                });
+                                if (npc == null)
+                                    continue;
+                                npc.doAction(Packet.NPC_ACTION_1, "Attack");
+                            }
+                            Game.resetMouseIdleTime();
+                            Time.sleep(2000);
+                        }
+                    }).start();
                 }
             }
         });
