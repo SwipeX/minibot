@@ -102,8 +102,9 @@ public class Minibot extends JFrame implements Runnable, Renderable {
         while (Game.state() < Game.STATE_CREDENTIALS)
             Time.sleep(100);
         DefinitionLoader.loadDefinitions();
-        canvas.addKeyListener(new KeyAdapter() {
+        canvas.original.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
+                System.out.println("srs..");
                 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_1) {
                     if (Bank.viewing()) {
                         Item iron = Bank.findByFilter(i -> {
@@ -162,6 +163,9 @@ public class Minibot extends JFrame implements Runnable, Renderable {
                             Time.sleep(2000);
                         }
                     }).start();
+                } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_4) {
+                    System.out.println("cmon..");
+                    Npcs.loaded();
                 }
             }
         });

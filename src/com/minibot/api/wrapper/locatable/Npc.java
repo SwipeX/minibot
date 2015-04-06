@@ -5,6 +5,7 @@ import com.minibot.api.method.projection.Projection;
 import com.minibot.api.util.Random;
 import com.minibot.api.wrapper.def.NpcDefinition;
 import com.minibot.internal.def.DefinitionLoader;
+import com.minibot.internal.mod.ModScript;
 import com.minibot.internal.mod.hooks.ReflectionData;
 
 import java.awt.*;
@@ -24,7 +25,8 @@ public class Npc extends Character {
     public Npc(Object raw, int index) {
         super(raw);
         this.index = index;
-        this.id = NpcDefinition.id(raw);
+        Object rawDef = ModScript.hook("Npc#definition").get(raw);
+        this.id = NpcDefinition.id(rawDef);
         this.definition = DefinitionLoader.findNpcDefinition(id);
     }
 
