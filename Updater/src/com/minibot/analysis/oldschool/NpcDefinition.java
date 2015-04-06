@@ -11,7 +11,7 @@ import org.objectweb.asm.commons.cfg.tree.node.MethodMemberNode;
 import org.objectweb.asm.commons.cfg.tree.node.VariableNode;
 import org.objectweb.asm.tree.ClassNode;
 
-@VisitorInfo(hooks = {"name", "id", "transformIds", "transformIndex"})
+@VisitorInfo(hooks = {"name", "actions", "id", "transformIds", "transformIndex"})
 public class NpcDefinition extends GraphVisitor {
 
     @Override
@@ -22,6 +22,7 @@ public class NpcDefinition extends GraphVisitor {
     @Override
     public void visit() {
         add("name", cn.getField(null, "Ljava/lang/String;"), "Ljava/lang/String;");
+        add("actions", cn.getField(null, "[Ljava/lang/String;"), "[Ljava/lang/String;");
         visitAll(new Id());
         visitAll(new TransformIds());
         visitAll(new TransformIndex());

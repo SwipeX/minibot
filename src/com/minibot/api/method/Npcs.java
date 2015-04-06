@@ -14,8 +14,12 @@ import java.util.Arrays;
  */
 public class Npcs {
 
+    public static Object[] raw() {
+        return (Object[]) ModScript.hook("Client#npcs").get();
+    }
+
     public static Npc[] loaded() {
-        Object[] raws = (Object[]) ModScript.hook("Client#npcs").get();
+        Object[] raws = raw();
         if (raws == null || raws.length == 0)
             return new Npc[0];
         int[] indices = (int[]) ModScript.hook("Client#npcIndices").get();
@@ -64,10 +68,7 @@ public class Npcs {
 
     public static Npc nearest(String name) {
         return nearestByFilter(npc -> {
-            NpcDefinition def = npc.definition();
-            if (def == null)
-                return false;
-            String npcName = def.name();
+            String npcName = npc.name();
             return npcName != null && npcName.equals(name);
         });
     }

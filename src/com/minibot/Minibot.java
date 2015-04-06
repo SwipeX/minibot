@@ -1,9 +1,8 @@
 package com.minibot;
 
-import com.minibot.api.Packet;
+import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.*;
 import com.minibot.api.method.projection.Projection;
-import com.minibot.api.util.Filter;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.Npc;
@@ -81,11 +80,11 @@ public class Minibot extends JFrame implements Runnable {
                             return name != null && name.equals("Iron ore");
                         });
                         if (iron != null)
-                            iron.doAction(Packet.INTERFACE, "Withdraw-1");
+                            iron.doAction(ActionOpcodes.INTERFACE, "Withdraw-1");
                     } else {
                         Npc banker = Npcs.nearest("Banker");
                         if (banker != null) {
-                            banker.doAction(Packet.NPC_ACTION_2, "Bank");
+                            banker.doAction(ActionOpcodes.NPC_ACTION_2, "Bank");
                         }
                     }
                 } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_2) {
@@ -126,7 +125,7 @@ public class Minibot extends JFrame implements Runnable {
                                 });
                                 if (npc == null)
                                     continue;
-                                npc.doAction(Packet.NPC_ACTION_1, "Attack");
+                                npc.doAction(ActionOpcodes.NPC_ACTION_1, "Attack");
                             }
                             Game.resetMouseIdleTime();
                             Time.sleep(2000);

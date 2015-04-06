@@ -11,7 +11,7 @@ import org.objectweb.asm.commons.cfg.tree.node.FieldMemberNode;
 import org.objectweb.asm.commons.cfg.tree.node.VariableNode;
 import org.objectweb.asm.tree.ClassNode;
 
-@VisitorInfo(hooks = {"name", "id", "transformIds", "transformIndex"})
+@VisitorInfo(hooks = {"name", "actions", "id", "transformIds", "transformIndex"})
 public class ObjectDefinition extends GraphVisitor {
 
     @Override
@@ -22,10 +22,10 @@ public class ObjectDefinition extends GraphVisitor {
     @Override
     public void visit() {
         add("name", cn.getField(null, "Ljava/lang/String;"), "Ljava/lang/String;");
+        add("actions", cn.getField(null, "[Ljava/lang/String;"), "[Ljava/lang/String;");
         visit(new Id());
         visit(new TransformIds());
         visit(new TransformIndex());
-
     }
 
     private class Id extends BlockVisitor {
