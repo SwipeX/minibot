@@ -1,8 +1,13 @@
 package com.minibot.api.method.projection;
 
+import com.minibot.api.Packet;
+import com.minibot.api.method.RuneScape;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.wrapper.WidgetComponent;
+import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.internal.mod.ModScript;
+
+import java.awt.*;
 
 /**
  * @author Tyler Sedlar

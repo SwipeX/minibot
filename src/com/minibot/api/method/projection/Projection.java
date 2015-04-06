@@ -162,4 +162,8 @@ public class Projection {
         int h2 = heights[plane][x1][y1 + 1] * (128 - x2) + heights[plane][x1 + 1][y1 + 1] * x2 >> 7;
         return h1 * (128 - y2) + h2 * y2 >> 7;
     }
+
+    public static Point toScreen(Locatable locatable) {
+        return toScreen(locatable.location().fineX(), locatable.location().fineY());
+    }
 }

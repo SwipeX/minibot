@@ -2,6 +2,7 @@ package com.minibot;
 
 import com.minibot.api.Packet;
 import com.minibot.api.method.*;
+import com.minibot.api.method.projection.Minimap;
 import com.minibot.api.method.projection.Projection;
 import com.minibot.api.util.Filter;
 import com.minibot.api.util.Time;
@@ -132,6 +133,8 @@ public class Minibot extends JFrame implements Runnable {
                             Time.sleep(2000);
                         }
                     }).start();
+                } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_4) {
+
                 }
             }
         });

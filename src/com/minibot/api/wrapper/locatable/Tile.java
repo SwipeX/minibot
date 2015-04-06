@@ -45,6 +45,14 @@ public class Tile implements Locatable {
         return y() - Game.baseY();
     }
 
+    public int fineX() {
+        return localX() << 7;
+    }
+
+    public int fineY() {
+        return localY() << 7;
+    }
+
     public Point point(double dx, double dy, int height) {
         int x = localX() << 7;
         int y = localY() << 7;
