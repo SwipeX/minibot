@@ -121,9 +121,8 @@ public class Minibot extends JFrame implements Runnable {
                             } else if (Players.local() != null && Players.local().interactingIndex() == -1) {
                                 final Npc npc = Npcs.nearestByFilter(n -> {
                                     final String name = n.definition().name();
-                                    if (name == null || n.maxHealth() < 1 || n.health() <= 0)
-                                        return false;
-                                    return n.interactingIndex() == -1 && (name.equals("Cow") || name.equals("Cow calf"));
+                                    return name != null && n.interactingIndex() == -1
+                                            && (name.equals("Cow") || name.equals("Cow calf"));
                                 });
                                 if (npc == null)
                                     continue;
