@@ -3,11 +3,14 @@ package com.minibot;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.*;
 import com.minibot.api.method.projection.Projection;
+import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.internal.def.DefinitionLoader;
+import com.minibot.internal.ext.RSCanvas;
 import com.minibot.internal.mod.ModScript;
+import com.minibot.internal.mod.reflection.FieldValue;
 import com.minibot.util.io.Crawler;
 
 import javax.swing.*;
@@ -25,9 +28,16 @@ import java.nio.file.Paths;
  * @author Tyler Sedlar
  * @since 4/4/15.
  */
-public class Minibot extends JFrame implements Runnable {
+public class Minibot extends JFrame implements Runnable, Renderable {
+
+    private static Minibot instance;
+
+    public static Minibot instance() {
+        return instance;
+    }
 
     private final Crawler crawler;
+    private RSCanvas canvas;
 
     public Minibot() {
         super("minibot");
@@ -35,6 +45,12 @@ public class Minibot extends JFrame implements Runnable {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.crawler = new Crawler(Crawler.GameType.OSRS);
         new Thread(this).start();
+    }
+
+    @Override
+    public void render(Graphics2D g) {
+        g.setColor(Color.WHITE);
+        g.drawString("Minibot", 16, 20);
     }
 
     @Override
@@ -57,17 +73,32 @@ public class Minibot extends JFrame implements Runnable {
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse modscript");
         }
+        Container container = getContentPane();
+        container.setBackground(Color.BLACK);
         Applet applet = crawler.applet(classloader);
-        add(applet);
+        container.add(applet);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-        Component canvas = null;
-        do {
-            if (applet.getComponents().length > 0)
-                canvas = applet.getComponent(0);
+        while (canvas == null) {
+            Component child = null;
+            if (applet.getComponentCount() > 0)
+                child = applet.getComponent(0);
+            if (child != null && child.getMouseListeners().length > 0 && child.getMouseWheelListeners().length > 0 &&
+                    child instanceof Canvas) {
+                if (canvas == null) {
+                    FieldValue fh = ModScript.hook("Client#canvas");
+                    if (fh != null && fh.valid()) {
+                        fh.set((canvas = new RSCanvas(container, (Canvas) child) {
+                            public void render(Graphics2D g) {
+                                instance.render(g);
+                            }
+                        }));
+                    }
+                }
+            }
             Time.sleep(50);
-        } while (canvas == null || !(canvas instanceof Canvas));
+        }
         while (Game.state() < Game.STATE_CREDENTIALS)
             Time.sleep(100);
         DefinitionLoader.loadDefinitions();
@@ -137,6 +168,6 @@ public class Minibot extends JFrame implements Runnable {
     }
 
     public static void main(String[] args) {
-        new Minibot();
+        instance = new Minibot();
     }
 }
