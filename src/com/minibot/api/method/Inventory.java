@@ -1,9 +1,11 @@
 package com.minibot.api.method;
 
 import com.minibot.api.util.Array;
-import com.minibot.api.util.Filter;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
+
+import java.awt.*;
 
 /**
  * @author Tyler Sedlar
@@ -18,7 +20,7 @@ public class Inventory {
         return GameTab.INVENTORY.viewing();
     }
 
-    public static Item[] items() {
+    public static Item[] items(Filter<Item> filter) {
         boolean bank = Bank.viewing();
         WidgetComponent inventory = Widgets.get(bank ? BANK_PARENT : INVENTORY_PARENT, bank ? BANK_CHILD : INVENTORY_CHILD);
         Item[] array = new Item[0];
@@ -28,8 +30,12 @@ public class Inventory {
                 for (WidgetComponent slot : inventory.children()) {
                     int id = slot.itemId();
                     int stack = slot.itemAmount();
-                    if (id > 0 && stack > 0)
-                        array = Array.add(array, (new Item(slot, Item.ItemType.INVENTORY, index)));
+                    if (id > 0 && stack > 0) {
+                        Item item = new Item(slot, Item.ItemType.INVENTORY, index);
+                        if (!filter.accept(item))
+                            continue;
+                        array = Array.add(array, item);
+                    }
                     index++;
                 }
             } else {
@@ -41,13 +47,21 @@ public class Inventory {
                     for (int i = 0; i < itemIds.length; i++) {
                         int id = itemIds[i];
                         int stack = itemAmounts[i];
-                        if (id > 0 && stack > 0)
-                            array = Array.add(array, (new Item(id - 1, stack, i)));
+                        if (id > 0 && stack > 0) {
+                            Item item = new Item(id - 1, stack, i);
+                            if (!filter.accept(item))
+                                continue;
+                            array = Array.add(array, item);
+                        }
                     }
                 }
             }
         }
         return array;
+    }
+
+    public static Item[] items() {
+        return items(Filter.always());
     }
 
     public static int count() {
@@ -68,5 +82,15 @@ public class Inventory {
                 return item;
         }
         return null;
+    }
+
+    public static boolean dropAll(Filter<Item> filter) {
+        for (Item item : Inventory.items(filter)) {
+            Point p = item.screen();
+            if (p == null)
+                continue;
+            RuneScape.doAction(item.index(), 9764864, 37, 436, "Drop", item.name(), p.x, p.y);
+        }
+        return empty();
     }
 }

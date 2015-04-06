@@ -2,6 +2,7 @@ package com.minibot.api.wrapper;
 
 import com.minibot.api.method.Bank;
 import com.minibot.api.method.RuneScape;
+import com.minibot.api.util.Identifiable;
 import com.minibot.api.util.Random;
 import com.minibot.api.wrapper.def.ItemDefinition;
 import com.minibot.internal.def.DefinitionLoader;
@@ -11,7 +12,7 @@ import java.awt.*;
 /**
  * @author Tyler Sedlar
  */
-public class Item {
+public class Item implements Identifiable {
 
     private int id;
     private int stackSize;

@@ -1,14 +1,13 @@
 package com.minibot.api.method;
 
 import com.minibot.api.util.Array;
-import com.minibot.api.util.Filter;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.node.RSHashTable;
 import com.minibot.api.wrapper.node.RSNode;
 import com.minibot.internal.mod.ModScript;
 
 import java.awt.*;
-import java.util.HashMap;
 
 /**
  * @author Tyler Sedlar

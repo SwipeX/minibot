@@ -2,6 +2,7 @@ package com.minibot.api.wrapper.locatable;
 
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.method.projection.Projection;
+import com.minibot.api.util.Identifiable;
 import com.minibot.api.util.Random;
 import com.minibot.api.wrapper.def.NpcDefinition;
 import com.minibot.internal.def.DefinitionLoader;
@@ -16,7 +17,7 @@ import java.lang.*;
  * @since 4/4/15.
  */
 @ReflectionData(className = "Npc")
-public class Npc extends Character {
+public class Npc extends Character implements Identifiable {
 
     private final int index;
     private final int id;

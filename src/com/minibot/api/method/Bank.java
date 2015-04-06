@@ -1,7 +1,7 @@
 package com.minibot.api.method;
 
 import com.minibot.api.util.Array;
-import com.minibot.api.util.Filter;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
 

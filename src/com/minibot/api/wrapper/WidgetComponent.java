@@ -2,6 +2,7 @@ package com.minibot.api.wrapper;
 
 import com.minibot.api.method.*;
 import com.minibot.api.util.*;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.node.RSNode;
 import com.minibot.internal.mod.hooks.ReflectionData;
 
