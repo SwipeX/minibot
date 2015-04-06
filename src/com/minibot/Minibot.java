@@ -80,7 +80,7 @@ public class Minibot extends JFrame implements Runnable {
                             return name != null && name.equals("Iron ore");
                         });
                         if (iron != null)
-                            iron.doAction(ActionOpcodes.INTERFACE, "Withdraw-1");
+                            iron.doAction(ActionOpcodes.WIDGET_ACTION, "Withdraw-1");
                     } else {
                         Npc banker = Npcs.nearest("Banker");
                         if (banker != null) {
@@ -119,7 +119,7 @@ public class Minibot extends JFrame implements Runnable {
                                 Widgets.get(15269890 >> 16, 15269890 & 0xfff).doAction("Continue");
                             } else if (Players.local() != null && Players.local().interactingIndex() == -1) {
                                 final Npc npc = Npcs.nearestByFilter(n -> {
-                                    final String name = n.definition().name();
+                                    final String name = n.name();
                                     return name != null && n.interactingIndex() == -1
                                             && (name.equals("Cow") || name.equals("Cow calf"));
                                 });
