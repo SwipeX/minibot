@@ -1,7 +1,7 @@
-package com.minibot.internal.mod.hooks;
+package com.minibot.mod.hooks;
 
-import com.minibot.internal.mod.Crypto;
-import com.minibot.internal.mod.ModScript;
+import com.minibot.mod.Crypto;
+import com.minibot.mod.ModScript;
 
 import java.io.DataInputStream;
 import java.io.IOException;

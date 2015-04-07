@@ -1,4 +1,4 @@
-package com.minibot.internal.mod.hooks;
+package com.minibot.mod.hooks;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

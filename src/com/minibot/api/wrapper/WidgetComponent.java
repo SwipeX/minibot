@@ -7,7 +7,7 @@ import com.minibot.api.util.Array;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.node.RSNode;
-import com.minibot.internal.mod.hooks.ReflectionData;
+import com.minibot.mod.hooks.ReflectionData;
 
 import java.awt.*;
 

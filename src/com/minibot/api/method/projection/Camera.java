@@ -3,7 +3,7 @@ package com.minibot.api.method.projection;
 import com.minibot.api.method.Players;
 import com.minibot.api.wrapper.locatable.Locatable;
 import com.minibot.api.wrapper.locatable.Tile;
-import com.minibot.internal.mod.ModScript;
+import com.minibot.mod.ModScript;
 
 /**
  * @author Tyler Sedlar

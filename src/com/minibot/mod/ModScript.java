@@ -1,10 +1,10 @@
-package com.minibot.internal.mod;
+package com.minibot.mod;
 
-import com.minibot.internal.mod.hooks.FieldHook;
-import com.minibot.internal.mod.hooks.Hook;
-import com.minibot.internal.mod.hooks.InvokeHook;
-import com.minibot.internal.mod.reflection.FieldValue;
-import com.minibot.internal.mod.reflection.RSClassLoader;
+import com.minibot.mod.hooks.FieldHook;
+import com.minibot.mod.hooks.Hook;
+import com.minibot.mod.hooks.InvokeHook;
+import com.minibot.mod.reflection.FieldValue;
+import com.minibot.mod.reflection.RSClassLoader;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

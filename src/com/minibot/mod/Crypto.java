@@ -1,4 +1,4 @@
-package com.minibot.internal.mod;
+package com.minibot.mod;
 
 /**
  * @author Tyler Sedlar

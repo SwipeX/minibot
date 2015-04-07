@@ -2,7 +2,7 @@ package com.minibot.api.method;
 
 import com.minibot.api.action.tree.Action;
 import com.minibot.api.action.tree.UnknownAction;
-import com.minibot.internal.mod.ModScript;
+import com.minibot.mod.ModScript;
 
 /**
  * @author Tyler Sedlar

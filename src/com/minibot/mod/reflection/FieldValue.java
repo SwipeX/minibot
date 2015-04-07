@@ -1,6 +1,6 @@
-package com.minibot.internal.mod.reflection;
+package com.minibot.mod.reflection;
 
-import com.minibot.internal.mod.ModScript;
+import com.minibot.mod.ModScript;
 
 import java.lang.reflect.Field;
 

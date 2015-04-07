@@ -1,6 +1,6 @@
 package com.minibot.api.wrapper.def;
 
-import com.minibot.internal.mod.ModScript;
+import com.minibot.mod.ModScript;
 
 /**
  * @author Tyler Sedlar

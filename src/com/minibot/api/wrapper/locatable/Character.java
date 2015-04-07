@@ -4,7 +4,7 @@ import com.minibot.api.method.Game;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.projection.Projection;
 import com.minibot.api.wrapper.Wrapper;
-import com.minibot.internal.mod.hooks.ReflectionData;
+import com.minibot.mod.hooks.ReflectionData;
 
 /**
  * @author Tyler Sedlar

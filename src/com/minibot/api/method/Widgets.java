@@ -5,7 +5,7 @@ import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.node.RSHashTable;
 import com.minibot.api.wrapper.node.RSNode;
-import com.minibot.internal.mod.ModScript;
+import com.minibot.mod.ModScript;
 
 import java.awt.*;
 

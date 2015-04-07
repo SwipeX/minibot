@@ -1,6 +1,6 @@
 package com.minibot.api.wrapper;
 
-import com.minibot.internal.mod.hooks.Hookable;
+import com.minibot.mod.hooks.Hookable;
 
 /**
  * @author Tyler Sedlar

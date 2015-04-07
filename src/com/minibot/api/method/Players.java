@@ -2,7 +2,7 @@ package com.minibot.api.method;
 
 import com.minibot.api.util.Array;
 import com.minibot.api.wrapper.locatable.Player;
-import com.minibot.internal.mod.ModScript;
+import com.minibot.mod.ModScript;
 
 /**
  * @author Tyler Sedlar

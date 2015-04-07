@@ -4,8 +4,8 @@ import com.minibot.api.method.Game;
 import com.minibot.api.wrapper.def.ItemDefinition;
 import com.minibot.api.wrapper.def.NpcDefinition;
 import com.minibot.api.wrapper.def.ObjectDefinition;
-import com.minibot.internal.mod.ModScript;
-import com.minibot.internal.mod.hooks.InvokeHook;
+import com.minibot.mod.ModScript;
+import com.minibot.mod.hooks.InvokeHook;
 
 import java.util.HashMap;
 import java.util.Map;

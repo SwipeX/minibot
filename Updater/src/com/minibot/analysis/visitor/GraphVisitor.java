@@ -1,8 +1,8 @@
 package com.minibot.analysis.visitor;
 
 import com.minibot.analysis.Updater;
-import com.minibot.internal.mod.hooks.FieldHook;
-import com.minibot.internal.mod.hooks.Hook;
+import com.minibot.mod.hooks.FieldHook;
+import com.minibot.mod.hooks.Hook;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.cfg.Block;

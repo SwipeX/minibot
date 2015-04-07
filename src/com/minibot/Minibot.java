@@ -9,8 +9,8 @@ import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.internal.def.DefinitionLoader;
 import com.minibot.internal.ext.RSCanvas;
-import com.minibot.internal.mod.ModScript;
-import com.minibot.internal.mod.reflection.FieldValue;
+import com.minibot.mod.ModScript;
+import com.minibot.mod.reflection.FieldValue;
 import com.minibot.util.io.Crawler;
 
 import javax.swing.*;
@@ -40,7 +40,7 @@ public class Minibot extends JFrame implements Runnable, Renderable {
     private RSCanvas canvas;
 
     public Minibot() {
-        super("minibot");
+        super("com/minibot");
         setBackground(Color.BLACK);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.crawler = new Crawler(Crawler.GameType.OSRS);

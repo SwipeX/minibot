@@ -2,8 +2,8 @@ package com.minibot.analysis.oldschool;
 
 import com.minibot.analysis.visitor.GraphVisitor;
 import com.minibot.analysis.visitor.VisitorInfo;
-import com.minibot.internal.mod.hooks.FieldHook;
-import com.minibot.internal.mod.hooks.InvokeHook;
+import com.minibot.mod.hooks.FieldHook;
+import com.minibot.mod.hooks.InvokeHook;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.cfg.Block;
 import org.objectweb.asm.commons.cfg.BlockVisitor;

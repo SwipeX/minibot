@@ -1,7 +1,7 @@
-package com.minibot.internal.mod;
+package com.minibot.mod;
 
 import com.minibot.analysis.visitor.GraphVisitor;
-import com.minibot.internal.mod.hooks.Hook;
+import com.minibot.mod.hooks.Hook;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.DataOutputStream;

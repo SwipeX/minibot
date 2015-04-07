@@ -2,15 +2,14 @@ package com.minibot.analysis.oldschool;
 
 import com.minibot.analysis.visitor.GraphVisitor;
 import com.minibot.analysis.visitor.VisitorInfo;
-import com.minibot.internal.mod.hooks.FieldHook;
-import com.minibot.internal.mod.hooks.InvokeHook;
+import com.minibot.mod.hooks.FieldHook;
+import com.minibot.mod.hooks.InvokeHook;
 import com.minibot.util.ArrayIterator;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.cfg.Block;
 import org.objectweb.asm.commons.cfg.BlockVisitor;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.*;
-import org.objectweb.asm.commons.cfg.tree.util.TreeBuilder;
 import org.objectweb.asm.tree.*;
 
 @VisitorInfo(hooks = {"doAction", "players", "npcs", "canvas", "player", "region", "widgets", "objects",

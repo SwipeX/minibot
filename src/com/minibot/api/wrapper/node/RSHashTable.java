@@ -1,7 +1,7 @@
 package com.minibot.api.wrapper.node;
 
 import com.minibot.api.wrapper.Wrapper;
-import com.minibot.internal.mod.hooks.ReflectionData;
+import com.minibot.mod.hooks.ReflectionData;
 
 /**
  * @author Tyler Sedlar

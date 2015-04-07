@@ -2,7 +2,7 @@ package com.minibot.analysis.oldschool;
 
 import com.minibot.analysis.visitor.GraphVisitor;
 import com.minibot.analysis.visitor.VisitorInfo;
-import com.minibot.internal.mod.hooks.FieldHook;
+import com.minibot.mod.hooks.FieldHook;
 import org.objectweb.asm.commons.cfg.Block;
 import org.objectweb.asm.commons.cfg.BlockVisitor;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;

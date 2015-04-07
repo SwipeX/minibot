@@ -1,6 +1,6 @@
 package com.minibot.api.wrapper.locatable;
 
-import com.minibot.internal.mod.hooks.ReflectionData;
+import com.minibot.mod.hooks.ReflectionData;
 
 /**
  * @author Tyler Sedlar

@@ -7,8 +7,8 @@ import com.minibot.api.util.Identifiable;
 import com.minibot.api.util.Random;
 import com.minibot.api.wrapper.def.NpcDefinition;
 import com.minibot.internal.def.DefinitionLoader;
-import com.minibot.internal.mod.ModScript;
-import com.minibot.internal.mod.hooks.ReflectionData;
+import com.minibot.mod.ModScript;
+import com.minibot.mod.hooks.ReflectionData;
 
 import java.awt.*;
 

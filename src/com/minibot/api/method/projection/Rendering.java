@@ -1,6 +1,6 @@
 package com.minibot.api.method.projection;
 
-import com.minibot.internal.mod.ModScript;
+import com.minibot.mod.ModScript;
 
 import java.awt.*;
 import java.util.LinkedList;

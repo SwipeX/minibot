@@ -1,7 +1,7 @@
-package com.minibot.internal.mod.hooks;
+package com.minibot.mod.hooks;
 
-import com.minibot.internal.mod.ModScript;
-import com.minibot.internal.mod.reflection.FieldValue;
+import com.minibot.mod.ModScript;
+import com.minibot.mod.reflection.FieldValue;
 
 /**
  * @author Tyler Sedlar
