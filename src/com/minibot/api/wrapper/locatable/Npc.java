@@ -62,7 +62,7 @@ public class Npc extends Character implements Identifiable {
         Point p = Projection.toScreen(fineX(), fineY());
         if (p == null)
             return;
-        RuneScape.processAction(new NpcAction(opcode, index), action, "<col=ffff00>" + name,
+        RuneScape.processAction(new NpcAction(opcode, index), action, name,
                 p.x + Random.nextInt(-4, 4), p.y + Random.nextInt(-4, 4));
     }
 

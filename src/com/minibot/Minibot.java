@@ -47,10 +47,14 @@ public class Minibot extends JFrame implements Runnable, Renderable {
         new Thread(this).start();
     }
 
+    public RSCanvas canvas() {
+        return canvas;
+    }
+
     @Override
     public void render(Graphics2D g) {
         g.setColor(Color.WHITE);
-        g.drawString("Minibot", 16, 20);
+        g.fillOval(Mouse.x() - 2, Mouse.y() - 2, 4, 4);
     }
 
     @Override
@@ -104,7 +108,6 @@ public class Minibot extends JFrame implements Runnable, Renderable {
         DefinitionLoader.loadDefinitions();
         canvas.original.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
-                System.out.println("srs..");
                 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_1) {
                     if (Bank.viewing()) {
                         Item iron = Bank.findByFilter(i -> {
@@ -161,9 +164,6 @@ public class Minibot extends JFrame implements Runnable, Renderable {
                             Time.sleep(2000);
                         }
                     }).start();
-                } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_4) {
-                    System.out.println("cmon..");
-                    Npcs.loaded();
                 }
             }
         });
