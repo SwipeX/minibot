@@ -1,4 +1,6 @@
-package com.minibot;
+package com.minibot.client;
+
+import com.minibot.client.ClientInvoked;
 
 /**
  * Project: minibot
@@ -9,7 +11,8 @@ package com.minibot;
  */
 public class Callback {
 
-    public static void doAction(int arg1, int arg2, int op, int arg0, String action, String target, int x, int y) {
+    @ClientInvoked
+    public static void processAction(int arg1, int arg2, int op, int arg0, String action, String target, int x, int y) {
         System.out.println("Arg1: " + arg1 + ", arg2: " + arg2 + ", opcode: " + op + ", arg0: " + arg0
                 + ", action: " + action + ", target: " + target + ", x: " + x + ", y: " + y);
     }

@@ -9,9 +9,9 @@ import java.util.Map;
 
 public class ModScript {
 
-    private static final Map<String, String> CLASS_MAP = new HashMap<>();
-    private static final Map<String, FieldHook> FIELD_HOOK_MAP = new HashMap<>();
-    private static final Map<String, InvokeHook> INVOKE_HOOK_MAP = new HashMap<>();
+    public static final Map<String, String> CLASS_MAP = new HashMap<>();
+    public static final Map<String, FieldHook> FIELD_HOOK_MAP = new HashMap<>();
+    public static final Map<String, InvokeHook> INVOKE_HOOK_MAP = new HashMap<>();
 
     private static final int MAGIC = 0xFADFAD;
 
@@ -19,6 +19,28 @@ public class ModScript {
 
     public static void setClassLoader(ClassLoader classloader) {
         ModScript.classloader = classloader;
+    }
+
+    public static String getClass(String definedName) {
+        return CLASS_MAP.get(definedName);
+    }
+
+    public static FieldHook getFieldHook(String definedName) {
+        return FIELD_HOOK_MAP.get(definedName);
+    }
+
+    public static InvokeHook getInvokeHook(String definedName) {
+        return INVOKE_HOOK_MAP.get(definedName);
+    }
+
+    public static String getDefinedName(String key) {
+        for (String definedName : CLASS_MAP.keySet()) {
+            String internalName = CLASS_MAP.get(definedName);
+            if (internalName != null && internalName.equals(key)) {
+                return definedName;
+            }
+        }
+        return null;
     }
 
     public static ClassLoader classes() {

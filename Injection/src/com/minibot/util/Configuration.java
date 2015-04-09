@@ -11,7 +11,7 @@ import java.io.File;
  */
 public class Configuration {
 
-    public static final String APPLICATION_NAME = "com/minibot";
+    public static final String APPLICATION_NAME = "minibot";
 
     public static final String HOME = getSystemHome() + File.separator + APPLICATION_NAME + File.separator;
     public static final String CACHE = HOME + "cache" + File.separator;
