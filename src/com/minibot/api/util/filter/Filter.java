@@ -2,13 +2,13 @@ package com.minibot.api.util.filter;
 
 public interface Filter<E> {
 
-    public boolean accept(E e);
+    boolean accept(E e);
 
     /**
      * @param <T> the type
      * @return a Filter that always accepts the element
      */
-    public static <T> Filter<T> always() {
+    static <T> Filter<T> always() {
         return t -> true;
     }
 
@@ -16,11 +16,11 @@ public interface Filter<E> {
      * @param <T> the type
      * @return a Filter that always rejects the element
      */
-    public static <T> Filter<T> never() {
+    static <T> Filter<T> never() {
         return t -> false;
     }
 
-    public static <E> Filter<E> not(Filter<E> filter) {
+    static <E> Filter<E> not(Filter<E> filter) {
         return e -> !filter.accept(e);
     }
 }
