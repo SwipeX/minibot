@@ -1,9 +1,8 @@
 package com.minibot.api.action.tree;
 
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.action.UID;
-import com.minibot.api.wrapper.def.ObjectDefinition;
-import com.minibot.internal.def.DefinitionLoader;
+import com.minibot.client.natives.RSObjectDefinition;
+import com.minibot.util.DefinitionLoader;
 
 public class ObjectAction extends EntityAction {
 
@@ -27,16 +26,16 @@ public class ObjectAction extends EntityAction {
         return UID.entityId(uid());
     }
 
-    public Object definition() {
+    public RSObjectDefinition definition() {
         return DefinitionLoader.findObjectDefinition(entityId());
     }
 
     public String name() {
-        return ObjectDefinition.name(definition());
+        return definition().getName();
     }
 
     public String actionName() {
-        String[] actions = ObjectDefinition.actions(definition());
+        String[] actions = definition().getActions();
         if (actions == null)
             return null;
         int actionIndex = actionIndex();

@@ -1,19 +1,16 @@
 package com.minibot.api.util;
 
-import com.minibot.api.method.projection.Rendering;
+import com.minibot.api.method.projection.Projection;
 
 import java.awt.*;
 import java.util.Collection;
 
-/**
- * @author Tyler Sedlar
- */
 public class Random {
 
-    private static final java.util.Random RANDOM = new java.util.Random();
+    private static final java.util.Random GEN = new java.util.Random();
 
     public static int nextInt(int max) {
-        return RANDOM.nextInt(max);
+        return GEN.nextInt(max);
     }
 
     public static int nextInt(int min, int max) {
@@ -21,11 +18,11 @@ public class Random {
     }
 
     public static double nextDouble() {
-        return RANDOM.nextDouble();
+        return GEN.nextDouble();
     }
 
     public static boolean nextBoolean() {
-        return RANDOM.nextBoolean();
+        return GEN.nextBoolean();
     }
 
     public static <T> T nextElement(T[] elements) {
@@ -39,7 +36,7 @@ public class Random {
     }
 
     public static Point nextPoint(Shape shape) {
-        return nextElement(Rendering.points(shape));
+        return nextElement(Projection.getPointsIn(shape));
     }
 
 }

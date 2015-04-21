@@ -4,25 +4,24 @@ import com.minibot.api.method.Game;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.projection.Projection;
 import com.minibot.api.wrapper.Wrapper;
-import com.minibot.mod.hooks.ReflectionData;
+import com.minibot.client.natives.RSCharacter;
 
 /**
  * @author Tyler Sedlar
  * @since 4/4/15.
  */
-@ReflectionData(className = "Character")
-public class Character extends Wrapper implements Locatable {
+public class Character<T extends RSCharacter> extends Wrapper<T> implements Locatable {
 
-    public Character(Object raw) {
+    public Character(T raw) {
         super(raw);
     }
 
     public int fineX() {
-        return hook("Character", "x").getInt(get());
+        return raw.getX();
     }
 
     public int fineY() {
-        return hook("Character", "y").getInt(get());
+        return raw.getY();
     }
 
     public int localX() {
@@ -42,19 +41,19 @@ public class Character extends Wrapper implements Locatable {
     }
 
     public int health() {
-        return hook("Character", "health").getInt(get());
+        return raw.getHealth();
     }
 
     public int maxHealth() {
-        return hook("Character", "maxHealth").getInt(get());
+        return raw.getMaxHealth();
     }
 
-    public int interactingIndex() {
-        return hook("Character", "interactingIndex").getInt(get());
+    public int targetIndex() {
+        return raw.getInteractingIndex();
     }
 
     public int animation() {
-        return hook("Character", "animation").getInt(get());
+        return raw.getAnimation();
     }
 
     @Override

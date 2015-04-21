@@ -1,12 +1,9 @@
 package com.minibot.api.action.tree;
 
-import com.minibot.api.action.ActionFilter;
 import com.minibot.api.action.ActionOpcodes;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.minibot.api.action.ActionOpcodes.*;
 

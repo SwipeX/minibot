@@ -1,8 +1,11 @@
 package com.minibot.api.method;
 
-import com.minibot.api.util.Array;
+import com.minibot.Minibot;
 import com.minibot.api.wrapper.locatable.Player;
-import com.minibot.mod.ModScript;
+import com.minibot.client.natives.RSPlayer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Tyler Sedlar
@@ -13,24 +16,24 @@ public class Players {
     public static final int MAX_PLAYERS = 2048;
 
     public static Player local() {
-        Object player = ModScript.hook("Client#player").get();
+        RSPlayer player = Minibot.instance().client().getPlayer();
         return player != null ? new Player(player) : null;
     }
 
-    public static Object[] raw() {
-        return (Object[]) ModScript.hook("Client#players").get();
+    public static RSPlayer[] raw() {
+        return Minibot.instance().client().getPlayers();
     }
 
     public static Player[] loaded() {
-        Object[] raws = raw();
+        List<Player> players = new ArrayList<>();
+        RSPlayer[] raws = raw();
         if (raws == null || raws.length == 0)
             return new Player[0];
-        Player[] array = new Player[0];
-        for (Object player : raws) {
+        for (RSPlayer player : raws) {
             if (player == null)
                 continue;
-            array = Array.add(array, new Player(player));
+            players.add(new Player(player));
         }
-        return array;
+        return players.toArray(new Player[players.size()]);
     }
 }

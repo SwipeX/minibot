@@ -39,11 +39,11 @@ public class WidgetAction extends Action {
 
 
     public int parent() {
-        return Widgets.findParentIndex(widgetUid());
+        return widgetUid() >> 16;
     }
 
     public int child() {
-        return Widgets.findChildIndex(widgetUid());
+        return widgetUid() & 0xffff;
     }
 
     public boolean isType2() {
@@ -73,8 +73,8 @@ public class WidgetAction extends Action {
     @Override
     public String toString() {
         final int UID = widgetUid();
-        final int parent = Widgets.findParentIndex(UID);
-        final int child = Widgets.findChildIndex(UID);
+        final int parent = widgetUid() >> 16;
+        final int child = widgetUid() & 0xffff;
         final int index = widgetIndex();
         final int action = actionIndex();
         final int type = isType2() ? 2 : 1;

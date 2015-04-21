@@ -1,33 +1,31 @@
 package com.minibot.api.wrapper;
 
-import com.minibot.mod.hooks.Hookable;
+import com.minibot.client.natives.ClientNative;
 
 /**
  * @author Tyler Sedlar
  * @since 4/4/15.
  */
-public abstract class Wrapper implements Hookable {
+public abstract class Wrapper<T extends ClientNative> {
 
-    private Object raw;
+    protected final T raw;
 
-    public Wrapper(Object raw) {
+    public Wrapper(T raw) {
+        if (raw == null)
+            throw new IllegalArgumentException("raw == null");
         this.raw = raw;
     }
 
-    public void set(Object raw) {
-        this.raw = raw;
-    }
-
-    public Object get() {
+    public T raw() {
         return raw;
     }
 
-    public boolean valid() {
+    public boolean validate() {
         return raw != null;
     }
 
     @Override
     public int hashCode() {
-        return valid() ? raw.hashCode() : super.hashCode();
+        return validate() ? raw.hashCode() : super.hashCode();
     }
 }

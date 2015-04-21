@@ -1,19 +1,18 @@
 package com.minibot.api.wrapper.locatable;
 
-import com.minibot.mod.hooks.ReflectionData;
+import com.minibot.client.natives.RSPlayer;
 
 /**
  * @author Tyler Sedlar
  * @since 4/4/15.
  */
-@ReflectionData(className = "Player")
-public class Player extends Character {
+public class Player extends Character<RSPlayer> {
 
-    public Player(Object raw) {
+    public Player(RSPlayer raw) {
         super(raw);
     }
 
     public String name() {
-        return hook("name").getString(get());
+        return raw.getName();
     }
 }

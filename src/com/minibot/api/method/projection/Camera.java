@@ -1,9 +1,9 @@
 package com.minibot.api.method.projection;
 
+import com.minibot.Minibot;
 import com.minibot.api.method.Players;
 import com.minibot.api.wrapper.locatable.Locatable;
 import com.minibot.api.wrapper.locatable.Tile;
-import com.minibot.mod.ModScript;
 
 /**
  * @author Tyler Sedlar
@@ -12,23 +12,23 @@ import com.minibot.mod.ModScript;
 public class Camera {
 
     public static int x() {
-        return ModScript.hook("Client#cameraX").getInt();
+        return Minibot.instance().client().getCameraX();
     }
 
     public static int y() {
-        return ModScript.hook("Client#cameraY").getInt();
+        return Minibot.instance().client().getCameraY();
     }
 
     public static int z() {
-        return ModScript.hook("Client#cameraZ").getInt();
+        return Minibot.instance().client().getCameraZ();
     }
 
     public static int pitch() {
-        return ModScript.hook("Client#cameraPitch").getInt();
+        return Minibot.instance().client().getCameraPitch();
     }
 
     public static int yaw() {
-        return ModScript.hook("Client#cameraYaw").getInt();
+        return Minibot.instance().client().getCameraYaw();
     }
 
     public static int angle() {

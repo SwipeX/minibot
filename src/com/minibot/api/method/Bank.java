@@ -1,6 +1,7 @@
 package com.minibot.api.method;
 
-import com.minibot.api.util.Array;
+import com.minibot.api.wrapper.Item.Source;
+import com.minibot.util.Array;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
@@ -35,14 +36,14 @@ public class Bank {
                 int id = slot.itemId();
                 int stack = slot.itemAmount();
                 if (id > 0 && stack > 0)
-                    array = Array.add(array, (new Item(slot, Item.ItemType.BANK, slot.index())));
+                    array = Array.add(array, (new Item(slot, Source.BANK, slot.rawIndex())));
             }
             return array;
         }
         return new Item[0];
     }
 
-    public static Item findByFilter(Filter<Item> filter) {
+    public static Item first(Filter<Item> filter) {
         for (Item item : items()) {
             if (item != null && filter.accept(item))
                 return item;

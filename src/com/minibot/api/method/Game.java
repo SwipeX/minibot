@@ -1,7 +1,6 @@
 package com.minibot.api.method;
 
-import com.minibot.mod.ModScript;
-import com.minibot.mod.reflection.FieldValue;
+import com.minibot.Minibot;
 
 /**
  * @author Tyler Sedlar
@@ -13,41 +12,29 @@ public class Game {
     public static final int STATE_PLAYING = 25;
     public static final int STATE_IN_GAME = 30;
 
-    private static FieldValue hook(String hookName) {
-        return ModScript.hook("Client#" + hookName);
-    }
-
     public static int state() {
-        return hook("gameState").getInt();
+        return Minibot.instance().client().getGameState();
     }
 
     public static int baseX() {
-        return hook("baseX").getInt();
+        return Minibot.instance().client().getBaseX();
     }
 
     public static int baseY() {
-        return hook("baseY").getInt();
+        return Minibot.instance().client().getBaseY();
     }
 
     public static int plane() {
-        return hook("plane").getInt();
+        return Minibot.instance().client().getPlane();
     }
 
-    public static int[] settings() {
-        try {
-            return (int[]) hook("gameSettings").get();
-        } catch (Exception e) {
-            return new int[0];
-        }
+    public static int[] varps() {
+        int[] settings = Minibot.instance().client().getGameSettings();
+        return settings == null ? null : settings.clone();
     }
 
-    public static int getSetting(int index) {
-        int[] settings = settings();
+    public static int varp(int index) {
+        int[] settings = varps();
         return settings.length == 0 || index >= settings.length ? -1 : settings[index];
-    }
-
-    public static void resetMouseIdleTime() {
-        hook("mouseIdleTime").set(null, 0);
-        System.out.println("Mouse idle: " + hook("mouseIdleTime").getInt());
     }
 }

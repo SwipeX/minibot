@@ -19,13 +19,12 @@ public class InvokeHook extends Hook {
 
     @Override
     protected void readData(DataInputStream in) throws IOException {
-        name = Crypto.crypt(in.readUTF());
-        clazz = Crypto.crypt(in.readUTF());
-        method = Crypto.crypt(in.readUTF());
-        desc = Crypto.crypt(in.readUTF());
+        name = Crypto.decrypt(in.readUTF());
+        clazz = Crypto.decrypt(in.readUTF());
+        method = Crypto.decrypt(in.readUTF());
+        desc = Crypto.decrypt(in.readUTF());
         predicate = in.readInt();
-        predicateType = Crypto.crypt(in.readUTF());
-        predicateTypeClass = resolvePredicateTypeClass();
+        predicateType = Crypto.decrypt(in.readUTF());
     }
 
     private Class<?> resolvePredicateTypeClass() {
@@ -33,57 +32,61 @@ public class InvokeHook extends Hook {
     }
 
     private Method findMethod(Class<?>[] parameterTypes) {
-        Method[] methods = ModScript.classes().loadClass(clazz).getDeclaredMethods();
-        main:
-        for (Method m : methods) {
-            if (m.getName().equals(method)) {
-                Class<?>[] types = m.getParameterTypes();
-                if (types.length == parameterTypes.length) {
-                    for (int i = 0; i < types.length; i++) {
-                        if (types[i] != parameterTypes[i])
-                            continue main;
+        try {
+            Method[] methods = ModScript.classes().loadClass(clazz).getDeclaredMethods();
+            main:
+            for (Method m : methods) {
+                if (m.getName().equals(method)) {
+                    Class<?>[] types = m.getParameterTypes();
+                    if (types.length == parameterTypes.length) {
+                        for (int i = 0; i < types.length; i++) {
+                            if (types[i] != parameterTypes[i])
+                                continue main;
+                        }
+                        String returnType = m.getGenericReturnType().getTypeName();
+                        switch (returnType) {
+                            case "void": {
+                                returnType = "V";
+                                break;
+                            }
+                            case "boolean": {
+                                returnType = "Z";
+                                break;
+                            }
+                            case "int": {
+                                returnType = "I";
+                                break;
+                            }
+                            case "byte": {
+                                returnType = "B";
+                                break;
+                            }
+                            case "short": {
+                                returnType = "S";
+                                break;
+                            }
+                            case "char": {
+                                returnType = "C";
+                                break;
+                            }
+                            case "long": {
+                                returnType = "J";
+                                break;
+                            }
+                        }
+                        if (desc.contains(")L")) {
+                            if (!desc.endsWith(")L" + returnType + ";"))
+                                continue;
+                        } else {
+                            if (!desc.endsWith(")" + returnType))
+                                continue;
+                        }
+                        return m;
                     }
-                    String returnType = m.getGenericReturnType().getTypeName();
-                    switch (returnType) {
-                        case "void": {
-                            returnType = "V";
-                            break;
-                        }
-                        case "boolean": {
-                            returnType = "Z";
-                            break;
-                        }
-                        case "int": {
-                            returnType = "I";
-                            break;
-                        }
-                        case "byte": {
-                            returnType = "B";
-                            break;
-                        }
-                        case "short": {
-                            returnType = "S";
-                            break;
-                        }
-                        case "char": {
-                            returnType = "C";
-                            break;
-                        }
-                        case "long": {
-                            returnType = "J";
-                            break;
-                        }
-                    }
-                    if (desc.contains(")L")) {
-                        if (!desc.endsWith(")L" + returnType + ";"))
-                            continue;
-                    } else {
-                        if (!desc.endsWith(")" + returnType))
-                            continue;
-                    }
-                    return m;
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

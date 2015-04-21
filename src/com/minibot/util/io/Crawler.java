@@ -2,17 +2,14 @@ package com.minibot.util.io;
 
 import com.minibot.util.Configuration;
 
-import java.applet.Applet;
-import java.applet.AppletContext;
-import java.applet.AppletStub;
+import java.applet.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.jar.JarInputStream;
 
 public class Crawler {
@@ -33,14 +30,14 @@ public class Crawler {
         this.config = home + "jav_config.ws";
     }
 
-    public Applet applet(ClassLoader classloader) {
+    public Applet start(ClassLoader classloader) {
         try {
             String main = parameters.get("initial_class").replace(".class", "");
             Applet applet = (Applet) classloader.loadClass(main).newInstance();
             applet.setBackground(Color.BLACK);
             applet.setPreferredSize(getAppletSize());
             applet.setLayout(null);
-            applet.setStub(stub(applet));
+            applet.setStub(getEnvironment(applet));
             applet.init();
             applet.start();
             applet.setVisible(true);
@@ -51,7 +48,7 @@ public class Crawler {
         }
     }
 
-    public AppletStub stub(final Applet applet) {
+    public AppletStub getEnvironment(final Applet applet) {
         return new AppletStub() {
             public boolean isActive() {
                 return true;
@@ -122,7 +119,7 @@ public class Crawler {
         hash = getLocalHash();
     }
 
-    public boolean outdated() {
+    public boolean isOutdated() {
         File gamepack = new File(pack);
         if (!gamepack.exists())
             return true;
@@ -154,7 +151,7 @@ public class Crawler {
 
     public boolean download(String target, final Runnable callback) {
         hash = getRemoteHash();
-        return Internet.download(home + parameters.get("initial_jar"), target, new DownloadManager() {
+        return Internet.download(home + parameters.get("initial_jar"), target, new InternetCallback() {
             public void onDownload(int p) {
                 percent = p;
                 if (callback != null)

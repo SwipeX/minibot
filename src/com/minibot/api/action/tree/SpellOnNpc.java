@@ -2,6 +2,7 @@ package com.minibot.api.action.tree;
 
 import com.minibot.api.method.Npcs;
 import com.minibot.api.wrapper.locatable.Npc;
+import com.minibot.client.natives.RSNpc;
 
 public class SpellOnNpc extends CharacterAction {
 
@@ -10,7 +11,7 @@ public class SpellOnNpc extends CharacterAction {
     }
 
     public Npc npc() {
-        Object[] npcs = Npcs.raw();
+        RSNpc[] npcs = Npcs.raw();
         int entityId = entityId();
         return npcs != null && entityId >= 0 && entityId < npcs.length ? new Npc(npcs[entityId], entityId) : null;
     }

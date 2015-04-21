@@ -1,8 +1,8 @@
 package com.minibot.api.method.projection;
 
+import com.minibot.Minibot;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.wrapper.WidgetComponent;
-import com.minibot.mod.ModScript;
 
 /**
  * @author Tyler Sedlar
@@ -11,15 +11,15 @@ import com.minibot.mod.ModScript;
 public class Minimap {
 
     public static int scale() {
-        return ModScript.hook("Client#mapScale").getInt();
+        return Minibot.instance().client().getMapScale();
     }
 
-    public static int angle() {
-        return ModScript.hook("Client#mapAngle").getInt();
+    public static int rotation() {
+        return Minibot.instance().client().getMapAngle();
     }
 
     public static int offset() {
-        return ModScript.hook("Client#mapOffset").getInt();
+        return Minibot.instance().client().getMapOffset();
     }
 
     public static WidgetComponent component() {

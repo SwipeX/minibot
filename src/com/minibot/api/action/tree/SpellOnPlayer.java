@@ -2,6 +2,7 @@ package com.minibot.api.action.tree;
 
 import com.minibot.api.method.Players;
 import com.minibot.api.wrapper.locatable.Player;
+import com.minibot.client.natives.RSPlayer;
 
 public class SpellOnPlayer extends CharacterAction {
 
@@ -10,7 +11,7 @@ public class SpellOnPlayer extends CharacterAction {
     }
 
     public Player player() {
-        Object[] players = Players.raw();
+        RSPlayer[] players = Players.raw();
         int entityId = entityId();
         return players != null && entityId >= 0 && entityId < players.length ? new Player(players[entityId]) : null;
     }

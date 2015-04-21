@@ -2,76 +2,62 @@ package com.minibot.api.wrapper.locatable;
 
 import com.minibot.api.action.tree.NpcAction;
 import com.minibot.api.method.RuneScape;
-import com.minibot.api.method.projection.Projection;
 import com.minibot.api.util.Identifiable;
-import com.minibot.api.util.Random;
-import com.minibot.api.wrapper.def.NpcDefinition;
-import com.minibot.internal.def.DefinitionLoader;
-import com.minibot.mod.ModScript;
-import com.minibot.mod.hooks.ReflectionData;
+import com.minibot.client.natives.RSNpc;
+import com.minibot.client.natives.RSNpcDefinition;
+import com.minibot.util.DefinitionLoader;
 
-import java.awt.*;
+import java.util.Arrays;
 
-/**
- * @author Tyler Sedlar
- * @since 4/4/15.
- */
-@ReflectionData(className = "Npc")
-public class Npc extends Character implements Identifiable {
+public class Npc extends Character<RSNpc> implements Identifiable {
 
     private final int index;
-    private final int id;
-    private final Object definition;
+    private final RSNpcDefinition definition;
 
-    public Npc(Object raw, int index) {
+    public Npc(RSNpc raw, int index) {
         super(raw);
         this.index = index;
-        Object rawDef = ModScript.hook("Npc#definition").get(raw);
-        this.id = NpcDefinition.id(rawDef);
-        this.definition = DefinitionLoader.findNpcDefinition(id);
+        RSNpcDefinition rawDef = raw.getDefinition();
+        if (rawDef == null)
+            throw new IllegalStateException("bad npc definition!");
+        this.definition = DefinitionLoader.findNpcDefinition(rawDef.getId());
     }
 
-    public int index() {
+    public int arrayIndex() {
         return index;
     }
 
+    @Override
+    public boolean validate() {
+        return super.validate() && id() != -1;
+    }
+
+    @Override
     public int id() {
-        return id;
+        return definition.getId();
     }
 
-    public String name() {
-        return NpcDefinition.name(definition);
-    }
-
-    public String[] actions() {
-        return NpcDefinition.actions(definition);
-    }
-
-    public int[] transformIds() {
-        return NpcDefinition.transformIds(definition);
-    }
-
-    public int transformIndex() {
-        return NpcDefinition.transformIndex(definition);
+    public RSNpcDefinition definition() {
+        return definition;
     }
 
     public void processAction(int opcode, String action) {
         String name = name();
         if (name == null)
             return;
-        Point p = Projection.toScreen(fineX(), fineY());
-        if (p == null)
+        RuneScape.processAction(new NpcAction(opcode, index), action, name, 0, 0);
+    }
+
+    public void processAction(String action) {
+        String[] actions = definition.getActions();
+        if (actions == null)
             return;
-        RuneScape.processAction(new NpcAction(opcode, index), action, name,
-                p.x + Random.nextInt(-4, 4), p.y + Random.nextInt(-4, 4));
+        int index = Arrays.asList(actions).indexOf(action);
+        if (index > 0)
+            processAction(9 + index, action);
     }
 
-    @Override
-    public boolean valid() {
-        return super.valid() && id() != -1;
-    }
-
-    public boolean named(String name) {
-        return name() != null && name().equals(name);
+    public String name() {
+        return definition.getName();
     }
 }

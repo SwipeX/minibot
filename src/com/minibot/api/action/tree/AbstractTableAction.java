@@ -29,11 +29,11 @@ public abstract class AbstractTableAction extends Action {
     }
 
     public int parent() {
-        return Widgets.findParentIndex(tableUid());
+        return tableUid() >> 16;
     }
 
     public int child() {
-        return Widgets.findChildIndex(tableUid());
+        return tableUid() & 0xffff;
     }
 
     public int actionIndex() {

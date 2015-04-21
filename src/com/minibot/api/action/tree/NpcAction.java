@@ -2,9 +2,10 @@ package com.minibot.api.action.tree;
 
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Npcs;
-import com.minibot.api.wrapper.def.NpcDefinition;
 import com.minibot.api.wrapper.locatable.Npc;
-import com.minibot.internal.def.DefinitionLoader;
+import com.minibot.client.natives.RSNpc;
+import com.minibot.client.natives.RSNpcDefinition;
+import com.minibot.util.DefinitionLoader;
 
 import java.util.Arrays;
 
@@ -31,23 +32,22 @@ public class NpcAction extends CharacterAction {
         int index = npcIndex();
         if (index < 0 || index > Short.MAX_VALUE)
             return null;
-        Object[] npcs = Npcs.raw();
+        RSNpc[] npcs = Npcs.raw();
         return index >= 0 && index < npcs.length ? new Npc(npcs[index], index) : null;
     }
 
-    public Object definition() {
-        return DefinitionLoader.findNpcDefinition(entityId());
+    public RSNpcDefinition definition() {
+        return npc().definition();
     }
 
     public String name() {
-        return NpcDefinition.name(definition());
+        return definition().getName();
     }
 
     public String actionName() {
-        String[] actions = NpcDefinition.actions(definition());
+        String[] actions = definition().getActions();
         if (actions == null)
             return null;
-        System.out.println(Arrays.toString(actions));
         int actionIndex = actionIndex();
         return actionIndex >= 0 && actionIndex < actions.length ? actions[actionIndex] : null;
     }

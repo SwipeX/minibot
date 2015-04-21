@@ -3,6 +3,7 @@ package com.minibot.api.action.tree;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Players;
 import com.minibot.api.wrapper.locatable.Player;
+import com.minibot.client.natives.RSPlayer;
 
 public class PlayerAction extends CharacterAction {
 
@@ -28,7 +29,7 @@ public class PlayerAction extends CharacterAction {
         int index = playerIndex();
         if (index < 0 || index > Players.MAX_PLAYERS)
             return null;
-        Object[] players = Players.raw();
+        RSPlayer[] players = Players.raw();
         return players != null && index >= 0 && index < players.length ? new Player(players[index]) : null;
     }
 

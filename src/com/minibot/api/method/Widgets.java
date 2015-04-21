@@ -1,11 +1,10 @@
 package com.minibot.api.method;
 
-import com.minibot.api.util.Array;
+import com.minibot.Minibot;
+import com.minibot.util.Array;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.WidgetComponent;
-import com.minibot.api.wrapper.node.RSHashTable;
-import com.minibot.api.wrapper.node.RSNode;
-import com.minibot.mod.ModScript;
+import com.minibot.client.natives.RSWidget;
 
 import java.awt.*;
 
@@ -15,50 +14,47 @@ import java.awt.*;
  */
 public class Widgets {
 
-    public static final int BUTTON_INPUT = 24;
-    public static final int  BUTTON_SPELL = 25;
-    public static final int BUTTON_CLOSE = 26;
-    public static final int  BUTTON_VAR_FLIP = 28;
-    public static final int  BUTTON_VAR_SET = 29;
-    public static final int   BUTTON_DIALOG = 30;
+    /** Values of the Widget#buttonType field (also referred to as actionType) **/
+    public static final int BUTTON_INPUT = 1;
+    public static final int BUTTON_SPELL = 2;
+    public static final int BUTTON_CLOSE = 3;
+    public static final int BUTTON_VAR_FLIP = 4;
+    public static final int BUTTON_VAR_SET = 5;
+    public static final int BUTTON_DIALOG = 6;
 
-    public static Object[][] raw() {
-        return (Object[][]) ModScript.hook("Client#widgets").get();
-    }
-
-    public static RSHashTable table() {
-        return new RSHashTable(ModScript.hook("Client#widgetNodes").get());
+    public static RSWidget[][] raw() {
+        return Minibot.instance().client().getWidgets();
     }
 
     public static int[] positionsX() {
-        return (int[]) ModScript.hook("Client#widgetPositionsX").get();
+        return Minibot.instance().client().getWidgetPositionsX();
     }
 
     public static int[] positionsY() {
-        return (int[]) ModScript.hook("Client#widgetPositionsY").get();
+        return Minibot.instance().client().getWidgetPositionsY();
     }
 
     public static int[] widths() {
-        return (int[]) ModScript.hook("Client#widgetWidths").get();
+        return Minibot.instance().client().getWidgetWidths();
     }
 
     public static int[] heights() {
-        return (int[]) ModScript.hook("Client#widgetHeights").get();
+        return Minibot.instance().client().getWidgetHeights();
     }
 
     public static WidgetComponent[] childrenFor(int index) {
         if (!validate(index))
             return new WidgetComponent[0];
-        Object[][] raw = Widgets.raw();
-        Object[] children = raw[index];
+        RSWidget[][] raw = Widgets.raw();
+        RSWidget[] children = raw[index];
         if (children == null)
             return new WidgetComponent[0];
-        WidgetComponent[] array = new WidgetComponent[0];
-        for (Object child : children) {
-            if (child == null)
+        WidgetComponent[] array = new WidgetComponent[children.length];
+        for (int i = 0; i < array.length; i++) {
+            RSWidget raw_ = children[i];
+            if (raw_ == null)
                 continue;
-            WidgetComponent component = new WidgetComponent(index, child);
-            array = Array.add(array, component);
+            array[i] = new WidgetComponent(raw_, i);
         }
         return array;
     }
@@ -67,7 +63,7 @@ public class Widgets {
         WidgetComponent[] children = childrenFor(parent);
         if (children != null) {
             for (WidgetComponent wc : children) {
-                if (wc.id() == child)
+                if (wc.index() == child)
                     return wc;
             }
         }
@@ -93,46 +89,47 @@ public class Widgets {
         return null;
     }
 
-    public static WidgetComponent findChildByFilter(int parent, Filter<WidgetComponent> filter) {
+    public static WidgetComponent get(int parent, Filter<WidgetComponent> filter) {
         for (WidgetComponent child : childrenFor(parent)) {
             try {
                 if (child != null && filter.accept(child))
                     return child;
                 if (child != null) {
-                    WidgetComponent result = child.findChildByFilter(filter);
+                    WidgetComponent result = child.child(filter);
                     if (result != null)
                         return result;
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
         return null;
     }
 
-    public static WidgetComponent findComponentByFilter(Filter<WidgetComponent> filter) {
-        Object[][] raw = raw();
+    public static WidgetComponent get(Filter<WidgetComponent> filter) {
+        RSWidget[][] raw = raw();
         if (raw == null) return null;
         for (int i = 0; i < raw.length; i++) {
-            WidgetComponent child = findChildByFilter(i, filter);
+            WidgetComponent child = get(i, filter);
             if (child != null)
                 return child;
         }
         return null;
     }
 
-    public static WidgetComponent[] findComponentsByFilter(Filter<WidgetComponent> filter) {
+    public static WidgetComponent[] getAll(Filter<WidgetComponent> filter) {
         WidgetComponent[] components = new WidgetComponent[0];
-        Object[][] raw = raw();
+        RSWidget[][] raw = raw();
         if (raw == null) return null;
         for (int i = 0; i < raw.length; i++) {
-            WidgetComponent child = findChildByFilter(i, filter);
+            WidgetComponent child = get(i, filter);
             if (child != null)
                 components = Array.add(components, child);
         }
         return components.length > 0 ? components : null;
     }
 
-    public static WidgetComponent findComponentByText(Filter<String> filter) {
-        return findComponentByFilter(wc -> {
+    public static WidgetComponent byText(Filter<String> filter) {
+        return get(wc -> {
             if (wc != null) {
                 String text = wc.text();
                 return text != null && filter.accept(text);
@@ -141,8 +138,8 @@ public class Widgets {
         });
     }
 
-    public static WidgetComponent findComponentByAction(Filter<String> filter) {
-        return findComponentByFilter(wc -> {
+    public static WidgetComponent byAction(Filter<String> filter) {
+        return get(wc -> {
             if (wc != null) {
                 String[] actions = wc.actions();
                 if (actions != null && actions.length > 0) {
@@ -157,21 +154,8 @@ public class Widgets {
     }
 
     public static boolean validate(int parent) {
-        Object[][] widgets = raw();
+        RSWidget[][] widgets = raw();
         return widgets != null && widgets.length >= parent && widgets[parent] != null;
     }
 
-    public static int findParentIndex(int uid) {
-        Object node = Widgets.table().iterator().findByWidgetId(uid);
-        if (node != null)
-            uid = (int) RSNode.uid(node);
-        return uid >> 16;
-    }
-
-    public static int findChildIndex(int uid) {
-        Object node = Widgets.table().iterator().findByWidgetId(uid);
-        if (node != null)
-            uid = (int) RSNode.uid(node);
-        return uid & 0xFFFF;
-    }
 }

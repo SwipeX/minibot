@@ -1,67 +1,54 @@
 package com.minibot.api.wrapper;
 
-import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.action.tree.WidgetAction;
-import com.minibot.api.method.RuneScape;
 import com.minibot.api.method.Widgets;
-import com.minibot.api.util.Array;
-import com.minibot.api.util.Random;
 import com.minibot.api.util.filter.Filter;
-import com.minibot.api.wrapper.node.RSNode;
-import com.minibot.mod.hooks.ReflectionData;
+import com.minibot.client.natives.RSWidget;
 
 import java.awt.*;
 
 /**
  * @author Tyler Sedlar
  */
-@ReflectionData(className = "Widget")
-public class WidgetComponent extends Wrapper {
+public class WidgetComponent extends Wrapper<RSWidget> {
 
     private int index;
     private int ownerId;
 
-    public WidgetComponent(int ownerId, Object raw) {
+    public WidgetComponent(int ownerId, RSWidget raw) {
         super(raw);
         this.ownerId = ownerId;
         this.index = -1;
     }
 
-    public WidgetComponent(Object raw, int index) {
+    public WidgetComponent(RSWidget raw, int index) {
         super(raw);
         this.index = index;
     }
 
     public WidgetComponent[] children() {
-        Object[] children = (Object[]) hook("children").get(get());
+        RSWidget[] children = raw.getChildren();
         if (children == null)
             return new WidgetComponent[0];
         int index = 0;
-        WidgetComponent[] array = new WidgetComponent[0];
-        for (Object widget : children) {
+        WidgetComponent[] array = new WidgetComponent[children.length];
+        for (RSWidget widget : children) {
             if (widget != null)
-                array = Array.add(array, new WidgetComponent(widget, index));
+                array[index] = new WidgetComponent(widget, index);
             index++;
         }
         return array;
     }
 
-    private int ownerUid() {
-        int uid = rawOwnerId();
-        if (uid == -1) {
-            Object node = Widgets.table().iterator().findByWidgetId(uid());
-            if (node != null)
-                uid = (int) RSNode.uid(node);
-        }
-        return uid;
+    private int ownerId() {
+        return raw.getOwnerId();
     }
 
-    public int widget() {
+    public int ownerIndex() {
         return ownerId;
     }
 
     public WidgetComponent owner() {
-        int uid = ownerUid();
+        int uid = ownerId();
         if (uid == -1)
             return null;
         int parent = uid >> 16;
@@ -70,118 +57,76 @@ public class WidgetComponent extends Wrapper {
     }
 
     public int x() {
-        int[] positionsX = Widgets.positionsX();
-        int index = boundsIndex();
-        int relX = relX();
-        WidgetComponent owner = owner();
-        int x = 0;
-        if (owner != null) {
-            x = owner.x() - scrollX();
-        } else {
-            if (index >= 0 && positionsX != null && positionsX[index] > 0) {
-                int absX = positionsX[index];
-                if (type() > 0)
-                    absX += relX;
-                return absX;
-            }
-        }
-        return x + relX;
+        return raw.getContainerX() + relX();
     }
 
     public int y() {
-        int[] positionsY = Widgets.positionsY();
-        int index = boundsIndex();
-        int relY = relY();
-        WidgetComponent owner = owner();
-        int y = 0;
-        if (owner != null) {
-            y = owner.y() - scrollY();
-        } else {
-            if (index >= 0 && positionsY != null && positionsY[index] > 0) {
-                int absY = positionsY[index];
-                if (type() > 0)
-                    absY += relY;
-                return absY;
-            }
-        }
-        return y + relY;
+        return raw.getContainerY() + relY();
     }
 
-    public int uid() {
-        return hook("id").getInt(get()) >>> 16;
-    }
-
-    public int id() {
-        int id = hook("id").getInt(get());
-        return index < 0 ? id & 0xFF : index;
-    }
-
-    public int rawOwnerId() {
-        return hook("ownerId").getInt(get());
-    }
-
-    public int boundsIndex() {
-        return hook("boundsIndex").getInt(get());
-    }
-
-    public int itemId() {
-        return hook("itemId").getInt(get());
-    }
-
-    public int itemAmount() {
-        return hook("itemAmount").getInt(get());
-    }
-
-    public int relX() {
-        return hook("x").getInt(get());
-    }
-
-    public int relY() {
-        return hook("y").getInt(get());
-    }
-
-    public int width() {
-        return hook("width").getInt(get());
-    }
-
-    public int height() {
-        return hook("height").getInt(get());
-    }
-
-    public int scrollX() {
-        return hook("scrollX").getInt(get());
-    }
-
-    public int scrollY() {
-        return hook("scrollY").getInt(get());
-    }
-
-    public int type() {
-        return hook("type").getInt(get());
+    public int hash() {
+        return raw.getId() >>> 16;
     }
 
     public int index() {
-        return hook("index").getInt(get());
+        int id = raw.getId();
+        return index < 0 ? id & 0xFF : index;
+    }
+
+    public int boundsIndex() {
+        return raw.getBoundsIndex();
+    }
+
+    public int itemId() {
+        return raw.getItemId();
+    }
+
+    public int itemAmount() {
+        return raw.getItemAmount();
+    }
+
+    public int relX() {
+        return raw.getX();
+    }
+
+    public int relY() {
+        return raw.getY();
+    }
+
+    public int width() {
+        return raw.getWidth();
+    }
+
+    public int height() {
+        return raw.getHeight();
+    }
+
+    public int type() {
+        return raw.getType();
+    }
+
+    public int rawIndex() {
+        return raw.getIndex();
     }
 
     public int[] itemIds() {
-        return (int[]) hook("itemIds").get(get());
+        return raw.getItemIds();
     }
 
-    public int[] stackSizes() {
-        return (int[]) hook("stackSizes").get(get());
+    public int[] itemStackSizes() {
+        return raw.getStackSizes();
     }
 
     public int textureId() {
-        return hook("textureId").getInt(get());
+        return raw.getTextureId();
     }
 
     public String text() {
-        return hook("text").getString(get());
+        return raw.getText();
     }
 
     public String[] actions() {
-        return (String[]) hook("actions").get(get());
+        return raw.getActions();
     }
 
     public Rectangle bounds() {
@@ -190,32 +135,24 @@ public class WidgetComponent extends Wrapper {
 
     public boolean hidden() {
         WidgetComponent owner = owner();
-        return (owner != null && owner.hidden()) || hook("hidden").getBoolean(get());
+        return (owner != null && owner.hidden()) || raw.isHidden();
     }
 
     public boolean visible() {
-        return !hidden();
+        return boundsIndex() != -1;
     }
 
-    public WidgetComponent findChildByFilter(Filter<WidgetComponent> filter) {
+    public WidgetComponent child(Filter<WidgetComponent> filter) {
         for (WidgetComponent child : children()) {
             try {
                 if (filter.accept(child))
                     return child;
-                WidgetComponent result = child.findChildByFilter(filter);
+                WidgetComponent result = child.child(filter);
                 if (result != null)
                     return result;
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
         return null;
-    }
-
-    //TODO confirm if this works for other widgets. only tested on Click here to continue
-    public void processAction(String action) {
-        Rectangle bounds = bounds();
-        if (bounds == null || bounds.x < 0 || bounds.y < 0 || bounds.width < 0 || bounds.height < 0)
-            return;
-        Point p = Random.nextPoint(bounds);
-        RuneScape.processAction(new WidgetAction(ActionOpcodes.BUTTON_DIALOG, 0, index(), id()), action, "", p.x, p.y);
     }
 }

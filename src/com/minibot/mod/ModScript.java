@@ -1,41 +1,50 @@
 package com.minibot.mod;
 
-import com.minibot.mod.hooks.FieldHook;
-import com.minibot.mod.hooks.Hook;
-import com.minibot.mod.hooks.InvokeHook;
-import com.minibot.mod.reflection.FieldValue;
-import com.minibot.mod.reflection.RSClassLoader;
+import com.minibot.mod.hooks.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ModScript {
 
-    private static final Map<String, String> CLASS_MAP = new HashMap<>();
-    private static final Map<String, FieldHook> FIELD_HOOK_MAP = new HashMap<>();
-    private static final Map<String, InvokeHook> INVOKE_HOOK_MAP = new HashMap<>();
+    public static final Map<String, String> CLASS_MAP = new HashMap<>();
+    public static final Map<String, FieldHook> FIELD_HOOK_MAP = new HashMap<>();
+    public static final Map<String, InvokeHook> INVOKE_HOOK_MAP = new HashMap<>();
 
     private static final int MAGIC = 0xFADFAD;
 
-    private static RSClassLoader classloader;
-
-    private static FieldValue invalid;
+    private static ClassLoader classloader;
 
     public static void setClassLoader(ClassLoader classloader) {
-        ModScript.classloader = new RSClassLoader(classloader);
-        ModScript.invalid = new FieldValue(ModScript.classloader, null, -1);
+        ModScript.classloader = classloader;
     }
 
-    public static RSClassLoader classes() {
+    public static String getClass(String definedName) {
+        return CLASS_MAP.get(definedName);
+    }
+
+    public static FieldHook getFieldHook(String definedName) {
+        return FIELD_HOOK_MAP.get(definedName);
+    }
+
+    public static InvokeHook getInvokeHook(String definedName) {
+        return INVOKE_HOOK_MAP.get(definedName);
+    }
+
+    public static String getDefinedName(String key) {
+        for (String definedName : CLASS_MAP.keySet()) {
+            String internalName = CLASS_MAP.get(definedName);
+            if (internalName != null && internalName.equals(key)) {
+                return definedName;
+            }
+        }
+        return null;
+    }
+
+    public static ClassLoader classes() {
         return classloader;
-    }
-
-    public static Class<?> classFor(String id) {
-        return classloader != null ? classloader.loadClass(CLASS_MAP.get(id)) : null;
     }
 
     public static int multiplyValueByDecoder(int value, String hook) {
@@ -58,16 +67,6 @@ public class ModScript {
             return value * num.modInverse(new BigInteger(String.valueOf(1L << 32))).intValue();
         } catch (Exception e) {
             return value;
-        }
-    }
-
-    public static FieldValue hook(String hook) {
-        try {
-            FieldHook fh = FIELD_HOOK_MAP.get(hook);
-            FieldValue fv = classloader.load(fh.clazz, fh.field, fh.multiplier);
-            return fv != null ? fv : invalid;
-        } catch (Exception e) {
-            return invalid;
         }
     }
 
@@ -95,8 +94,8 @@ public class ModScript {
                 for (int i = 0; i < classSize; i++) {
                     boolean valid = in.readBoolean();
                     if (valid) {
-                        String className = Crypto.crypt(in.readUTF());
-                        String id = Crypto.crypt(in.readUTF());
+                        String className = Crypto.decrypt(in.readUTF());
+                        String id = Crypto.decrypt(in.readUTF());
                         CLASS_MAP.put(id, className);
                         int hookCount = in.readInt();
                         for (int j = 0; j < hookCount; j++) {

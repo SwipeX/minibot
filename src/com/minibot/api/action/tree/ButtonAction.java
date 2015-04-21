@@ -66,11 +66,11 @@ public abstract class ButtonAction extends Action {
     }
 
     public int buttonParent() {
-        return Widgets.findParentIndex(buttonUid());
+        return buttonUid() >> 16;
     }
 
     public int buttonChild() {
-        return Widgets.findChildIndex(buttonUid());
+        return buttonUid() & 0xffff;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.minibot.api.action;
 
-
 /**
  * @author Brainfree
  */
@@ -102,11 +101,11 @@ public interface ActionOpcodes {
     public int USE_ITEM = 38;
 
 
-    // Note: These actions are extended by the container to all of its items,
-    // meaning both item actions(if enabled) and the 'container actions'
+    // Note: These actions are extended by the table to all of its items,
+    // meaning both item actions(if enabled) and the 'table actions'
     // are all possible actions for every item within the table.
 
-    // Note: Container actions are always enabled/present(if any).
+    // Note: Table actions are always enabled/present(if any).
     //
     // Note: Tables, such as shops , usually disable the item defined actions.
     // Making its container actions the only implemented type.
@@ -144,3 +143,4 @@ public interface ActionOpcodes {
 
     public int CANCEL = 1006;
 }
+
