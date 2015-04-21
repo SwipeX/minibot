@@ -1,11 +1,13 @@
 package com.minibot.api.method.projection;
 
+import com.minibot.Minibot;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Players;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.*;
 
 import java.awt.*;
+import java.util.LinkedList;
 
 /**
  * @author Tyler Sedlar
@@ -23,12 +25,12 @@ public class Projection {
         }
     }
 
-    public static boolean onScreen(int x, int y) {
+    public static boolean onViewport(int x, int y) {
         return x > 1 && x < 516 && y > 1 && y < 337;
     }
 
-    public static boolean onScreen(Point p) {
-        return onScreen(p.x, p.y);
+    public static boolean onViewport(Point p) {
+        return onViewport(p.x, p.y);
     }
 
     public static double distance(int x1, int y1, int x2, int y2) {
@@ -51,10 +53,10 @@ public class Projection {
         return distance(t1.x(), t1.y(), t2.x(), t2.y());
     }
 
-    public static Point toScreen(int x, int y) {
+    public static Point groundToViewport(int x, int y) {
         try {
             if (x >= 128 && x <= 13056 && y >= 128 && y <= 13056) {
-                int z = tileHeight(x, y);
+                int z = getGroundHeight(x, y);
                 x -= Camera.x();
                 y -= Camera.y();
                 z -= Camera.z();
@@ -78,7 +80,7 @@ public class Projection {
         return null;
     }
 
-    public static Point toScreen(int x, int y, int height) {
+    public static Point groundToViewport(int x, int y, int height) {
         if (x >= 128 && x <= 13056 && y >= 128 && y <= 13056) {
             int pitch = Camera.pitch();
             if (pitch < 0)
@@ -86,7 +88,7 @@ public class Projection {
             int yaw = Camera.yaw();
             if (yaw < 0)
                 return null;
-            int z = tileHeight(x, y) - height;
+            int z = getGroundHeight(x, y) - height;
             x -= Camera.x();
             y -= Camera.y();
             z -= Camera.z();
@@ -107,23 +109,23 @@ public class Projection {
         return null;
     }
 
-    public static Point toMap(Locatable locatable) {
-        return toMap(locatable.location().x(), locatable.location().y());
+    public static Point locatableToMap(Locatable locatable) {
+        return groundToMap(locatable.location().x(), locatable.location().y());
     }
 
-    public static Point toMap(double x, double y, boolean ignoreDist) {
+    public static Point groundToMap(int x, int y, boolean ignoreDist) {
         WidgetComponent minimap = Minimap.component();
         if (minimap == null)
             return null;
         Player local = Players.local();
-        if (local.get() == null)
+        if (local.raw() == null)
             return null;
-        if (ignoreDist || distance(local, new Tile((int) x, (int) y)) < 17) {
+        if (ignoreDist || distance(local, new Tile(x, y)) < 17) {
             x -= Game.baseX();
             y -= Game.baseY();
-            int calcX = (int) ((x * 4) - (local.fineX() / 32) + 2);
-            int calcY = (int) ((y * 4) - (local.fineY() / 32) + 2);
-            int degree = Minimap.scale() + Minimap.angle() & 0x7FF;
+            int calcX = (x << 2) - (local.fineX() >> 5) + 2;
+            int calcY = (y << 2) - (local.fineY() >> 5) + 2;
+            int degree = Minimap.scale() + Minimap.rotation() & 0x7FF;
             int offset = Minimap.offset();
             int sin = SIN_TABLE[degree] * 256 / (offset + 256);
             int cos = COS_TABLE[degree] * 256 / (offset + 256);
@@ -136,19 +138,19 @@ public class Projection {
         return null;
     }
 
-    public static Point toMap(double x, double y) {
-        return toMap(x, y, false);
+    public static Point groundToMap(int x, int y) {
+        return groundToMap(x, y, false);
     }
 
-    public static int tileHeight(int x, int y) {
+    public static int getGroundHeight(int x, int y) {
         int x1 = x >> 7;
         int y1 = y >> 7;
         if (x1 < 0 || x1 > 103 || y1 < 0 || y1 > 103)
             return 0;
-        byte[][][] rules = Rendering.rules();
+        byte[][][] rules = renderRules();
         if (rules == null)
             return 0;
-        int[][][] heights = Rendering.heights();
+        int[][][] heights = tileHeights();
         if (heights == null)
             return 0;
         int plane = Game.plane();
@@ -161,7 +163,27 @@ public class Projection {
         return h1 * (128 - y2) + h2 * y2 >> 7;
     }
 
-    public static Point toScreen(Locatable locatable) {
-        return toScreen(locatable.location().fineX(), locatable.location().fineY());
+    public static Point locatableToViewport(Locatable locatable) {
+        return groundToViewport(locatable.location().fineX(), locatable.location().fineY());
+    }
+
+    public static byte[][][] renderRules() {
+        return Minibot.instance().client().getRenderRules();
+    }
+
+    public static int[][][] tileHeights() {
+        return Minibot.instance().client().getTileHeights();
+    }
+
+    public static Point[] getPointsIn(Shape shape) {
+        java.util.List<Point> points = new LinkedList<>();
+        Rectangle bounds = shape.getBounds();
+        for (int x = bounds.x; x < bounds.getMaxX(); x++) {
+            for (int y = bounds.y; y < bounds.getMaxY(); y++) {
+                if (shape.contains(x, y))
+                    points.add(new Point(x, y));
+            }
+        }
+        return points.toArray(new Point[points.size()]);
     }
 }

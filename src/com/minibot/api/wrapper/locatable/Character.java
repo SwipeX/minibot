@@ -46,7 +46,7 @@ public class Character extends Wrapper implements Locatable {
     }
 
     public int maxHealth() {
-        return hook("Character", "health").getInt(get());
+        return hook("Character", "maxHealth").getInt(get());
     }
 
     public int interactingIndex() {

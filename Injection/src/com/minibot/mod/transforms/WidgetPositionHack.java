@@ -1,4 +1,4 @@
-package com.minibot.mod.impl;
+package com.minibot.mod.transforms;
 
 import com.minibot.mod.ModScript;
 import com.minibot.mod.hooks.FieldHook;
@@ -8,14 +8,9 @@ import jdk.internal.org.objectweb.asm.tree.*;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
-/**
- * Project: minibot
- * Date: 08-04-2015
- * Time: 21:33
- * Created by Dogerina.
- * Copyright under GPL license by Dogerina.
- */
 public class WidgetPositionHack implements Transform {
+
+    //Inject to retrieve the container/parent position (or 'master')
 
     @Override
     public void inject(Map<String, ClassNode> classes) {

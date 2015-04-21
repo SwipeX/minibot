@@ -39,16 +39,16 @@ public class WidgetComponent extends Wrapper<RSWidget> {
         return array;
     }
 
-    private int ownerUid() {
+    private int ownerId() {
         return raw.getOwnerId();
     }
 
-    public int widget() {
+    public int ownerIndex() {
         return ownerId;
     }
 
     public WidgetComponent owner() {
-        int uid = ownerUid();
+        int uid = ownerId();
         if (uid == -1)
             return null;
         int parent = uid >> 16;
@@ -64,17 +64,13 @@ public class WidgetComponent extends Wrapper<RSWidget> {
         return raw.getContainerY() + relY();
     }
 
-    public int uid() {
+    public int hash() {
         return raw.getId() >>> 16;
     }
 
-    public int id() {
+    public int index() {
         int id = raw.getId();
         return index < 0 ? id & 0xFF : index;
-    }
-
-    public int rawOwnerId() {
-        return raw.getOwnerId();
     }
 
     public int boundsIndex() {
@@ -105,19 +101,11 @@ public class WidgetComponent extends Wrapper<RSWidget> {
         return raw.getHeight();
     }
 
-    public int scrollX() {
-        return raw.getScrollX();
-    }
-
-    public int scrollY() {
-        return raw.getScrollY();
-    }
-
     public int type() {
         return raw.getType();
     }
 
-    public int index() {
+    public int rawIndex() {
         return raw.getIndex();
     }
 
@@ -125,7 +113,7 @@ public class WidgetComponent extends Wrapper<RSWidget> {
         return raw.getItemIds();
     }
 
-    public int[] stackSizes() {
+    public int[] itemStackSizes() {
         return raw.getStackSizes();
     }
 
@@ -151,15 +139,15 @@ public class WidgetComponent extends Wrapper<RSWidget> {
     }
 
     public boolean visible() {
-        return !hidden();
+        return boundsIndex() != -1;
     }
 
-    public WidgetComponent findChildByFilter(Filter<WidgetComponent> filter) {
+    public WidgetComponent child(Filter<WidgetComponent> filter) {
         for (WidgetComponent child : children()) {
             try {
                 if (filter.accept(child))
                     return child;
-                WidgetComponent result = child.findChildByFilter(filter);
+                WidgetComponent result = child.child(filter);
                 if (result != null)
                     return result;
             } catch (Exception ignored) {

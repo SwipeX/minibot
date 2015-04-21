@@ -94,8 +94,8 @@ public class ModScript {
                 for (int i = 0; i < classSize; i++) {
                     boolean valid = in.readBoolean();
                     if (valid) {
-                        String className = Crypto.crypt(in.readUTF());
-                        String id = Crypto.crypt(in.readUTF());
+                        String className = Crypto.decrypt(in.readUTF());
+                        String id = Crypto.decrypt(in.readUTF());
                         CLASS_MAP.put(id, className);
                         int hookCount = in.readInt();
                         for (int j = 0; j < hookCount; j++) {

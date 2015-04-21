@@ -1,4 +1,4 @@
-package com.minibot.api.util;
+package com.minibot.util;
 
 /**
  * @author Tyler Sedlar

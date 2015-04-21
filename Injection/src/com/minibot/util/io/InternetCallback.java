@@ -3,7 +3,7 @@ package com.minibot.util.io;
 /**
  * @author Tyler Sedlar
  */
-public abstract class DownloadManager {
+public abstract class InternetCallback {
 
     public int length = -1;
 

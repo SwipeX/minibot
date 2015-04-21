@@ -53,12 +53,12 @@ public class Tile implements Locatable {
         return localY() << 7;
     }
 
-    public Point point(double dx, double dy, int height) {
+    public Point toViewport(double dx, double dy, int height) {
         int x = localX() << 7;
         int y = localY() << 7;
         x += 128 * dx;
         y += 128 * dy;
-        return Projection.toScreen(x, y, height);
+        return Projection.groundToViewport(x, y, height);
     }
 
     public Tile derive(int x, int y) {
@@ -67,7 +67,7 @@ public class Tile implements Locatable {
 
     public void draw(Graphics2D g) {
         Polygon polygon = new Polygon();
-        Point[] points = {point(0, 0, 0), point(1, 0, 0), point(1, 1, 0), point(0, 1, 0)};
+        Point[] points = {toViewport(0, 0, 0), toViewport(1, 0, 0), toViewport(1, 1, 0), toViewport(0, 1, 0)};
         for (Point p : points) {
             if (p == null)
                 return;

@@ -1,9 +1,9 @@
 package com.minibot.api.method;
 
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.util.Array;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
+import com.minibot.api.wrapper.Item.Source;
 import com.minibot.api.wrapper.WidgetComponent;
 
 import java.awt.*;
@@ -26,15 +26,15 @@ public class Inventory {
         WidgetComponent inventory = Widgets.get(bank ? BANK_PARENT : INVENTORY_PARENT, bank ? BANK_CONTAINER : INVENTORY_CONTAINER);
         if (inventory == null)
             return new Item[0];
-        Item[] items = new Item[inventory.stackSizes().length];
-        if (inventory.valid()) {
+        Item[] items = new Item[inventory.itemStackSizes().length];
+        if (inventory.validate()) {
             if (bank) {
                 int index = 0;
                 for (WidgetComponent slot : inventory.children()) {
                     int id = slot.itemId();
                     int stack = slot.itemAmount();
                     if (id > 0 && stack > 0) {
-                        Item item = new Item(slot, Item.ItemType.INVENTORY, index);
+                        Item item = new Item(slot, Source.INVENTORY, index);
                         if (!filter.accept(item))
                             continue;
                         items[index] = item;
@@ -43,7 +43,7 @@ public class Inventory {
                 }
             } else {
                 int[] itemIds = inventory.itemIds();
-                int[] itemAmounts = inventory.stackSizes();
+                int[] itemAmounts = inventory.itemStackSizes();
                 if (itemIds != null && itemAmounts != null) {
                     if (itemIds.length != itemAmounts.length)
                         throw new IllegalStateException("Internal Data Mismatch");
@@ -79,7 +79,7 @@ public class Inventory {
         return count() == 0;
     }
 
-    public static Item findByFilter(Filter<Item> filter) {
+    public static Item first(Filter<Item> filter) {
         for (Item item : items()) {
             if (item != null && filter.accept(item))
                 return item;
@@ -91,13 +91,27 @@ public class Inventory {
         boolean bank = Bank.viewing();
         WidgetComponent container = Widgets.get(bank ? BANK_PARENT : INVENTORY_PARENT, bank ?
                 BANK_CONTAINER : INVENTORY_CONTAINER);
-        int widgetUid = container.uid();
+        int widgetUid = container.hash();
         for (Item item : Inventory.items(filter)) {
-            Point p = item.screen();
+            Point p = item.point();
             if (p == null)
                 continue;
             item.processAction(ActionOpcodes.ITEM_ACTION_4, "Drop");
         }
-        return empty();
+        return items(filter).length == 0;
+    }
+
+    public static boolean dropAllExcept(Filter<Item> filter) {
+        boolean bank = Bank.viewing();
+        WidgetComponent container = Widgets.get(bank ? BANK_PARENT : INVENTORY_PARENT, bank ?
+                BANK_CONTAINER : INVENTORY_CONTAINER);
+        int widgetUid = container.hash();
+        for (Item item : Inventory.items(Filter.not(filter))) {
+            Point p = item.point();
+            if (p == null)
+                continue;
+            item.processAction(ActionOpcodes.ITEM_ACTION_4, "Drop");
+        }
+        return 28 - items(filter).length == count();
     }
 }

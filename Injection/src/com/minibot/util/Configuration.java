@@ -29,10 +29,6 @@ public class Configuration {
     }
 
     public static String getSystemHome() {
-        if (OperatingSystem.get() == OperatingSystem.WINDOWS) {
-            return System.getProperty("user.home") + "/Documents/";
-        } else {
-            return System.getProperty("user.home") + "/";
-        }
+        return OS.get() == OS.WINDOWS ? System.getProperty("user.home") + "/Documents/" : System.getProperty("user.home") + "/";
     }
 }

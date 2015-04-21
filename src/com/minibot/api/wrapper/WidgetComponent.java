@@ -1,5 +1,6 @@
 package com.minibot.api.wrapper;
 
+import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.action.tree.WidgetAction;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.method.Widgets;
@@ -77,7 +78,7 @@ public class WidgetComponent extends Wrapper {
         if (owner != null) {
             x = owner.x() - scrollX();
         } else {
-            if (index >= 0 && positionsX[index] > 0) {
+            if (index >= 0 && positionsX != null && positionsX[index] > 0) {
                 int absX = positionsX[index];
                 if (type() > 0)
                     absX += relX;
@@ -96,7 +97,7 @@ public class WidgetComponent extends Wrapper {
         if (owner != null) {
             y = owner.y() - scrollY();
         } else {
-            if (index >= 0 && positionsY[index] > 0) {
+            if (index >= 0 && positionsY != null && positionsY[index] > 0) {
                 int absY = positionsY[index];
                 if (type() > 0)
                     absY += relY;
@@ -215,6 +216,6 @@ public class WidgetComponent extends Wrapper {
         if (bounds == null || bounds.x < 0 || bounds.y < 0 || bounds.width < 0 || bounds.height < 0)
             return;
         Point p = Random.nextPoint(bounds);
-        RuneScape.processAction(new WidgetAction(-1, id(), 30, 0), action, "", p.x, p.y);
+        RuneScape.processAction(new WidgetAction(ActionOpcodes.BUTTON_DIALOG, 0, index(), id()), action, "", p.x, p.y);
     }
 }

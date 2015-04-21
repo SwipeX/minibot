@@ -1,4 +1,4 @@
-package com.minibot.mod.impl;
+package com.minibot.mod.transforms;
 
 import com.minibot.mod.ModScript;
 import com.minibot.mod.util.ASMFactory;
@@ -6,13 +6,6 @@ import jdk.internal.org.objectweb.asm.tree.*;
 
 import java.util.*;
 
-/**
- * Project: minibot
- * Date: 08-04-2015
- * Time: 06:53
- * Created by Dogerina.
- * Copyright under GPL license by Dogerina.
- */
 public class ModelHack implements Transform {
     @Override
     public void inject(Map<String, ClassNode> classes) {

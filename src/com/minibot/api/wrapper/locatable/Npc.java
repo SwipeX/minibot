@@ -70,4 +70,8 @@ public class Npc extends Character implements Identifiable {
     public boolean valid() {
         return super.valid() && id() != -1;
     }
+
+    public boolean named(String name) {
+        return name() != null && name().equals(name);
+    }
 }

@@ -1,4 +1,4 @@
-package com.minibot.mod.impl;
+package com.minibot.mod.transforms;
 
 import com.minibot.mod.ModScript;
 import com.minibot.mod.hooks.FieldHook;
@@ -7,16 +7,10 @@ import jdk.internal.org.objectweb.asm.tree.ClassNode;
 
 import java.util.Map;
 
-/**
- * Project: minibot
- * Date: 08-04-2015
- * Time: 15:50
- * Created by Dogerina.
- * Copyright under GPL license by Dogerina.
- */
 public class GetterAdder implements Transform {
     @Override
     public void inject(Map<String, ClassNode> classes) {
+        //yuck redo this l8r
         for (FieldHook hook : ModScript.FIELD_HOOK_MAP.values()) {
             ClassNode where = classes.get(hook.isStatic ? "client" : hook.clazz);
             if (where == null)
@@ -30,8 +24,11 @@ public class GetterAdder implements Transform {
                     }
                 }
                 retDesc = retDesc.replace("L", "");
-                retDesc = prebuild + "Lcom/minibot/client/natives/RS" + ModScript.getDefinedName(retDesc) + ";";
+                retDesc = prebuild + "L" + PACKAGE + "RS" + ModScript.getDefinedName(retDesc) + ";";
             } else {
+                retDesc = hook.fieldDesc;
+            }
+            if (retDesc.contains("null")) {
                 retDesc = hook.fieldDesc;
             }
             where.methods.add(ASMFactory.createGetter(hook, retDesc));

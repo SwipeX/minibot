@@ -18,12 +18,18 @@ public final class ASMFactory implements Opcodes {
     public static MethodNode createGetter(FieldHook hook, String returnDesc) {
         MethodNode dankMeth = new MethodNode(ACC_PUBLIC, methodifyFieldName(hook.name, hook.fieldDesc),
                 "()" + returnDesc, null, null);
-        if (hook.isStatic)
+        if (!hook.isStatic)
             dankMeth.instructions.add(new VarInsnNode(ALOAD, 0));
         dankMeth.instructions.add(new FieldInsnNode(hook.isStatic ? GETSTATIC : GETFIELD, hook.clazz, hook.field, hook.fieldDesc));
+        /**
+         * TODO set default multiplier to 0
+         * reason being is because the multiplier can never legit be 0, but it can actually be -1
+         */
+        if (hook.multiplier != -1) {
+            dankMeth.instructions.add(new LdcInsnNode(hook.multiplier));
+            dankMeth.instructions.add(new InsnNode(IMUL));
+        }
         dankMeth.instructions.add(new InsnNode(getReturnOpcode(hook.fieldDesc)));
-        dankMeth.visitMaxs(0, 0);
-        dankMeth.visitEnd();
         return dankMeth;
     }
 

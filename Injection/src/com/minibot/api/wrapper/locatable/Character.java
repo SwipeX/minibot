@@ -48,7 +48,7 @@ public class Character<T extends RSCharacter> extends Wrapper<T> implements Loca
         return raw.getMaxHealth();
     }
 
-    public int interactingIndex() {
+    public int targetIndex() {
         return raw.getInteractingIndex();
     }
 

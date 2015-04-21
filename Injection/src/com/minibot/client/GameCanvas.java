@@ -1,27 +1,22 @@
 package com.minibot.client;
 
-import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
-import com.minibot.client.natives.RSWidget;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
-/**
- * @author Tyler Sedlar
- */
 public class GameCanvas extends Canvas implements Renderable {
 
     public static final int INPUT_MOUSE = 0x2;
     public static final int INPUT_KEYBOARD = 0x4;
 
-    public final BufferedImage raw;
-    public final BufferedImage backBuffer;
+    private final BufferedImage raw;
+    private final BufferedImage backBuffer;
 
-    public final EventQueue queue;
+    private final EventQueue queue;
 
     public int input = INPUT_MOUSE | INPUT_KEYBOARD;
     public int mouseX = 0, mouseY = 0;
@@ -38,9 +33,8 @@ public class GameCanvas extends Canvas implements Renderable {
                     return;
                 }
                 if (!evt.getSource().equals("bot")) {
-                    if (evt instanceof MouseEvent && (input & INPUT_MOUSE) == 0) {
-                        return;
-                    } else if (evt instanceof KeyEvent && (input & INPUT_KEYBOARD) == 0) {
+                    if (evt instanceof MouseEvent && (input & INPUT_MOUSE) == 0
+                            || evt instanceof KeyEvent && (input & INPUT_KEYBOARD) == 0) {
                         return;
                     }
                 }
@@ -141,27 +135,7 @@ public class GameCanvas extends Canvas implements Renderable {
 
     @Override
     public void render(Graphics2D g) {
-        RSWidget[][] raw = Widgets.raw();
-        if (raw == null)
-            return;
-        for (int i = 0; i < raw.length; i++) {
-            RSWidget[] comp = raw[i];
-            g.setColor(Color.WHITE);
-            if (comp == null)
-                continue;
-            for (RSWidget widget : comp) {
-                if (widget == null)
-                    continue;
-                g.drawRect(
-                        widget.getContainerX() + widget.getX(),
-                        widget.getContainerY() + widget.getY(),
-                        widget.getWidth(),
-                        widget.getHeight()
-                );
-                g.setColor(Color.GREEN);
-                g.drawString(i + "," + widget.getIndex(), widget.getContainerX(), widget.getContainerY());
-            }
-        }
+        g.drawString("HEY YOU'RE A FAGGOT", 20, 20);
     }
 }
 

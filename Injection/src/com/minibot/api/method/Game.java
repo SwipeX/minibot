@@ -25,16 +25,16 @@ public class Game {
     }
 
     public static int plane() {
-        return Minibot.instance().client().getBaseY();
+        return Minibot.instance().client().getPlane();
     }
 
-    public static int[] settings() {
+    public static int[] varps() {
         int[] settings = Minibot.instance().client().getGameSettings();
         return settings == null ? null : settings.clone();
     }
 
-    public static int setting(int index) {
-        int[] settings = settings();
+    public static int varp(int index) {
+        int[] settings = varps();
         return settings.length == 0 || index >= settings.length ? -1 : settings[index];
     }
 }

@@ -1,7 +1,7 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
-import com.minibot.api.util.Array;
+import com.minibot.util.Array;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.client.natives.RSWidget;
@@ -50,10 +50,11 @@ public class Widgets {
         if (children == null)
             return new WidgetComponent[0];
         WidgetComponent[] array = new WidgetComponent[children.length];
-        for (RSWidget child : children) {
-            if (child == null)
+        for (int i = 0; i < array.length; i++) {
+            RSWidget raw_ = children[i];
+            if (raw_ == null)
                 continue;
-            array[index] = new WidgetComponent(index, child);
+            array[i] = new WidgetComponent(raw_, i);
         }
         return array;
     }
@@ -62,7 +63,7 @@ public class Widgets {
         WidgetComponent[] children = childrenFor(parent);
         if (children != null) {
             for (WidgetComponent wc : children) {
-                if (wc.id() == child)
+                if (wc.index() == child)
                     return wc;
             }
         }
@@ -88,13 +89,13 @@ public class Widgets {
         return null;
     }
 
-    public static WidgetComponent findChildByFilter(int parent, Filter<WidgetComponent> filter) {
+    public static WidgetComponent get(int parent, Filter<WidgetComponent> filter) {
         for (WidgetComponent child : childrenFor(parent)) {
             try {
                 if (child != null && filter.accept(child))
                     return child;
                 if (child != null) {
-                    WidgetComponent result = child.findChildByFilter(filter);
+                    WidgetComponent result = child.child(filter);
                     if (result != null)
                         return result;
                 }
@@ -104,31 +105,31 @@ public class Widgets {
         return null;
     }
 
-    public static WidgetComponent findComponentByFilter(Filter<WidgetComponent> filter) {
+    public static WidgetComponent get(Filter<WidgetComponent> filter) {
         RSWidget[][] raw = raw();
         if (raw == null) return null;
         for (int i = 0; i < raw.length; i++) {
-            WidgetComponent child = findChildByFilter(i, filter);
+            WidgetComponent child = get(i, filter);
             if (child != null)
                 return child;
         }
         return null;
     }
 
-    public static WidgetComponent[] findComponentsByFilter(Filter<WidgetComponent> filter) {
+    public static WidgetComponent[] getAll(Filter<WidgetComponent> filter) {
         WidgetComponent[] components = new WidgetComponent[0];
         RSWidget[][] raw = raw();
         if (raw == null) return null;
         for (int i = 0; i < raw.length; i++) {
-            WidgetComponent child = findChildByFilter(i, filter);
+            WidgetComponent child = get(i, filter);
             if (child != null)
                 components = Array.add(components, child);
         }
         return components.length > 0 ? components : null;
     }
 
-    public static WidgetComponent findComponentByText(Filter<String> filter) {
-        return findComponentByFilter(wc -> {
+    public static WidgetComponent byText(Filter<String> filter) {
+        return get(wc -> {
             if (wc != null) {
                 String text = wc.text();
                 return text != null && filter.accept(text);
@@ -137,8 +138,8 @@ public class Widgets {
         });
     }
 
-    public static WidgetComponent findComponentByAction(Filter<String> filter) {
-        return findComponentByFilter(wc -> {
+    public static WidgetComponent byAction(Filter<String> filter) {
+        return get(wc -> {
             if (wc != null) {
                 String[] actions = wc.actions();
                 if (actions != null && actions.length > 0) {

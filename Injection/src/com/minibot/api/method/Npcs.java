@@ -1,7 +1,6 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
-import com.minibot.api.util.Array;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.client.natives.RSNpc;
@@ -36,37 +35,33 @@ public class Npcs {
         return npcs.toArray(new Npc[npcs.size()]);
     }
 
-    public static Npc[] findByFilter(int dist, Filter<Npc> filter) {
-        Npc[] npcs = new Npc[0];
+    public static Npc[] firstWithin(int dist, Filter<Npc> filter) {
+        List<Npc> npcs = new ArrayList<>();
         for (Npc npc : loaded()) {
-            if (npc == null)
-                continue;
-            if (dist != -1 && npc.distance() > dist)
-                continue;
-            if (filter.accept(npc))
-                npcs = Array.add(npcs, npc);
+            if (npc == null || dist != -1 && npc.distance() > dist || !filter.accept(npc)) continue;
+            npcs.add(npc);
         }
-        return npcs;
+        return npcs.toArray(new Npc[npcs.size()]);
     }
 
-    public static Npc[] findByFilter(Filter<Npc> filter) {
-        return findByFilter(-1, filter);
+    public static Npc[] first(Filter<Npc> filter) {
+        return firstWithin(-1, filter);
     }
 
-    public static Npc nearestByFilter(int dist, Filter<Npc> filter) {
-        Npc[] loaded = findByFilter(dist, filter);
+    public static Npc nearest(int dist, Filter<Npc> filter) {
+        Npc[] loaded = firstWithin(dist, filter);
         if (loaded.length == 0)
             return null;
         Arrays.sort(loaded, (o1, o2) -> o1.distance() - o2.distance());
         return loaded[0];
     }
 
-    public static Npc nearestByFilter(Filter<Npc> filter) {
-        return nearestByFilter(-1, filter);
+    public static Npc nearest(Filter<Npc> filter) {
+        return nearest(-1, filter);
     }
 
     public static Npc nearest(String name) {
-        return nearestByFilter(npc -> {
+        return nearest(npc -> {
             String npcName = npc.name();
             return npcName != null && npcName.equals(name);
         });

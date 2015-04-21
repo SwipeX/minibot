@@ -12,36 +12,36 @@ import java.awt.*;
 public class Item implements Identifiable {
 
     private int id;
-    private int stackSize;
+    private int amount;
     private int index;
-    private ItemType type = ItemType.INVENTORY;
+    private Source source = Source.INVENTORY;
     private WidgetComponent comp;
 
-    public Item(int id, int stackSize) {
+    public Item(int id, int amount) {
         this.id = id;
-        this.stackSize = stackSize;
+        this.amount = amount;
     }
 
-    public Item(int id, int stackSize, int index) {
+    public Item(int id, int amount, int index) {
         this.id = id;
         this.index = index;
-        this.stackSize = stackSize;
+        this.amount = amount;
     }
 
-    public Item(int id, int stackSize, ItemType type) {
+    public Item(int id, int amount, Source source) {
         this.id = id;
-        this.stackSize = stackSize;
-        this.type = type;
+        this.amount = amount;
+        this.source = source;
     }
 
-    public Item(WidgetComponent comp, ItemType type, int index) {
+    public Item(WidgetComponent comp, Source source, int index) {
         this(comp.itemId(), comp.itemAmount());
-        this.type = type;
+        this.source = source;
         this.comp = comp;
         this.index = index;
     }
 
-    public WidgetComponent component() {
+    public WidgetComponent owner() {
         return comp;
     }
 
@@ -53,10 +53,10 @@ public class Item implements Identifiable {
         return index;
     }
 
-    public Point screen() {
+    public Point point() {
         if (comp != null) {
             return new Point(comp.x(), comp.y());
-        } else if (type != ItemType.INVENTORY) {
+        } else if (source != Source.INVENTORY) {
             return new Point(-1, -1);
         }
         int col = (index % 4);
@@ -69,16 +69,16 @@ public class Item implements Identifiable {
     public Rectangle bounds() {
         if (comp != null)
             return comp.bounds();
-        Point screen = screen();
+        Point screen = point();
         return new Rectangle(screen.x, screen.y, 36, 36);
     }
 
-    public int stackSize() {
-        return stackSize;
+    public int amount() {
+        return amount;
     }
 
-    public ItemType type() {
-        return type;
+    public Source source() {
+        return source;
     }
 
     public void processAction(int opcode, String action) {
@@ -90,7 +90,7 @@ public class Item implements Identifiable {
             return;
         Point p = Random.nextPoint(bounds);
         int widgetParent, widgetChild;
-        if (type == ItemType.BANK) {
+        if (source == Source.BANK) {
             widgetParent = Bank.BANK_PARENT;
             widgetChild = Bank.SLOT_CONTAINER;
         } else {
@@ -105,17 +105,17 @@ public class Item implements Identifiable {
         WidgetComponent component = Widgets.get(widgetParent, widgetChild);
         if (component == null)
             return;
-        int widgetUid = component.uid();
+        int widgetUid = component.hash();
         RuneScape.processAction(opcode, id(), index(), widgetUid, action,
                 "<col=ff9040>" + itemName + "</col>", p.x, p.y);
     }
 
-    public enum ItemType {
+    public enum Source {
         INVENTORY(0), BANK(1), EQUIPMENT(2);
 
-        final int type;
+        private final int type;
 
-        ItemType(int type) {
+        private Source(int type) {
             this.type = type;
         }
     }

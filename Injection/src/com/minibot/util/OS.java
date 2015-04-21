@@ -5,7 +5,7 @@ import java.io.File;
 /**
  * @author Tyler Sedlar
  */
-public enum OperatingSystem {
+public enum OS {
 
     WINDOWS, MAC, LINUX, UNKNOWN;
 
@@ -38,7 +38,7 @@ public enum OperatingSystem {
     }
 
     public String getUserAgentPart() {
-        switch (OperatingSystem.get()) {
+        switch (OS.get()) {
             case LINUX: {
                 return "X11; Linux " + (is64BitJVM() ? "x86_64" : "i686");
             }
@@ -51,9 +51,9 @@ public enum OperatingSystem {
         }
     }
 
-    public static OperatingSystem get() {
+    public static OS get() {
         String os = System.getProperty("os.name");
-        for (OperatingSystem o : OperatingSystem.values()) {
+        for (OS o : OS.values()) {
             if (os.contains(o.toString()))
                 return o;
         }

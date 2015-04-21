@@ -1,6 +1,5 @@
 package com.minibot.api.method;
 
-import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.action.tree.WalkHereAction;
 import com.minibot.api.method.projection.Projection;
 import com.minibot.api.wrapper.locatable.Tile;

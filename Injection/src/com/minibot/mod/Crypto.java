@@ -5,7 +5,7 @@ package com.minibot.mod;
  */
 public class Crypto {
 
-	public static String crypt(String string) {
+	public static String decrypt(String string) {
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < string.length(); i++) {
 			char c = string.charAt(i);

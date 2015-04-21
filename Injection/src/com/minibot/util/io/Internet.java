@@ -1,6 +1,6 @@
 package com.minibot.util.io;
 
-import com.minibot.util.OperatingSystem;
+import com.minibot.util.OS;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -40,7 +40,7 @@ public class Internet {
     }
 
     public static String getDefaultHttpUserAgent() {
-        return "Mozilla/5.0 (" + OperatingSystem.get().getUserAgentPart() + ")" +
+        return "Mozilla/5.0 (" + OS.get().getUserAgentPart() + ")" +
                 " AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.57 Safari/537.17";
     }
 
@@ -116,7 +116,7 @@ public class Internet {
         }
     }
 
-    public static byte[] downloadBinary(InputStream in, DownloadManager manager) throws IOException {
+    public static byte[] downloadBinary(InputStream in, InternetCallback manager) throws IOException {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             byte[] buf = new byte[BUFFER_SIZE];
             int downloaded = 0;
@@ -133,7 +133,7 @@ public class Internet {
         }
     }
 
-    public static File download(String site, String target, DownloadManager manager, boolean mask) {
+    public static File download(String site, String target, InternetCallback manager, boolean mask) {
         try {
             URL url = new URL(site);
             URLConnection connection = url.openConnection();
@@ -160,7 +160,7 @@ public class Internet {
         }
     }
 
-    public static File download(String site, String target, DownloadManager manager) {
+    public static File download(String site, String target, InternetCallback manager) {
         return download(site, target, manager, true);
     }
 

@@ -5,7 +5,9 @@ import com.minibot.api.method.*;
 import com.minibot.api.method.projection.Projection;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
+import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.internal.def.DefinitionLoader;
 import com.minibot.internal.ext.RSCanvas;
@@ -149,10 +151,14 @@ public class Minibot extends JFrame implements Runnable, Renderable {
                     new Thread(() -> {
                         System.out.println("starting 1337 cow killer");
                         while (true) {
-                            if (Widgets.validate(15269890 >> 16)) {
-                                Widgets.get(15269890 >> 16, 15269890 & 0xfff).processAction("Continue");
+                            WidgetComponent w = Widgets.findComponentByText(s -> s.contains("Click here to continue"));
+                            if (w != null && w.valid()) {
+                                canvas.moveMouse(w.x(), w.y());
+                                canvas.clickMouse(true);
                             } else if (Players.local() != null && Players.local().interactingIndex() == -1) {
                                 final Npc npc = Npcs.nearestByFilter(n -> {
+                                    if (n.maxHealth() > 0 && n.health() <= 0)
+                                        return false;
                                     final String name = n.name();
                                     return name != null && n.interactingIndex() == -1
                                             && (name.equals("Cow") || name.equals("Cow calf"));
@@ -161,7 +167,6 @@ public class Minibot extends JFrame implements Runnable, Renderable {
                                     continue;
                                 npc.processAction(ActionOpcodes.NPC_ACTION_1, "Attack");
                             }
-                            Game.resetMouseIdleTime();
                             Time.sleep(2000);
                         }
                     }).start();

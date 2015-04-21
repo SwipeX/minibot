@@ -14,7 +14,7 @@ public class Minimap {
         return Minibot.instance().client().getMapScale();
     }
 
-    public static int angle() {
+    public static int rotation() {
         return Minibot.instance().client().getMapAngle();
     }
 

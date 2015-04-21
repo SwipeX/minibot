@@ -5,13 +5,6 @@ import com.minibot.client.GameCanvas;
 
 import java.applet.Applet;
 
-/**
- * Project: minibot
- * Date: 08-04-2015
- * Time: 05:48
- * Created by Dogerina.
- * Copyright under GPL license by Dogerina.
- */
 public interface RSClient extends ClientNative {
 
     int getCameraX();
@@ -48,4 +41,8 @@ public interface RSClient extends ClientNative {
     }
 
     RSCanvas getCanvas();
+
+    RSObjectDefinition loadObjectDefinition(int id);
+    RSNpcDefinition loadNpcDefinition(int id);
+    RSItemDefinition loadItemDefinition(int id);
 }

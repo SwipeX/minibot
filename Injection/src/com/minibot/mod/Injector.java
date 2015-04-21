@@ -1,19 +1,12 @@
 package com.minibot.mod;
 
-import com.minibot.mod.impl.Transform;
+import com.minibot.mod.transforms.Transform;
 import com.minibot.util.JarArchive;
 import jdk.internal.org.objectweb.asm.ClassWriter;
 import jdk.internal.org.objectweb.asm.tree.ClassNode;
 
 import java.util.*;
 
-/**
- * Project: minibot
- * Date: 08-04-2015
- * Time: 05:32
- * Created by Dogerina.
- * Copyright under GPL license by Dogerina.
- */
 public class Injector {
 
     private final JarArchive arch;

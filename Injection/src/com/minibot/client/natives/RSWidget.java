@@ -2,13 +2,6 @@ package com.minibot.client.natives;
 
 import com.minibot.client.Artificial;
 
-/**
- * Project: minibot
- * Date: 08-04-2015
- * Time: 19:10
- * Created by Dogerina.
- * Copyright under GPL license by Dogerina.
- */
 public interface RSWidget extends ClientNative {
     RSWidget[] getChildren();
     int getId();

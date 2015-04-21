@@ -10,21 +10,21 @@ public abstract class Hook {
 
     public String name;
 
-    private enum Type_ {
+    private enum Type {
 
-        FIELD(Type.FIELD, FieldHook.class),
-        INVOKE(Type.INVOKE, InvokeHook.class);
+        FIELD(ID.FIELD, FieldHook.class),
+        INVOKE(ID.INVOKE, InvokeHook.class);
 
         private final int id;
         private final Class<? extends Hook> clazz;
 
-        private Type_(int id, Class<? extends Hook> clazz) {
+        private Type(int id, Class<? extends Hook> clazz) {
             this.id = id;
             this.clazz = clazz;
         }
 
         public static Class<? extends Hook> forID(int id) {
-            for (Type_ t : values()) {
+            for (Type t : values()) {
                 if (t.id == id)
                     return t.clazz;
             }
@@ -32,8 +32,7 @@ public abstract class Hook {
         }
     }
 
-    private interface Type {
-
+    private interface ID {
         public static final byte FIELD = 0;
         public static final byte INVOKE = 1;
     }
@@ -42,7 +41,7 @@ public abstract class Hook {
 
     public static Hook readDataStream(DataInputStream in) throws IOException {
         int type = in.readByte();
-        Class<? extends Hook> clazz = Type_.forID(type);
+        Class<? extends Hook> clazz = Type.forID(type);
         Hook hook;
         try {
             hook = clazz.newInstance();

@@ -1,10 +1,8 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
-import com.minibot.api.util.Array;
 import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.client.natives.RSPlayer;
-import com.minibot.mod.ModScript;
 
 import java.util.ArrayList;
 import java.util.List;

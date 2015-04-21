@@ -3,6 +3,7 @@ package com.minibot.analysis.oldschool;
 import com.minibot.analysis.visitor.GraphVisitor;
 import com.minibot.analysis.visitor.VisitorInfo;
 import com.minibot.mod.hooks.FieldHook;
+import com.minibot.mod.hooks.InvokeHook;
 import org.objectweb.asm.commons.cfg.Block;
 import org.objectweb.asm.commons.cfg.BlockVisitor;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
@@ -10,8 +11,11 @@ import org.objectweb.asm.commons.cfg.tree.node.FieldMemberNode;
 import org.objectweb.asm.commons.cfg.tree.node.MethodMemberNode;
 import org.objectweb.asm.commons.cfg.tree.node.VariableNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
-@VisitorInfo(hooks = {"name", "actions", "id", "transformIds", "transformIndex"})
+import java.lang.reflect.Modifier;
+
+@VisitorInfo(hooks = {"name", "actions", "id", "transformIds", "transformIndex", "transform"})
 public class NpcDefinition extends GraphVisitor {
 
     @Override
@@ -26,6 +30,11 @@ public class NpcDefinition extends GraphVisitor {
         visitAll(new Id());
         visitAll(new TransformIds());
         visitAll(new TransformIndex());
+        for (MethodNode mn : cn.methods) {
+            if (!Modifier.isStatic(mn.access) && mn.desc.endsWith("L" + cn.name + ";")) {
+                addHook(new InvokeHook("transform", mn));
+            }
+        }
     }
 
     private class Id extends BlockVisitor {
