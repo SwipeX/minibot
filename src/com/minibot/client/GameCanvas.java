@@ -135,7 +135,6 @@ public class GameCanvas extends Canvas implements Renderable {
 
     @Override
     public void render(Graphics2D g) {
-        g.drawString("HEY YOU'RE A FAGGOT", 20, 20);
     }
 }
 
