@@ -1,10 +1,13 @@
 package com.minibot.api.wrapper;
 
+import com.minibot.api.action.tree.TableItemAction;
+import com.minibot.api.action.tree.WidgetAction;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Identifiable;
 import com.minibot.api.util.Random;
 
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * @author Tyler Sedlar
@@ -106,8 +109,17 @@ public class Item implements Identifiable {
         if (component == null)
             return;
         int widgetUid = component.hash();
-        RuneScape.processAction(opcode, id(), index(), widgetUid, action,
-                "<col=ff9040>" + itemName + "</col>", p.x, p.y);
+        if (source == Source.INVENTORY) {
+            RuneScape.processAction(new TableItemAction(opcode, id(), index(), widgetUid), action,
+                    "<col=ff9040>" + itemName + "</col>", p.x, p.y);
+        } else {
+            String[] actions = component.actions();
+            if (actions == null)
+                return;
+            int actionIndex = Arrays.asList(actions).indexOf(action);
+            RuneScape.processAction(new WidgetAction(opcode, actionIndex, index(), widgetUid),
+                    action, "", p.x, p.y);
+        }
     }
 
     public enum Source {
@@ -115,7 +127,7 @@ public class Item implements Identifiable {
 
         private final int type;
 
-        private Source(int type) {
+        Source(int type) {
             this.type = type;
         }
     }
