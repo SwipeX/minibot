@@ -10,7 +10,8 @@ import com.minibot.api.action.tree.Action;
 public class RuneScape {
 
     public static void processAction(Action action, String actionText, String targetText, int x, int y) {
-        Minibot.instance().client().processAction(action.arg1, action.arg2, action.opcode, action.arg0, actionText, targetText, x, y);
+        Minibot.instance().client().processAction(action.arg1, action.arg2, action.opcode, action.arg0,
+                actionText, targetText, x, y);
     }
 
     @Deprecated
