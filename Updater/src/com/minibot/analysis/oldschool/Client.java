@@ -16,7 +16,8 @@ import org.objectweb.asm.tree.*;
         "groundItems", "cameraX", "cameraY", "cameraZ", "cameraPitch", "cameraYaw", "mapScale", "mapOffset",
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices",
-        "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime"})
+        "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
+        "hoveredRegionTileX", "hoveredRegionTileY"})
 public class Client extends GraphVisitor {
 
     @Override
@@ -51,6 +52,36 @@ public class Client extends GraphVisitor {
         visitAll(new NpcIndices());
         visitAll(new Plane());
         visitAll(new GameState());
+        updater.visitor("Region").visitIfM(new HoveredTile(), mn -> mn.desc.contains(";IIIII") && mn.desc.endsWith("V"));
+    }
+
+    private class HoveredTile extends BlockVisitor {
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor() {
+                @Override
+                public void visitField(FieldMemberNode fmn) {
+                    if (fmn.opcode() == PUTSTATIC && fmn.desc().equals("I")) {
+                        VariableNode setTo = fmn.firstVariable();
+                        if (setTo == null)
+                            return;
+                        if (!hooks.containsKey("hoveredRegionTileX")) {
+                            addHook(new FieldHook("hoveredRegionTileX", fmn.fin()));
+                        } else if (!hooks.containsKey("hoveredRegionTileY")) {
+                            addHook(new FieldHook("hoveredRegionTileY", fmn.fin()));
+                        } else {
+                            lock.set(true);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private void visitMouseIdleTime() {

@@ -14,6 +14,7 @@ import org.objectweb.asm.tree.MethodNode;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public abstract class GraphVisitor implements Opcodes {
 
@@ -119,6 +120,34 @@ public abstract class GraphVisitor implements Opcodes {
     public final void visit(MethodVisitor mv) {
         for (MethodNode mn : cn.methods)
             mn.accept(mv);
+    }
+
+    public final void visitIf(BlockVisitor bv, Predicate<Block> blockPredicate) {
+        for (Map<MethodNode, FlowGraph> map : updater.graphs().values()) {
+            for (FlowGraph graph : map.values()) {
+                this.graph = graph;
+                for (Block block : graph) {
+                    if (bv.validate() && blockPredicate.test(block))
+                        bv.visit(block);
+                }
+            }
+        }
+        bv.visitEnd();
+    }
+
+    public final void visitIfM(BlockVisitor bv, Predicate<MethodNode> methodPredicate) {
+        for (Map<MethodNode, FlowGraph> map : updater.graphs().values()) {
+            for (Map.Entry<MethodNode, FlowGraph> graph : map.entrySet()) {
+                if (!methodPredicate.test(graph.getKey()))
+                    continue;
+                this.graph = graph.getValue();
+                for (Block block : this.graph) {
+                    if (bv.validate())
+                        bv.visit(block);
+                }
+            }
+        }
+        bv.visitEnd();
     }
 
     public final void visitAll(MethodVisitor mv) {

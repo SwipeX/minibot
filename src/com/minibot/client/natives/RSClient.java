@@ -34,6 +34,12 @@ public interface RSClient extends ClientNative {
     int[] getWidgetWidths();
 
     @Artificial
+    void setHoveredRegionTileX(int newRegionX);
+
+    @Artificial
+    void setHoveredRegionTileY(int newRegionY);
+
+    @Artificial
     void processAction(int arg1, int arg2, int op, int arg0, String action, String target, int x, int y);
 
     default Applet asApplet() {
