@@ -1,37 +1,66 @@
 package com.minibot.client.natives;
 
 import com.minibot.client.Artificial;
-import com.minibot.client.GameCanvas;
 
 import java.applet.Applet;
 
 public interface RSClient extends ClientNative {
 
     int getCameraX();
+
     int getCameraY();
+
     int getCameraZ();
+
     int getCameraYaw();
+
     int getCameraPitch();
+
     int getMapScale();
+
     int getMapAngle();
+
     int getMapOffset();
+
     int[][][] getTileHeights();
+
     byte[][][] getRenderRules();
+
     int getGameState();
+
     int getBaseX();
+
     int getBaseY();
+
     int getPlane();
+
     int[] getGameSettings();
+
     int getMouseIdleTime();
+
     RSNpc[] getNpcs();
+
     int[] getNpcIndices();
+
     RSPlayer[] getPlayers();
+
     RSPlayer getPlayer();
+
     RSWidget[][] getWidgets();
+
     int[] getWidgetPositionsX();
+
     int[] getWidgetPositionsY();
+
     int[] getWidgetHeights();
+
     int[] getWidgetWidths();
+
+    int[] experiences();
+
+    int[] levels();
+
+    int[] realLevels();
 
     @Artificial
     void setHoveredRegionTileX(int newRegionX);
@@ -49,6 +78,8 @@ public interface RSClient extends ClientNative {
     RSCanvas getCanvas();
 
     RSObjectDefinition loadObjectDefinition(int id);
+
     RSNpcDefinition loadNpcDefinition(int id);
+
     RSItemDefinition loadItemDefinition(int id);
 }

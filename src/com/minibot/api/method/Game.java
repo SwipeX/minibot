@@ -28,6 +28,18 @@ public class Game {
         return Minibot.instance().client().getPlane();
     }
 
+    public static int[] realLevels() {
+        return Minibot.instance().client().realLevels();
+    }
+
+    public static int[] levels() {
+        return Minibot.instance().client().levels();
+    }
+
+    public static int[] experiences() {
+        return Minibot.instance().client().experiences();
+    }
+
     public static int[] varps() {
         int[] settings = Minibot.instance().client().getGameSettings();
         return settings == null ? null : settings.clone();

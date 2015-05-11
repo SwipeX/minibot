@@ -8,6 +8,8 @@ import com.minibot.util.ArrayIterator;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.cfg.Block;
 import org.objectweb.asm.commons.cfg.BlockVisitor;
+import org.objectweb.asm.commons.cfg.query.InsnQuery;
+import org.objectweb.asm.commons.cfg.tree.NodeTree;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.*;
 import org.objectweb.asm.tree.*;
@@ -17,7 +19,7 @@ import org.objectweb.asm.tree.*;
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices",
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
-        "hoveredRegionTileX", "hoveredRegionTileY"})
+        "hoveredRegionTileX", "hoveredRegionTileY","experiences","levels","realLevels"})
 public class Client extends GraphVisitor {
 
     @Override
@@ -38,6 +40,7 @@ public class Client extends GraphVisitor {
         visitDefLoader("loadNpcDefinition", "NpcDefinition", false);
         visitDefLoader("loadItemDefinition", "ItemDefinition", false);
         visitStaticFields();
+        visitAll(new ExperienceHooks());
         visitAll(new CameraXY());
         visitAll(new CameraZ());
         visitAll(new CameraPY());
@@ -54,7 +57,42 @@ public class Client extends GraphVisitor {
         visitAll(new GameState());
         updater.visitor("Region").visitIfM(new HoveredTile(), mn -> mn.desc.contains(";IIIII") && mn.desc.endsWith("V"));
     }
+    private class ExperienceHooks extends BlockVisitor {
 
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(final Block block) {
+            if (block.count(new InsnQuery(ISTORE)) == 4 && block.count(new InsnQuery(IASTORE)) == 3) {
+                NodeTree root = block.tree();
+                AbstractNode storeE = root.find(IASTORE, 0);
+                if (storeE == null)
+                    return;
+                FieldMemberNode experiences = storeE.firstField();
+                if (experiences == null || experiences.opcode() != GETSTATIC)
+                    return;
+                AbstractNode storeL = root.find(IASTORE, 1);
+                if (storeL == null)
+                    return;
+                FieldMemberNode levels = storeL.firstField();
+                if (levels == null || levels.opcode() != GETSTATIC)
+                    return;
+                AbstractNode storeRL = root.find(IASTORE, 2);
+                if (storeRL == null)
+                    return;
+                FieldMemberNode realLevels = storeRL.firstField();
+                if (realLevels == null || realLevels.opcode() != GETSTATIC)
+                    return;
+                addHook(new FieldHook("experiences", experiences.fin()));
+                addHook(new FieldHook("levels", levels.fin()));
+                addHook(new FieldHook("realLevels", realLevels.fin()));
+                lock.set(true);
+            }
+        }
+    }
     private class HoveredTile extends BlockVisitor {
 
         @Override
