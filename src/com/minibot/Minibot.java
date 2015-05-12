@@ -1,19 +1,17 @@
 package com.minibot;
 
 import com.minibot.api.Macro;
-import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.method.*;
-import com.minibot.api.method.projection.Projection;
+import com.minibot.api.method.Game;
 import com.minibot.api.util.Time;
-import com.minibot.api.wrapper.Item;
-import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.client.GameCanvas;
 import com.minibot.client.natives.RSClient;
-import com.minibot.macros.CowKiller;
+import com.minibot.macros.SnareTrapper;
 import com.minibot.mod.Injector;
 import com.minibot.mod.ModScript;
 import com.minibot.mod.transforms.*;
-import com.minibot.util.*;
+import com.minibot.util.DefinitionLoader;
+import com.minibot.util.JarArchive;
+import com.minibot.util.RSClassLoader;
 import com.minibot.util.io.Crawler;
 
 import javax.swing.*;
@@ -75,6 +73,7 @@ public class Minibot extends JFrame implements Runnable {
         injector.getTransforms().add(new GetterAdder());
         injector.getTransforms().add(new DefinitionInvoker());
         injector.getTransforms().add(new HoveredRegionTileSetter());
+        injector.getTransforms().add(new MiscSetters());
         Map<String, byte[]> classes = injector.inject();
         RSClassLoader classloader;
         try {
@@ -93,13 +92,21 @@ public class Minibot extends JFrame implements Runnable {
         while (Game.state() < Game.STATE_CREDENTIALS)
             Time.sleep(100);
         DefinitionLoader.loadDefinitions(client);
-        Macro macro = new CowKiller();
+        Macro macro = new SnareTrapper();
+        Thread script = new Thread(){
+            public void run(){
+                while (!isInterrupted()) {
+                    macro.run();
+                    Time.sleep(50, 100);
+                }
+            }
+        };
         canvas().addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_1) {
-                    macro.start();
+                    script.start();
                 } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_2) {
-                    macro.interrupt();
+                    script.interrupt();
                 }
             }
         });
