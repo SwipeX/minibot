@@ -4,14 +4,12 @@ import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.action.tree.Action;
 import com.minibot.api.action.tree.TableItemAction;
 import com.minibot.api.action.tree.WidgetAction;
-import com.minibot.api.method.*;
+import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Identifiable;
-import com.minibot.api.util.Random;
 import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.util.DefinitionLoader;
 
 import java.awt.*;
-import java.util.Arrays;
 
 /**
  * @author Tyler Sedlar
@@ -92,6 +90,7 @@ public class Item implements Identifiable {
      * @return true if this item is contained within a table-type widget
      */
     public boolean table() {
+        if (comp == null) return true;
         return comp.type() == 2;
     }
 
@@ -130,6 +129,10 @@ public class Item implements Identifiable {
 
     private RSItemDefinition definition() {
         return DefinitionLoader.findItemDefinition(id());
+    }
+
+    public void setComponent(WidgetComponent comp) {
+        this.comp = comp;
     }
 
 

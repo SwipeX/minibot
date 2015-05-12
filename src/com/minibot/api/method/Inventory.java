@@ -55,6 +55,7 @@ public class Inventory {
                             if (!filter.accept(item))
                                 continue;
                             items[i] = item;
+                            items[i].setComponent(inventory);
                         }
                     }
                 }
