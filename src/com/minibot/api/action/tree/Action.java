@@ -268,4 +268,7 @@ public abstract class Action implements ActionFilter { // An action has the abil
         return format(opcode, arg0, arg1, arg2);
     }
 
+    public static int indexOf(String[] actions, String action) {
+        return actions == null ? -1 : Arrays.asList(actions).indexOf(action);
+    }
 }

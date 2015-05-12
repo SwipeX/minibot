@@ -1,10 +1,13 @@
 package com.minibot.api.wrapper;
 
+import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.action.tree.Action;
 import com.minibot.api.action.tree.TableItemAction;
 import com.minibot.api.action.tree.WidgetAction;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Identifiable;
 import com.minibot.api.util.Random;
+import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.util.DefinitionLoader;
 
 import java.awt.*;
@@ -85,46 +88,50 @@ public class Item implements Identifiable {
         return source;
     }
 
+    /**
+     * @return true if this item is contained within a table-type widget
+     */
+    public boolean table() {
+        return comp.type() == 2;
+    }
+
     public void processAction(int opcode, String action) {
         String itemName = name();
         if (itemName == null)
             return;
-        Rectangle bounds = bounds();
-        if (bounds == null)
-            return;
-        Point p = Random.nextPoint(bounds);
-        int widgetParent, widgetChild;
-        if (source == Source.BANK) {
-            widgetParent = Bank.BANK_PARENT;
-            widgetChild = Bank.SLOT_CONTAINER;
+        if (table()) {
+            RuneScape.processAction(new TableItemAction(opcode, id, index, comp.raw.getId()), action, itemName, 0, 0);
         } else {
-            if (Bank.viewing()) {
-                widgetParent = Inventory.INVENTORY_PARENT;
-                widgetChild = Inventory.INVENTORY_CONTAINER;
+            int index = Action.indexOf(comp.actions(), action) + 1;
+            if (index > 4) {
+                RuneScape.processAction(new WidgetAction(true, index, this.index, comp.raw.getId()), action, itemName, 0, 0);
             } else {
-                widgetParent = Inventory.BANK_PARENT;
-                widgetChild = Inventory.BANK_CONTAINER;
+                RuneScape.processAction(new WidgetAction(opcode, index, this.index, comp.raw.getId()), action, itemName, 0, 0);
             }
         }
-        WidgetComponent component = Widgets.get(widgetParent, widgetChild);
-        if (component == null)
-            return;
-        int widgetUid = component.hash();
-        if (source == Source.INVENTORY) {
-            RuneScape.processAction(new TableItemAction(opcode, id(), index(), widgetUid), action,
-                    "<col=ff9040>" + itemName + "</col>", p.x, p.y);
-        } else {
-            String[] actions = component.actions();
-            if (actions == null)
+    }
+
+    public void processAction(String action) {
+        if (table()) {
+            if (definition() == null)
                 return;
-            int actionIndex = Arrays.asList(actions).indexOf(action);
-            RuneScape.processAction(new WidgetAction(opcode, actionIndex, index(), widgetUid),
-                    action, "", p.x, p.y);
+            processAction(ActionOpcodes.ITEM_ACTION_0 + Action.indexOf(definition().getActions(), action), action);
+        } else {
+            int index = Action.indexOf(comp.actions(), action) + 1;
+            RuneScape.processAction(new WidgetAction(index > 4, index, this.index, comp.raw.getId()), action, name(), 50, 50);
         }
     }
-    public String name(){
-        return DefinitionLoader.findItemDefinition(id()).getName();
+
+    @Override
+    public String name() {
+        RSItemDefinition definition = definition();
+        return definition == null ? null : definition.getName();
     }
+
+    private RSItemDefinition definition() {
+        return DefinitionLoader.findItemDefinition(id());
+    }
+
 
     public enum Source {
         INVENTORY(0), BANK(1), EQUIPMENT(2);

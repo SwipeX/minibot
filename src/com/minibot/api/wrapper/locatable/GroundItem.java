@@ -15,6 +15,7 @@ import com.minibot.client.natives.RSObjectDefinition;
 import com.minibot.util.DefinitionLoader;
 
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * @author Tyler Sedlar
@@ -90,13 +91,25 @@ public class GroundItem extends Wrapper<RSItem> implements Locatable {
         return (int) Projection.distance(Players.local(), this);
     }
 
-    public void processAction(String action) {
-        processAction(ActionOpcodes.GROUND_ITEM_ACTION_0, action);
+    public void processAction(int opcode, String action) {
+        String name = name();
+        if (name == null)
+            return;
+        RuneScape.processAction(new GroundItemAction(opcode, id(), localX(), localY()), action, name, 0, 0);
     }
 
-    public void processAction(int opcode, String action) {
-        Point screen = screen();
-        RuneScape.processAction(new GroundItemAction(opcode, id(), localX(), localY()),
-                action, definition().getName(), screen.x, screen.y);
+    public void processAction(String action) {
+        RSItemDefinition definition = definition();
+        if (definition == null)
+            return;
+        String[] actions = definition.getGroundActions();
+        if (actions == null)
+            return;
+        int index = Arrays.asList(actions).indexOf(action);
+        if (index == -1 && (actions[2] == null || actions[2].equals("null")) && action.equals("Take")) {
+            processAction(ActionOpcodes.GROUND_ITEM_ACTION_2, action);
+        } else {
+            processAction(ActionOpcodes.GROUND_ITEM_ACTION_0 + index, action);
+        }
     }
 }

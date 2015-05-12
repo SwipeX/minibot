@@ -1,7 +1,7 @@
 package com.minibot.api.wrapper.locatable;
 
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.action.tree.ObjectAction;
+import com.minibot.api.action.tree.Action;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.RuneScape;
@@ -12,6 +12,7 @@ import com.minibot.client.natives.RSObjectDefinition;
 import com.minibot.util.DefinitionLoader;
 
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * @author Tyler Sedlar
@@ -81,7 +82,7 @@ public class GameObject extends Wrapper<RSInteractableObject> implements Locatab
 
     public String name() {
         RSObjectDefinition def = definition();
-        return def !=null ? definition().getName() : null;
+        return def != null ? definition().getName() : null;
     }
 
     public RSObjectDefinition definition() {
@@ -91,13 +92,30 @@ public class GameObject extends Wrapper<RSInteractableObject> implements Locatab
             return null;
         }
     }
-    public void processAction(String action){
-        processAction(ActionOpcodes.OBJECT_ACTION_0,action);
-    }
-    public void processAction(int opcode,String action) {
+
+    public void processAction(int opcode, String action) {
+        RSObjectDefinition definition = definition();
+        if (definition == null)
+            return;
+        String name = definition.getName();
+        if (name == null)
+            return;
+        // if shit breaks look here
+        //RuneScape.processAction(Action.valueOf(opcode, raw.getId(), raw.getX(), raw.getY()), action, name);
         Point screen = screen();
-        RuneScape.processAction(new ObjectAction(opcode, uid(), localX(), localY()),
-                action, definition().getName(), screen.x, screen.y);
+        RuneScape.processAction(Action.valueOf(opcode, raw.getId(), localX(), localY()), action, name, screen.x, screen.y);
+    }
+
+    public void processAction(String action) {
+        RSObjectDefinition definition = definition();
+        if (definition == null)
+            return;
+        String[] actions = definition.getActions();
+        if (actions == null)
+            return;
+        int index = Arrays.asList(actions).indexOf(action);
+        if (index >= 0)
+            processAction(ActionOpcodes.OBJECT_ACTION_0 + index, action);
     }
 
     private Point screen() {
