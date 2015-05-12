@@ -19,7 +19,7 @@ import org.objectweb.asm.tree.*;
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices",
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
-        "hoveredRegionTileX", "hoveredRegionTileY","experiences","levels","realLevels"})
+        "hoveredRegionTileX", "hoveredRegionTileY","experiences","levels","realLevels","username","password","loginState"})
 public class Client extends GraphVisitor {
 
     @Override
@@ -55,9 +55,9 @@ public class Client extends GraphVisitor {
         visitAll(new NpcIndices());
         visitAll(new Plane());
         visitAll(new GameState());
-        visitAll(new LoginState());
         visitAll(new Username());
         visitAll(new Password());
+        visitAll(new LoginState());
         updater.visitor("Region").visitIfM(new HoveredTile(), mn -> mn.desc.contains(";IIIII") && mn.desc.endsWith("V"));
     }
 
