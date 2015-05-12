@@ -5,10 +5,12 @@ import com.minibot.api.Macro;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Time;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.GroundItem;
 import com.minibot.api.wrapper.locatable.Tile;
+import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.client.natives.RSObjectDefinition;
 
 import java.util.Arrays;
@@ -20,12 +22,12 @@ import java.util.List;
  * @since 5/11/15
  */
 public class SnareTrapper extends Macro {
-    private Tile tile;
+    private static Tile tile;
     private int ONE_TRAP = 20;
     private int TWO_TRAP = 40;
     private int THREE_TRAP = 60;
     private int FOUR_TRAP = 80;
-    private int SKILL_HUNTER = 15;
+    private int SKILL_HUNTER = 21;
 
     @Override
     public void run() {
@@ -41,7 +43,8 @@ public class SnareTrapper extends Macro {
             }
         }
         if (next == null) {
-            System.out.println("No trap tile needs attention");
+           // System.out.println("No trap tile needs attention");
+            if (!Players.local().location().equals(next))
             Inventory.dropAll(item -> (item.name().equals("Raw bird meat") || item.name().equals("Bones")));
             return;
         }
@@ -54,7 +57,11 @@ public class SnareTrapper extends Macro {
                 obj.processAction("Dismantle");
             Time.sleep(2000);
         }
-        Deque<GroundItem> items = Ground.at(next.localX(), next.localY());
+        final Tile finalNext = next;
+        Deque<GroundItem> items = Ground.findByFilter(groundItem -> {
+            RSItemDefinition def = groundItem.definition();
+            return groundItem!=null && groundItem.location().equals(finalNext) && def!=null && def.getName().equals("Bird snare");
+        });
         if (items == null || items.size() == 0) {
             if (Objects.topAt(next) == null && next != null) {
                 if (!Players.local().location().equals(next)) {
@@ -63,7 +70,8 @@ public class SnareTrapper extends Macro {
                 }
                 Item snare = Inventory.first(item -> item.name().equals("Bird snare"));
                 if (snare != null) {
-                    snare.processAction(ActionOpcodes.ITEM_ACTION_0, "Lay");
+                    if (Players.local().location().equals(next))
+                        snare.processAction(ActionOpcodes.ITEM_ACTION_0, "Lay");
                     Time.sleep(3500, 5000);
                 }
             }

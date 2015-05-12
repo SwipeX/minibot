@@ -111,6 +111,7 @@ public class Minibot extends JFrame implements Runnable {
                 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_1) {
                     username = instance.client.getUsername();
                     password = instance.client.getPassword();
+                    System.out.println(username+" cached");
                     script.start();
                 } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_2) {
                     script.interrupt();
