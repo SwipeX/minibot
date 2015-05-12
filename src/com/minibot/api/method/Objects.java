@@ -35,8 +35,11 @@ public class Objects {
 
     private static GameObject[] copy(RSInteractableObject[] array) {
         GameObject[] objects = new GameObject[array.length];
-        for (int i = 0; i < array.length; i++)
-            objects[i] = new GameObject(array[i]);
+        if (objects == null) return null;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] != null)
+                objects[i] = new GameObject(array[i]);
+        }
         return objects;
     }
 
