@@ -88,4 +88,6 @@ public interface RSClient extends ClientNative {
     RSInteractableObject[] getObjects();
 
     RSRegion getRegion();
+
+    void resetMouseIdleTime();
 }
