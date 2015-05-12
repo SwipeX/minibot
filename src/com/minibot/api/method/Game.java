@@ -29,15 +29,15 @@ public class Game {
     }
 
     public static int[] realLevels() {
-        return Minibot.instance().client().realLevels();
+        return Minibot.instance().client().getRealLevels();
     }
 
     public static int[] levels() {
-        return Minibot.instance().client().levels();
+        return Minibot.instance().client().getLevels();
     }
 
     public static int[] experiences() {
-        return Minibot.instance().client().experiences();
+        return Minibot.instance().client().getExperiences();
     }
 
     public static int[] varps() {

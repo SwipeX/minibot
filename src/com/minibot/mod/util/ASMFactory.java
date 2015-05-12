@@ -13,7 +13,7 @@ public final class ASMFactory implements Opcodes {
     private ASMFactory() {}
 
     /**
-     * pass custom desc because known array descs e.g: x[] -> Player[]
+     * pass custom desc because known array descs e.g: getX[] -> Player[]
      */
     public static MethodNode createGetter(FieldHook hook, String returnDesc) {
         MethodNode dankMeth = new MethodNode(ACC_PUBLIC, methodifyFieldName(hook.name, hook.fieldDesc),

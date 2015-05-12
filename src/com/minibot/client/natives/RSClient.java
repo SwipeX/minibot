@@ -56,11 +56,11 @@ public interface RSClient extends ClientNative {
 
     int[] getWidgetWidths();
 
-    int[] experiences();
+    int[] getExperiences();
 
-    int[] levels();
+    int[] getLevels();
 
-    int[] realLevels();
+    int[] getRealLevels();
 
     @Artificial
     void setHoveredRegionTileX(int newRegionX);
@@ -82,4 +82,8 @@ public interface RSClient extends ClientNative {
     RSNpcDefinition loadNpcDefinition(int id);
 
     RSItemDefinition loadItemDefinition(int id);
+
+    RSNodeDeque[][][] getGroundItems();
+
+    RSInteractableObject[] getObjects();
 }

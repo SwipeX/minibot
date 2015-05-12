@@ -5,6 +5,7 @@ import com.minibot.api.action.tree.WidgetAction;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Identifiable;
 import com.minibot.api.util.Random;
+import com.minibot.util.DefinitionLoader;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -120,6 +121,9 @@ public class Item implements Identifiable {
             RuneScape.processAction(new WidgetAction(opcode, actionIndex, index(), widgetUid),
                     action, "", p.x, p.y);
         }
+    }
+    public String name(){
+        return DefinitionLoader.findItemDefinition(id()).getName();
     }
 
     public enum Source {

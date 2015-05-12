@@ -151,7 +151,7 @@ public abstract class Action implements ActionFilter { // An action has the abil
      * If the returned value is null, then the action is unknown
      * or not defined.
      *
-     * @param opcode The id of the action to lookup
+     * @param opcode The getId of the action to lookup
      * @return The defined name of the opcode. Null if
      * the opcode is unknown or undefined.
      */

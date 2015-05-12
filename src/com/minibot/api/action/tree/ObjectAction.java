@@ -14,7 +14,7 @@ public class ObjectAction extends EntityAction {
         return opcode - ActionOpcodes.OBJECT_ACTION_0;
     }
 
-    public int entityId() { //Arg0 is the UID, not the direct id of the entity
+    public int entityId() { //Arg0 is the UID, not the direct getId of the entity
         return objectId();
     }
 
@@ -44,7 +44,7 @@ public class ObjectAction extends EntityAction {
 
     @Override
     public String toString() {
-        return "Object Action [object-name(id=" + entityId() + ")=" + name() + ",action-name(index=" +
+        return "Object Action [object-name(getId=" + entityId() + ")=" + name() + ",action-name(index=" +
                 actionIndex() + ")=" + actionName() + ")<" + x() + "," + y() + "> on object " /*+ getObject()*/;
     }
 }
