@@ -86,4 +86,6 @@ public interface RSClient extends ClientNative {
     RSNodeDeque[][][] getGroundItems();
 
     RSInteractableObject[] getObjects();
+
+    RSRegion getRegion();
 }
