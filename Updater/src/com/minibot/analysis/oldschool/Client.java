@@ -55,8 +55,90 @@ public class Client extends GraphVisitor {
         visitAll(new NpcIndices());
         visitAll(new Plane());
         visitAll(new GameState());
+        visitAll(new LoginState());
+        visitAll(new Username());
+        visitAll(new Password());
         updater.visitor("Region").visitIfM(new HoveredTile(), mn -> mn.desc.contains(";IIIII") && mn.desc.endsWith("V"));
     }
+
+    private class LoginState extends BlockVisitor {
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor(this) {
+                public void visitJump(JumpNode jn) {
+                    if (jn.opcode() == IF_ICMPNE) {
+                        NumberNode nn = jn.firstNumber();
+                        if (nn != null && nn.number() >= 3) {
+                            FieldMemberNode fmn = (FieldMemberNode) jn.layer(IMUL, GETSTATIC);
+                            if (fmn == null || !fmn.owner().equals(((FieldHook) hooks.get("username")).clazz) || !fmn.desc().equals("I"))
+                                return;
+                            addHook(new FieldHook("loginState", fmn.fin()));
+                            lock.set(true);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private class Username extends BlockVisitor {
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor() {
+                @Override
+                public void visitJump(JumpNode jn) {
+                    NumberNode len = jn.firstNumber();
+                    MethodMemberNode lenCall = jn.firstMethod();
+                    if (len == null || len.number() != 320 || lenCall == null || !lenCall.name().equals("length"))
+                        return;
+                    FieldMemberNode fmn = lenCall.firstField();
+                    if (fmn != null) {
+                        addHook(new FieldHook("username", fmn.fin()));
+                        lock.set(true);
+                    }
+                }
+            });
+        }
+    }
+
+    private class Password extends BlockVisitor {
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor() {
+                @Override
+                public void visitJump(JumpNode jn) {
+                    NumberNode len = jn.firstNumber();
+                    MethodMemberNode lenCall = jn.firstMethod();
+                    if (len == null || len.number() != 20 || lenCall == null || !lenCall.name().equals("length"))
+                        return;
+                    FieldMemberNode fmn = lenCall.firstField();
+                    if (fmn != null) {
+                        addHook(new FieldHook("password", fmn.fin()));
+                        lock.set(true);
+                    }
+                }
+            });
+        }
+    }
+
     private class ExperienceHooks extends BlockVisitor {
 
         @Override

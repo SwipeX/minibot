@@ -49,4 +49,8 @@ public class Game {
         int[] settings = varps();
         return settings.length == 0 || index >= settings.length ? -1 : settings[index];
     }
+
+    public static boolean isLoggedIn() {
+        return Minibot.instance().client().getGameState() == 30;
+    }
 }

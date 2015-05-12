@@ -25,4 +25,8 @@ public class Mouse {
     public static void hop(int x, int y) {
         Minibot.instance().canvas().moveMouse(x, y);
     }
+
+    public static void click(boolean left) {
+        Minibot.instance().canvas().clickMouse(left);
+    }
 }

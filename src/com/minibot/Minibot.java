@@ -2,6 +2,8 @@ package com.minibot;
 
 import com.minibot.api.Macro;
 import com.minibot.api.method.Game;
+import com.minibot.api.method.Login;
+import com.minibot.api.method.Mouse;
 import com.minibot.api.util.Time;
 import com.minibot.client.GameCanvas;
 import com.minibot.client.natives.RSClient;
@@ -28,6 +30,8 @@ public class Minibot extends JFrame implements Runnable {
     private static Minibot instance;
     private final Crawler crawler;
     private RSClient client;
+    private String username;
+    private String password;
 
     public Minibot() {
         super("Minibot");
@@ -98,17 +102,36 @@ public class Minibot extends JFrame implements Runnable {
                 while (!isInterrupted()) {
                     macro.run();
                     Time.sleep(50, 100);
+                    checkLogin();
                 }
             }
         };
         canvas().addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_1) {
+                    username = instance.client.getUsername();
+                    password = instance.client.getPassword();
                     script.start();
                 } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_2) {
                     script.interrupt();
                 }
             }
         });
+    }
+
+    private void checkLogin() {
+        if (!Game.isLoggedIn()) {
+            if (Login.state() == Login.STATE_MAIN_MENU) {
+                Mouse.hop(Login.EXISTING_USER.x, Login.EXISTING_USER.y);
+                Mouse.click(true);
+                Time.sleep(600, 700);
+            } else if (Login.state() == Login.STATE_CREDENTIALS) {
+                Login.setUsername(username);
+                Login.setPassword(password);
+                Mouse.hop(Login.LOGIN.x, Login.LOGIN.y);
+                Mouse.click(true);
+                Time.sleep(600, 700);
+            }
+        }
     }
 }

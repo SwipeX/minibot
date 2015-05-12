@@ -90,4 +90,14 @@ public interface RSClient extends ClientNative {
     RSRegion getRegion();
 
     void resetMouseIdleTime();
+
+    void setPassword(String to);
+
+    int getLoginState();
+
+    void setUsername(String to);
+
+    String getPassword();
+
+    String getUsername();
 }

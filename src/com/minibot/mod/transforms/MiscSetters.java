@@ -2,10 +2,7 @@ package com.minibot.mod.transforms;
 
 import com.minibot.mod.ModScript;
 import com.minibot.mod.hooks.FieldHook;
-import jdk.internal.org.objectweb.asm.tree.ClassNode;
-import jdk.internal.org.objectweb.asm.tree.FieldInsnNode;
-import jdk.internal.org.objectweb.asm.tree.InsnNode;
-import jdk.internal.org.objectweb.asm.tree.MethodNode;
+import jdk.internal.org.objectweb.asm.tree.*;
 
 import java.util.Map;
 
@@ -25,5 +22,17 @@ public class MiscSetters implements Transform {
         setter.instructions.add(new FieldInsnNode(PUTSTATIC, hook.clazz, hook.field, hook.fieldDesc));
         setter.instructions.add(new InsnNode(RETURN));
         classes.get("client").methods.add(setter);
+        //setter -> login
+        ClassNode client = classes.get("client");
+        client.methods.add(mkStringSetter("setUsername", ModScript.getFieldHook("Client#username")));
+        client.methods.add(mkStringSetter("setPassword", ModScript.getFieldHook("Client#password")));
+    }
+
+    private MethodNode mkStringSetter(String name, FieldHook hook) {
+        MethodNode meth = new MethodNode(ACC_PUBLIC, name, "(Ljava/lang/String;)V", null, null);
+        meth.instructions.add(new VarInsnNode(ALOAD, 1));
+        meth.instructions.add(new FieldInsnNode(PUTSTATIC, hook.clazz, hook.field, "Ljava/lang/String;"));
+        meth.instructions.add(new InsnNode(RETURN));
+        return meth;
     }
 }
