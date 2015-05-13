@@ -5,14 +5,18 @@ import com.minibot.api.util.Renderable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameCanvas extends Canvas implements Renderable {
 
     public static final int INPUT_MOUSE = 0x2;
     public static final int INPUT_KEYBOARD = 0x4;
-
+    private static List<Renderable> renderables = new ArrayList<>();
     private final BufferedImage raw;
     private final BufferedImage backBuffer;
 
@@ -151,6 +155,15 @@ public class GameCanvas extends Canvas implements Renderable {
 
     @Override
     public void render(Graphics2D g) {
+        renderables.parallelStream().forEach(r -> r.render(g));
+    }
+
+    public static void addRenderable(Renderable renderable) {
+        renderables.add(renderable);
+    }
+
+    public static void removeRenderable(Renderable renderable) {
+        renderables.remove(renderable);
     }
 }
 

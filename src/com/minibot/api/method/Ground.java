@@ -81,7 +81,7 @@ public class Ground {
     }
 
     public static Deque<GroundItem> findByFilter(Filter<GroundItem> filter) {
-        return findByFilter(-1, filter);
+        return findByFilter(15, filter);
     }
 
     public static GroundItem nearestByFilter(int dist, Filter<GroundItem> filter) {

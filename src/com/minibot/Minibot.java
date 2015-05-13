@@ -4,6 +4,7 @@ import com.minibot.api.Macro;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Login;
 import com.minibot.api.method.Mouse;
+import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.client.GameCanvas;
 import com.minibot.client.natives.RSClient;
@@ -111,9 +112,10 @@ public class Minibot extends JFrame implements Runnable {
                 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_1) {
                     username = instance.client.getUsername();
                     password = instance.client.getPassword();
-                    System.out.println(username+" cached");
+                    canvas().addRenderable((Renderable) macro);
                     script.start();
                 } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_2) {
+                    canvas().removeRenderable((Renderable) macro);
                     script.interrupt();
                 }
             }
