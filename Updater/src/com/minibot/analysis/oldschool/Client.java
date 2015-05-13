@@ -17,7 +17,7 @@ import org.objectweb.asm.tree.*;
 @VisitorInfo(hooks = {"processAction", "players", "npcs", "canvas", "player", "region", "widgets", "objects",
         "groundItems", "cameraX", "cameraY", "cameraZ", "cameraPitch", "cameraYaw", "mapScale", "mapOffset",
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
-        "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices",
+        "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices","playerIndices",
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
         "hoveredRegionTileX", "hoveredRegionTileY","experiences","levels","realLevels","username","password","loginState"})
 public class Client extends GraphVisitor {
@@ -53,6 +53,7 @@ public class Client extends GraphVisitor {
         visitAll(new WidgetNodes());
         visitAll(new HintHooks());
         visitAll(new NpcIndices());
+        visitAll(new PlayerIndices());
         visitAll(new Plane());
         visitAll(new GameState());
         visitAll(new Username());
@@ -596,7 +597,30 @@ public class Client extends GraphVisitor {
             });
         }
     }
+    private class PlayerIndices extends BlockVisitor {
 
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor() {
+                public void visitField(FieldMemberNode fmn) {
+                    if (fmn.parent() != null && fmn.parent().opcode() == AALOAD) {
+                        if (fmn.desc().equals("[" + desc("Player"))) {
+                            fmn = (FieldMemberNode) fmn.parent().layer(IALOAD, GETSTATIC);
+                            if (fmn != null && fmn.desc().equals("[I")) {
+                                addHook(new FieldHook("playerIndices", fmn.fin()));
+                                lock.set(true);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
     private class Plane extends BlockVisitor {
 
         @Override

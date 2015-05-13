@@ -42,6 +42,8 @@ public interface RSClient extends ClientNative {
 
     int[] getNpcIndices();
 
+    int[] getPlayerIndices();
+
     RSPlayer[] getPlayers();
 
     RSPlayer getPlayer();

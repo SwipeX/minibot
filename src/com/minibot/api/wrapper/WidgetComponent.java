@@ -1,5 +1,8 @@
 package com.minibot.api.wrapper;
 
+import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.action.tree.WidgetAction;
+import com.minibot.api.method.RuneScape;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.client.natives.RSWidget;
@@ -154,5 +157,15 @@ public class WidgetComponent extends Wrapper<RSWidget> {
             }
         }
         return null;
+    }
+
+    @Override
+    public void processAction(String action) {
+        processAction(ActionOpcodes.WIDGET_ACTION, action);
+    }
+
+    @Override
+    public void processAction(int opcode, String action) {
+        RuneScape.processAction(new WidgetAction(opcode, 0, index, ownerId), action, "", x(), y());
     }
 }

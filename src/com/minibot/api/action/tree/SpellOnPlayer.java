@@ -13,6 +13,6 @@ public class SpellOnPlayer extends CharacterAction {
     public Player player() {
         RSPlayer[] players = Players.raw();
         int entityId = entityId();
-        return players != null && entityId >= 0 && entityId < players.length ? new Player(players[entityId]) : null;
+        return players != null && entityId >= 0 && entityId < players.length ? new Player(players[entityId],entityId) : null;
     }
 }

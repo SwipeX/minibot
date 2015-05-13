@@ -6,11 +6,13 @@ import com.minibot.api.method.projection.Projection;
 import com.minibot.api.wrapper.Wrapper;
 import com.minibot.client.natives.RSCharacter;
 
+import java.awt.*;
+
 /**
  * @author Tyler Sedlar
  * @since 4/4/15.
  */
-public class Character<T extends RSCharacter> extends Wrapper<T> implements Locatable {
+public abstract class Character<T extends RSCharacter> extends Wrapper<T> implements Locatable {
 
     public Character(T raw) {
         super(raw);
@@ -69,5 +71,9 @@ public class Character<T extends RSCharacter> extends Wrapper<T> implements Loca
     @Override
     public int distance() {
         return distance(Players.local());
+    }
+
+    public Point screen(){
+        return Projection.groundToViewport(fineX(),fineY());
     }
 }

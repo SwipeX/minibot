@@ -30,7 +30,7 @@ public class PlayerAction extends CharacterAction {
         if (index < 0 || index > Players.MAX_PLAYERS)
             return null;
         RSPlayer[] players = Players.raw();
-        return players != null && index >= 0 && index < players.length ? new Player(players[index]) : null;
+        return players != null && index >= 0 && index < players.length ? new Player(players[index],index) : null;
     }
 
     @Override

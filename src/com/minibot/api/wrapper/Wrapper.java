@@ -28,4 +28,8 @@ public abstract class Wrapper<T extends ClientNative> {
     public int hashCode() {
         return validate() ? raw.hashCode() : super.hashCode();
     }
+
+    public abstract void processAction(String action);
+
+    public abstract void processAction(int opcode, String action);
 }

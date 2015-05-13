@@ -17,7 +17,7 @@ public class Players {
 
     public static Player local() {
         RSPlayer player = Minibot.instance().client().getPlayer();
-        return player != null ? new Player(player) : null;
+        return player != null ? new Player(player, -1) : null;
     }
 
     public static RSPlayer[] raw() {
@@ -25,15 +25,20 @@ public class Players {
     }
 
     public static Player[] loaded() {
-        List<Player> players = new ArrayList<>();
         RSPlayer[] raws = raw();
         if (raws == null || raws.length == 0)
             return new Player[0];
-        for (RSPlayer player : raws) {
-            if (player == null)
+        int[] indices = Minibot.instance().client().getPlayerIndices();
+        if (indices == null || indices.length == 0)
+            return new Player[0];
+        List<Player> Players = new ArrayList<>(indices.length);
+        for (int index : indices) {
+            RSPlayer raw = raws[index];
+            if (raw == null)
                 continue;
-            players.add(new Player(player));
+            Player player = new Player(raw, index);
+            Players.add(player);
         }
-        return players.toArray(new Player[players.size()]);
+        return Players.toArray(new Player[Players.size()]);
     }
 }
