@@ -41,4 +41,11 @@ public class Players {
         }
         return Players.toArray(new Player[Players.size()]);
     }
+
+    public static Player atIndex(int idx) {
+        RSPlayer[] raws = raw();
+        if (raws == null || raws.length == 0)
+            return null;
+        return new Player(raws[idx], idx);
+    }
 }

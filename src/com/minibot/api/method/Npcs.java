@@ -52,6 +52,14 @@ public class Npcs {
     }
 
     public static Npc nearest(String name) {
-        return nearest(npc -> npc != null && npc.name().equals(name));
+
+        return nearest(npc -> npc != null && npc.name() != null && npc.name().equals(name));
+    }
+
+    public static Npc atIndex(int idx) {
+        RSNpc[] raws = raw();
+        if (raws == null || raws.length == 0)
+            return null;
+        return new Npc(raws[idx], idx);
     }
 }

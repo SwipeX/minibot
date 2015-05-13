@@ -20,7 +20,7 @@ public class Falconry extends Macro implements Renderable {
     private int SKILL_HUNTER = 21;
     private int start_exp = 0;
     private long start_time;
-    private String NPC = "Spotted kebbit";
+    private String NPC = "Dark kebbit";
     private String FALCON = "Gyr Falcon";
 
 

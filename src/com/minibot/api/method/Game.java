@@ -1,6 +1,9 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
+import com.minibot.api.wrapper.locatable.Character;
+import com.minibot.api.wrapper.locatable.Npc;
+import com.minibot.api.wrapper.locatable.Player;
 
 /**
  * @author Tyler Sedlar
@@ -52,5 +55,13 @@ public class Game {
 
     public static boolean isLoggedIn() {
         return Minibot.instance().client().getGameState() == 30;
+    }
+
+    public static Character getHinted() {
+        int npcIndex = Minibot.instance().client().getHintNpcIndex();
+        Npc npc = Npcs.atIndex(npcIndex);
+        int playerIndex = Minibot.instance().client().getHintPlayerIndex();
+        Player player = Players.atIndex(playerIndex);
+        return npc != null ? npc : player;
     }
 }

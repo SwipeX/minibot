@@ -12,14 +12,17 @@ import org.objectweb.asm.commons.cfg.query.InsnQuery;
 import org.objectweb.asm.commons.cfg.tree.NodeTree;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.*;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.MethodNode;
 
 @VisitorInfo(hooks = {"processAction", "players", "npcs", "canvas", "player", "region", "widgets", "objects",
         "groundItems", "cameraX", "cameraY", "cameraZ", "cameraPitch", "cameraYaw", "mapScale", "mapOffset",
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
-        "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices","playerIndices",
+        "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices", "playerIndices",
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
-        "hoveredRegionTileX", "hoveredRegionTileY","experiences","levels","realLevels","username","password","loginState","hintX","hintY"})
+        "hoveredRegionTileX", "hoveredRegionTileY", "experiences", "levels", "realLevels", "username", "password", "loginState",
+        "hintX", "hintY","hintPlayerIndex","hintNpcIndex"})
 public class Client extends GraphVisitor {
 
     @Override
@@ -40,6 +43,7 @@ public class Client extends GraphVisitor {
         visitDefLoader("loadNpcDefinition", "NpcDefinition", false);
         visitDefLoader("loadItemDefinition", "ItemDefinition", false);
         visitStaticFields();
+        visitAll(new TargetHooks());
         visitAll(new ExperienceHooks());
         visitAll(new CameraXY());
         visitAll(new CameraZ());
@@ -176,6 +180,7 @@ public class Client extends GraphVisitor {
             }
         }
     }
+
     private class HoveredTile extends BlockVisitor {
 
         @Override
@@ -400,6 +405,35 @@ public class Client extends GraphVisitor {
         }
     }
 
+    private class TargetHooks extends BlockVisitor {
+
+        @Override
+        public boolean validate() {
+            return true;
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor(this) {
+                public void visitVariable(VariableNode vn) {
+                    if (vn.opcode() == ASTORE && vn.var() == 7) {
+                        FieldMemberNode type = (FieldMemberNode) block.tree().layer(ASTORE, AALOAD, GETSTATIC);
+                        if (type == null) return;
+                        if (type.desc().equals("[" + desc("Player"))) {
+                            FieldMemberNode fmn = (FieldMemberNode) vn.layer(AALOAD, IMUL, GETSTATIC);
+                            if (fmn != null)
+                                hooks.put("hintPlayerIndex", new FieldHook("hintPlayerIndex", fmn.fin()));
+                        } else if (type.desc().equals("[" + desc("Npc"))) {
+                            FieldMemberNode fmn = (FieldMemberNode) vn.layer(AALOAD, IMUL, GETSTATIC);
+                            if (fmn != null)
+                                hooks.put("hintNpcIndex", new FieldHook("hintNpcIndex", fmn.fin()));
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     private class HintHooks extends BlockVisitor {
 
         @Override
@@ -597,6 +631,7 @@ public class Client extends GraphVisitor {
             });
         }
     }
+
     private class PlayerIndices extends BlockVisitor {
 
         @Override
@@ -621,6 +656,7 @@ public class Client extends GraphVisitor {
             });
         }
     }
+
     private class Plane extends BlockVisitor {
 
         @Override
