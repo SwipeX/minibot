@@ -58,6 +58,7 @@ public class Npc extends Character<RSNpc> implements Identifiable {
     }
 
     public String name() {
-        return definition.getName();
+        RSNpcDefinition def = definition();
+        return def==null? null :def.getName();
     }
 }

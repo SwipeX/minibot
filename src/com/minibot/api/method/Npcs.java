@@ -5,7 +5,8 @@ import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.client.natives.RSNpc;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Tyler Sedlar
@@ -35,35 +36,22 @@ public class Npcs {
         return npcs.toArray(new Npc[npcs.size()]);
     }
 
-    public static Npc[] firstWithin(int dist, Filter<Npc> filter) {
-        List<Npc> npcs = new ArrayList<>();
-        for (Npc npc : loaded()) {
-            if (npc == null || dist != -1 && npc.distance() > dist || !filter.accept(npc)) continue;
-            npcs.add(npc);
-        }
-        return npcs.toArray(new Npc[npcs.size()]);
-    }
-
-    public static Npc[] first(Filter<Npc> filter) {
-        return firstWithin(-1, filter);
-    }
-
-    public static Npc nearest(int dist, Filter<Npc> filter) {
-        Npc[] loaded = firstWithin(dist, filter);
-        if (loaded.length == 0)
-            return null;
-        Arrays.sort(loaded, (o1, o2) -> o1.distance() - o2.distance());
-        return loaded[0];
-    }
-
     public static Npc nearest(Filter<Npc> filter) {
-        return nearest(-1, filter);
+        int dist = Integer.MAX_VALUE;
+        Npc temp = null;
+        for (Npc npc : loaded()) {
+            if (filter.accept(npc)) {
+                int d = npc.distance();
+                if (d < dist) {
+                    dist = d;
+                    temp = npc;
+                }
+            }
+        }
+        return temp;
     }
 
     public static Npc nearest(String name) {
-        return nearest(npc -> {
-            String npcName = npc.name();
-            return npcName != null && npcName.equals(name);
-        });
+        return nearest(npc -> npc != null && npc.name().equals(name));
     }
 }

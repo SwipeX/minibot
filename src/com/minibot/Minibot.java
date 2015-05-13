@@ -8,6 +8,7 @@ import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.client.GameCanvas;
 import com.minibot.client.natives.RSClient;
+import com.minibot.macros.Falconry;
 import com.minibot.macros.SnareTrapper;
 import com.minibot.mod.Injector;
 import com.minibot.mod.ModScript;
@@ -97,7 +98,7 @@ public class Minibot extends JFrame implements Runnable {
         while (Game.state() < Game.STATE_CREDENTIALS)
             Time.sleep(100);
         DefinitionLoader.loadDefinitions(client);
-        Macro macro = new SnareTrapper();
+        Macro macro = new Falconry();
         Thread script = new Thread(){
             public void run(){
                 while (!isInterrupted()) {

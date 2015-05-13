@@ -94,7 +94,7 @@ public class Inventory {
                 BANK_CONTAINER : INVENTORY_CONTAINER);
         int widgetUid = container.hash();
         for (Item item : Inventory.items(filter)) {
-            if(item==null)continue;
+            if (item == null) continue;
             Point p = item.point();
             if (p == null)
                 continue;
@@ -109,6 +109,7 @@ public class Inventory {
                 BANK_CONTAINER : INVENTORY_CONTAINER);
         int widgetUid = container.hash();
         for (Item item : Inventory.items(Filter.not(filter))) {
+            if (item == null) continue;
             Point p = item.point();
             if (p == null)
                 continue;

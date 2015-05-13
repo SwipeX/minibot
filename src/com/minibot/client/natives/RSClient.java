@@ -102,4 +102,8 @@ public interface RSClient extends ClientNative {
     String getPassword();
 
     String getUsername();
+
+    int getHintX();
+
+    int getHintY();
 }

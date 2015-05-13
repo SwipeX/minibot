@@ -19,7 +19,7 @@ import org.objectweb.asm.tree.*;
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices","playerIndices",
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
-        "hoveredRegionTileX", "hoveredRegionTileY","experiences","levels","realLevels","username","password","loginState"})
+        "hoveredRegionTileX", "hoveredRegionTileY","experiences","levels","realLevels","username","password","loginState","hintX","hintY"})
 public class Client extends GraphVisitor {
 
     @Override
@@ -423,9 +423,9 @@ public class Client extends GraphVisitor {
                                         FieldMemberNode baseX = x.parent().next().firstField();
                                         FieldMemberNode y = (FieldMemberNode) yBlock.layer(IMUL, GETSTATIC);
                                         FieldMemberNode baseY = y.parent().next().firstField();
-//                                        hooks.put("hintX", new FieldHook("hintX", x.fin()));
+                                        hooks.put("hintX", new FieldHook("hintX", x.fin()));
                                         hooks.put("baseX", new FieldHook("baseX", baseX.fin()));
-//                                        hooks.put("hintY", new FieldHook("hintY", y.fin()));
+                                        hooks.put("hintY", new FieldHook("hintY", y.fin()));
                                         hooks.put("baseY", new FieldHook("baseY", baseY.fin()));
                                         lock.set(true);
                                     }
