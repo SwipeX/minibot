@@ -1,7 +1,10 @@
 package com.minibot.ui;
 
 import com.minibot.Minibot;
-import com.minibot.api.Macro;
+import com.minibot.api.macro.Macro;
+import com.minibot.api.macro.MacroDefinition;
+import com.minibot.api.macro.Manifest;
+import com.minibot.api.util.Renderable;
 import com.minibot.util.Configuration;
 
 import javax.swing.*;
@@ -32,7 +35,7 @@ public class MacroSelector extends JDialog {
         return current;
     }
 
-    public static void unsetSlave() {
+    public static void halt() {
         if (current != null) {
             current.interrupt();
         }
@@ -41,7 +44,7 @@ public class MacroSelector extends JDialog {
     }
 
     public MacroSelector() {
-        setTitle("Slave Selector");
+        setTitle("Macro Selector");
         setResizable(false);
         setModal(true);
         setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
@@ -60,7 +63,6 @@ public class MacroSelector extends JDialog {
         model.addColumn("Author");
         model.addColumn("Name");
         model.addColumn("Description");
-        loadSlaves();
         table = new JTable(model);
         table.setFillsViewportHeight(true);
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -70,7 +72,6 @@ public class MacroSelector extends JDialog {
                 setBorder(noFocusBorder);
                 return this;
             }
-
         });
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setShowVerticalLines(false);
@@ -108,9 +109,11 @@ public class MacroSelector extends JDialog {
                 if (success) {
                     Minibot.instance().setMacroRunning(true);
                     current().start();
+                    Minibot.instance().canvas().addRenderable((Renderable) current());
                 } else {
                     Minibot.instance().setMacroRunning(false);
-                    unsetSlave();
+                    halt();
+                    Minibot.instance().canvas().removeRenderable((Renderable) current());
                 }
                 dispose();
             }
@@ -118,10 +121,10 @@ public class MacroSelector extends JDialog {
         container.add(start, BorderLayout.SOUTH);
         add(container);
         pack();
-        setLocationRelativeTo(null);//Minibot.instance().canvas());
+        setLocationRelativeTo(Minibot.instance().canvas());
     }
 
-    public void loadSlaves() {
+    public void loadMacros() {
         model.getDataVector().clear();
         model.fireTableDataChanged();
         LocalMacroLoader loader = new LocalMacroLoader();
@@ -129,7 +132,7 @@ public class MacroSelector extends JDialog {
             loader.parse(new File(Configuration.MACROS));
             MacroDefinition[] definitions = loader.definitions();
             for (MacroDefinition def : definitions)
-                addSlave(def);
+                addMacro(def);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -147,7 +150,7 @@ public class MacroSelector extends JDialog {
         }
     }
 
-    public void addSlave(MacroDefinition def) {
+    public void addMacro(MacroDefinition def) {
         Manifest manifest = def.manifest();
         model.addRow(new MacroVector(def, manifest.author(), manifest.name(), manifest.description()));
     }

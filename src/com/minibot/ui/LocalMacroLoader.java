@@ -1,6 +1,7 @@
 package com.minibot.ui;
 
-import com.minibot.api.Macro;
+import com.minibot.api.macro.Macro;
+import com.minibot.api.macro.MacroDefinition;
 
 import java.io.File;
 

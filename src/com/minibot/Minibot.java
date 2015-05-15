@@ -1,6 +1,6 @@
 package com.minibot;
 
-import com.minibot.api.Macro;
+import com.minibot.api.macro.Macro;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Login;
 import com.minibot.api.method.Mouse;
@@ -12,6 +12,7 @@ import com.minibot.macros.ChinHunter;
 import com.minibot.mod.Injector;
 import com.minibot.mod.ModScript;
 import com.minibot.mod.transforms.*;
+import com.minibot.ui.GameMenu;
 import com.minibot.util.Configuration;
 import com.minibot.util.DefinitionLoader;
 import com.minibot.util.JarArchive;
@@ -35,6 +36,7 @@ public class Minibot extends JFrame implements Runnable {
     private String username;
     private String password;
     private boolean macroRunning;
+    private boolean farming;
 
     public Minibot() {
         super("Minibot");
@@ -94,42 +96,37 @@ public class Minibot extends JFrame implements Runnable {
         container.setBackground(Color.BLACK);
         this.client = (RSClient) crawler.start(classloader);
         container.add(client.asApplet());
+        container.add(GameMenu.component(),BorderLayout.NORTH);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
         while (Game.state() < Game.STATE_CREDENTIALS)
             Time.sleep(100);
         DefinitionLoader.loadDefinitions(client);
-        Macro macro = new ChinHunter();
-        canvas().addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_1) {
-                    username = instance.client.getUsername();
-                    password = instance.client.getPassword();
-                    canvas().addRenderable((Renderable) macro);
-                    macro.start();
-                } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_2) {
-                    canvas().removeRenderable((Renderable) macro);
-                    macro.interrupt();
-                }
-            }
-        });
+//        Macro macro = new ChinHunter();
+//        canvas().addKeyListener(new KeyAdapter() {
+//            public void keyPressed(KeyEvent e) {
+//                if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_1) {
+//                    username = instance.client.getUsername();
+//                    password = instance.client.getPassword();
+//                    canvas().addRenderable((Renderable) macro);
+//                    macro.start();
+//                } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_2) {
+//                    canvas().removeRenderable((Renderable) macro);
+//                    macro.interrupt();
+//                }
+//            }
+//        });
     }
 
-    private void checkLogin() {
-        if (!Game.isLoggedIn()) {
-            if (Login.state() == Login.STATE_MAIN_MENU) {
-                Mouse.hop(Login.EXISTING_USER.x, Login.EXISTING_USER.y);
-                Mouse.click(true);
-                Time.sleep(600, 700);
-            } else if (Login.state() == Login.STATE_CREDENTIALS) {
-                Login.setUsername(username);
-                Login.setPassword(password);
-                Mouse.hop(Login.LOGIN.x, Login.LOGIN.y);
-                Mouse.click(true);
-                Time.sleep(600, 700);
-            }
-        }
+
+
+    public void setFarming(boolean farming) {
+        this.farming = farming;
+    }
+
+    public boolean isFarming() {
+        return farming;
     }
 
     public boolean isMacroRunning() {

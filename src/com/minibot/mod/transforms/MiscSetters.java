@@ -1,5 +1,6 @@
 package com.minibot.mod.transforms;
 
+import com.minibot.client.Callback;
 import com.minibot.mod.ModScript;
 import com.minibot.mod.hooks.FieldHook;
 import jdk.internal.org.objectweb.asm.tree.*;
@@ -26,7 +27,20 @@ public class MiscSetters implements Transform {
         ClassNode client = classes.get("client");
         client.methods.add(mkStringSetter("setUsername", ModScript.getFieldHook("Client#username")));
         client.methods.add(mkStringSetter("setPassword", ModScript.getFieldHook("Client#password")));
+        //onEngineTick
+        ClassNode engine = classes.get(classes.get("client").superName);
+        for (MethodNode run : engine.methods) {
+            if (!run.name.equals("run") || !run.desc.equals("()V"))
+                continue;
+            for (AbstractInsnNode ain : run.instructions.toArray()) {
+                if (ain.getOpcode() == PUTSTATIC && backtrack(ain, INVOKEVIRTUAL)) {
+                    run.instructions.insert(ain, new MethodInsnNode(INVOKESTATIC, Callback.class.getName().replace('.', '/'),
+                            "onEngineTick", "()V", false));
+                }
+            }
+        }
     }
+
 
     private MethodNode mkStringSetter(String name, FieldHook hook) {
         MethodNode meth = new MethodNode(ACC_PUBLIC, name, "(Ljava/lang/String;)V", null, null);
@@ -35,4 +49,13 @@ public class MiscSetters implements Transform {
         meth.instructions.add(new InsnNode(RETURN));
         return meth;
     }
+
+    private boolean backtrack(AbstractInsnNode ain, int insn) {
+        for (int i = 0; i < 5 && (ain = ain.getPrevious()) != null; i++) {
+            if (ain.getOpcode() == insn)
+                return true;
+        }
+        return false;
+    }
+
 }

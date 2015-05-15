@@ -8,6 +8,8 @@ import com.minibot.api.action.tree.Action;
  * @since 4/4/15.
  */
 public class RuneScape {
+   public static boolean MODEL_RENDERING_ENABLED = false;
+    public static boolean LANDSCAPE_RENDERING_ENABLED = false;
 
     public static void processAction(Action action, String actionText, String targetText, int x, int y) {
         Minibot.instance().client().processAction(action.arg1, action.arg2, action.opcode, action.arg0,

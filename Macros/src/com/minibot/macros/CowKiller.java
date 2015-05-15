@@ -1,6 +1,6 @@
 package com.minibot.macros;
 
-import com.minibot.api.Macro;
+import com.minibot.api.macro.Macro;
 import com.minibot.api.method.Npcs;
 import com.minibot.api.method.Players;
 import com.minibot.api.util.Time;

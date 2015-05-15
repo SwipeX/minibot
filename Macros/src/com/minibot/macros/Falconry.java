@@ -1,13 +1,13 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.Macro;
+import com.minibot.api.macro.Macro;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.locatable.Npc;
-import com.minibot.ui.Manifest;
+import com.minibot.api.macro.Manifest;
 
 import java.awt.*;
 import java.util.concurrent.TimeUnit;

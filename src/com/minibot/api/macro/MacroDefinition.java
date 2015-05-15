@@ -1,7 +1,5 @@
-package com.minibot.ui;
+package com.minibot.api.macro;
 
-import com.minibot.api.Macro;
- 
 /**
  * @author Tyler Sedlar
  * @since 4/30/2015

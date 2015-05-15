@@ -1,7 +1,7 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.Macro;
+import com.minibot.api.macro.Macro;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
@@ -12,7 +12,7 @@ import com.minibot.api.wrapper.locatable.GroundItem;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.client.natives.RSObjectDefinition;
-import com.minibot.ui.Manifest;
+import com.minibot.api.macro.Manifest;
 
 import java.awt.*;
 import java.util.Arrays;
