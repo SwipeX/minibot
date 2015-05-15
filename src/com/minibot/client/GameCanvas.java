@@ -68,6 +68,9 @@ public class GameCanvas extends Canvas implements Renderable {
         return e;
     }
 
+    public BufferedImage capture() {
+        return backBuffer;
+    }
 
     private void push(AWTEvent evt) {
         if (!evt.getSource().equals(this)) {

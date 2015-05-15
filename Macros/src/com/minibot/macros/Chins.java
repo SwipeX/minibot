@@ -4,6 +4,7 @@ import com.minibot.Minibot;
 import com.minibot.api.Macro;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.*;
+import com.minibot.api.util.Condition;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
@@ -20,20 +21,19 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Calculations for red chins only.
+ *
  * @author Tim Dekker
  * @since 5/11/15
  */
 public class Chins extends Macro implements Renderable {
     private static Tile tile;
-    private int ONE_TRAP = 20;
-    private int TWO_TRAP = 40;
-    private int THREE_TRAP = 60;
-    private int FOUR_TRAP = 80;
     private int SKILL_HUNTER = 21;
     private int start_exp = 0;
     private long start_time;
     private static final int EXP_EACH = 265;
     private static final int PRICE_CACHED = 1290;
+    private static final int Y_POS = 12;
 
     @Override
     public void run() {
@@ -43,16 +43,13 @@ public class Chins extends Macro implements Renderable {
             start_exp = Game.experiences()[SKILL_HUNTER];
             start_time = System.currentTimeMillis();
         }
-        if (Players.local().animation() != -1)
-            return;
-        Tile next = getNext();
+        final Tile next = getNext();
         if (next == null) {
             return;
         } else {
-            final Tile finalNext = next;
             Deque<GroundItem> items = Ground.findByFilter(groundItem -> {
                 RSItemDefinition def = groundItem.definition();
-                return groundItem.location().equals(finalNext) && def != null && def.getName().equals("Box trap");
+                return groundItem.location().equals(next) && def != null && def.getName().equals("Box trap");
             });
             GameObject obj = Objects.topAt(next);
             if (triggered(obj)) {
@@ -60,23 +57,39 @@ public class Chins extends Macro implements Renderable {
                     obj.processAction("Check");
                 else
                     obj.processAction("Dismantle");
-                Time.sleep(100, 400);
+                Time.sleep(new Condition() {
+                    @Override
+                    public boolean validate() {
+                        return Objects.topAt(next) == null && Players.local().animation() == -1;
+                    }
+                }, 1500L);
             } else if (obj == null && (items == null || items.size() == 0)) {
                 if (!Players.local().location().equals(next)) {
                     Walking.walkTo(next);
-                    Time.sleep(500, 800);
+                    Time.sleep(new Condition() {
+                        @Override
+                        public boolean validate() {
+                            return Players.local().location().equals(next);
+                        }
+                    }, 1000L);
                 }
                 Item snare = Inventory.first(item -> item.name().equals("Box trap"));
                 if (snare != null) {
-                    if (Players.local().location().equals(next))
+                    if (Players.local().location().equals(next)) {
                         snare.processAction(ActionOpcodes.ITEM_ACTION_0, "Lay");
-                    Time.sleep(500, 800);
+                        Time.sleep(600, 900);
+                    }
                 }
             } else if (items != null && items.size() > 0) {
                 GroundItem item = items.getFirst();
                 if (item != null) {
                     item.processAction(ActionOpcodes.GROUND_ITEM_ACTION_3, "Lay");
-                    Time.sleep(200, 400);
+                    Time.sleep(new Condition() {
+                        @Override
+                        public boolean validate() {
+                            return Objects.topAt(next) != null && Players.local().animation() == -1;
+                        }
+                    }, 1500L);
                 }
             }
         }
@@ -116,17 +129,17 @@ public class Chins extends Macro implements Renderable {
     }
 
     public Tile getNext() {
-        //Triggered
-        for (Tile tile : traps()) {
-            GameObject obj = Objects.topAt(tile);
-            if (obj != null && triggered(obj)) {
-                return tile;
-            }
-        }
         //No trap
         for (Tile tile : traps()) {
             GameObject obj = Objects.topAt(tile);
             if (obj == null) {
+                return tile;
+            }
+        }
+        //Triggered
+        for (Tile tile : traps()) {
+            GameObject obj = Objects.topAt(tile);
+            if (obj != null && triggered(obj)) {
                 return tile;
             }
         }
@@ -146,15 +159,16 @@ public class Chins extends Macro implements Renderable {
     @Override
     public void render(Graphics2D g) {
         g.setColor(Color.YELLOW);
-        g.drawRect(0, 0, 150, 85);
+        g.drawRect(0, 0, 150, 90);
         long time_diff = System.currentTimeMillis() - start_time;
         int gain = Game.experiences()[21] - start_exp;
         int amount = gain / EXP_EACH;
         int profit = amount * PRICE_CACHED;
-        g.drawString("Time: " + format(time_diff), 10, 10);
-        g.drawString("Exp: " + gain, 10, 25);
-        g.drawString("Exp/H: " + hourly(gain, time_diff), 10, 40);
-        g.drawString("Profit: " + profit, 10, 55);
-        g.drawString("Profit/H: " + hourly(profit, time_diff), 10, 70);
+        g.drawString("Time: " + format(time_diff), 10, Y_POS);
+        g.drawString("Exp: " + gain, 10, Y_POS + 15);
+        g.drawString("Exp/H: " + hourly(gain, time_diff), 10, Y_POS + 30);
+        g.drawString(String.format("Caught: %s (%s/H)", amount, hourly(amount, time_diff)), 10, Y_POS + 45);
+        g.drawString("Profit: " + profit, 10, Y_POS + 60);
+        g.drawString("Profit/H: " + hourly(profit, time_diff), 10, Y_POS + 75);
     }
 }
