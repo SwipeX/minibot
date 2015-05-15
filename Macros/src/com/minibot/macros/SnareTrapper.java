@@ -4,8 +4,10 @@ import com.minibot.Minibot;
 import com.minibot.api.macro.Macro;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.*;
+import com.minibot.api.util.Condition;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.GroundItem;
@@ -21,20 +23,18 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * TODO rewrite this script to use dynamic sleeping
+ * Calculations for red chins only.
+ *
  * @author Tim Dekker
  * @since 5/11/15
  */
-@Manifest(name = "SnareTrapper", author = "Swipe", version = "1.0.0", description = "Traps Birds")
+@Manifest(name = "SnareTrapper", author = "Swipe", version = "1.0.0", description = "Snares birds")
 public class SnareTrapper extends Macro implements Renderable {
     private static Tile tile;
-    private int ONE_TRAP = 20;
-    private int TWO_TRAP = 40;
-    private int THREE_TRAP = 60;
-    private int FOUR_TRAP = 80;
     private int SKILL_HUNTER = 21;
     private int start_exp = 0;
     private long start_time;
+    private static final int Y_POS = 12;
 
     @Override
     public void run() {
@@ -44,43 +44,59 @@ public class SnareTrapper extends Macro implements Renderable {
             start_exp = Game.experiences()[SKILL_HUNTER];
             start_time = System.currentTimeMillis();
         }
-        if (Players.local().animation() != -1)
-            return;
-        Tile next = getNext();
+        final Tile next = getNext();
         if (next == null) {
-            Inventory.dropAll(item -> (item.name().equals("Raw bird meat") || item.name().equals("Bones")));
-            Time.sleep(50);
+            Inventory.dropAll(new Filter<Item>() {
+                @Override
+                public boolean accept(Item item) {
+                    return item.name().contains("meat")||item.name().equals("Bones");
+                }
+            });
             return;
         } else {
+            Deque<GroundItem> items = Ground.findByFilter(groundItem -> {
+                RSItemDefinition def = groundItem.definition();
+                return groundItem.location().equals(next) && def != null && def.getName().equals("Bird snare");
+            });
             GameObject obj = Objects.topAt(next);
-            if (next != null && triggered(obj)) {
-                System.out.println("Triggered");
+            if (triggered(obj)) {
                 if (Arrays.asList(obj.definition().getActions()).contains("Check"))
                     obj.processAction("Check");
                 else
                     obj.processAction("Dismantle");
-                Time.sleep(1500, 2000);
-            } else if (next != null && obj == null) {
-                final Tile finalNext = next;
-                Deque<GroundItem> items = Ground.findByFilter(groundItem -> {
-                    RSItemDefinition def = groundItem.definition();
-                    return groundItem.location().equals(finalNext) && def != null && def.getName().equals("Bird snare");
-                });
-                if (items == null || items.size() == 0) {
-                    if (!Players.local().location().equals(next)) {
-                        Walking.walkTo(next);
-                        Time.sleep(500, 800);
+                Time.sleep(new Condition() {
+                    @Override
+                    public boolean validate() {
+                        return Objects.topAt(next) == null && Players.local().animation() == -1;
                     }
-                    Item snare = Inventory.first(item -> item.name().equals("Bird snare"));
-                    if (snare != null) {
-                        if (Players.local().location().equals(next))
-                            snare.processAction(ActionOpcodes.ITEM_ACTION_0, "Lay");
-                        Time.sleep(1500, 2000);
+                }, 1500L);
+            } else if (obj == null && (items == null || items.size() == 0)) {
+                if (!Players.local().location().equals(next)) {
+                    Walking.walkTo(next);
+                    Time.sleep(new Condition() {
+                        @Override
+                        public boolean validate() {
+                            return Players.local().location().equals(next);
+                        }
+                    }, 1000L);
+                }
+                Item snare = Inventory.first(item -> item.name().equals("Bird snare"));
+                if (snare != null) {
+                    if (Players.local().location().equals(next)) {
+                        snare.processAction(ActionOpcodes.ITEM_ACTION_0, "Lay");
+                        Time.sleep(600, 900);
                     }
-                } else if (items != null && items.size() > 0) {
-                    GroundItem item = items.getFirst();
+                }
+            } else if (items != null && items.size() > 0) {
+                GroundItem item = items.getFirst();
+                if (item != null) {
                     item.processAction(ActionOpcodes.GROUND_ITEM_ACTION_3, "Lay");
-                    Time.sleep(1500, 2000);
+                    Time.sleep(new Condition() {
+                        @Override
+                        public boolean validate() {
+                            return Objects.topAt(next) != null && Players.local().animation() == -1;
+                        }
+                    }, 1500L);
                 }
             }
         }
@@ -100,16 +116,7 @@ public class SnareTrapper extends Macro implements Renderable {
      * @return the maximum number of traps that can be used at current level.
      */
     private int trapSize() {
-        int level = Game.realLevels()[SKILL_HUNTER];
-        if (level < ONE_TRAP)
-            return 1;
-        else if (level < TWO_TRAP)
-            return 2;
-        else if (level < THREE_TRAP)
-            return 3;
-        else if (level < FOUR_TRAP)
-            return 4;
-        else return 5;
+        return Game.realLevels()[SKILL_HUNTER] / 20 + 1;
     }
 
     private Tile[] traps() {
@@ -158,12 +165,12 @@ public class SnareTrapper extends Macro implements Renderable {
 
     @Override
     public void render(Graphics2D g) {
-        g.setColor(Color.GREEN);
-        g.drawRect(0, 0, 150, 50);
+        g.setColor(Color.CYAN);
+        g.drawRect(0, 0, 150, 65);
         long time_diff = System.currentTimeMillis() - start_time;
         int gain = Game.experiences()[21] - start_exp;
-        g.drawString("Time: " + format(time_diff), 10, 10);
-        g.drawString("Exp: " + gain, 10, 25);
-        g.drawString("Exp/H: " + hourly(gain, time_diff), 10, 40);
+        g.drawString("Time: " + format(time_diff), 10, Y_POS);
+        g.drawString("Exp: " + gain, 10, Y_POS + 15);
+        g.drawString("Exp/H: " + hourly(gain, time_diff), 10, Y_POS + 30);
     }
 }
