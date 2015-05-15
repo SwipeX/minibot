@@ -7,6 +7,7 @@ import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.locatable.Npc;
+import com.minibot.ui.Manifest;
 
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
@@ -15,12 +16,13 @@ import java.util.concurrent.TimeUnit;
  * @author Tim Dekker
  * @since 5/12/15
  */
+@Manifest(name = "Falconry", author = "Swipe", version = "1.0.0", description = "Hunts Kebbits")
 public class Falconry extends Macro implements Renderable {
     boolean started;
     private int SKILL_HUNTER = 21;
     private int start_exp = 0;
     private long start_time;
-    private String NPC = "Dark kebbit";
+    private String NPC = "Spotted kebbit";//Dark kebbits = bad exp
     private String FALCON = "Gyr Falcon";
 
 

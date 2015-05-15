@@ -8,12 +8,11 @@ import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.client.GameCanvas;
 import com.minibot.client.natives.RSClient;
-import com.minibot.macros.Chins;
-import com.minibot.macros.Falconry;
-import com.minibot.macros.SnareTrapper;
+import com.minibot.macros.ChinHunter;
 import com.minibot.mod.Injector;
 import com.minibot.mod.ModScript;
 import com.minibot.mod.transforms.*;
+import com.minibot.util.Configuration;
 import com.minibot.util.DefinitionLoader;
 import com.minibot.util.JarArchive;
 import com.minibot.util.RSClassLoader;
@@ -35,6 +34,7 @@ public class Minibot extends JFrame implements Runnable {
     private RSClient client;
     private String username;
     private String password;
+    private boolean macroRunning;
 
     public Minibot() {
         super("Minibot");
@@ -62,6 +62,7 @@ public class Minibot extends JFrame implements Runnable {
 
     @Override
     public void run() {
+        Configuration.setup();
         crawler.crawl();
         if (crawler.isOutdated())
             crawler.download(() -> System.out.println("Downloaded: " + crawler.percent + "%"));
@@ -99,28 +100,17 @@ public class Minibot extends JFrame implements Runnable {
         while (Game.state() < Game.STATE_CREDENTIALS)
             Time.sleep(100);
         DefinitionLoader.loadDefinitions(client);
-        Macro macro = new Chins();
-        Thread script = new Thread(){
-            public void run(){
-                while (!isInterrupted()) {
-                    if (Game.isLoggedIn()) {
-                        macro.run();
-                        Time.sleep(50, 100);
-                    }
-                    checkLogin();
-                }
-            }
-        };
+        Macro macro = new ChinHunter();
         canvas().addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_1) {
                     username = instance.client.getUsername();
                     password = instance.client.getPassword();
                     canvas().addRenderable((Renderable) macro);
-                    script.start();
+                    macro.start();
                 } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_2) {
                     canvas().removeRenderable((Renderable) macro);
-                    script.interrupt();
+                    macro.interrupt();
                 }
             }
         });
@@ -140,5 +130,13 @@ public class Minibot extends JFrame implements Runnable {
                 Time.sleep(600, 700);
             }
         }
+    }
+
+    public boolean isMacroRunning() {
+        return macroRunning;
+    }
+
+    public void setMacroRunning(boolean macroRunning) {
+        this.macroRunning = macroRunning;
     }
 }

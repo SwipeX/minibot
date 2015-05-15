@@ -12,6 +12,7 @@ import com.minibot.api.wrapper.locatable.GroundItem;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.client.natives.RSObjectDefinition;
+import com.minibot.ui.Manifest;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -20,9 +21,11 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * TODO rewrite this script to use dynamic sleeping
  * @author Tim Dekker
  * @since 5/11/15
  */
+@Manifest(name = "SnareTrapper", author = "Swipe", version = "1.0.0", description = "Traps Birds")
 public class SnareTrapper extends Macro implements Renderable {
     private static Tile tile;
     private int ONE_TRAP = 20;

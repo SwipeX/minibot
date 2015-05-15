@@ -13,6 +13,7 @@ import com.minibot.api.wrapper.locatable.GroundItem;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.client.natives.RSObjectDefinition;
+import com.minibot.ui.Manifest;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -26,7 +27,8 @@ import java.util.concurrent.TimeUnit;
  * @author Tim Dekker
  * @since 5/11/15
  */
-public class Chins extends Macro implements Renderable {
+@Manifest(name = "ChinHunter", author = "Swipe", version = "1.0.0", description = "Hunts Red Chinchompas")
+public class ChinHunter extends Macro implements Renderable {
     private static Tile tile;
     private int SKILL_HUNTER = 21;
     private int start_exp = 0;

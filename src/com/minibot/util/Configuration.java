@@ -16,7 +16,9 @@ public class Configuration {
     public static final String HOME = getSystemHome() + File.separator + APPLICATION_NAME + File.separator;
     public static final String CACHE = HOME + "cache" + File.separator;
     public static final String DATA = CACHE + "data" + File.separator;
-    public static final String[] DIRECTORIES = {CACHE, DATA};
+    public static final String MACROS = HOME + "macros" + File.separator;
+    public static final String[] DIRECTORIES = {CACHE, DATA,MACROS};
+
 
 
     public static boolean isLocal() {
