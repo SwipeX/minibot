@@ -49,7 +49,7 @@ public class SnareTrapper extends Macro implements Renderable {
             Inventory.dropAll(new Filter<Item>() {
                 @Override
                 public boolean accept(Item item) {
-                    return item.name().contains("meat")||item.name().equals("Bones");
+                    return item.name().contains("meat") || item.name().equals("Bones");
                 }
             });
             return;
@@ -84,7 +84,7 @@ public class SnareTrapper extends Macro implements Renderable {
                 if (snare != null) {
                     if (Players.local().location().equals(next)) {
                         snare.processAction(ActionOpcodes.ITEM_ACTION_0, "Lay");
-                        Time.sleep(600, 900);
+                        Time.sleep(1200, 1400);
                     }
                 }
             } else if (items != null && items.size() > 0) {
@@ -98,6 +98,8 @@ public class SnareTrapper extends Macro implements Renderable {
                         }
                     }, 1500L);
                 }
+            } else if (obj != null && !triggered(obj) && obj.location().equals(Players.local().location())) {
+                Walking.walkTo(next.derive(1, 0));
             }
         }
     }

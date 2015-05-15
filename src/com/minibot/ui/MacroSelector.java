@@ -36,6 +36,7 @@ public class MacroSelector extends JDialog {
     }
 
     public static void halt() {
+        Minibot.instance().canvas().removeRenderable((Renderable) current);
         if (current != null) {
             current.interrupt();
         }
@@ -111,7 +112,6 @@ public class MacroSelector extends JDialog {
                     current().start();
                     Minibot.instance().canvas().addRenderable((Renderable) current());
                 } else {
-                    Minibot.instance().canvas().removeRenderable((Renderable) current());
                     Minibot.instance().setMacroRunning(false);
                     halt();
                 }
