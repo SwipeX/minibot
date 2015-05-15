@@ -13,12 +13,13 @@ public abstract class Macro {
     private String password;
 
     public final void start() {
+        final Macro macro = this;
         thread = new Thread() {
             public void run() {
                 username = Minibot.instance().client().getUsername();
                 password = Minibot.instance().client().getPassword();
                 while (!interrupted() && Minibot.instance().isMacroRunning()) {
-                    run();
+                    macro.run();
                     Time.sleep(20, 50);
                     checkLogin();
                 }

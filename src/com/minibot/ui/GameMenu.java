@@ -12,12 +12,11 @@ import java.awt.event.ActionListener;
  */
 public class GameMenu {
     private static JMenuBar menuBar;
-    private static MacroSelector macroSelector;
 
     static {
-        macroSelector = new MacroSelector();
         menuBar = new JMenuBar();
         menuBar.add(combine(new JButton("Start"), e -> {
+            MacroSelector macroSelector = new MacroSelector();
             macroSelector.loadMacros();
             macroSelector.setVisible(true);
         }));
