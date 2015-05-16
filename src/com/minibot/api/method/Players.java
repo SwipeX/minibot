@@ -46,6 +46,7 @@ public class Players {
         RSPlayer[] raws = raw();
         if (raws == null || raws.length == 0)
             return null;
-        return new Player(raws[idx], idx);
+        RSPlayer p = raws[idx];
+        return p == null ? null : new Player(raws[idx], idx);
     }
 }

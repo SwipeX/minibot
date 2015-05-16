@@ -60,6 +60,7 @@ public class Npcs {
         RSNpc[] raws = raw();
         if (raws == null || raws.length == 0)
             return null;
-        return new Npc(raws[idx], idx);
+        RSNpc raw = raws[idx];
+        return raw == null ? null : new Npc(raws[idx], idx);
     }
 }

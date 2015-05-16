@@ -125,7 +125,7 @@ public class ChinHunter extends Macro implements Renderable {
             case 4:
                 return new Tile[]{tile.derive(-1, 0), tile.derive(0, -1), tile.derive(1, 0), tile.derive(0, 1)};
             case 5:
-                return new Tile[]{tile.derive(-1, 0), tile.derive(0, -1), tile.derive(0, 1), tile.derive(1, -1), tile.derive(1, 1)};
+                return new Tile[]{tile.derive(-1, 1), tile.derive(-1, -1), tile, tile.derive(1, -1), tile.derive(1, 1),};
         }
         return new Tile[]{};
     }
