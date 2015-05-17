@@ -166,6 +166,10 @@ public class WidgetComponent extends Wrapper<RSWidget> {
 
     @Override
     public void processAction(int opcode, String action) {
-        RuneScape.processAction(new WidgetAction(opcode, 0, index, ownerId), action, "", x(), y());
+        processAction(ActionOpcodes.WIDGET_ACTION, 0, action, "");
+    }
+
+    public void processAction(int opcode, int actionIndex, String action, String target) {
+        RuneScape.processAction(new WidgetAction(opcode, actionIndex, index, raw.getId()), action, target, x(), y());
     }
 }

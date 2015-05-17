@@ -54,7 +54,7 @@ public class Widgets {
             RSWidget raw_ = children[i];
             if (raw_ == null)
                 continue;
-            array[i] = new WidgetComponent(raw_, i);
+            array[i] = new WidgetComponent(index,raw_);
         }
         return array;
     }
