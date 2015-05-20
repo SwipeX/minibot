@@ -34,11 +34,12 @@ public class Objects {
     }
 
     private static GameObject[] copy(RSInteractableObject[] array) {
+        if (array == null || array.length == 0) return null;
         GameObject[] objects = new GameObject[array.length];
-        if (objects == null) return null;
         for (int i = 0; i < array.length; i++) {
-            if (array[i] != null)
-                objects[i] = new GameObject(array[i]);
+            RSInteractableObject obj = array[i];
+            if (obj != null)
+                objects[i] = new GameObject(obj);
         }
         return objects;
     }

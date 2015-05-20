@@ -79,7 +79,13 @@ public class ChinHunter extends Macro implements Renderable {
                 if (snare != null) {
                     if (Players.local().location().equals(next)) {
                         snare.processAction(ActionOpcodes.ITEM_ACTION_0, "Lay");
-                        Time.sleep(600, 900);
+                        Time.sleep(300, 400);
+                        Time.sleep(new Condition() {
+                            @Override
+                            public boolean validate() {
+                                return Players.local().animation() == -1;
+                            }
+                        }, 1500L);
                     }
                 }
             } else if (items != null && items.size() > 0) {

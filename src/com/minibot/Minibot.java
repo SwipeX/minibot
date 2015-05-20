@@ -64,6 +64,11 @@ public class Minibot extends JFrame implements Runnable {
 
     @Override
     public void run() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Configuration.setup();
         crawler.crawl();
         if (crawler.isOutdated())

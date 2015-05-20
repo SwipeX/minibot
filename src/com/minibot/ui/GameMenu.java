@@ -15,21 +15,26 @@ public class GameMenu {
 
     static {
         menuBar = new JMenuBar();
-        menuBar.add(combine(new JButton("Start"), e -> {
-            MacroSelector macroSelector = new MacroSelector();
-            macroSelector.loadMacros();
-            macroSelector.setVisible(true);
-        }));
-        menuBar.add(combine(new JButton("Stop"), e -> MacroSelector.halt()));
-        menuBar.add(combine(new JButton("Rendering"), e -> {
+        JMenu file = new JMenu("File");
+        menuBar.add(file);
+        file.add(combine(new JMenuItem("Start"), e -> EventQueue.invokeLater(() -> {
+                    MacroSelector macroSelector = new MacroSelector();
+                    macroSelector.loadMacros();
+                    macroSelector.setVisible(true);
+                })
+        ));
+        file.add(combine(new JMenuItem("Stop"), e -> MacroSelector.halt()));
+        JMenu options = new JMenu("Options");
+        menuBar.add(options);
+        options.add(combine(new JMenuItem("Rendering"), e -> {
                     RuneScape.LANDSCAPE_RENDERING_ENABLED = !RuneScape.LANDSCAPE_RENDERING_ENABLED;
                     RuneScape.MODEL_RENDERING_ENABLED = !RuneScape.MODEL_RENDERING_ENABLED;
                 }
         ));
-        menuBar.add(combine(new JButton("Farming"), e -> Minibot.instance().setFarming(!Minibot.instance().isFarming())));
+        options.add(combine(new JMenuItem("Farming"), e -> Minibot.instance().setFarming(!Minibot.instance().isFarming())));
     }
 
-    public static JButton combine(JButton button, ActionListener listener) {
+    public static JMenuItem combine(JMenuItem button, ActionListener listener) {
         button.addActionListener(listener);
         return button;
     }
