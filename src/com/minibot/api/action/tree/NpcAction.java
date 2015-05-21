@@ -37,15 +37,19 @@ public class NpcAction extends CharacterAction {
     }
 
     public RSNpcDefinition definition() {
-        return npc().definition();
+        Npc npc = npc();
+        return npc == null ? null : npc.definition();
     }
 
     public String name() {
-        return definition().getName();
+        RSNpcDefinition def = definition();
+        return def == null ? null : def.getName();
     }
 
     public String actionName() {
-        String[] actions = definition().getActions();
+        RSNpcDefinition def = definition();
+        if (def == null) return null;
+        String[] actions = def.getActions();
         if (actions == null)
             return null;
         int actionIndex = actionIndex();
