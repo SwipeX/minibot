@@ -1,5 +1,6 @@
 package com.minibot.macros;
 
+import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.macro.Macro;
 import com.minibot.api.macro.Manifest;
@@ -29,6 +30,7 @@ public class NightmareZone extends Macro implements Renderable {
 
     @Override
     public void run() {
+        Minibot.instance().client().resetMouseIdleTime();
         if (startExp == -1) {
             startExp = Game.experiences()[Skills.RANGE];
             start_time = System.currentTimeMillis();

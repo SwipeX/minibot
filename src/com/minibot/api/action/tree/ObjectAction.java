@@ -31,11 +31,15 @@ public class ObjectAction extends EntityAction {
     }
 
     public String name() {
-        return definition().getName();
+        RSObjectDefinition def = definition();
+        if (def == null) return null;
+        return def.getName();
     }
 
     public String actionName() {
-        String[] actions = definition().getActions();
+        RSObjectDefinition def = definition();
+        if (def == null) return null;
+        String[] actions = def.getActions();
         if (actions == null)
             return null;
         int actionIndex = actionIndex();

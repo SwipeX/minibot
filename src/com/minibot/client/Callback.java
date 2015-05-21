@@ -2,6 +2,7 @@ package com.minibot.client;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.tree.Action;
+import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Time;
 
 public class Callback {
@@ -13,6 +14,7 @@ public class Callback {
 
     @ClientInvoked
     public static void onEngineTick() {
+        RuneScape.processActions();
         if (Minibot.instance().isFarming())
             Time.sleep(80);
     }
