@@ -50,8 +50,7 @@ public class NpcAction extends CharacterAction {
         RSNpcDefinition def = definition();
         if (def == null) return null;
         String[] actions = def.getActions();
-        if (actions == null)
-            return null;
+        if (actions == null) return null;
         int actionIndex = actionIndex();
         return actionIndex >= 0 && actionIndex < actions.length ? actions[actionIndex] : null;
     }

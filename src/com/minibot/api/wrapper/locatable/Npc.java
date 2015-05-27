@@ -34,7 +34,7 @@ public class Npc extends Character<RSNpc> implements Identifiable {
 
     @Override
     public int id() {
-        return definition.getId();
+        return definition == null ? -1 : definition.getId();
     }
 
     public RSNpcDefinition definition() {
@@ -49,6 +49,7 @@ public class Npc extends Character<RSNpc> implements Identifiable {
     }
 
     public void processAction(String action) {
+        if (definition == null) return;
         String[] actions = definition.getActions();
         if (actions == null)
             return;
@@ -59,6 +60,6 @@ public class Npc extends Character<RSNpc> implements Identifiable {
 
     public String name() {
         RSNpcDefinition def = definition();
-        return def==null? null :def.getName();
+        return def == null ? null : def.getName();
     }
 }

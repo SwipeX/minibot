@@ -35,31 +35,31 @@ public class NightmareZone extends Macro implements Renderable {
             startExp = Game.experiences()[Skills.RANGE];
             start_time = System.currentTimeMillis();
         }
-        if (prayerThread == null) {
-            prayerThread = new Thread() {
-                public void run() {
-                    while (true) {
-                        if (Game.levels()[Skills.PRAYER] <= 0)
-                            return;
-                        Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("verload"));
-                        if (abs == null) System.exit(1);
-                        Item j = Inventory.first(item -> item != null && item.name() != null && item.name().contains("cake"));
-                        if (j != null) {
-                            if (j.index() == 27) {
-                                WidgetComponent protect = Widgets.get(271, 18);
-                                if (protect != null) {
-                                    protect.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Activate", "<col=ff9040>Protect from Melee");
-                                    Time.sleep(570, 580);
-                                    protect.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Deactivate", "<col=ff9040>Protect from Melee");
-                                    Time.sleep(10, 20);
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-            prayerThread.start();
-        }
+//        if (prayerThread == null) {
+//            prayerThread = new Thread() {
+//                public void run() {
+//                    while (true) {
+//                        if (Game.levels()[Skills.PRAYER] <= 0)
+//                            return;
+//                        Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("verload"));
+//                        if (abs == null) System.exit(1);
+//                        Item j = Inventory.first(item -> item != null && item.name() != null && item.name().contains("cake"));
+//                        if (j != null) {
+//                            if (j.index() == 27) {
+//                                WidgetComponent protect = Widgets.get(271, 18);
+//                                if (protect != null) {
+//                                    protect.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Activate", "<col=ff9040>Protect from Melee");
+//                                    Time.sleep(570, 580);
+//                                    protect.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Deactivate", "<col=ff9040>Protect from Melee");
+//                                    Time.sleep(10, 20);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            };
+//            prayerThread.start();
+//        }
         WidgetComponent absorbParent = Widgets.get(202, 2);
         if (absorbParent != null) {
             WidgetComponent child = absorbParent.child(widgetComponent -> widgetComponent != null && widgetComponent.index() == 9);
@@ -81,7 +81,7 @@ public class NightmareZone extends Macro implements Renderable {
                 WidgetComponent component = Widgets.get(271, 11);
                 if (component != null) {
                     component.processAction(ActionOpcodes.WIDGET_ACTION, 1, (i == 0 ? "Activate" : "Deactivate"), "<col=ff9040>Rapid Heal");
-                    Time.sleep(10, 30);
+                    Time.sleep(160, 220);
                 }
             }
             lastFlick = System.currentTimeMillis();

@@ -27,7 +27,7 @@ public class RuneScape {
         while (iterator.hasNext()) {
             Node cur = iterator.next();
             boolean fire = true;
-            if (last != null && (System.currentTimeMillis() - lastProcess) < 600) {
+            if (last != null && (System.currentTimeMillis() - lastProcess) < 100) {
                 if (last.opcode == cur.opcode && last.arg1 == cur.arg1 && last.arg2 == cur.arg2) {
                     fire = false;
                 }
@@ -59,17 +59,21 @@ public class RuneScape {
         node.opcode = opcode;
         node.actionText = actionText;
         node.targetText = targetText;
+        node.x = x;
+        node.y = y;
         queue.offer(node);
     }
 
     private static class Node {
 
         private int arg0, arg1, arg2, opcode;
+        private int x = 0;
+        private int y = 0;
         private String actionText;
         private String targetText;
 
         private void fire() {
-           Minibot.instance().client().processAction(arg1, arg2, opcode, arg0, actionText, targetText, 0, 0);
+            Minibot.instance().client().processAction(arg1, arg2, opcode, arg0, actionText, targetText, x, y);
         }
     }
 }
