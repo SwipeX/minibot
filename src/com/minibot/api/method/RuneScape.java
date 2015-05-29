@@ -27,7 +27,7 @@ public class RuneScape {
         while (iterator.hasNext()) {
             Node cur = iterator.next();
             boolean fire = true;
-            if (last != null && (System.currentTimeMillis() - lastProcess) < 100) {
+            if (last != null && (System.currentTimeMillis() - lastProcess) < 15) {
                 if (last.opcode == cur.opcode && last.arg1 == cur.arg1 && last.arg2 == cur.arg2) {
                     fire = false;
                 }
