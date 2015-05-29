@@ -49,7 +49,7 @@ public class SnareTrapper extends Macro implements Renderable {
         Tile next = getNext();
         if (next == null) {
             Inventory.dropAll(item -> (item.name().equals("Raw bird meat") || item.name().equals("Bones")));
-            Time.sleep(50);
+            Time.sleep(550);
             return;
         } else {
             GameObject obj = Objects.topAt(next);
