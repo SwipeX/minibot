@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by tim on 5/17/15.
  */
-@Manifest(name = "NightmareZone4", author = "Swipe", version = "1.0.0", description = "Absorption NMZ Player")
-public class NightmareZone4 extends Macro implements Renderable {
+@Manifest(name = "NightmareZone", author = "Swipe", version = "1.0.0", description = "Absorption NMZ Player")
+public class NightmareZone extends Macro implements Renderable {
     private boolean absorb;
     private long lastFlick = -1;
     private long lastCombat;
