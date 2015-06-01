@@ -16,8 +16,14 @@ public class IntervalHandler extends BreakHandler {
         times = new long[DEFAULT_SIZE];
         lengths = new int[DEFAULT_SIZE];
         for (int i = 0; i < DEFAULT_SIZE; i++) {
-            times[i] = System.currentTimeMillis() + (i * SIX_HOURS) +
-                    Random.nextInt(-1 * THIRTY_MINUTES, THIRTY_MINUTES);; //6 hours from point times[i] +- 30M
+            if (i == 0) {
+                times[0] = System.currentTimeMillis() + SIX_HOURS +
+                        Random.nextInt(-1 * THIRTY_MINUTES, THIRTY_MINUTES);                ;
+            } else {
+                times[i] = times[i - 1] + (2 * SIX_HOURS) + //last break + 12 hrs
+                        Random.nextInt(-1 * THIRTY_MINUTES, THIRTY_MINUTES);
+            }
+            ; //6 hours from point times[i] +- 30M
             lengths[i] = SIX_HOURS + Random.nextInt(-1 * THIRTY_MINUTES, THIRTY_MINUTES);//all breaks will be the same six hours +- 30M
         }
     }
