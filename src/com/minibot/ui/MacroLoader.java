@@ -1,8 +1,8 @@
 package com.minibot.ui;
 
-import com.minibot.api.macro.Macro;
-import com.minibot.api.macro.MacroDefinition;
-import com.minibot.api.macro.Manifest;
+import com.minibot.bot.macro.Macro;
+import com.minibot.bot.macro.MacroDefinition;
+import com.minibot.bot.macro.Manifest;
 import com.minibot.api.util.filter.Filter;
 
 import java.io.IOException;

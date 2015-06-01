@@ -1,14 +1,10 @@
 package com.minibot;
 
-import com.minibot.api.macro.Macro;
 import com.minibot.api.method.Game;
-import com.minibot.api.method.Login;
-import com.minibot.api.method.Mouse;
-import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
+import com.minibot.bot.BreakHandler;
 import com.minibot.client.GameCanvas;
 import com.minibot.client.natives.RSClient;
-import com.minibot.macros.ChinHunter;
 import com.minibot.mod.Injector;
 import com.minibot.mod.ModScript;
 import com.minibot.mod.transforms.*;
@@ -21,8 +17,6 @@ import com.minibot.util.io.Crawler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -37,6 +31,7 @@ public class Minibot extends JFrame implements Runnable {
     private String password;
     private boolean macroRunning;
     private boolean farming;
+    private BreakHandler breakHandler;
 
     public Minibot() {
         super("Minibot");
@@ -101,7 +96,7 @@ public class Minibot extends JFrame implements Runnable {
         container.setBackground(Color.BLACK);
         this.client = (RSClient) crawler.start(classloader);
         container.add(client.asApplet());
-        container.add(GameMenu.component(),BorderLayout.NORTH);
+        container.add(GameMenu.component(), BorderLayout.NORTH);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -125,7 +120,6 @@ public class Minibot extends JFrame implements Runnable {
     }
 
 
-
     public void setFarming(boolean farming) {
         this.farming = farming;
     }
@@ -140,5 +134,9 @@ public class Minibot extends JFrame implements Runnable {
 
     public void setMacroRunning(boolean macroRunning) {
         this.macroRunning = macroRunning;
+    }
+
+    public BreakHandler breakHandler() {
+        return breakHandler;
     }
 }

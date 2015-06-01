@@ -1,10 +1,11 @@
-package com.minibot.api.macro;
+package com.minibot.bot.macro;
 
 import com.minibot.Minibot;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Login;
 import com.minibot.api.method.Mouse;
 import com.minibot.api.util.Time;
+import com.minibot.bot.BreakHandler;
 
 public abstract class Macro {
 
@@ -37,6 +38,9 @@ public abstract class Macro {
     public abstract void run();
 
     protected final void checkLogin() {
+        BreakHandler handler = Minibot.instance().breakHandler();
+        if (handler != null && handler.activated()) //if no handler/no break, let this continue
+            return;//break is current active
         if (!Game.isLoggedIn()) {
             if (Login.state() == Login.STATE_MAIN_MENU) {
                 Mouse.hop(Login.EXISTING_USER.x, Login.EXISTING_USER.y);

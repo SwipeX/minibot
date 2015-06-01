@@ -2,8 +2,8 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.macro.Macro;
-import com.minibot.api.macro.Manifest;
+import com.minibot.bot.macro.Macro;
+import com.minibot.bot.macro.Manifest;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Skills;

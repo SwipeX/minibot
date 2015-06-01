@@ -1,4 +1,4 @@
-package com.minibot.api.macro;
+package com.minibot.bot.macro;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

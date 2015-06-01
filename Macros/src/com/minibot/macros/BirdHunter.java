@@ -2,8 +2,8 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.macro.Macro;
-import com.minibot.api.macro.Manifest;
+import com.minibot.bot.macro.Macro;
+import com.minibot.bot.macro.Manifest;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Condition;
 import com.minibot.api.util.Renderable;
