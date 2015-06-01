@@ -9,14 +9,17 @@ public abstract class BreakHandler {
     protected int[] lengths;
     protected long[] times;
 
+    /**
+     * Use this void to set up lengths and times
+     */
     public abstract void init();
 
     public boolean activated() {
-        long current = System.currentTimeMillis();
-        return current >= last() && current <= end();
+        long time = System.currentTimeMillis();
+        return time >= current() && time <= end();
     }
 
-    public long last() {
+    public long current() {
         return times[index];
     }
 
@@ -25,7 +28,7 @@ public abstract class BreakHandler {
     }
 
     public long elapsed() {
-        return activated() ? System.currentTimeMillis() - last() : -1;
+        return activated() ? System.currentTimeMillis() - current() : -1;
     }
 
     public long remaining() {

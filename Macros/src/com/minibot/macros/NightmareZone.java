@@ -30,6 +30,8 @@ public class NightmareZone extends Macro implements Renderable {
 
     @Override
     public void run() {
+        if (Game.realLevels()[Skills.ATTACK] == 75)
+            System.exit(1);
         Minibot.instance().client().resetMouseIdleTime();
         if (startExp == -1) {
             startExp = Game.experiences()[Skills.ATTACK];
