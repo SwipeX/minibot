@@ -132,7 +132,7 @@ public class Projection {
             int centerX = (calcY * sin) + (calcX * cos) >> 16;
             int centerY = (calcX * sin) - (calcY * cos) >> 16;
             int screenX = 12 + (minimap.x() + (minimap.width() / 2)) + centerX;
-            int screenY = 1 + (minimap.y() + (minimap.height() / 2)) + centerY;
+            int screenY = 1 + (minimap.y() + (minimap.height() / 2)) + centerY; //TODO re-add widget x and y if needed
             return new Point(screenX, screenY);
         }
         return null;

@@ -5,16 +5,16 @@ import com.minibot.api.method.Game;
 import com.minibot.api.method.Login;
 import com.minibot.api.method.Mouse;
 import com.minibot.api.util.Time;
-import com.minibot.bot.BreakHandler;
+import com.minibot.bot.breaks.BreakHandler;
 
 public abstract class Macro {
 
-    Thread thread;
+    private Thread thread;
     private String username;
     private String password;
 
     public final void start() {
-        final Macro macro = this;
+        Macro macro = this;
         thread = new Thread() {
             public void run() {
                 username = Minibot.instance().client().getUsername();
@@ -37,7 +37,7 @@ public abstract class Macro {
 
     public abstract void run();
 
-    protected final void checkLogin() {
+    private void checkLogin() {
         BreakHandler handler = Minibot.instance().breakHandler();
         if (handler != null && handler.activated()) //if no handler/no break, let this continue
             return;//break is current active

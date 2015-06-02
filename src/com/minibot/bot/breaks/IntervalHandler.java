@@ -1,4 +1,4 @@
-package com.minibot.bot;
+package com.minibot.bot.breaks;
 
 import com.minibot.api.util.Random;
 
@@ -6,8 +6,8 @@ import com.minibot.api.util.Random;
  * Created by tim on 6/1/15.
  */
 public class IntervalHandler extends BreakHandler {
-    private final static int DEFAULT_SIZE = 10;
-    private final static int SIX_HOURS = 6 * 60 * 60 * 1000; //H * M * S * MS -> THE    JVM WILL CONSTANT FOLD THIS
+    private static final int DEFAULT_SIZE = 10;
+    private static final int SIX_HOURS = 6 * 60 * 60 * 1000; //H * M * S * MS -> THE    JVM WILL CONSTANT FOLD THIS
     private static final int THIRTY_MINUTES = 30 * 60 * 1000;
 
     @Override

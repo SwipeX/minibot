@@ -1,11 +1,11 @@
 package com.minibot.api.wrapper;
 
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.action.tree.Action;
-import com.minibot.api.action.tree.TableItemAction;
-import com.minibot.api.action.tree.WidgetAction;
+import com.minibot.api.action.tree.*;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Identifiable;
+import com.minibot.api.wrapper.locatable.GameObject;
+import com.minibot.api.wrapper.locatable.GroundItem;
 import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.util.DefinitionLoader;
 
@@ -90,8 +90,7 @@ public class Item implements Identifiable {
      * @return true if this item is contained within a table-type widget
      */
     public boolean table() {
-        if (comp == null) return true;
-        return comp.type() == 2;
+        return comp == null || comp.type() == 2;
     }
 
     public void processAction(int opcode, String action) {
@@ -108,6 +107,29 @@ public class Item implements Identifiable {
                 RuneScape.processAction(new WidgetAction(opcode, index, this.index, comp.raw.getId()), action, itemName, 0, 0);
             }
         }
+    }
+
+    public void use(Item target) {
+        RuneScape.processAction(new UseItemAction(id, index, comp.raw.getId()), "Use", "Use");
+        RuneScape.processAction(new ItemOnItemAction(target.id, target.index, target.comp.raw.getId()), "Use", "Use " + name() + " -> " + target.name());
+    }
+
+    public void use(GameObject target) {
+        RuneScape.processAction(new UseItemAction(id, index, comp.raw.getId()), "Use", "Use");
+        RuneScape.processAction(new ItemOnEntityAction(ActionOpcodes.ITEM_ON_OBJECT, target.raw.getId(), target.localX(), target.localY()), "Use", "Use " + name() + " -> " + target.name());
+    }
+
+    public void use(GroundItem target) {
+        RuneScape.processAction(new UseItemAction(id, index, comp.raw.getId()), "Use", "Use");
+        RuneScape.processAction(new ItemOnEntityAction(ActionOpcodes.ITEM_ON_GROUND_ITEM, target.id(), target.localX(), target.localY()), "Use", "Use " + name() + " -> " + target.name());
+    }
+
+    public void drop() {
+        processAction(ActionOpcodes.ITEM_ACTION_4, "Drop");
+    }
+
+    public void examine() {
+        processAction(ActionOpcodes.EXAMINE_ITEM, "Examine");
     }
 
     public void processAction(String action) {

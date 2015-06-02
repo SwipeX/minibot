@@ -77,11 +77,13 @@ public class BirdHunter extends Macro implements Renderable {
 					if (Players.local().location().equals(next)) {
 						snare.processAction(ActionOpcodes.ITEM_ACTION_0, "Lay");
 						Time.sleep(300, 400);
-						Time.sleep(new Condition() {
+						if (Time.sleep(new Condition() {
 							public boolean validate() {
 								return Players.local().animation() == -1;
 							}
-						}, 1500L);
+						}, 1500L)) {
+							Walking.walkTo(next.derive(0, 1));
+						}
 					}
 				}
 			} else if (items != null && items.size() > 0) {

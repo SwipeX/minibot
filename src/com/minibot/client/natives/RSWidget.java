@@ -1,7 +1,5 @@
 package com.minibot.client.natives;
 
-import com.minibot.client.Artificial;
-
 public interface RSWidget extends ClientNative {
     RSWidget[] getChildren();
     int getId();
@@ -23,10 +21,4 @@ public interface RSWidget extends ClientNative {
     String[] getActions();
     String getText();
     boolean isHidden();
-
-    @Artificial
-    int getContainerX();
-
-    @Artificial
-    int getContainerY();
 }

@@ -1,4 +1,4 @@
-package com.minibot.bot;
+package com.minibot.bot.breaks;
 
 /**
  * Created by tim on 5/29/15.

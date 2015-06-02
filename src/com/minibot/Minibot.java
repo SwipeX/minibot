@@ -2,7 +2,7 @@ package com.minibot;
 
 import com.minibot.api.method.Game;
 import com.minibot.api.util.Time;
-import com.minibot.bot.BreakHandler;
+import com.minibot.bot.breaks.BreakHandler;
 import com.minibot.client.GameCanvas;
 import com.minibot.client.natives.RSClient;
 import com.minibot.mod.Injector;
@@ -79,7 +79,7 @@ public class Minibot extends JFrame implements Runnable {
         injector.getTransforms().add(new InterfaceImpl());
         injector.getTransforms().add(new ModelHack());
         injector.getTransforms().add(new CanvasHack());
-        injector.getTransforms().add(new WidgetPositionHack());
+        //injector.getTransforms().add(new WidgetPositionHack());
         injector.getTransforms().add(new GetterAdder());
         injector.getTransforms().add(new DefinitionInvoker());
         injector.getTransforms().add(new HoveredRegionTileSetter());

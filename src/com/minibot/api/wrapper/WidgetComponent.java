@@ -60,11 +60,11 @@ public class WidgetComponent extends Wrapper<RSWidget> {
     }
 
     public int x() {
-        return raw.getContainerX() + relX();
+        return relX();
     }
 
     public int y() {
-        return raw.getContainerY() + relY();
+        return relY();
     }
 
     public int hash() {

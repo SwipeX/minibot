@@ -1,12 +1,12 @@
-package com.minibot.bot;
-
-import com.minibot.api.util.Random;
+package com.minibot.bot.breaks;
 
 /**
  * Created by tim on 6/1/15.
  */
 public class RotationHandler extends BreakHandler {
-    private final static int SIX_HOURS = 6 * 60 * 60 * 1000; //H * M * S * MS -> THE    JVM WILL CONSTANT FOLD THIS
+
+    private static final int SIX_HOURS = 6 * 60 * 60 * 1000; //H * M * S * MS -> THE    JVM WILL CONSTANT FOLD THIS
+
     @Override
     public void init() {
         //set up accounts, once six hours is up switch accounts and macros.

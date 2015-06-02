@@ -1,5 +1,6 @@
 package com.minibot.api.wrapper.locatable;
 
+import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.action.tree.NpcAction;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Identifiable;
@@ -54,8 +55,8 @@ public class Npc extends Character<RSNpc> implements Identifiable {
         if (actions == null)
             return;
         int index = Arrays.asList(actions).indexOf(action);
-        if (index > 0)
-            processAction(9 + index, action);
+        if (index >= 0)
+            processAction(ActionOpcodes.NPC_ACTION_0 + index, action);
     }
 
     public String name() {

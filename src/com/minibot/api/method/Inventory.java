@@ -5,8 +5,10 @@ import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.Item.Source;
 import com.minibot.api.wrapper.WidgetComponent;
+import com.minibot.api.wrapper.locatable.GameObject;
+import com.minibot.api.wrapper.locatable.GroundItem;
 
-import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * @author Tyler Sedlar
@@ -88,33 +90,32 @@ public class Inventory {
         return null;
     }
 
-    public static boolean dropAll(Filter<Item> filter) {
-        boolean bank = Bank.viewing();
-        WidgetComponent container = Widgets.get(bank ? BANK_PARENT : INVENTORY_PARENT, bank ?
-                BANK_CONTAINER : INVENTORY_CONTAINER);
-        int widgetUid = container.hash();
-        for (Item item : Inventory.items(filter)) {
-            if (item == null) continue;
-            Point p = item.point();
-            if (p == null)
-                continue;
-            item.processAction(ActionOpcodes.ITEM_ACTION_4, "Drop");
-        }
-        return items(filter).length == 0;
+    public static void dropAll(Filter<Item> filter) {
+        apply(filter, Item::drop);
     }
 
-    public static boolean dropAllExcept(Filter<Item> filter) {
-        boolean bank = Bank.viewing();
-        WidgetComponent container = Widgets.get(bank ? BANK_PARENT : INVENTORY_PARENT, bank ?
-                BANK_CONTAINER : INVENTORY_CONTAINER);
-        int widgetUid = container.hash();
-        for (Item item : Inventory.items(Filter.not(filter))) {
-            if (item == null) continue;
-            Point p = item.point();
-            if (p == null)
-                continue;
-            item.processAction(ActionOpcodes.ITEM_ACTION_4, "Drop");
-        }
-        return 28 - items(filter).length == count();
+    public static void dropAllExcept(Filter<Item> filter) {
+        apply(Filter.not(filter), Item::drop);
+    }
+
+    public static void apply(Filter<Item> filter, Consumer<Item> application) {
+        for (Item item : items(filter))
+            application.accept(item);
+    }
+
+    public static void apply(Consumer<Item> application) {
+        apply(i -> i != null, application);
+    }
+
+    public static void use(Item a, Item b) {
+        a.use(b);
+    }
+
+    public static void use(Item a, GroundItem b) {
+        a.use(b);
+    }
+
+    public static void use(Item a, GameObject b) {
+        a.use(b);
     }
 }
