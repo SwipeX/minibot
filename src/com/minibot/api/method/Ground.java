@@ -3,8 +3,7 @@ package com.minibot.api.method;
 import com.minibot.Minibot;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.locatable.GroundItem;
-import com.minibot.client.natives.RSNode;
-import com.minibot.client.natives.RSNodeDeque;
+import com.minibot.client.natives.*;
 import com.minibot.mod.ModScript;
 
 import java.util.ArrayDeque;
@@ -46,7 +45,6 @@ public class Ground {
     }
 
     public static Deque<GroundItem> at(int x, int y) {
-        String itemClass = ModScript.getClass("Item");
         int baseX = Game.baseX(), baseY = Game.baseY();
         RSNodeDeque[][][] raw = raw();
         if (raw == null || raw.length == 0)
@@ -63,7 +61,7 @@ public class Ground {
         RSNode tail = rawDeque.getTail();
         RSNode current = tail.getPrevious();
         while (current != null && current != tail) {
-            if (current.getClass().getName().equals(itemClass))
+            if (current instanceof RSItem)
                 items.add(new GroundItem(current, x + baseX, y + baseY));
             current = current.getPrevious();
         }

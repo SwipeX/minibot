@@ -38,6 +38,7 @@ public class Minibot extends JFrame implements Runnable {
         setBackground(Color.BLACK);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.crawler = new Crawler(Crawler.GameType.OSRS);
+        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
         new Thread(this).start();
     }
 

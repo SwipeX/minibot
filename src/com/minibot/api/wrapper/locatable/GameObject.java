@@ -102,8 +102,7 @@ public class GameObject extends Wrapper<RSInteractableObject> implements Locatab
             return;
         // if shit breaks look here
         //RuneScape.processAction(Action.valueOf(opcode, raw.getId(), raw.getX(), raw.getY()), action, name);
-        Point screen = screen();
-        RuneScape.processAction(Action.valueOf(opcode, raw.getId(), localX(), localY()), action, name, screen.x, screen.y);
+        RuneScape.processAction(Action.valueOf(opcode, raw.getId(), localX(), localY()), action, name);
     }
 
     public void processAction(String action) {

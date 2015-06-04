@@ -26,8 +26,10 @@ public class GameCanvas extends Canvas implements Renderable {
     public int mouseX = 0, mouseY = 0;
 
     public GameCanvas() {
-        this.raw = new BufferedImage(765, 503, BufferedImage.TYPE_INT_ARGB);
-        this.backBuffer = new BufferedImage(765, 503, BufferedImage.TYPE_INT_ARGB);
+        this.raw = new BufferedImage(Toolkit.getDefaultToolkit().getScreenSize().width,
+                Toolkit.getDefaultToolkit().getScreenSize().height, BufferedImage.TYPE_INT_ARGB);
+        this.backBuffer = new BufferedImage(Toolkit.getDefaultToolkit().getScreenSize().width,
+                Toolkit.getDefaultToolkit().getScreenSize().height, BufferedImage.TYPE_INT_ARGB);
         requestFocusInWindow();
         queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
         queue.push(new EventQueue() {
