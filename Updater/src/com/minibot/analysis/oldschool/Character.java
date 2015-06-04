@@ -49,6 +49,8 @@ public class Character extends GraphVisitor {
                             return;
                         for (AbstractNode delegate : delegates) {
                             FieldMemberNode fmn = (FieldMemberNode) delegate;
+                            if (!fmn.owner().equals(cn.name))
+                                continue;
                             addHook(new FieldHook(hooks.containsKey("x") ? "y" : "x", fmn.fin()));
                             added++;
                         }
