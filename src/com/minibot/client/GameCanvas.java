@@ -11,12 +11,13 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameCanvas extends Canvas implements Renderable {
 
     public static final int INPUT_MOUSE = 0x2;
     public static final int INPUT_KEYBOARD = 0x4;
-    private static List<Renderable> renderables = new ArrayList<>();
+    private static List<Renderable> renderables = new CopyOnWriteArrayList<>();
     private final BufferedImage raw;
     private final BufferedImage backBuffer;
 
