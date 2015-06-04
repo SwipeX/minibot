@@ -2,6 +2,7 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.util.Random;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 import com.minibot.api.method.*;
@@ -34,7 +35,7 @@ public class BirdHunter extends Macro implements Renderable {
 	private static final int SKILL_HUNTER = 21;
 
 	private Tile tile;
-	private int startExperience = 0;
+	private int startExperience;
 	private long startTime;
 
 	@Override
@@ -62,15 +63,15 @@ public class BirdHunter extends Macro implements Renderable {
 					public boolean validate() {
 						return Objects.topAt(next) == null && Players.local().animation() == -1;
 					}
-				}, 1500L);
-			} else if (obj == null && (items == null || items.size() == 0)) {
+				}, Random.nextInt(1500, 2500));
+			} else if (obj == null && (items == null || items.isEmpty())) {
 				if (!Players.local().location().equals(next)) {
 					Walking.walkTo(next);
 					Time.sleep(new Condition() {
 						public boolean validate() {
 							return Players.local().location().equals(next);
 						}
-					}, 1000L);
+					}, Random.nextInt(2500, 4000));
 				}
 				Item snare = Inventory.first(item -> item.name().equals("Bird snare"));
 				if (snare != null) {
@@ -81,12 +82,12 @@ public class BirdHunter extends Macro implements Renderable {
 							public boolean validate() {
 								return Players.local().animation() == -1;
 							}
-						}, 1500L)) {
+						}, Random.nextInt(2750, 4000))) {
 							Walking.walkTo(next.derive(0, 1));
 						}
 					}
 				}
-			} else if (items != null && items.size() > 0) {
+			} else if (items != null && !items.isEmpty()) {
 				GroundItem item = items.getFirst();
 				if (item != null) {
 					item.processAction(ActionOpcodes.GROUND_ITEM_ACTION_3, "Lay");
@@ -94,12 +95,14 @@ public class BirdHunter extends Macro implements Renderable {
 						public boolean validate() {
 							return Objects.topAt(next) != null && Players.local().animation() == -1;
 						}
-					}, 1500L);
+					}, Random.nextInt(2750, 4000));
 				}
 			}
 		} else {
-			Inventory.dropAll(item -> (item.name().equals("Raw bird meat") ||
-					item.name().equals("Bones")));
+			Inventory.dropAll(item -> {
+                String name = item.name();
+                return name != null && (name.equals("Raw bird meat") || name.equals("Bones"));
+            });
 			Time.sleep(50);
 		}
 	}
@@ -108,20 +111,23 @@ public class BirdHunter extends Macro implements Renderable {
 		if (obj == null)
 			return false;
 		RSObjectDefinition def = obj.definition();
-		if (def == null)
-			return false;
+		if (def == null) {
+            return false;
+        }
 		String[] actions = def.getActions();
-		if (actions == null)
-			return false;
-		List<String> act = Arrays.asList(actions);
-		return act.contains("Check") || !act.contains("Investigate");
+		if (actions == null) {
+            return false;
+        }
+        List<String> act = Arrays.asList(actions);
+        return act.contains("Check") || !act.contains("Investigate");
 	}
 
 	/**
 	 * @return the maximum number of traps that can be used at current level.
 	 */
 	private int trapSize() {
-		return Game.realLevels()[SKILL_HUNTER] / 20 + 1;
+        System.out.println((Game.realLevels()[SKILL_HUNTER] / 20 + 1));
+		return Game.realLevels()[SKILL_HUNTER] / 20 + 1; // print this out
 	}
 
 	private Tile[] traps() {
@@ -149,20 +155,22 @@ public class BirdHunter extends Macro implements Renderable {
 
 	public Tile getNext() {
 		// No trap
-		for (Tile tile : traps()) {
+        Tile[] traps = traps();
+        System.out.println(Arrays.toString(traps));
+        for (Tile tile : traps) {
 			GameObject obj = Objects.topAt(tile);
 			if (obj == null) {
 				return tile;
 			}
 		}
-		// Triggered
-		for (Tile tile : traps()) {
+        // Triggered
+		for (Tile tile : traps) {
 			GameObject obj = Objects.topAt(tile);
 			if (obj != null && triggered(obj)) {
 				return tile;
 			}
 		}
-		return null;
+        return null;
 	}
 
 	public int hourly(int val, long difference) {

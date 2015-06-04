@@ -99,8 +99,10 @@ public class Inventory {
     }
 
     public static void apply(Filter<Item> filter, Consumer<Item> application) {
-        for (Item item : items(filter))
-            application.accept(item);
+        for (Item item : items(filter)) {
+            if (item != null)
+                application.accept(item);
+        }
     }
 
     public static void apply(Consumer<Item> application) {
