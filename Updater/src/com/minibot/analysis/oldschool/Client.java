@@ -24,7 +24,7 @@ import java.util.List;
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices", "playerIndices",
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
         "hoveredRegionTileX", "hoveredRegionTileY", "experiences", "levels", "realLevels", "username", "password", "loginState",
-        "hintX", "hintY","hintPlayerIndex","hintNpcIndex", "screenWidth", "screenHeight", "screenZoom"})
+        "hintX", "hintY","hintPlayerIndex","hintNpcIndex", "screenWidth", "screenHeight", "screenZoom", "screenState"})
 public class Client extends GraphVisitor {
 
     @Override
@@ -66,6 +66,7 @@ public class Client extends GraphVisitor {
         visitAll(new Password());
         visitAll(new LoginState());
         visitAll(new ScreenVisitor());
+        visitAll(new ScreenState());
         updater.visitor("Region").visitIfM(new HoveredTile(), mn -> mn.desc.contains(";IIIII") && mn.desc.endsWith("V"));
     }
 
@@ -753,6 +754,44 @@ public class Client extends GraphVisitor {
                     }
                 }
             });
+        }
+    }
+
+    private class ScreenState extends BlockVisitor {
+
+        private int added = 0;
+
+        @Override
+        public boolean validate() {
+            return added < 3;
+        }
+
+        @Override
+        public void visit(Block block) {
+            if (block.count(new InsnQuery(ILOAD)) >= 4 && block.count(new InsnQuery(ISTORE)) >= 4) {
+                block.tree().accept(new NodeVisitor(this) {
+                    public void visitField(FieldMemberNode fmn) {
+                        if (fmn.opcode() == GETSTATIC && fmn.desc().equals("I")) {
+                            VariableNode vn = (VariableNode) fmn.preLayer(IMUL, ISTORE);
+                            if (vn != null) {
+                                String name = null;
+                                int var = vn.var();
+                                if (var == 21) {
+                                    name = "screenState";
+                                } else if (var == 22) {
+                                    name = "screenWidth";
+                                } else if (var == 23) {
+                                    name = "screenHeight";
+                                }
+                                if (name == null || hooks.containsKey(name))
+                                    return;
+                                added++;
+                                addHook(new FieldHook(name, fmn.fin()));
+                            }
+                        }
+                    }
+                });
+            }
         }
     }
 }
