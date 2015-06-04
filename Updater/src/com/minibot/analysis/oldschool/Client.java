@@ -68,7 +68,7 @@ public class Client extends GraphVisitor {
         visitAll(new LoginState());
         visitAll(new ScreenVisitor());
         visitAll(new ScreenState());
-        updater.visitor("Region").visitIfM(new HoveredTile(), mn -> mn.desc.contains(";IIIII") && mn.desc.endsWith("V"));
+        visitAll(new HoveredRegionTiles());
     }
 
     private class ScreenVisitor extends BlockVisitor {
@@ -230,35 +230,6 @@ public class Client extends GraphVisitor {
                 addHook(new FieldHook("realLevels", realLevels.fin()));
                 lock.set(true);
             }
-        }
-    }
-
-    private class HoveredTile extends BlockVisitor {
-
-        @Override
-        public boolean validate() {
-            return !lock.get();
-        }
-
-        @Override
-        public void visit(Block block) {
-            block.tree().accept(new NodeVisitor() {
-                @Override
-                public void visitField(FieldMemberNode fmn) {
-                    if (fmn.opcode() == PUTSTATIC && fmn.desc().equals("I")) {
-                        VariableNode setTo = fmn.firstVariable();
-                        if (setTo == null)
-                            return;
-                        if (!hooks.containsKey("hoveredRegionTileX")) {
-                            addHook(new FieldHook("hoveredRegionTileX", fmn.fin()));
-                        } else if (!hooks.containsKey("hoveredRegionTileY")) {
-                            addHook(new FieldHook("hoveredRegionTileY", fmn.fin()));
-                        } else {
-                            lock.set(true);
-                        }
-                    }
-                }
-            });
         }
     }
 
@@ -821,6 +792,45 @@ public class Client extends GraphVisitor {
                         }
                     }
                 });
+            }
+        }
+    }
+
+    private class HoveredRegionTiles extends BlockVisitor {
+
+        private int added = 0;
+
+        @Override
+        public boolean validate() {
+            return added < 2;
+        }
+
+        @Override
+        public void visit(Block block) {
+            List<AbstractNode> layer = block.tree().layerAll(ISTORE, GETSTATIC);
+            if (layer != null && layer.size() == 2) {
+                VariableNode yLoad = (VariableNode) block.tree().layer(INVOKEVIRTUAL, IADD, ILOAD);
+                if (yLoad != null) {
+                    block.tree().accept(new NodeVisitor(this) {
+                        public void visitVariable(VariableNode vn) {
+                            if (vn.opcode() == ISTORE) {
+                                FieldMemberNode fmn = vn.firstField();
+                                if (fmn != null) {
+                                    String name;
+                                    if (vn.var() == yLoad.var()) {
+                                        name = "hoveredRegionTileY";
+                                    } else {
+                                        name = "hoveredRegionTileX";
+                                    }
+                                    if (hooks.containsKey(name))
+                                        return;
+                                    addHook(new FieldHook(name, fmn.fin()));
+                                    added++;
+                                }
+                            }
+                        }
+                    });
+                }
             }
         }
     }
