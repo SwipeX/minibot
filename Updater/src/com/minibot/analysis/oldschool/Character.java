@@ -10,6 +10,8 @@ import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.*;
 import org.objectweb.asm.tree.ClassNode;
 
+import java.util.List;
+
 @VisitorInfo(hooks = {"x", "y", "health", "maxHealth", "interactingIndex", "animation"})
 public class Character extends GraphVisitor {
 
@@ -21,7 +23,7 @@ public class Character extends GraphVisitor {
 
     @Override
     public void visit() {
-        visitAll(new PositionHooks());
+        visitIfM(new PositionHooks(), m -> m.desc.startsWith("(L" + cn.name + ";I") && (m.access & ACC_STATIC) != 0);
         visitAll(new HealthHooks());
         visitAll(new InteractingIndex());
         visitAll(new Animation());
@@ -38,25 +40,21 @@ public class Character extends GraphVisitor {
 
         @Override
         public void visit(Block block) {
-            if (block.count(new NumberQuery(SIPUSH, 13184)) > 0) {
-                block.tree().accept(new NodeVisitor() {
-                    public void visitJump(JumpNode jn) {
-                        String name = null;
-                        if (jn.opcode() == IF_ICMPGE) {
-                            name = "x";
-                        } else if (jn.opcode() == IF_ICMPLT) {
-                            name = "y";
+            block.tree().accept(new NodeVisitor() {
+                @Override
+                public void visitMethod(MethodMemberNode mmn) {
+                    if (mmn.children() >= 3) { //params will always be charac.x, charac.y, heightArg, sometimesDummy
+                        List<AbstractNode> delegates = mmn.layerAll(IMUL, GETFIELD);
+                        if (delegates == null || delegates.size() != 2)
+                            return;
+                        for (AbstractNode delegate : delegates) {
+                            FieldMemberNode fmn = (FieldMemberNode) delegate;
+                            addHook(new FieldHook(hooks.containsKey("x") ? "y" : "x", fmn.fin()));
+                            added++;
                         }
-                        if (name == null || hooks.containsKey(name))
-                            return;
-                        FieldMemberNode fmn = (FieldMemberNode) jn.layer(IMUL, GETFIELD);
-                        if (fmn == null)
-                            return;
-                        addHook(new FieldHook(name, fmn.fin()));
-                        added++;
                     }
-                });
-            }
+                }
+            });
         }
     }
 
