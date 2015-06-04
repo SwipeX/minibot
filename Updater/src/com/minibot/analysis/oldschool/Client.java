@@ -45,7 +45,8 @@ public class Client extends GraphVisitor {
         visitDefLoader("loadNpcDefinition", "NpcDefinition", false);
         visitDefLoader("loadItemDefinition", "ItemDefinition", false);
         visitStaticFields();
-        visitAll(new TargetHooks());
+        visitAll(new HintPlayerIndex());
+        visitAll(new HintNpcIndex());
         visitAll(new ExperienceHooks());
         visitAll(new CameraXY());
         visitAll(new CameraZ());
@@ -456,28 +457,57 @@ public class Client extends GraphVisitor {
         }
     }
 
-    private class TargetHooks extends BlockVisitor {
+    private class HintPlayerIndex extends BlockVisitor {
 
         @Override
         public boolean validate() {
-            return true;
+            return !lock.get();
         }
 
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
-                public void visitVariable(VariableNode vn) {
-                    if (vn.opcode() == ASTORE && vn.var() == 7) {
-                        FieldMemberNode type = (FieldMemberNode) block.tree().layer(ASTORE, AALOAD, GETSTATIC);
-                        if (type == null) return;
-                        if (type.desc().equals("[" + desc("Player"))) {
-                            FieldMemberNode fmn = (FieldMemberNode) vn.layer(AALOAD, IMUL, GETSTATIC);
-                            if (fmn != null)
-                                hooks.put("hintPlayerIndex", new FieldHook("hintPlayerIndex", fmn.fin()));
-                        } else if (type.desc().equals("[" + desc("Npc"))) {
-                            FieldMemberNode fmn = (FieldMemberNode) vn.layer(AALOAD, IMUL, GETSTATIC);
-                            if (fmn != null)
-                                hooks.put("hintNpcIndex", new FieldHook("hintNpcIndex", fmn.fin()));
+                public void visitJump(JumpNode jn) {
+                    if (jn.opcode() == IF_ICMPNE) {
+                        FieldMemberNode fmn = (FieldMemberNode) jn.layer(IMUL, GETSTATIC);
+                        if (fmn != null && fmn.opcode() == GETSTATIC && fmn.owner().equals("client")) {
+                            FieldMemberNode array = (FieldMemberNode) jn.layer(IALOAD, GETSTATIC);
+                            if (array != null && array.desc().equals("[I")) {
+                                VariableNode vn = array.nextVariable();
+                                if (vn != null && vn.var() == 1) {
+                                    addHook(new FieldHook("hintPlayerIndex", fmn.fin()));
+                                    lock.set(true);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private class HintNpcIndex extends BlockVisitor {
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor(this) {
+                public void visitJump(JumpNode jn) {
+                    if (jn.opcode() == IF_ICMPNE) {
+                        FieldMemberNode fmn = (FieldMemberNode) jn.layer(IMUL, GETSTATIC);
+                        if (fmn != null && fmn.opcode() == GETSTATIC && fmn.owner().equals("client")) {
+                            FieldMemberNode array = (FieldMemberNode) jn.layer(IALOAD, GETSTATIC);
+                            if (array != null && array.desc().equals("[I")) {
+                                AbstractNode an = array.next(ISUB);
+                                if (an != null && an.layer(IMUL, GETSTATIC) != null) {
+                                    addHook(new FieldHook("hintNpcIndex", fmn.fin()));
+                                    lock.set(true);
+                                }
+                            }
                         }
                     }
                 }

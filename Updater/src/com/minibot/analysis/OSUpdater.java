@@ -109,7 +109,7 @@ public class OSUpdater extends Updater {
 
     public static void main(String[] args) throws Exception {
         Updater updater = new OSUpdater(null, false);
-//        Updater updater = new OSUpdater(new File("R74.jar"), false);
+//        Updater updater = new OSUpdater(new File("78.jar"), false);
         updater.print = true;
         updater.run();
     }
