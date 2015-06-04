@@ -104,7 +104,7 @@ public class Minibot extends JFrame implements Runnable {
         while (Game.state() < Game.STATE_CREDENTIALS)
             Time.sleep(100);
         DefinitionLoader.loadDefinitions(client);
-//        Macro macro = new ChinHunter();
+//        Macro macro = new ChinchompaHunter();
 //        canvas().addKeyListener(new KeyAdapter() {
 //            public void keyPressed(KeyEvent e) {
 //                if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_1) {
