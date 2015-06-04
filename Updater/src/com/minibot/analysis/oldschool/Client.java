@@ -16,13 +16,15 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import java.util.List;
+
 @VisitorInfo(hooks = {"processAction", "players", "npcs", "canvas", "player", "region", "widgets", "objects",
         "groundItems", "cameraX", "cameraY", "cameraZ", "cameraPitch", "cameraYaw", "mapScale", "mapOffset",
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices", "playerIndices",
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
         "hoveredRegionTileX", "hoveredRegionTileY", "experiences", "levels", "realLevels", "username", "password", "loginState",
-        "hintX", "hintY","hintPlayerIndex","hintNpcIndex"})
+        "hintX", "hintY","hintPlayerIndex","hintNpcIndex", "screenWidth", "screenHeight", "screenZoom"})
 public class Client extends GraphVisitor {
 
     @Override
@@ -63,7 +65,55 @@ public class Client extends GraphVisitor {
         visitAll(new Username());
         visitAll(new Password());
         visitAll(new LoginState());
+        visitAll(new ScreenVisitor());
         updater.visitor("Region").visitIfM(new HoveredTile(), mn -> mn.desc.contains(";IIIII") && mn.desc.endsWith("V"));
+    }
+
+    private class ScreenVisitor extends BlockVisitor {
+
+        private int added = 0;
+
+        @Override
+        public boolean validate() {
+            return added < 3;
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor() {
+                @Override
+                public void visitNumber(NumberNode nn) {
+                    if (nn.number() == 334) {
+                        FieldMemberNode set = (FieldMemberNode) nn.preLayer(IDIV, ISHL, IMUL, PUTSTATIC);
+                        if (set != null) {
+                            addHook(new FieldHook("screenZoom", set.fin()));
+                            added++;
+                        }
+                    }
+                }
+
+                @Override
+                public void visitField(FieldMemberNode fmn) {
+                    if (fmn.opcode() == PUTSTATIC) {
+                        List<AbstractNode> divs = fmn.layerAll(IMUL, IADD, IDIV);
+                        if (divs == null || divs.size() != 2)
+                            return;
+                        for (AbstractNode idiv : divs) {
+                            FieldMemberNode val = (FieldMemberNode) idiv.layer(IMUL, GETSTATIC);
+                            if (val == null)
+                                continue;
+                            if (!hooks.containsKey("screenWidth")) {
+                                addHook(new FieldHook("screenWidth", val.fin()));
+                                added++;
+                            } else if (!hooks.containsKey("screenHeight")) {
+                                addHook(new FieldHook("screenHeight", val.fin()));
+                                added++;
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private class LoginState extends BlockVisitor {

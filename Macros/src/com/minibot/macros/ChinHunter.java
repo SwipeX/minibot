@@ -34,7 +34,7 @@ public class ChinHunter extends Macro implements Renderable {
     private int start_exp = 0;
     private long start_time;
     private static final int EXP_EACH = 265;
-    private static final int PRICE_CACHED = 1290;
+    private static final int PRICE_CACHED = 1330;
     private static final int Y_POS = 12;
 
     @Override
@@ -103,7 +103,7 @@ public class ChinHunter extends Macro implements Renderable {
         }
     }
 
-    boolean triggered(GameObject obj) {
+    private boolean triggered(GameObject obj) {
         if (obj == null) return false;
         RSObjectDefinition def = obj.definition();
         if (def == null) return false;
