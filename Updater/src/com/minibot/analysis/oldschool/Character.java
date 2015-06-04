@@ -43,7 +43,7 @@ public class Character extends GraphVisitor {
             block.tree().accept(new NodeVisitor() {
                 @Override
                 public void visitMethod(MethodMemberNode mmn) {
-                    if (mmn.children() >= 3) { //params will always be charac.x, charac.y, heightArg, sometimesDummy
+                    if (mmn.children() >= 3) {
                         List<AbstractNode> delegates = mmn.layerAll(IMUL, GETFIELD);
                         if (delegates == null || delegates.size() != 2)
                             return;
