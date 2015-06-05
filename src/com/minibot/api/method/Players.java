@@ -44,9 +44,9 @@ public class Players {
 
     public static Player atIndex(int idx) {
         RSPlayer[] raws = raw();
-        if (raws == null || raws.length == 0)
+        if (raws == null || raws.length == 0 || idx < 0 || idx >= raws.length)
             return null;
-        RSPlayer p = raws[idx];
-        return p == null ? null : new Player(raws[idx], idx);
+        RSPlayer raw = raws[idx];
+        return raw == null ? null : new Player(raw, idx);
     }
 }

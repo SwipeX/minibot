@@ -62,6 +62,6 @@ public class Game {
         Npc npc = Npcs.atIndex(npcIndex);
         int playerIndex = Minibot.instance().client().getHintPlayerIndex();
         Player player = Players.atIndex(playerIndex);
-        return npc != null ? npc : player;
+        return npc != null ? npc : (player != null ? player : null);
     }
 }
