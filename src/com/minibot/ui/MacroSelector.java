@@ -1,6 +1,7 @@
 package com.minibot.ui;
 
 import com.minibot.Minibot;
+import com.minibot.api.method.Players;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.MacroDefinition;
 import com.minibot.bot.macro.Manifest;
@@ -27,7 +28,7 @@ public class MacroSelector extends JDialog {
     private final DefaultTableModel model;
     private final JTable table;
 
-    private MacroVector selected;
+    private static MacroVector selected;
 
     private static Macro current;
 
@@ -36,6 +37,7 @@ public class MacroSelector extends JDialog {
     }
 
     public static void halt() {
+        Minibot.connection().script(1, Players.local().name(), selected.def.manifest().name());
         Minibot.instance().canvas().removeRenderable((Renderable) current);
         if (current != null) {
             current.interrupt();
@@ -102,6 +104,7 @@ public class MacroSelector extends JDialog {
                 try {
                     Manifest manifest = selected.def.manifest();
                     System.out.println("Started " + manifest.name() + " by " + manifest.author());
+                    Minibot.connection().script(0, Players.local().name(), selected.def.manifest().name());
                     current = selected.def.mainClass().newInstance();
                 } catch (Exception err) {
                     err.printStackTrace();

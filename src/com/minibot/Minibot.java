@@ -1,14 +1,19 @@
 package com.minibot;
 
 import com.minibot.api.method.Game;
+import com.minibot.api.method.Players;
 import com.minibot.api.util.Time;
+import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.bot.breaks.BreakHandler;
+import com.minibot.bot.farm.Connection;
+import com.minibot.bot.macro.Macro;
 import com.minibot.client.GameCanvas;
 import com.minibot.client.natives.RSClient;
 import com.minibot.mod.Injector;
 import com.minibot.mod.ModScript;
 import com.minibot.mod.transforms.*;
 import com.minibot.ui.GameMenu;
+import com.minibot.ui.MacroSelector;
 import com.minibot.util.Configuration;
 import com.minibot.util.DefinitionLoader;
 import com.minibot.util.JarArchive;
@@ -17,6 +22,8 @@ import com.minibot.util.io.Crawler;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -32,6 +39,7 @@ public class Minibot extends JFrame implements Runnable {
     private boolean macroRunning;
     private boolean farming;
     private BreakHandler breakHandler;
+    private static Connection connection;
 
     public Minibot() {
         super("Minibot");
@@ -39,7 +47,36 @@ public class Minibot extends JFrame implements Runnable {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.crawler = new Crawler(Crawler.GameType.OSRS);
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+        connection = new Connection(Connection.DEFAULT_IRC);
+        addCloseListener();
         new Thread(this).start();
+    }
+
+    /**
+     * Well this should be improved, the data is rather inconsistent and likely should be tested.
+     */
+    private void addCloseListener() {
+        Frame[] frames = Frame.getFrames();
+        for (Frame f : frames) {
+            f.addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent e) {
+                    Macro current = MacroSelector.current();
+                    if (current != null) {
+                        String name;
+                        Player local = Players.local();
+                        if (local != null)
+                            name = local.name();
+                        else
+                            name = Minibot.instance().client().getUsername();//this would be the email and would require manual fixing
+                        connection().script(1, name, current.getClass().getSimpleName());
+                    }
+                }
+            });
+        }
+    }
+
+    public static Connection connection() {
+        return connection;
     }
 
     public static Minibot instance() {
