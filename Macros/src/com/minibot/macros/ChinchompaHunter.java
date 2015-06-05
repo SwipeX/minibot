@@ -37,8 +37,8 @@ public class ChinchompaHunter extends Macro implements Renderable {
 
 	private static Tile tile;
 
-	private int SKILL_HUNTER = 21;
-	private int startExp = 0;
+	private static final int SKILL_HUNTER = 21;
+	private int startExp;
 	private long startTime;
 
 	@Override
@@ -73,7 +73,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
 					}
 				}, 1500L);
 				Time.sleep(800, 1200);
-			} else if (obj == null && (items == null || items.size() == 0)) {
+			} else if (obj == null && (items == null || items.isEmpty())) {
 				if (!Players.local().location().equals(next)) {
 					Walking.walkTo(next);
 					Time.sleep(new Condition() {
@@ -99,7 +99,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
 						}, 1500L);
 					}
 				}
-			} else if (items != null && items.size() > 0) {
+			} else if (items != null && !items.isEmpty()) {
 				GroundItem item = items.getFirst();
 				if (item != null) {
 					item.processAction(ActionOpcodes.GROUND_ITEM_ACTION_3, "Lay");

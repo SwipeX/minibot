@@ -126,8 +126,7 @@ public class BirdHunter extends Macro implements Renderable {
 	 * @return the maximum number of traps that can be used at current level.
 	 */
 	private int trapSize() {
-        System.out.println((Game.realLevels()[SKILL_HUNTER] / 20 + 1));
-		return Game.realLevels()[SKILL_HUNTER] / 20 + 1; // print this out
+		return Game.realLevels()[SKILL_HUNTER] / 20 + 1;
 	}
 
 	private Tile[] traps() {
@@ -156,7 +155,6 @@ public class BirdHunter extends Macro implements Renderable {
 	public Tile getNext() {
 		// No trap
         Tile[] traps = traps();
-        System.out.println(Arrays.toString(traps));
         for (Tile tile : traps) {
 			GameObject obj = Objects.topAt(tile);
 			if (obj == null) {

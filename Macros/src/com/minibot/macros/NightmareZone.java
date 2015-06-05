@@ -17,13 +17,14 @@ import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by tim on 5/17/15.
+ * @author Tim
+ * @since 5/17/15.
  */
 @Manifest(name = "NightmareZone", author = "Swipe", version = "1.0.0", description = "Absorption NMZ Player")
 public class NightmareZone extends Macro implements Renderable {
+
 	private boolean absorb;
 	private long lastFlick = -1;
-	private long lastCombat;
 	Thread prayerThread;
 	int startExp = -1;
 	private long start_time;

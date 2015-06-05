@@ -29,7 +29,7 @@ public abstract class Macro {
         thread.start();
     }
 
-    public final void interrupt() {
+    public void interrupt() {
         if (thread != null)
             thread.interrupt();
         thread = null;
