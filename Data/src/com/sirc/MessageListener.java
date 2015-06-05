@@ -44,7 +44,7 @@ public interface MessageListener {
 	 * @param target The channel the action was sent to.
 	 * @param action The action message.
 	 */
-	void onAction(IrcConnection irc, User sender, Channel target, String action);
+	default void onAction(IrcConnection irc, User sender, Channel target, String action) {}
 	
 	/**
 	 * Received a private action.
@@ -53,7 +53,7 @@ public interface MessageListener {
 	 * @param sender The user who sent the action.
 	 * @param action The action message.
 	 */
-	void onAction(IrcConnection irc, User sender, String action);
+	default void onAction(IrcConnection irc, User sender, String action) {}
 	
 	/**
 	 * Received a CTCP reply. Note that this event is only fired when
@@ -68,7 +68,7 @@ public interface MessageListener {
 	 * @see User#sendCtcpPing()
 	 * @see User#sendCtcpVersion()
 	 */
-	void onCtcpReply(IrcConnection irc, User sender, String command, String message);
+	default void onCtcpReply(IrcConnection irc, User sender, String command, String message) {}
 	
 	/**
 	 * Received a message in a channel.
@@ -78,7 +78,7 @@ public interface MessageListener {
 	 * @param target The channel the message was sent to.
 	 * @param message The message.
 	 */
-	void onMessage(IrcConnection irc, User sender, Channel target, String message);
+	default void onMessage(IrcConnection irc, User sender, Channel target, String message) {}
 	
 	/**
 	 * Received a notice in a channel.
@@ -88,7 +88,7 @@ public interface MessageListener {
 	 * @param target The channel the notice was sent to.
 	 * @param message The notice.
 	 */
-	void onNotice(IrcConnection irc, User sender, Channel target, String message);
+	default void onNotice(IrcConnection irc, User sender, Channel target, String message) {}
 	
 	/**
 	 * Received a private notice.
@@ -97,7 +97,7 @@ public interface MessageListener {
 	 * @param sender The user who sent the notice.
 	 * @param message The notice.
 	 */
-	void onNotice(IrcConnection irc, User sender, String message);
+	default void onNotice(IrcConnection irc, User sender, String message) {}
 	
 	/**
 	 * Received a private message.
@@ -106,5 +106,5 @@ public interface MessageListener {
 	 * @param sender The user who sent the message.
 	 * @param message The message.
 	 */
-	void onPrivateMessage(IrcConnection irc, User sender, String message);
+	default void onPrivateMessage(IrcConnection irc, User sender, String message) {}
 }

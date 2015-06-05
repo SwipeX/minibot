@@ -11,6 +11,7 @@ import java.util.List;
  * Created by tim on 6/3/15.
  */
 public class Host {
+
     private static IrcConnection instance;
     private static Listener listener;
 

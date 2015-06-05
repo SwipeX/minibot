@@ -11,6 +11,7 @@ import java.util.HashMap;
  * Created by tim on 6/3/15.
  */
 public class RespondentPool {
+
     private static HashMap<String, Respondent> tasks = new HashMap<>();
 
     static {

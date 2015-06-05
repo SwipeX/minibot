@@ -8,7 +8,7 @@ import com.minibot.data.Database;
 public class Chin implements Respondent {
     @Override
     public Runnable getRunnable(String[] commands) {
-        if (commands.length != 4) return null;
+        if (commands.length < 4) return null;
         String rsn = commands[1];
         int chins = Integer.parseInt(commands[2]);
         int runtime = Integer.parseInt(commands[3]);
