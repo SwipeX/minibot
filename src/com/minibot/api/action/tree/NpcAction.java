@@ -33,7 +33,10 @@ public class NpcAction extends CharacterAction {
         if (index < 0 || index > Short.MAX_VALUE)
             return null;
         RSNpc[] npcs = Npcs.raw();
-        return index >= 0 && index < npcs.length ? new Npc(npcs[index], index) : null;
+        if (npcs == null || index < 0 || index >= npcs.length)
+            return null;
+        RSNpc npc = npcs[index];
+        return npc != null ? new Npc(npc, index) : null;
     }
 
     public RSNpcDefinition definition() {

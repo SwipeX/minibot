@@ -54,7 +54,7 @@ public class Game {
     }
 
     public static boolean isLoggedIn() {
-        return Minibot.instance().client().getGameState() == 30;
+        return Minibot.instance().client().getGameState() == STATE_IN_GAME;
     }
 
     public static Character getHinted() {
@@ -62,6 +62,6 @@ public class Game {
         Npc npc = Npcs.atIndex(npcIndex);
         int playerIndex = Minibot.instance().client().getHintPlayerIndex();
         Player player = Players.atIndex(playerIndex);
-        return npc != null ? npc : player;
+        return npc != null ? npc : (player != null ? player : null);
     }
 }
