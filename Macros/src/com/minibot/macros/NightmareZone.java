@@ -23,113 +23,116 @@ import java.util.concurrent.TimeUnit;
 @Manifest(name = "NightmareZone", author = "Swipe", version = "1.0.0", description = "Absorption NMZ Player")
 public class NightmareZone extends Macro implements Renderable {
 
-	private boolean absorb;
-	private long lastFlick = -1;
-	Thread prayerThread;
-	int startExp = -1;
-	private long start_time;
+    private boolean absorb;
+    private long lastFlick = -1;
+    Thread prayerThread;
+    int startExp = -1;
+    private long start_time;
 
-	@Override
-	public void run() {
-		if (Game.realLevels()[Skills.ATTACK] == 75)
-			System.exit(1);
-		Minibot.instance().client().resetMouseIdleTime();
-		if (startExp == -1) {
-			startExp = Game.experiences()[Skills.ATTACK];
-			start_time = System.currentTimeMillis();
-		}
-		if (prayerThread == null) {
-			prayerThread = new Thread() {
-				public void run() {
-					while (true) {
-						if (Game.levels()[Skills.PRAYER] <= 0)
-							return;
-						Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("verload"));
-						if (abs == null) System.exit(1);
-						Item j = Inventory.first(item -> item != null && item.name() != null && item.name().contains("cake"));
-						if (j != null) {
-							if (j.index() == 27) {
-								WidgetComponent protect = Widgets.get(271, 18);
-								if (protect != null) {
-									protect.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Activate", "<col=ff9040>Protect from Melee");
-									Time.sleep(570, 580);
-									protect.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Deactivate", "<col=ff9040>Protect from Melee");
-									Time.sleep(10, 20);
-								}
-							}
-						}
-					}
-				}
-			};
-			prayerThread.start();
-		}
-		WidgetComponent absorbParent = Widgets.get(202, 2);
-		if (absorbParent != null) {
-			WidgetComponent child = absorbParent.child(widgetComponent -> widgetComponent != null && widgetComponent.index() == 9);
-			if (child != null) {
-				String text = child.text().replace(",", "");
-				if (text != null) {
-					int amount = Integer.parseInt(text);
-					if (amount < 950) {
-						absorb = true;
-					}
-				}
-			}
-		} else {
-			Time.sleep(100);
-			return; //Not in NMZ, we will use the absorb widget to determine this
-		}
-		if (lastFlick == -1 || System.currentTimeMillis() - lastFlick > 30000) {
-			for (int i = 0; i < 2; i++) {
-				WidgetComponent component = Widgets.get(271, 11);
-				if (component != null) {
-					component.processAction(ActionOpcodes.WIDGET_ACTION, 1, (i == 0 ? "Activate" : "Deactivate"), "<col=ff9040>Rapid Heal");
-					Time.sleep(160, 220);
-				}
-			}
-			lastFlick = System.currentTimeMillis();
-		}
-		if (Game.levels()[Skills.CONSTITUTION] == 51) {
-			Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("verload"));
-			if (abs != null) {
-				abs.processAction(ActionOpcodes.ITEM_ACTION_0, "Drink");
-				Time.sleep(1200);
-			}
-		}
-		if (absorb) {
-			Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("Absorption"));
-			if (abs != null) {
-				abs.processAction(ActionOpcodes.ITEM_ACTION_0, "Drink");
-				Time.sleep(100, 500);
-			}
-			absorb = false;
-		}
-//        if (Minibot.instance().client().getGameSettings()[300] / 10 >= 25) {
+    @Override
+    public void run() {
+        Minibot.instance().client().resetMouseIdleTime();
+        if (startExp == -1) {
+            startExp = Game.experiences()[Skills.STRENGTH];
+            start_time = System.currentTimeMillis();
+        }
+        if (prayerThread == null) {
+            prayerThread = new Thread() {
+                public void run() {
+                    while (true) {
+                        if (Game.levels()[Skills.PRAYER] <= 0)
+                            return;
+                        Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("verload"));
+                        if (abs == null) System.exit(1);
+                        Item j = Inventory.first(item -> item != null && item.name() != null && item.name().contains("cake"));
+                        if (j != null) {
+                            if (j.index() == 27) {
+                                WidgetComponent protect = Widgets.get(271, 18);
+                                if (protect != null) {
+                                    protect.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Activate", "<col=ff9040>Protect from Melee");
+                                    Time.sleep(570, 580);
+                                    protect.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Deactivate", "<col=ff9040>Protect from Melee");
+                                    Time.sleep(10, 20);
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            prayerThread.start();
+        }
+        if (lastFlick == -1 || System.currentTimeMillis() - lastFlick > 30000) {
+            for (int i = 0; i < 2; i++) {
+                WidgetComponent component = Widgets.get(271, 11);
+                if (component != null) {
+                    component.processAction(ActionOpcodes.WIDGET_ACTION, 1, (i == 0 ? "Activate" : "Deactivate"), "<col=ff9040>Rapid Heal");
+                    Time.sleep(460, 920);
+                }
+            }
+            lastFlick = System.currentTimeMillis();
+        }
+        if (Game.levels()[Skills.CONSTITUTION] == 51) {
+            Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("verload"));
+            if (abs != null) {
+                abs.processAction(ActionOpcodes.ITEM_ACTION_0, "Drink");
+                Time.sleep(1200);
+            }
+        }
+        WidgetComponent absorbParent = Widgets.get(202, 2);
+        if (absorbParent != null) {
+            WidgetComponent child = absorbParent.child(widgetComponent -> widgetComponent != null && widgetComponent.index() == 9);
+            if (child != null) {
+                String text = child.text().replace(",", "");
+                if (text != null) {
+                    int amount = Integer.parseInt(text);
+                    if (amount < 950) {
+                        absorb = true;
+                    }
+                }
+            }
+        } else {
+            Time.sleep(100);
+            return; //Not in NMZ, we will use the absorb widget to determine this
+        }
+        if (absorb) {
+            Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("Absorption"));
+            if (abs != null) {
+                abs.processAction(ActionOpcodes.ITEM_ACTION_0, "Drink");
+                Time.sleep(100, 500);
+            }
+            absorb = false;
+        }
+//        if (Minibot.instance().client().getGameSettings()[300] / 10 >= 50) {
+//            Item gs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("god"));
+//            gs.processAction(ActionOpcodes.ITEM_ACTION_1, "Wield");
 //            WidgetComponent comp = Widgets.get(593, 30);
 //            if (comp != null) {
 //                comp.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Use <col=00ff00>Special Attack</col>", "");
 //            }
+//            Time.sleep(3500);
+//            Item sara = Inventory.first(item -> item != null && item.name() != null && item.name().contains("Sara"));
+//            sara.processAction(ActionOpcodes.ITEM_ACTION_1, "Wield");
 //        }
-	}
+    }
 
-	public int hourly(int val, long difference) {
-		return (int) Math.ceil(val * 3600000D / difference);
-	}
+    public int hourly(int val, long difference) {
+        return (int) Math.ceil(val * 3600000D / difference);
+    }
 
-	public static String format(long millis) {
-		return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-				TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
-				TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
-	}
+    public static String format(long millis) {
+        return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
+                TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
+    }
 
-	@Override
-	public void render(Graphics2D g) {
-		g.setColor(Color.CYAN);
-		g.drawRect(0, 0, 150, 50);
-		long time_diff = System.currentTimeMillis() - start_time;
-		int gain = Game.experiences()[Skills.ATTACK] - startExp;
-		g.drawString("Time: " + format(time_diff), 10, 10);
-		g.drawString("Exp: " + gain, 10, 25);
-		g.drawString("Exp/H: " + hourly(gain, time_diff), 10, 40);
-	}
+    @Override
+    public void render(Graphics2D g) {
+        g.setColor(Color.CYAN);
+        g.drawRect(0, 0, 150, 50);
+        long time_diff = System.currentTimeMillis() - start_time;
+        int gain = Game.experiences()[Skills.STRENGTH] - startExp;
+        g.drawString("Time: " + format(time_diff), 10, 10);
+        g.drawString("Exp: " + gain, 10, 25);
+        g.drawString("Exp/H: " + hourly(gain, time_diff), 10, 40);
+    }
 }

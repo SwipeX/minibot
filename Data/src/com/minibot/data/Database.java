@@ -33,6 +33,15 @@ public class Database {
         return connection;
     }
 
+    public static ResultSet query(String rawSQL) {
+        try {
+            return connection.createStatement().executeQuery(rawSQL);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     //type = 0 = start,
     //type = 1 = stop
     public static void activity(int type, String name, String macro) {
