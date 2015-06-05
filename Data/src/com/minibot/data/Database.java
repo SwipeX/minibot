@@ -13,8 +13,8 @@ public class Database {
             Class.forName("org.h2.Driver");
             connection = DriverManager.getConnection("jdbc:h2:~/minibot");
             Statement stat = connection.createStatement();
-            stat.execute("CREATE TABLE IF NOT EXISTS activity(name VARCHAR(255) PRIMARY KEY, macro VARCHAR(255), type INT, stamp TIMESTAMP)");
-            stat.execute("CREATE TABLE IF NOT EXISTS chin(name VARCHAR(255) PRIMARY KEY, chins INT, runtime INT)");
+            stat.execute("CREATE TABLE IF NOT EXISTS activity(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY, name VARCHAR(255), macro VARCHAR(255), type INT, stamp TIMESTAMP)");
+            stat.execute("CREATE TABLE IF NOT EXISTS chin(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY, name VARCHAR(255), chins INT, runtime INT)");
             stat.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,7 +37,7 @@ public class Database {
     //type = 1 = stop
     public static void activity(int type, String name, String macro) {
         try {
-            PreparedStatement stat = connection.prepareStatement(String.format("insert into activity values('%s','%s', %s, ?)", name, macro, type,
+            PreparedStatement stat = connection.prepareStatement(String.format("insert into activity(name, macro, type, stamp) values('%s','%s', %s, ?)", name, macro, type,
                     ""));
             stat.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
             stat.execute();
@@ -50,7 +50,7 @@ public class Database {
     public static void chin(String name, int chins, int runtime) {
         try {
             Statement stat = connection.createStatement();
-            stat.execute(String.format("insert into chin values('%s', %s, %s)", name, chins, runtime));
+            stat.execute(String.format("insert into chin(name, chins, runtime) values('%s', %s, %s)", name, chins, runtime));
             stat.close();
         } catch (SQLException e) {
             e.printStackTrace();
