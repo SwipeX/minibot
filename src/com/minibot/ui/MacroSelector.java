@@ -104,7 +104,7 @@ public class MacroSelector extends JDialog {
                 try {
                     Manifest manifest = selected.def.manifest();
                     System.out.println("Started " + manifest.name() + " by " + manifest.author());
-                    Minibot.connection().script(0, Players.local().name(), selected.def.manifest().name());
+                    Minibot.connection().script(0, Players.local().name(), manifest.name());
                     current = selected.def.mainClass().newInstance();
                 } catch (Exception err) {
                     err.printStackTrace();

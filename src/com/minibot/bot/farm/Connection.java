@@ -28,7 +28,7 @@ public class Connection {
     }
 
     public void script(int type, String rsn, String macro) {
-        channel.send(Crypto.encrypt(type == 0 ? "START" : "FINISH" + String.format("&%s&%s", rsn, macro)));
+        channel.send(Crypto.encrypt((type == 0 ? "START" : "FINISH") + String.format("&%s&%s", rsn, macro)));
     }
 
     public void chin(String rsn, int chins, int runtime) {
