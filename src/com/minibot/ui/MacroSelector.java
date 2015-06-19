@@ -6,6 +6,7 @@ import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.MacroDefinition;
 import com.minibot.bot.macro.Manifest;
 import com.minibot.api.util.Renderable;
+import com.minibot.client.GameCanvas;
 import com.minibot.util.Configuration;
 
 import javax.swing.*;
@@ -113,7 +114,9 @@ public class MacroSelector extends JDialog {
                 if (success) {
                     Minibot.instance().setMacroRunning(true);
                     current().start();
-                    Minibot.instance().canvas().addRenderable((Renderable) current());
+                    Minibot.instance().canvas();
+                    if (current() instanceof Renderable)
+                        GameCanvas.addRenderable((Renderable) current());
                 } else {
                     Minibot.instance().setMacroRunning(false);
                     halt();
