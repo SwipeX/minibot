@@ -39,7 +39,9 @@ public class MacroSelector extends JDialog {
 
     public static void halt() {
         Minibot.connection().script(1, Players.local().name(), selected.def.manifest().name());
-        Minibot.instance().canvas().removeRenderable((Renderable) current);
+        Minibot.instance().canvas();
+        if (current instanceof Renderable)
+            GameCanvas.removeRenderable((Renderable) current);
         if (current != null) {
             current.interrupt();
         }
