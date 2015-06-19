@@ -12,14 +12,11 @@ import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.*;
 import org.objectweb.asm.tree.ClassNode;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @VisitorInfo(hooks = {"owner", "children", "x", "y", "width", "height", "itemId", "itemAmount",
         "id", "type", "itemIds", "stackSizes", "scrollX", "scrollY", "textureId", "index",
-        "text", "ownerId", "hidden", "boundsIndex"})
+        "text", "ownerId", "hidden", "boundsIndex", "actions"})
 public class Widget extends GraphVisitor {
 
     @Override
@@ -44,6 +41,30 @@ public class Widget extends GraphVisitor {
         visitAll(new Text());
         visitAll(new Hidden());
         visitAll(new BoundsIndex());
+        visitAll(new Actions());
+    }
+
+    private class Actions extends BlockVisitor {
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor(this) {
+                public void visit(AbstractNode an) {
+                    if (an.opcode() == ARRAYLENGTH) {
+                        FieldMemberNode expr = (FieldMemberNode) an.layer(GETFIELD);
+                        if (expr != null && expr.owner().equals(cn.name) && expr.desc().equals("[Ljava/lang/String;")) {
+                            hooks.put("actions", new FieldHook("actions", expr.fin()));
+                            lock.set(true);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private class PositionHooks extends BlockVisitor {
@@ -281,13 +302,13 @@ public class Widget extends GraphVisitor {
 
     private class TextureId extends BlockVisitor {
 
+        private final Set<String> possible = new HashSet<>();
+        private boolean collected = false;
+
         @Override
         public boolean validate() {
             return !lock.get();
         }
-
-        private boolean collected = false;
-        private final Set<String> possible = new HashSet<>();
 
         @Override
         public void visit(Block block) {
@@ -315,7 +336,7 @@ public class Widget extends GraphVisitor {
                 });
                 collected = true;
                 counts.entrySet().stream().filter(entry -> entry.getValue() < 3).forEach(entry ->
-                        possible.remove(entry.getKey())
+                                possible.remove(entry.getKey())
                 );
             }
             block.tree().accept(new NodeVisitor() {
