@@ -1,5 +1,6 @@
 package com.minibot.macros;
 
+import com.minibot.Minibot;
 import com.minibot.api.action.tree.DialogButtonAction;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
@@ -117,6 +118,7 @@ public class Nightshade extends Macro implements Renderable {
 
     @Override
     public void run() {
+        Minibot.instance().client().resetMouseIdleTime();
         if (Inventory.first(SHADE_FILTER) != null && BANK_CHEST.distance() < 10) {
             if (!Bank.viewing()) {
                 openBank();
