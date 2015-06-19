@@ -12,6 +12,7 @@ public abstract class Macro {
     private Thread thread;
     private String username;
     private String password;
+    private long start;
 
     public final void start() {
         Macro macro = this;
@@ -27,6 +28,15 @@ public abstract class Macro {
             }
         };
         thread.start();
+        start = Time.millis();
+    }
+
+    public long runtime() {
+        return Time.millis() - start;
+    }
+
+    public int hourly(int i) {
+        return Time.hourly(runtime(), i);
     }
 
     public void interrupt() {

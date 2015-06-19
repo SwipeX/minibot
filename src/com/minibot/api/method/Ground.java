@@ -31,6 +31,8 @@ public class Ground {
     }
 
     public static Deque<GroundItem> loaded(int radius) {
+        if (radius == -1)
+            return loaded();
         Deque<GroundItem> items = new ArrayDeque<>();
         int xx = Players.local().localX();
         int yy = Players.local().localY();
