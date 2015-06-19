@@ -2,8 +2,8 @@ package com.minibot.data;
 
 import com.minibot.data.respondents.Chin;
 import com.minibot.data.respondents.Finish;
-import com.minibot.data.respondents.Start;
 import com.minibot.data.respondents.Respondent;
+import com.minibot.data.respondents.Start;
 
 import java.util.HashMap;
 

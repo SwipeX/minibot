@@ -11,7 +11,6 @@ import com.minibot.api.wrapper.Wrapper;
 import com.minibot.client.natives.RSItem;
 import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.client.natives.RSNode;
-import com.minibot.client.natives.RSObjectDefinition;
 import com.minibot.util.DefinitionLoader;
 
 import java.awt.*;

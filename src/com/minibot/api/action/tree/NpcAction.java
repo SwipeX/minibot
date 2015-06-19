@@ -5,9 +5,6 @@ import com.minibot.api.method.Npcs;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.client.natives.RSNpc;
 import com.minibot.client.natives.RSNpcDefinition;
-import com.minibot.util.DefinitionLoader;
-
-import java.util.Arrays;
 
 public class NpcAction extends CharacterAction {
 

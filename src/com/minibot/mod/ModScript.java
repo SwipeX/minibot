@@ -1,8 +1,12 @@
 package com.minibot.mod;
 
-import com.minibot.mod.hooks.*;
+import com.minibot.mod.hooks.FieldHook;
+import com.minibot.mod.hooks.Hook;
+import com.minibot.mod.hooks.InvokeHook;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;

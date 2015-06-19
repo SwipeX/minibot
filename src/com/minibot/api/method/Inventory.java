@@ -1,6 +1,5 @@
 package com.minibot.api.method;
 
-import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.Item.Source;
@@ -8,6 +7,8 @@ import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.GroundItem;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -23,12 +24,12 @@ public class Inventory {
         return GameTab.INVENTORY.viewing();
     }
 
-    public static Item[] items(Filter<Item> filter) {
+    public static List<Item> items(Filter<Item> filter) {
         boolean bank = Bank.viewing();
         WidgetComponent inventory = Widgets.get(bank ? BANK_PARENT : INVENTORY_PARENT, bank ? BANK_CONTAINER : INVENTORY_CONTAINER);
+        List<Item> items = new LinkedList<>();
         if (inventory == null)
-            return new Item[0];
-        Item[] items = new Item[inventory.itemStackSizes().length];
+            return items;
         if (inventory.validate()) {
             if (bank) {
                 int index = 0;
@@ -39,7 +40,7 @@ public class Inventory {
                         Item item = new Item(slot, Source.INVENTORY, index);
                         if (!filter.accept(item))
                             continue;
-                        items[index] = item;
+                        items.add(item);
                     }
                     index++;
                 }
@@ -56,8 +57,8 @@ public class Inventory {
                             Item item = new Item(id - 1, stack, i);
                             if (!filter.accept(item))
                                 continue;
-                            items[i] = item;
-                            items[i].setComponent(inventory);
+                            item.setComponent(inventory);
+                            items.add(item);
                         }
                     }
                 }
@@ -66,12 +67,12 @@ public class Inventory {
         return items;
     }
 
-    public static Item[] items() {
+    public static List<Item> items() {
         return items(Filter.always());
     }
 
     public static int count() {
-        return items().length;
+        return items().size();
     }
 
     public static boolean full() {
@@ -99,10 +100,7 @@ public class Inventory {
     }
 
     public static void apply(Filter<Item> filter, Consumer<Item> application) {
-        for (Item item : items(filter)) {
-            if (item != null)
-                application.accept(item);
-        }
+        items(filter).stream().filter(item -> item != null).forEach(application::accept);
     }
 
     public static void apply(Consumer<Item> application) {

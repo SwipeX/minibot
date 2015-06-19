@@ -3,8 +3,9 @@ package com.minibot.api.method;
 import com.minibot.Minibot;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.locatable.GroundItem;
-import com.minibot.client.natives.*;
-import com.minibot.mod.ModScript;
+import com.minibot.client.natives.RSItem;
+import com.minibot.client.natives.RSNode;
+import com.minibot.client.natives.RSNodeDeque;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

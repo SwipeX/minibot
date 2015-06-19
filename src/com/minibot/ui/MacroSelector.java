@@ -2,10 +2,10 @@ package com.minibot.ui;
 
 import com.minibot.Minibot;
 import com.minibot.api.method.Players;
+import com.minibot.api.util.Renderable;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.MacroDefinition;
 import com.minibot.bot.macro.Manifest;
-import com.minibot.api.util.Renderable;
 import com.minibot.client.GameCanvas;
 import com.minibot.util.Configuration;
 

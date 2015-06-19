@@ -1,7 +1,6 @@
 package com.minibot.api.action.tree;
 
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.method.Widgets;
 
 public class WidgetAction extends Action {
 

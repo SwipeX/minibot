@@ -5,7 +5,6 @@ import com.minibot.analysis.visitor.VisitorInfo;
 import com.minibot.mod.hooks.FieldHook;
 import org.objectweb.asm.commons.cfg.Block;
 import org.objectweb.asm.commons.cfg.BlockVisitor;
-import org.objectweb.asm.commons.cfg.query.NumberQuery;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.*;
 import org.objectweb.asm.tree.ClassNode;

@@ -4,7 +4,9 @@ import com.minibot.Minibot;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Players;
 import com.minibot.api.wrapper.WidgetComponent;
-import com.minibot.api.wrapper.locatable.*;
+import com.minibot.api.wrapper.locatable.Locatable;
+import com.minibot.api.wrapper.locatable.Player;
+import com.minibot.api.wrapper.locatable.Tile;
 
 import java.awt.*;
 import java.util.LinkedList;

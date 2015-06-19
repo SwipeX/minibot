@@ -2,14 +2,17 @@ package com.minibot.util.io;
 
 import com.minibot.util.Configuration;
 
-import java.applet.*;
+import java.applet.Applet;
+import java.applet.AppletContext;
+import java.applet.AppletStub;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.jar.JarInputStream;
 
 public class Crawler {

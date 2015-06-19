@@ -1,10 +1,10 @@
 package com.minibot.api.method;
 
-import com.minibot.api.wrapper.Item.Source;
-import com.minibot.util.Array;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
+import com.minibot.api.wrapper.Item.Source;
 import com.minibot.api.wrapper.WidgetComponent;
+import com.minibot.util.Array;
 
 /**
  * @author Tyler Sedlar

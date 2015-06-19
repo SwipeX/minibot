@@ -6,12 +6,15 @@
  */
 package com.minibot.util;
 
-import com.minibot.api.method.Game;
-import com.minibot.client.natives.*;
+import com.minibot.client.natives.RSClient;
+import com.minibot.client.natives.RSItemDefinition;
+import com.minibot.client.natives.RSNpcDefinition;
+import com.minibot.client.natives.RSObjectDefinition;
 import com.minibot.mod.ModScript;
 import com.minibot.mod.hooks.InvokeHook;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DefinitionLoader {
 

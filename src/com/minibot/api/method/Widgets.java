@@ -1,10 +1,10 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
-import com.minibot.util.Array;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.client.natives.RSWidget;
+import com.minibot.util.Array;
 
 import java.awt.*;
 

@@ -1,8 +1,9 @@
 package com.minibot.api.util;
 
 /**
- * Created by tim on 5/14/15.
+ * @author Tyler Sedlar
+ * @since 6/19/2015
  */
-public abstract class Condition {
-    public abstract boolean validate();
+public interface Condition {
+    boolean validate();
 }

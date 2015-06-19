@@ -2,10 +2,6 @@ package com.minibot.data;
 
 import com.sirc.Channel;
 import com.sirc.IrcConnection;
-import com.sirc.MessageListener;
-import com.sirc.User;
-
-import java.util.List;
 
 /**
  * Created by tim on 6/3/15.

@@ -24,7 +24,6 @@ public class GameObject extends Wrapper<RSInteractableObject> implements Locatab
         super(raw);
     }
 
-
     public int uid() {
         return raw.getId();
     }
@@ -93,19 +92,25 @@ public class GameObject extends Wrapper<RSInteractableObject> implements Locatab
         }
     }
 
-    public void processAction(int opcode, String action) {
+    public void processAction(int opcode, String action, int realLocalX, int realLocalY) {
         RSObjectDefinition definition = definition();
         if (definition == null)
             return;
         String name = definition.getName();
         if (name == null)
             return;
-        // if shit breaks look here
-        //RuneScape.processAction(Action.valueOf(opcode, raw.getId(), raw.getX(), raw.getY()), action, name);
-        RuneScape.processAction(Action.valueOf(opcode, raw.getId(), localX(), localY()), action, name);
+        if (realLocalX == -1)
+            realLocalX = localX();
+        if (realLocalY == -1)
+            realLocalY = localY();
+        RuneScape.processAction(Action.valueOf(opcode, raw.getId(), realLocalX, realLocalY), action, name);
     }
 
-    public void processAction(String action) {
+    public void processAction(int opcode, String action) {
+        processAction(opcode, action, -1, -1);
+    }
+
+    public void processAction(String action, int realLocalX, int realLocalY) {
         RSObjectDefinition definition = definition();
         if (definition == null)
             return;
@@ -114,7 +119,11 @@ public class GameObject extends Wrapper<RSInteractableObject> implements Locatab
             return;
         int index = Arrays.asList(actions).indexOf(action);
         if (index >= 0)
-            processAction(ActionOpcodes.OBJECT_ACTION_0 + index, action);
+            processAction(ActionOpcodes.OBJECT_ACTION_0 + index, action, realLocalX, realLocalY);
+    }
+
+    public void processAction(String action) {
+        processAction(action, -1, -1);
     }
 
     private Point screen() {

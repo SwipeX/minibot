@@ -4,7 +4,6 @@ import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.MacroDefinition;
 
 import java.io.File;
-
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
