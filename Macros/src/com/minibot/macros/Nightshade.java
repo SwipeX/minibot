@@ -1,6 +1,8 @@
 package com.minibot.macros;
 
+import com.minibot.api.action.tree.DialogButtonAction;
 import com.minibot.api.method.Inventory;
+import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
 import com.minibot.bot.macro.Macro;
@@ -20,12 +22,11 @@ public class Nightshade extends Macro {
         });
         if (ring != null) {
             ring.processAction("Rub");
+            Time.sleep(900, 1100);
+            RuneScape.processAction(new DialogButtonAction(14352384, 2), "", "");
+            return true;
         }
         return false;
-        /*
-        ItemAction:[TableAddress(9764864,2)=<149#0#2> | ItemId=2554 | ItemIndex=2 | ActionIndex=3]
-        Action<BUTTON_DIALOG>(id=30,args=[ 0 | 0 | 14352384 ])
-         */
     }
 
     @Override

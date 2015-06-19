@@ -7,12 +7,16 @@ import static com.minibot.api.action.ActionOpcodes.*;
 
 public abstract class ButtonAction extends Action {
 
+    public ButtonAction(int opcode, int buttonIndex, int widgetUid) {
+        super(opcode, 0, buttonIndex, widgetUid);
+    }
+
     public ButtonAction(int opcode, int widgetUid) {
-        super(opcode, 0, 0, widgetUid);
+        this(opcode, 0, widgetUid);
     }
 
     public final int significantArgs() {
-        return ARG2;
+        return ARG1|ARG2;
     }
 
     // widgetUid is known to be the arg2

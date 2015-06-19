@@ -4,8 +4,12 @@ import com.minibot.api.action.ActionOpcodes;
 
 public class DialogButtonAction extends ButtonAction {
 
+    public DialogButtonAction(int widgetUid, int buttonIndex) {
+        super(ActionOpcodes.BUTTON_DIALOG, buttonIndex, widgetUid);
+    }
+
     public DialogButtonAction(int widgetUid) {
-        super(ActionOpcodes.BUTTON_DIALOG, widgetUid);
+        this(widgetUid, 0);
     }
 
     public static boolean isInstance(int opcode) {
