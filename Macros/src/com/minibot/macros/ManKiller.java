@@ -1,19 +1,19 @@
 package com.minibot.macros;
 
+import com.minibot.Minibot;
 import com.minibot.api.action.tree.Action;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
 import com.minibot.api.wrapper.WidgetComponent;
-import com.minibot.api.wrapper.locatable.*;
 import com.minibot.api.wrapper.locatable.Character;
+import com.minibot.api.wrapper.locatable.*;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 import com.minibot.client.natives.RSObjectDefinition;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +33,7 @@ public class ManKiller extends Macro implements Renderable {
 
     private int looted = 0;
     private int profit = 0;
+    private int startExp = 0;
 
     @Override
     public void atStart() {
@@ -47,6 +48,7 @@ public class ManKiller extends Macro implements Renderable {
         LOOT_PRICES.put("Grimy lantadyme", 1302);
         LOOT_PRICES.put("Grimy dwarf weed", 1991);
         LOOT_PRICES.put("Grimy torstol", 6970);
+        startExp = Game.totalExperience();
     }
 
     private boolean openBank() {
@@ -147,18 +149,19 @@ public class ManKiller extends Macro implements Renderable {
 
     @Override
     public void run() {
+        Minibot.instance().client().resetMouseIdleTime();
         if (Inventory.full()) {
             if (Bank.viewing()) {
                 prepareInventory();
             } else {
-                if (BANK_BOOTH.distance() > 8 && locked()) {
+                if (BANK_BOOTH.distance() > 10 && locked()) {
                     openDoors();
                 } else {
                     openBank();
                 }
             }
         } else {
-            if (DOOR.distance() > 8) {
+            if (DOOR.distance() > 10) {
                 Walking.walkTo(DOOR);
                 Time.sleep(600, 800);
             } else {
@@ -181,6 +184,10 @@ public class ManKiller extends Macro implements Renderable {
         g.drawString("Looted: " + fLooted + " (" + hourly(looted) + "/HR)", 13, yOff += 15);
         String fProfit = ValueFormat.format(profit, COMMA_FORMAT);
         String fProfitHr = ValueFormat.format(hourly(profit), THOUSAND_FORMAT);
-        g.drawString("Profit: " + fProfit + " (" + fProfitHr + "/HR)", 13, yOff + 15);
+        g.drawString("Profit: " + fProfit + " (" + fProfitHr + "/HR)", 13, yOff += 15);
+        int exp = Game.totalExperience() - startExp;
+        String fExp = ValueFormat.format(exp, COMMA_FORMAT);
+        String fExpHr = ValueFormat.format(hourly(exp), THOUSAND_FORMAT);
+        g.drawString("Experience: " + fExp + " (" + fExpHr + "/HR)", 13, yOff + 15);
     }
 }

@@ -43,6 +43,13 @@ public class Game {
         return Minibot.instance().client().getExperiences();
     }
 
+    public static int totalExperience() {
+        int i = 0;
+        for (int exp : experiences())
+            i += exp;
+        return i;
+    }
+
     public static int[] varps() {
         int[] settings = Minibot.instance().client().getGameSettings();
         return settings == null ? null : settings.clone();

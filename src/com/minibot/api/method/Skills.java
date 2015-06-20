@@ -1,7 +1,8 @@
 package com.minibot.api.method;
 
 /**
- * Created by tim on 5/17/15.
+ * @author Tim Dekker
+ * @since 5/17/15
  */
 public class Skills {
     public static final int ATTACK = 0;
