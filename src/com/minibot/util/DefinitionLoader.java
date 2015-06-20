@@ -63,14 +63,11 @@ public class DefinitionLoader {
             for (int i = 0; i < 30000; i++) {
                 RSObjectDefinition raw = client.loadObjectDefinition(i);
                 if (raw != null) {
-                    String name = raw.getName();
-                    if (name != null) {
-                        if (name.equals(NULL)) {
-                            raw = raw.transform();
-                            if (raw == null)
-                                continue;
-                        }
-                        data.put(i, raw);
+                    RSObjectDefinition transformed = raw.transform();
+                    if (transformed != null) {
+                        data.put(transformed.getId(), raw);
+                    } else {
+                        data.put(raw.getId(), raw);
                     }
                 }
             }
@@ -92,14 +89,11 @@ public class DefinitionLoader {
             for (int i = 0; i < 20000; i++) {
                 RSNpcDefinition raw = client.loadNpcDefinition(i);
                 if (raw != null) {
-                    String name = raw.getName();
-                    if (name != null) {
-                        if (name.equals(NULL)) {
-                            raw = raw.transform();
-                            if (raw == null)
-                                continue;
-                        }
-                        data.put(i, raw);
+                    RSNpcDefinition transformed = raw.transform();
+                    if (transformed != null) {
+                        data.put(transformed.getId(), raw);
+                    } else {
+                        data.put(raw.getId(), raw);
                     }
                 }
             }

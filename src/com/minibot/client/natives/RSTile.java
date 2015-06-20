@@ -6,4 +6,7 @@ public interface RSTile extends ClientNative {
     int getPlane();
     int getX();
     int getY();
+    RSWallDecoration getWallDecoration();
+    RSFloorDecoration getFloorDecoration();
+    RSBoundary getBoundary();
 }

@@ -31,6 +31,7 @@ public class OSUpdater extends Updater {
                 new Cache(), new NodeDeque(), new Queue(), new Tile(), new Model(),
                 new AnimationSequence(), new Character(), new NpcDefinition(), new Npc(),
                 new Player(), new Item(), new ItemDefinition(), new InteractableObject(),
+                new WallDecoration(), new FloorDecoration(), new Boundary(),
                 new ObjectDefinition(), new Region(), new Canvas(), new WidgetNode(),
                 new Widget(), new Varpbits(), new Client()
         };

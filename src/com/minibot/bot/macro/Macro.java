@@ -20,6 +20,7 @@ public abstract class Macro {
             public void run() {
                 username = Minibot.instance().client().getUsername();
                 password = Minibot.instance().client().getPassword();
+                atStart();
                 while (!isInterrupted() && Minibot.instance().isMacroRunning()) {
                     macro.run();
                     Time.sleep(20, 50);
@@ -30,6 +31,8 @@ public abstract class Macro {
         thread.start();
         start = Time.millis();
     }
+
+    public void atStart() {}
 
     public long runtime() {
         return Time.millis() - start;

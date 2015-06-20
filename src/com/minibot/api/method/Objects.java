@@ -3,8 +3,7 @@ package com.minibot.api.method;
 import com.minibot.Minibot;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Tile;
-import com.minibot.client.natives.RSInteractableObject;
-import com.minibot.client.natives.RSTile;
+import com.minibot.client.natives.*;
 
 import java.util.*;
 
@@ -36,6 +35,15 @@ public class Objects {
                 objs.add(new GameObject(entity));
             }
         }
+        RSWallDecoration wall = tile.getWallDecoration();
+        if (wall != null)
+            objs.add(new GameObject(wall));
+        RSFloorDecoration floor = tile.getFloorDecoration();
+        if (floor != null)
+            objs.add(new GameObject(floor));
+        RSBoundary boundary = tile.getBoundary();
+        if (boundary != null)
+            objs.add(new GameObject(boundary));
         return objs.toArray(new GameObject[objs.size()]);
     }
 

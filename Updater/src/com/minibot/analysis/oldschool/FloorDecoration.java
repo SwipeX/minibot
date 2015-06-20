@@ -10,30 +10,28 @@ import org.objectweb.asm.commons.cfg.tree.node.FieldMemberNode;
 import org.objectweb.asm.commons.cfg.tree.node.VariableNode;
 import org.objectweb.asm.tree.ClassNode;
 
-@VisitorInfo(hooks = {"objects", "x", "y", "plane", "wallDecoration", "floorDecoration", "boundary"})
-public class Tile extends GraphVisitor {
+@VisitorInfo(hooks = {"worldX", "worldY", "plane", "id", "flags", "model"})
+public class FloorDecoration extends GraphVisitor {
 
     @Override
     public boolean validate(ClassNode cn) {
-        return cn.superName.equals(clazz("Node")) && cn.fieldCount("Z") == 3;
+        return cn.ownerless() && cn.getFieldTypeCount() == 2 && cn.fieldCount("I") == 5 &&
+                cn.fieldCount(desc("RenderableNode")) == 1;
     }
 
     @Override
     public void visit() {
-        add("objects", cn.getField(null, "[" + desc("InteractableObject")), "[" + literalDesc("InteractableObject"));
-        add("wallDecoration", cn.getField(null, desc("WallDecoration")), literalDesc("WallDecoration"));
-        add("floorDecoration", cn.getField(null, desc("FloorDecoration")), literalDesc("FloorDecoration"));
-        add("boundary", cn.getField(null, desc("Boundary")), literalDesc("Boundary"));
-        visit(new TileHooks());
+        visit("Region", new FloorHooks());
+        add("model", cn.getField(null, desc("RenderableNode")), literalDesc("RenderableNode"));
     }
 
-    private class TileHooks extends BlockVisitor {
+    private class FloorHooks extends BlockVisitor {
 
         private int added = 0;
 
         @Override
         public boolean validate() {
-            return added < 3;
+            return added < 5;
         }
 
         @Override
@@ -42,17 +40,22 @@ public class Tile extends GraphVisitor {
                 public void visitField(FieldMemberNode fmn) {
                     if (fmn.opcode() == PUTFIELD && fmn.owner().equals(cn.name) && fmn.desc().equals("I")) {
                         VariableNode vn = (VariableNode) fmn.layer(IMUL, ILOAD);
-                        if (vn == null) vn = (VariableNode) fmn.layer(DUP_X1, IMUL, ILOAD);
+                        if (vn == null) vn = (VariableNode) fmn.layer(IADD, IMUL, ILOAD);
                         if (vn != null) {
                             String name = null;
-                            if (vn.var() == 1) {
-                                name = "plane";
-                            } else if (vn.var() == 2) {
-                                name = "x";
+                            if (vn.var() == 2) {
+                                name = "worldX";
                             } else if (vn.var() == 3) {
-                                name = "y";
+                                name = "worldY";
+                            } else if (vn.var() == 4) {
+                                name = "plane";
+                            } else if (vn.var() == 6) {
+                                name = "id";
+                            } else if (vn.var() == 7) {
+                                name = "flags";
                             }
-                            if (name == null) return;
+                            if (name == null)
+                                return;
                             hooks.put(name, new FieldHook(name, fmn.fin()));
                             added++;
                         }
@@ -62,5 +65,3 @@ public class Tile extends GraphVisitor {
         }
     }
 }
-
-

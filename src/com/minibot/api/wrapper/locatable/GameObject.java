@@ -7,8 +7,7 @@ import com.minibot.api.method.Players;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.method.projection.Projection;
 import com.minibot.api.wrapper.Wrapper;
-import com.minibot.client.natives.RSInteractableObject;
-import com.minibot.client.natives.RSObjectDefinition;
+import com.minibot.client.natives.*;
 import com.minibot.util.DefinitionLoader;
 
 import java.awt.*;
@@ -17,19 +16,20 @@ import java.util.Arrays;
 /**
  * @author Tyler Sedlar
  */
-public class GameObject extends Wrapper<RSInteractableObject> implements Locatable {
+public class GameObject extends Wrapper<ClientNative> implements Locatable {
 
-
-    public GameObject(RSInteractableObject raw) {
+    public GameObject(ClientNative raw) {
         super(raw);
     }
 
     public int uid() {
-        return raw.getId();
+        if (raw instanceof RSInteractableObject)
+            return ((RSInteractableObject) raw).getId();
+        return ((RSDecoration) raw).getId();
     }
 
     public int id() {
-        return raw != null ? uid() >> 14 & 0x7FFF : -1;
+        return uid() >> 14 & 0x7FFF;
     }
 
     public int localX() {
@@ -49,19 +49,40 @@ public class GameObject extends Wrapper<RSInteractableObject> implements Locatab
     }
 
     public int fineX() {
-        return raw.getWorldX();
+        if (raw instanceof RSInteractableObject)
+            return ((RSInteractableObject) raw).getWorldX();
+        return ((RSDecoration) raw).getWorldX();
     }
 
     public int fineY() {
-        return raw.getWorldY();
+        if (raw instanceof RSInteractableObject)
+            return ((RSInteractableObject) raw).getWorldY();
+        return ((RSDecoration) raw).getWorldY();
     }
 
     public int plane() {
-        return raw.getPlane();
+        if (raw instanceof RSInteractableObject)
+            return ((RSInteractableObject) raw).getPlane();
+        return ((RSDecoration) raw).getPlane();
     }
 
     public int height() {
-        return Math.max(0, raw.getHeight());
+        int height = 1;
+        if (raw instanceof RSInteractableObject) {
+            height = ((RSInteractableObject) raw).getHeight();
+        } else {
+            RSRenderableNode model = ((RSDecoration) raw).getModel();
+            if (model == null) {
+                if (raw instanceof RSWallDecoration) {
+                    model = ((RSWallDecoration) raw).getBackup();
+                } else if(raw instanceof RSBoundary) {
+                    model = ((RSBoundary) raw).getBackup();
+                }
+            }
+            if (model != null)
+                height = model.getHeight();
+        }
+        return Math.max(0, height);
     }
 
     @Override
@@ -103,7 +124,7 @@ public class GameObject extends Wrapper<RSInteractableObject> implements Locatab
             realLocalX = localX();
         if (realLocalY == -1)
             realLocalY = localY();
-        RuneScape.processAction(Action.valueOf(opcode, raw.getId(), realLocalX, realLocalY), action, name);
+        RuneScape.processAction(Action.valueOf(opcode, uid(), realLocalX, realLocalY), action, name);
     }
 
     public void processAction(int opcode, String action) {

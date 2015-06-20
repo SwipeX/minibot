@@ -1,10 +1,13 @@
 package com.minibot.api.wrapper.locatable;
 
 import com.minibot.api.method.Game;
+import com.minibot.api.method.Npcs;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.projection.Projection;
 import com.minibot.api.wrapper.Wrapper;
 import com.minibot.client.natives.RSCharacter;
+import com.minibot.client.natives.RSNpc;
+import com.minibot.client.natives.RSPlayer;
 
 import java.awt.*;
 
@@ -74,6 +77,28 @@ public abstract class Character<T extends RSCharacter> extends Wrapper<T> implem
     }
 
     public Point screen(){
-        return Projection.groundToViewport(fineX(),fineY());
+        return Projection.groundToViewport(fineX(), fineY());
+    }
+
+    public final Character target() {
+        int index = targetIndex();
+        if (index == -1 || index == 65535)
+            return null;
+        if (index < 0x8000) {
+            RSNpc[] npcs = Npcs.raw();
+            if (npcs == null || npcs.length == 0)
+                return null;
+            if (npcs[index] != null)
+                return new Npc(npcs[index], index);
+        } else if (index - 0x8000 == Players.local().index()) {
+            return Players.local();
+        } else {
+            RSPlayer[] players = Players.raw();
+            if (players == null || players.length == 0)
+                return null;
+            if (players[index - 0x8000] != null)
+                return new Player(players[index - 0x8000], index - 0x8000);
+        }
+        return null;
     }
 }

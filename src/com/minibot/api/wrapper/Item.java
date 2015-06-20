@@ -111,17 +111,20 @@ public class Item implements Identifiable {
 
     public void use(Item target) {
         RuneScape.processAction(new UseItemAction(id, index, comp.raw.getId()), "Use", "Use");
-        RuneScape.processAction(new ItemOnItemAction(target.id, target.index, target.comp.raw.getId()), "Use", "Use " + name() + " -> " + target.name());
+        RuneScape.processAction(new ItemOnItemAction(target.id, target.index, target.comp.raw.getId()), "Use",
+                "Use " + name() + " -> " + target.name());
     }
 
     public void use(GameObject target) {
         RuneScape.processAction(new UseItemAction(id, index, comp.raw.getId()), "Use", "Use");
-        RuneScape.processAction(new ItemOnEntityAction(ActionOpcodes.ITEM_ON_OBJECT, target.raw.getId(), target.localX(), target.localY()), "Use", "Use " + name() + " -> " + target.name());
+        RuneScape.processAction(new ItemOnEntityAction(ActionOpcodes.ITEM_ON_OBJECT, target.uid(), target.localX(),
+                target.localY()), "Use", "Use " + name() + " -> " + target.name());
     }
 
     public void use(GroundItem target) {
         RuneScape.processAction(new UseItemAction(id, index, comp.raw.getId()), "Use", "Use");
-        RuneScape.processAction(new ItemOnEntityAction(ActionOpcodes.ITEM_ON_GROUND_ITEM, target.id(), target.localX(), target.localY()), "Use", "Use " + name() + " -> " + target.name());
+        RuneScape.processAction(new ItemOnEntityAction(ActionOpcodes.ITEM_ON_GROUND_ITEM, target.id(), target.localX(),
+                target.localY()), "Use", "Use " + name() + " -> " + target.name());
     }
 
     public void drop() {
