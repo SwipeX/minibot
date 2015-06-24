@@ -1,5 +1,6 @@
 package com.minibot.api.method;
 
+import com.minibot.api.util.Time;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.Item.Source;
@@ -64,6 +65,18 @@ public class Bank {
      */
     public static void withdraw(String item, int amount) {
         withdraw(first(itemFilter(item)), amount);
+    }
+
+    public static boolean close() {
+        WidgetComponent component = Widgets.get(12, 3);
+        if (component != null) {
+            component = component.children()[11];
+            if (component != null) {
+                component.processAction("Close");
+                return Time.sleep(() -> !Bank.viewing(), 3000);
+            }
+        }
+        return false;
     }
 
     public static Item[] items() {

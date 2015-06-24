@@ -1,5 +1,7 @@
 package com.minibot.api.method;
 
+import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
 
 /**
@@ -7,13 +9,31 @@ import com.minibot.api.wrapper.WidgetComponent;
  * @since Oct 16, 2014 - 8:35 PM
  */
 public enum GameTab {
-    CLAN_CHAT, FRIENDS_LIST, IGNORE_LIST, LOGOUT, OPTIONS, EMOTES, MUSIC,
-    COMBAT, STATS, QUESTS, INVENTORY, EQUIPMENT, PRAYER, MAGIC;
 
-    public static final int PARENT = 548;
+    CLAN_CHAT("Clan Chat"),
+    FRIENDS_LIST("Friends List"),
+    IGNORE_LIST("Ignore List"),
+    LOGOUT("Logout"),
+    OPTIONS("Options"),
+    EMOTES("Emotes"),
+    MUSIC("Music Player"),
+    COMBAT("Combat Options"),
+    STATS("Stats"),
+    QUESTS("Quest List"),
+    INVENTORY("Inventory"),
+    EQUIPMENT("Worn Equipment"),
+    PRAYER("Prayer"),
+    MAGIC("Magic");
+
+    private static final int PARENT = 548;
+    private final String action;
+
+    GameTab(String action) {
+        this.action = action;
+    }
 
     public int componentIndex() {
-        return ordinal() <= 6 ? (31 + ordinal()) : (48 + (ordinal() - 7));
+        return ordinal() <= 6 ? 25 + ordinal() : 35 + ordinal();
     }
 
     public WidgetComponent component() {
@@ -25,13 +45,17 @@ public enum GameTab {
         return component != null && component.textureId() != -1;
     }
 
-    public void view() {
+    public boolean open() {
         WidgetComponent component = component();
         if (component != null) {
-            String[] actions = component.actions();
-            if (actions != null && actions.length > 0)
-                component.processAction(component.actions()[0]);
+            if (component.textureId() == -1) {
+                component.processAction(ActionOpcodes.WIDGET_ACTION, 1, action, "");
+                Time.sleep(300, 600);
+                return viewing();
+            }
+            return true;
         }
+        return false;
     }
 
     public static GameTab current() {

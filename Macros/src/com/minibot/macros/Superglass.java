@@ -11,6 +11,7 @@ import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.GameObject;
+import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
@@ -21,7 +22,7 @@ import java.awt.*;
  * @author Jacob Doiron
  * @since 6/24/2015
  */
-@Manifest(name = "Superglass", author = "Jacob", version = "1.0.0", description = "Makes molten glass")
+@Manifest(name = "Superglass", author = "Jacob", version = "1.1.0", description = "Makes molten glass")
 public class Superglass extends Macro implements Renderable {
 
     private static int casts;
@@ -36,9 +37,7 @@ public class Superglass extends Macro implements Renderable {
     private static final int PROFIT = (MOLTEN_PRICE * (int) (1.3 * 13)) - (!staff ? FIRE_PRICE * 6 : 0) -
             (ASTRAL_PRICE * 2) - (SAND_PRICE * 13) - (SEAWEED_PRICE * 13);
 
-    private static final int TEXT_FORMAT = ValueFormat.THOUSANDS | ValueFormat.COMMAS | ValueFormat.PRECISION(2);
-
-    private static final Tile BANK_CHEST = new Tile(2444, 3083, 0);
+    private static final int TEXT_FORMAT = ValueFormat.THOUSANDS | ValueFormat.COMMAS | ValueFormat.PRECISION(1);
 
     private static final Filter<Item> SAND_FILTER = i -> {
         String name = i.name();
@@ -66,9 +65,9 @@ public class Superglass extends Macro implements Renderable {
     };
 
     private boolean openBank() {
-        GameObject chest = Objects.topAt(BANK_CHEST);
-        if (chest != null) {
-            chest.processAction("Use");
+        Npc banker = Npcs.nearest("Banker");
+        if (banker != null) {
+            banker.processAction(ActionOpcodes.NPC_ACTION_2, "Bank");
             return Time.sleep(Bank::viewing, 10000);
         }
         return false;
@@ -89,7 +88,8 @@ public class Superglass extends Macro implements Renderable {
                 sand.processAction("Withdraw-13");
                 Time.sleep(300, 500);
             } else {
-                return false;
+                System.out.println("No sand");
+                interrupt();
             }
         }
         if (Inventory.first(SEAWEED_FILTER) == null) {
@@ -98,31 +98,35 @@ public class Superglass extends Macro implements Renderable {
                 seaweed.processAction("Withdraw-13");
                 Time.sleep(300, 500);
             } else {
-                return false;
+                System.out.println("No seaweed");
+                interrupt();
             }
         }
-        //RuneScape.processAction(new WidgetAction(ActionOpcodes.WIDGET_ACTION, 1, 11, 3), "", "");
-        cast = false;
-        Time.sleep(150, 375);
-        return true;
+        if (Bank.close()) {
+            cast = false;
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void run() {
         Minibot.instance().client().resetMouseIdleTime();
         if (Bank.viewing())
-            prepareInventory(); // close bank, cast = false
+            prepareInventory();
         else {
             if (cast)
                 openBank();
             else {
-                /*if (!GameTab.MAGIC.viewing()) {
-                    GameTab.MAGIC.component().processAction("Magic");
-                    Time.sleep(200, 450);
-                }*/
-                //RuneScape.processAction(new WidgetAction(ActionOpcodes.WIDGET_ACTION, 1, 218, 110), "", "");
-                cast = true;
-                Time.sleep(2650, 2950);
+                if (GameTab.MAGIC.open()) {
+                    WidgetComponent spell = Widgets.get(218, 110);
+                    if (spell != null) {
+                        spell.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Cast", "");
+                        casts++;
+                        cast = true;
+                        Time.sleep(2650, 2950);
+                    }
+                }
             }
         }
     }
@@ -131,9 +135,8 @@ public class Superglass extends Macro implements Renderable {
     public void render(Graphics2D g) {
         g.setColor(Color.CYAN);
         g.drawString("Runtime: " + Time.format(runtime()), 13, 15);
-        g.drawString("Casts: " + ValueFormat.format(casts, TEXT_FORMAT) + " (" +
-                ValueFormat.format(hourly(casts), TEXT_FORMAT) + "/HR)", 13, 30);
+        g.drawString("Casts: " + ValueFormat.format(casts, TEXT_FORMAT) + " (" + hourly(casts) + "/HR)", 13, 30);
         g.drawString("Profit: " + ValueFormat.format(PROFIT * casts, TEXT_FORMAT) + " (" +
-                ValueFormat.format(hourly(PROFIT), TEXT_FORMAT) + "/HR)", 13, 45);
+                ValueFormat.format(hourly(PROFIT * casts), TEXT_FORMAT) + "/HR)", 13, 45);
     }
 }
