@@ -25,6 +25,15 @@ public enum GameTab {
         return component != null && component.textureId() != -1;
     }
 
+    public void view() {
+        WidgetComponent component = component();
+        if (component != null) {
+            String[] actions = component.actions();
+            if (actions != null && actions.length > 0)
+                component.processAction(component.actions()[0]);
+        }
+    }
+
     public static GameTab current() {
         for (GameTab tab : GameTab.values()) {
             if (tab.viewing())
