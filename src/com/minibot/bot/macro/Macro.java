@@ -56,9 +56,9 @@ public abstract class Macro {
     public void interrupt() {
         if (thread != null) {
             thread.interrupt();
+            thread = null;
             MacroSelector.halt();
         }
-        thread = null;
     }
 
     public abstract void run();
