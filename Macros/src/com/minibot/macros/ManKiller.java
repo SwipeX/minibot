@@ -88,7 +88,7 @@ public class ManKiller extends Macro implements Renderable {
     private boolean attack() {
         Character target = Players.local().target();
         if (target == null || (target.maxHealth() > 0 && target.health() <= 0)) {
-            Npc npc = Npcs.nearest(n -> {
+            Npc npc = Npcs.nearestByFilter(n -> {
                 Character npcTarget = n.target();
                 if (npcTarget != null)
                     return npcTarget.equals(Players.local());

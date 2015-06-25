@@ -2,7 +2,6 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.action.tree.WidgetAction;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -10,9 +9,7 @@ import com.minibot.api.util.ValueFormat;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
-import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Npc;
-import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
@@ -27,7 +24,7 @@ public class Superglass extends Macro implements Renderable {
 
     private static int casts;
     private static boolean cast;
-    private static boolean staff;
+    private static boolean staff = true;
 
     private static final int MOLTEN_PRICE = 150;
     private static final int SAND_PRICE = 50;
@@ -65,7 +62,7 @@ public class Superglass extends Macro implements Renderable {
     };
 
     private boolean openBank() {
-        Npc banker = Npcs.nearest("Banker");
+        Npc banker = Npcs.nearestByName("Banker");
         if (banker != null) {
             banker.processAction(ActionOpcodes.NPC_ACTION_2, "Bank");
             return Time.sleep(Bank::viewing, 10000);

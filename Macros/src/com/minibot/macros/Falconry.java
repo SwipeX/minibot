@@ -37,7 +37,7 @@ public class Falconry extends Macro implements Renderable {
         if (Players.local().animation() != -1)
             return;
         Inventory.dropAllExcept(item -> item.name().equals("Coins"));
-        Npc falcon = (Npc) Game.getHinted();//Npcs.nearest(FALCON); TODO TEST
+        Npc falcon = (Npc) Game.getHinted();//Npcs.nearestByFilter(FALCON); TODO TEST
         if (falcon != null) {
             Point screen = falcon.screen();
             if (screen.x < 0 || screen.x > 600) {
@@ -48,7 +48,7 @@ public class Falconry extends Macro implements Renderable {
                 Time.sleep(500);
             }
         } else {
-            Npc kebbit = Npcs.nearest(NPC);
+            Npc kebbit = Npcs.nearestByName(NPC);
             if (kebbit != null) {
                 Point screen = kebbit.screen();
                 if (screen.x < 0 || screen.x > 600) {

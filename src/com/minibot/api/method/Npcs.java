@@ -1,12 +1,19 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
+import com.minibot.api.action.tree.Action;
 import com.minibot.api.util.filter.Filter;
+import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.client.natives.RSNpc;
+import com.minibot.client.natives.RSNpcDefinition;
+import com.minibot.client.natives.RSObjectDefinition;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Tyler Sedlar
@@ -18,7 +25,7 @@ public class Npcs {
         return Minibot.instance().client().getNpcs();
     }
 
-    public static Npc[] loaded() {
+    public static Npc[] loaded(int radius) {
         RSNpc[] raws = raw();
         if (raws == null || raws.length == 0)
             return new Npc[0];
@@ -31,15 +38,28 @@ public class Npcs {
             if (raw == null)
                 continue;
             Npc npc = new Npc(raw, index);
-            npcs.add(npc);
+            if (radius == -1 || npc.distance() <= radius)
+                npcs.add(npc);
         }
         return npcs.toArray(new Npc[npcs.size()]);
     }
 
-    public static Npc nearest(Filter<Npc> filter) {
+    public static Npc[] loaded() {
+        return loaded(-1);
+    }
+
+    public static Npc atIndex(int idx) {
+        RSNpc[] raws = raw();
+        if (raws == null || raws.length == 0 || idx < 0 || idx >= raws.length)
+            return null;
+        RSNpc raw = raws[idx];
+        return raw == null ? null : new Npc(raw, idx);
+    }
+
+    public static Npc nearestByFilter(Filter<Npc> filter, int radius) {
         int dist = Integer.MAX_VALUE;
         Npc temp = null;
-        for (Npc npc : loaded()) {
+        for (Npc npc : loaded(radius)) {
             if (filter.accept(npc)) {
                 int d = npc.distance();
                 if (d < dist) {
@@ -51,15 +71,37 @@ public class Npcs {
         return temp;
     }
 
-    public static Npc nearest(String name) {
-        return nearest(npc -> npc != null && npc.name() != null && npc.name().equals(name));
+    public static Npc nearestByFilter(Filter<Npc> filter) {
+        return nearestByFilter(filter, -1);
     }
 
-    public static Npc atIndex(int idx) {
-        RSNpc[] raws = raw();
-        if (raws == null || raws.length == 0 || idx < 0 || idx >= raws.length)
-            return null;
-        RSNpc raw = raws[idx];
-        return raw == null ? null : new Npc(raw, idx);
+    public static Npc nearestByAction(String action, int radius) {
+        return nearestByFilter(o -> {
+            RSNpcDefinition def = o.definition();
+            if (def != null) {
+                String[] actions = def.getActions();
+                return actions != null && Action.indexOf(actions, action) >= 0;
+            }
+            return false;
+        }, radius);
+    }
+
+    public static Npc nearestByAction(String action) {
+        return nearestByAction(action, -1);
+    }
+
+    public static Npc nearestByName(String name, int radius) {
+        return nearestByFilter(o -> {
+            RSNpcDefinition def = o.definition();
+            if (def != null) {
+                String objName = def.getName();
+                return objName != null && objName.equals(name);
+            }
+            return false;
+        }, radius);
+    }
+
+    public static Npc nearestByName(String name) {
+        return nearestByName(name, -1);
     }
 }

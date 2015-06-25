@@ -1,11 +1,19 @@
 package com.minibot.api.method;
 
+import com.minibot.api.action.tree.Action;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.Item.Source;
 import com.minibot.api.wrapper.WidgetComponent;
+import com.minibot.api.wrapper.locatable.GameObject;
+import com.minibot.client.natives.RSObjectDefinition;
 import com.minibot.util.Array;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.List;
 
 /**
  * @author Tyler Sedlar
@@ -39,6 +47,19 @@ public class Bank {
         if (depositButton != null) {
             depositButton.processAction("Deposit worn items");
         }
+    }
+
+    public static GameObject nearestBooth() {
+        return Objects.nearestByAction("Bank", 10);
+    }
+
+    public static boolean openBooth() {
+        GameObject booth = nearestBooth();
+        if (booth != null) {
+            booth.processAction("Bank");
+            return Time.sleep(Bank::viewing, 10000);
+        }
+        return false;
     }
 
     /**

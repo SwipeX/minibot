@@ -6,6 +6,8 @@ import com.minibot.api.method.Login;
 import com.minibot.api.method.Mouse;
 import com.minibot.api.util.Time;
 import com.minibot.bot.breaks.BreakHandler;
+import com.minibot.bot.random.RandomEvent;
+import com.minibot.ui.MacroSelector;
 
 public abstract class Macro {
 
@@ -21,7 +23,16 @@ public abstract class Macro {
                 username = Minibot.instance().client().getUsername();
                 password = Minibot.instance().client().getPassword();
                 atStart();
-                while (!isInterrupted() && Minibot.instance().isMacroRunning()) {
+                main: while (!isInterrupted() && Minibot.instance().isMacroRunning()) {
+                    for (RandomEvent random : RandomEvent.SOLVERS) {
+                        if (random.validate()) {
+                            random.solving = true;
+                            random.run();
+                            continue main;
+                        } else {
+                            random.solving = false;
+                        }
+                    }
                     macro.run();
                     Time.sleep(20, 50);
                     checkLogin();
@@ -43,8 +54,10 @@ public abstract class Macro {
     }
 
     public void interrupt() {
-        if (thread != null)
+        if (thread != null) {
             thread.interrupt();
+            MacroSelector.halt();
+        }
         thread = null;
     }
 

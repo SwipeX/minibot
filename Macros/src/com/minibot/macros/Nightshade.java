@@ -56,7 +56,7 @@ public class Nightshade extends Macro implements Renderable {
     }
 
     private boolean inCave() {
-        return Npcs.nearest(n -> {
+        return Npcs.nearestByFilter(n -> {
             String name = n.name();
             return name != null && name.equals("Skavid");
         }) != null;

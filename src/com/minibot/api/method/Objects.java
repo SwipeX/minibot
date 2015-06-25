@@ -1,11 +1,14 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
+import com.minibot.api.action.tree.Action;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.client.natives.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Tim Dekker
@@ -47,15 +50,9 @@ public class Objects {
         return objs.toArray(new GameObject[objs.size()]);
     }
 
-    private static GameObject[] copy(RSInteractableObject[] array) {
-        if (array == null || array.length == 0) return null;
-        GameObject[] objects = new GameObject[array.length];
-        for (int i = 0; i < array.length; i++) {
-            RSInteractableObject obj = array[i];
-            if (obj != null)
-                objects[i] = new GameObject(obj);
-        }
-        return objects;
+    public static GameObject topAt(Tile t) {
+        GameObject[] all = allAt(t);
+        return all.length == 0 ? null : all[0];
     }
 
     public static Deque<GameObject> loaded(int radius) {
@@ -73,8 +70,47 @@ public class Objects {
         return objects;
     }
 
-    public static GameObject topAt(Tile t) {
-        GameObject[] all = allAt(t);
-        return all.length == 0 ? null : all[0];
+    public static GameObject nearestByFilter(Filter<GameObject> filter, int radius) {
+        Deque<GameObject> loaded = loaded(radius);
+        List<GameObject> filtered = loaded.stream().filter(filter::accept).collect(Collectors.toList());
+        if (!filtered.isEmpty()) {
+            Collections.sort(filtered, (o1, o2) -> o1.distance() - o2.distance());
+            return filtered.get(0);
+        }
+        return null;
+    }
+
+    public static GameObject nearestByFilter(Filter<GameObject> filter) {
+        return nearestByFilter(filter, -1);
+    }
+
+    public static GameObject nearestByAction(String action, int radius) {
+        return nearestByFilter(o -> {
+            RSObjectDefinition def = o.definition();
+            if (def != null) {
+                String[] actions = def.getActions();
+                return actions != null && Action.indexOf(actions, action) >= 0;
+            }
+            return false;
+        }, radius);
+    }
+
+    public static GameObject nearestByAction(String action) {
+        return nearestByAction(action, -1);
+    }
+
+    public static GameObject nearestByName(String name, int radius) {
+        return nearestByFilter(o -> {
+            RSObjectDefinition def = o.definition();
+            if (def != null) {
+                String objName = def.getName();
+                return objName != null && objName.equals(name);
+            }
+            return false;
+        }, radius);
+    }
+
+    public static GameObject nearestByName(String name) {
+        return nearestByName(name, -1);
     }
 }
