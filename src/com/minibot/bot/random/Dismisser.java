@@ -1,8 +1,10 @@
 package com.minibot.bot.random;
 
 import com.minibot.api.method.Npcs;
+import com.minibot.api.method.Players;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.locatable.Npc;
+import com.minibot.api.wrapper.locatable.Character;
 
 import java.awt.*;
 
@@ -17,7 +19,11 @@ public class Dismisser extends RandomEvent {
     @Override
     public boolean validate() {
         npc = Npcs.nearestByAction("Dismiss", 3);
-        return npc != null;
+        if (npc != null) {
+            Character target = npc.target();
+            return target != null && target.equals(Players.local());
+        }
+        return false;
     }
 
     @Override
