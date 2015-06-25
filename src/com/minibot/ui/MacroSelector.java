@@ -3,6 +3,7 @@ package com.minibot.ui;
 import com.minibot.Minibot;
 import com.minibot.api.method.Players;
 import com.minibot.api.util.Renderable;
+import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.MacroDefinition;
 import com.minibot.bot.macro.Manifest;
@@ -38,7 +39,9 @@ public class MacroSelector extends JDialog {
     }
 
     public static void halt() {
-        Minibot.connection().script(1, Players.local().name(), selected.def.manifest().name());
+        Player local = Players.local();
+        if (local != null)
+            Minibot.connection().script(1, local.name(), selected.def.manifest().name());
         Minibot.instance().canvas();
         if (current instanceof Renderable)
             GameCanvas.removeRenderable((Renderable) current);

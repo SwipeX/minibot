@@ -1,5 +1,6 @@
 package com.minibot.bot.random;
 
+import com.minibot.api.method.Bank;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
@@ -39,7 +40,7 @@ public class PinSolver extends RandomEvent {
                 WidgetComponent text = container.children()[1];
                 if (text.text().equals(numString)) {
                     button.processAction("Select");
-                    Time.sleep(1200, 1500);
+                    Time.sleep(2200, 2500);
                     return true;
                 }
             }
@@ -47,21 +48,12 @@ public class PinSolver extends RandomEvent {
         return false;
     }
 
-    private boolean inputPin() {
-        try (Stream<String> lines = Files.lines(Paths.get(BANK_PIN_FILE))) {
-            Optional<String> first = lines.findFirst();
-            if (first != null) {
-                char[] chars = first.get().toCharArray();
-                for (char c : chars) {
-                    if (!inputNumber(Integer.parseInt(Character.toString(c))))
-                        return false;
-                }
-                return true;
-            }
-            return false;
-        } catch (IOException e) {
-            return false;
+    private boolean inputPin(char[] pin) {
+        for (char c : pin) {
+            if (!inputNumber(Integer.parseInt(Character.toString(c))))
+                return false;
         }
+        return true;
     }
 
     @Override
@@ -71,8 +63,15 @@ public class PinSolver extends RandomEvent {
 
     @Override
     public void run() {
-        if (inputPin())
-            Time.sleep(2000);
+        try (Stream<String> lines = Files.lines(Paths.get(BANK_PIN_FILE))) {
+            Optional<String> first = lines.findFirst();
+            if (first != null) {
+                if (inputPin(first.get().toCharArray()))
+                    Time.sleep(Bank::viewing, 5000);
+            }
+        } catch (IOException e) {
+            System.err.println("Invalid bank pin file");
+        }
     }
 
     @Override
