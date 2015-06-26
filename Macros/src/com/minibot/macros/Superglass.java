@@ -25,7 +25,7 @@ public class Superglass extends Macro implements Renderable {
 
     private static int casts;
     private static boolean cast;
-    private static boolean staff;
+    private static boolean staff = true;
 
     private static final int MOLTEN_PRICE = 150;
     private static final int SAND_PRICE = 50;

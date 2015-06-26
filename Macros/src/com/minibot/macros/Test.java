@@ -17,8 +17,8 @@ import java.awt.*;
  * @author Tyler Sedlar
  * @since 6/24/2015
  */
-@Manifest(name = "Test2", author = "Tyler", version = "1.0.0", description = "For testing purposes")
-public class Test2 extends Macro implements Renderable {
+@Manifest(name = "Test", author = "Tyler", version = "1.0.0", description = "For testing purposes")
+public class Test extends Macro implements Renderable {
 
     private Tile tile;
 
