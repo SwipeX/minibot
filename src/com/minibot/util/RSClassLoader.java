@@ -12,27 +12,39 @@ import java.util.Map;
  */
 public class RSClassLoader extends ClassLoader {
 
-    public final Map<String, byte[]> classes;
+    private final Map<String, byte[]> classes;
 
-    public final Map<String, Class<?>> loaded = new HashMap<>();
-    public final Map<String, Class<?>> defined = new HashMap<>();
+    private final Map<String, Class<?>> loaded = new HashMap<>();
+    private final Map<String, Class<?>> defined = new HashMap<>();
 
-    public RSClassLoader(final Map<String, byte[]> classes) {
+    public RSClassLoader(Map<String, byte[]> classes) {
         this.classes = classes;
     }
 
     @Override
-    public Class<?> loadClass(final String name) throws ClassNotFoundException {
+    public Class<?> loadClass(String name) throws ClassNotFoundException {
         if (loaded.containsKey(name))
             return loaded.get(name);
         if (!classes.containsKey(name))
             return super.loadClass(name);
         if (defined.containsKey(name))
             return defined.get(name);
-        final byte[] def = classes.get(name);
-        final Class<?> clazz = super.defineClass(name, def, 0, def.length);
+        byte[] def = classes.get(name);
+        Class<?> clazz = defineClass(name, def, 0, def.length);
         loaded.put(name, clazz);
         defined.put(name, clazz);
         return clazz;
+    }
+
+    public Map<String, byte[]> getClasses() {
+        return classes;
+    }
+
+    public Map<String, Class<?>> getLoaded() {
+        return loaded;
+    }
+
+    public Map<String, Class<?>> getDefined() {
+        return defined;
     }
 }

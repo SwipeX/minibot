@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ModelHack implements Transform {
+
     @Override
     public void inject(Map<String, ClassNode> classes) {
         //landscape
@@ -33,8 +34,6 @@ public class ModelHack implements Transform {
                 methodNode.instructions.insert(setStack);
               //  System.out.println("Injected conditional disable landscape rendering @" + methodNode.name + methodNode.desc);
             }
-
-
             //Model
             ClassNode model = classes.get(ModScript.getClass("Model"));
             List<String> badKeys = new ArrayList<>(); //TODO identify the method in updater module
@@ -49,10 +48,10 @@ public class ModelHack implements Transform {
             for (MethodNode mn : model.methods) {
                 if (badKeys.contains(mn.name + mn.desc) || mn.desc.contains("[B") || Modifier.isStatic(mn.access))
                     continue;
-                fgt:
                 for (AbstractInsnNode ain : mn.instructions.toArray()) {
-                    if (ain.getOpcode() != IFNONNULL || !matchPrevs(ain, GETFIELD, ALOAD))
+                    if (ain.getOpcode() != IFNONNULL || !matchPrevs(ain, GETFIELD, ALOAD)) {
                         continue;
+                    }
                     FieldInsnNode field = (FieldInsnNode) ain.getPrevious();
                     if (field.desc.equals("[B")) {
                         VarInsnNode aload = (VarInsnNode) ain.getPrevious().getPrevious();
@@ -66,7 +65,7 @@ public class ModelHack implements Transform {
                         setStack.add(new InsnNode(RETURN));
                         setStack.add(ln);
                         mn.instructions.insertBefore(aload, setStack);
-                      //  System.out.println("Injected conditional disable model rendering @" + mn.name + mn.desc);
+                        //  System.out.println("Injected conditional disable model rendering @" + mn.name + mn.desc);
                         //break fgt;
                     }
                 }

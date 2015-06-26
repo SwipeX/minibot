@@ -143,4 +143,3 @@ public interface ActionOpcodes {
 
     public int CANCEL = 1006;
 }
-

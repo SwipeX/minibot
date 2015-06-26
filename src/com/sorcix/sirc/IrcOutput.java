@@ -53,12 +53,12 @@ class IrcOutput extends Thread {
 	 * @param irc The IrcConnection using this output thread.
 	 * @param out The stream to use for communication.
 	 */
-	protected IrcOutput(final IrcConnection irc, final Writer out) {
-		this.setName("sIRC-OUT:" + irc.getServerAddress() + "-" + irc.getClient().getUserName());
-		this.setPriority(Thread.MIN_PRIORITY);
-		this.setDaemon(true);
+	protected IrcOutput(IrcConnection irc, Writer out) {
+        setName("sIRC-OUT:" + irc.getServerAddress() + "-" + irc.getClient().getUserName());
+        setPriority(Thread.MIN_PRIORITY);
+        setDaemon(true);
 		this.irc = irc;
-		this.queue = new IrcQueue();
+        queue = new IrcQueue();
 		this.out = new BufferedWriter(out);
 	}
 	
@@ -69,8 +69,8 @@ class IrcOutput extends Thread {
 	 * @see IrcConnection#disconnect()
 	 */
 	protected void close() throws IOException {
-		this.out.flush();
-		this.out.close();
+        out.flush();
+        out.close();
 	}
 	
 	/**
@@ -82,15 +82,15 @@ class IrcOutput extends Thread {
 			boolean running = true;
 			String line;
 			while (running) {
-				Thread.sleep(this.irc.getMessageDelay());
-				line = this.queue.take();
+				Thread.sleep(irc.getMessageDelay());
+				line = queue.take();
 				if (line != null) {
-					this.sendNow(line);
+                    sendNow(line);
 				} else {
 					running = false;
 				}
 			}
-		} catch (final InterruptedException e) {
+		} catch (InterruptedException e) {
 			// end this thread
 		}/* catch (final IllegalStateException e) {
 			if (this.irc.isConnected()) {
@@ -106,12 +106,12 @@ class IrcOutput extends Thread {
 	 * 
 	 * @param packet The data to send.
 	 */
-	protected synchronized void send(final IrcPacket packet) {
-		if (this.irc.getMessageDelay() == 0) {
-			this.sendNow(packet.getRaw());
+	protected synchronized void send(IrcPacket packet) {
+		if (irc.getMessageDelay() == 0) {
+            sendNow(packet.getRaw());
 			return;
 		}
-		this.queue.add(packet.getRaw());
+        queue.add(packet.getRaw());
 	}
 	
 	/**
@@ -121,13 +121,13 @@ class IrcOutput extends Thread {
 	 * @deprecated Use {@link #send(IrcPacket)} instead.
 	 */
 	@Deprecated
-	protected synchronized void send(final String line) {
+	protected synchronized void send(String line) {
 		//TODO: Remove in a future release.
-		if (this.irc.getMessageDelay() == 0) {
-			this.sendNow(line);
+		if (irc.getMessageDelay() == 0) {
+            sendNow(line);
 			return;
 		}
-		this.queue.add(line);
+        queue.add(line);
 	}
 	
 	/**
@@ -137,10 +137,10 @@ class IrcOutput extends Thread {
 	 * 
 	 * @param packet The IrcPacket to send.
 	 */
-	protected synchronized void sendNow(final IrcPacket packet) {
+	protected synchronized void sendNow(IrcPacket packet) {
 		try {
-			this.sendNowEx(packet.getRaw());
-		} catch (final Exception ex) {
+            sendNowEx(packet.getRaw());
+		} catch (Exception ex) {
 			// ignore
 		}
 	}
@@ -154,11 +154,11 @@ class IrcOutput extends Thread {
 	 * @deprecated Use {@link #sendNow(IrcPacket)} instead.
 	 */
 	@Deprecated
-	protected synchronized void sendNow(final String line) {
+	protected synchronized void sendNow(String line) {
 		//TODO: Remove in a future release.
 		try {
-			this.sendNowEx(line);
-		} catch (final Exception ex) {
+            sendNowEx(line);
+		} catch (Exception ex) {
 			throw new IllegalStateException(ex);
 		}
 	}
@@ -171,8 +171,8 @@ class IrcOutput extends Thread {
 	 * @throws IOException If anything goes wrong while sending this
 	 *             message.
 	 */
-	protected synchronized void sendNowEx(final IrcPacket packet) throws IOException {
-		this.sendNowEx(packet.getRaw());
+	protected synchronized void sendNowEx(IrcPacket packet) throws IOException {
+        sendNowEx(packet.getRaw());
 	}
 	
 	/**
@@ -188,8 +188,8 @@ class IrcOutput extends Thread {
 			line = line.substring(0, IrcOutput.MAX_LINE_LENGTH - 2);
 		}
 		IrcDebug.log(">>> " + line);
-		this.out.write(line + IrcConnection.ENDLINE);
-		this.out.flush();
+        out.write(line + IrcConnection.ENDLINE);
+        out.flush();
 	}
 
 	/**
@@ -198,8 +198,8 @@ class IrcOutput extends Thread {
 	 */
 	protected void pong(String code) {
 		try {
-			this.sendNowEx("PONG "+code);
-		} catch (final Exception ex) {
+            sendNowEx("PONG "+code);
+		} catch (Exception ex) {
 			// ignore
 		}
 	}

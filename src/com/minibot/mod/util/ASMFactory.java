@@ -16,34 +16,34 @@ public final class ASMFactory implements Opcodes {
      * pass custom desc because known array descs e.g: getX[] -> Player[]
      */
     public static MethodNode createGetter(FieldHook hook, String returnDesc) {
-        MethodNode dankMeth = new MethodNode(ACC_PUBLIC, methodifyFieldName(hook.name, hook.fieldDesc),
+        MethodNode dankMeth = new MethodNode(ACC_PUBLIC, methodifyFieldName(hook.getName(), hook.getFieldDesc()),
                 "()" + returnDesc, null, null);
-        if (!hook.isStatic)
+        if (!hook.isStatic())
             dankMeth.instructions.add(new VarInsnNode(ALOAD, 0));
-        dankMeth.instructions.add(new FieldInsnNode(hook.isStatic ? GETSTATIC : GETFIELD, hook.clazz, hook.field, hook.fieldDesc));
+        dankMeth.instructions.add(new FieldInsnNode(hook.isStatic() ? GETSTATIC : GETFIELD, hook.getClazz(), hook.getField(), hook.getFieldDesc()));
         /**
          * TODO set default multiplier to 0
          * reason being is because the multiplier can never legit be 0, but it can actually be -1
          */
-        if (hook.multiplier != -1) {
-            dankMeth.instructions.add(new LdcInsnNode(hook.multiplier));
+        if (hook.getMultiplier() != -1) {
+            dankMeth.instructions.add(new LdcInsnNode(hook.getMultiplier()));
             dankMeth.instructions.add(new InsnNode(IMUL));
         }
-        dankMeth.instructions.add(new InsnNode(getReturnOpcode(hook.fieldDesc)));
+        dankMeth.instructions.add(new InsnNode(getReturnOpcode(hook.getFieldDesc())));
         return dankMeth;
     }
 
     public static MethodNode createGetter(FieldHook hook) {
-        return createGetter(hook, hook.fieldDesc);
+        return createGetter(hook, hook.getFieldDesc());
     }
 
     public static MethodNode createGetter(boolean stadik, String owner, String name, String desc, String definedFieldName) {
         FieldHook hook = new FieldHook();
-        hook.name = definedFieldName;
-        hook.fieldDesc = desc;
-        hook.field = name;
-        hook.clazz = owner;
-        hook.isStatic = stadik;
+        hook.setName(definedFieldName);
+        hook.setFieldDesc(desc);
+        hook.setField(name);
+        hook.setClazz(owner);
+        hook.setIsStatic(stadik);
         return createGetter(hook);
     }
 
@@ -56,7 +56,7 @@ public final class ASMFactory implements Opcodes {
         desc = desc.substring(desc.indexOf(")") + 1);
         if (desc.length() > 1)
             return ARETURN;
-        final char c = desc.charAt(0);
+        char c = desc.charAt(0);
         switch (c) {
             case 'I':
             case 'Z':

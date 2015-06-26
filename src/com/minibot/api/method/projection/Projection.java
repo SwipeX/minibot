@@ -10,6 +10,7 @@ import com.minibot.api.wrapper.locatable.Tile;
 
 import java.awt.*;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Tyler Sedlar
@@ -178,7 +179,7 @@ public class Projection {
     }
 
     public static Point[] getPointsIn(Shape shape) {
-        java.util.List<Point> points = new LinkedList<>();
+        List<Point> points = new LinkedList<>();
         Rectangle bounds = shape.getBounds();
         for (int x = bounds.x; x < bounds.getMaxX(); x++) {
             for (int y = bounds.y; y < bounds.getMaxY(); y++) {

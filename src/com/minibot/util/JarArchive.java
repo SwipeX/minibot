@@ -20,15 +20,14 @@ public class JarArchive {
     private final Map<String, byte[]> resources = new HashMap<>();
 
     private final File file;
-    private Manifest manifest;
 
     public JarArchive(File file) {
         this.file = file;
     }
 
     private byte[] inputToBytes(InputStream in) throws IOException {
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        final byte[] buffer = new byte[1024];
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
         int read;
         while ((read = in.read(buffer)) != -1) {
             out.write(buffer, 0, read);
@@ -38,23 +37,23 @@ public class JarArchive {
     }
 
     public Map<String, ClassNode> build() {
-        if (nodes.size() > 0)
+        if (!nodes.isEmpty())
             return nodes;
         try (final JarFile jf = new JarFile(file)) {
-            final JarInputStream in = new JarInputStream(new FileInputStream(file));
-            manifest = in.getManifest();
+            JarInputStream in = new JarInputStream(new FileInputStream(file));
+            Manifest manifest = in.getManifest();
             for (JarEntry entry = in.getNextJarEntry(); entry != null; entry = in.getNextJarEntry()) {
-                final String entryName = entry.getName();
+                String entryName = entry.getName();
                 if (entryName.endsWith(".class")) {
-                    final ClassReader cr = new ClassReader(jf.getInputStream(entry));
-                    final ClassNode cs = new ClassNode();
+                    ClassReader cr = new ClassReader(jf.getInputStream(entry));
+                    ClassNode cs = new ClassNode();
                     cr.accept(cs, ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
                     nodes.put(entryName.replace(".class", ""), cs);
                 } else {
                     resources.put(entryName, inputToBytes(jf.getInputStream(entry)));
                 }
             }
-        } catch (final IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return nodes;

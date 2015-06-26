@@ -29,7 +29,7 @@ public class Client extends GraphVisitor {
 
     @Override
     public String iface() {
-        return updater.getAccessorPackage() + "/Client";
+        return getUpdater().getAccessorPackage() + "/Client";
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Client extends GraphVisitor {
 
     private class ScreenVisitor extends BlockVisitor {
 
-        private int added = 0;
+        private int added;
 
         @Override
         public boolean validate() {
@@ -104,10 +104,10 @@ public class Client extends GraphVisitor {
                             FieldMemberNode val = (FieldMemberNode) idiv.layer(IMUL, GETSTATIC);
                             if (val == null)
                                 continue;
-                            if (!hooks.containsKey("screenWidth")) {
+                            if (!getHooks().containsKey("screenWidth")) {
                                 addHook(new FieldHook("screenWidth", val.fin()));
                                 added++;
-                            } else if (!hooks.containsKey("screenHeight")) {
+                            } else if (!getHooks().containsKey("screenHeight")) {
                                 addHook(new FieldHook("screenHeight", val.fin()));
                                 added++;
                             }
@@ -128,12 +128,13 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitJump(JumpNode jn) {
                     if (jn.opcode() == IF_ICMPNE) {
                         NumberNode nn = jn.firstNumber();
                         if (nn != null && nn.number() >= 3) {
                             FieldMemberNode fmn = (FieldMemberNode) jn.layer(IMUL, GETSTATIC);
-                            if (fmn == null || !fmn.owner().equals(((FieldHook) hooks.get("username")).clazz) || !fmn.desc().equals("I"))
+                            if (fmn == null || !fmn.owner().equals(((FieldHook) getHooks().get("username")).getClazz()) || !fmn.desc().equals("I"))
                                 return;
                             addHook(new FieldHook("loginState", fmn.fin()));
                             lock.set(true);
@@ -204,7 +205,7 @@ public class Client extends GraphVisitor {
         }
 
         @Override
-        public void visit(final Block block) {
+        public void visit(Block block) {
             if (block.count(new InsnQuery(ISTORE)) == 4 && block.count(new InsnQuery(IASTORE)) == 3) {
                 NodeTree root = block.tree();
                 AbstractNode storeE = root.find(IASTORE, 0);
@@ -234,13 +235,13 @@ public class Client extends GraphVisitor {
     }
 
     private void visitMouseIdleTime() {
-        for (ClassNode cn : updater.classnodes.values()) {
+        for (ClassNode cn : getUpdater().getClassnodes().values()) {
             if (!cn.interfaces.contains("java/awt/event/MouseListener"))
                 continue;
             for (MethodNode meth : cn.methods) {
                 if (!meth.name.equals("mouseExited"))
                     continue;
-                updater.graphs().get(cn).get(meth).forEach(b -> b.tree().accept(new NodeVisitor() {
+                getUpdater().graphs().get(cn).get(meth).forEach(b -> b.tree().accept(new NodeVisitor() {
                     @Override
                     public void visitField(FieldMemberNode fmn) {
                         if (fmn.opcode() != PUTSTATIC || fmn.children() != 1)
@@ -256,14 +257,14 @@ public class Client extends GraphVisitor {
     }
 
     private void visitProcessAction() {
-        for (ClassNode cn : updater.classnodes.values()) {
+        for (ClassNode cn : getUpdater().getClassnodes().values()) {
             cn.methods.stream().filter(mn -> mn.desc.startsWith("(IIIILjava/lang/String;Ljava/lang/String;II") &&
                     mn.desc.endsWith(")V")).forEach(mn -> addHook(new InvokeHook("processAction", mn)));
         }
     }
 
     private void visitDefLoader(String hook, String visitor, boolean transform) {
-        for (ClassNode cn : updater.classnodes.values()) {
+        for (ClassNode cn : getUpdater().getClassnodes().values()) {
             cn.methods.stream().filter(mn -> mn.desc.endsWith(")" + desc(visitor))).forEach(mn -> {
                 int access = mn.access & ACC_STATIC;
                 if (transform ? access == 0 : access > 0)
@@ -273,14 +274,14 @@ public class Client extends GraphVisitor {
     }
 
     private void visitStaticFields() {
-        add("players", cn.getField(null, "[" + desc("Player"), false));
-        add("npcs", cn.getField(null, "[" + desc("Npc"), false));
+        add("players", getCn().getField(null, "[" + desc("Player"), false));
+        add("npcs", getCn().getField(null, "[" + desc("Npc"), false));
         String playerDesc = desc("Player");
         String regionDesc = desc("Region");
         String widgetDesc = desc("Widget");
         String objectDesc = desc("InteractableObject");
         String dequeDesc = desc("NodeDeque");
-        for (ClassNode node : updater.classnodes.values()) {
+        for (ClassNode node : getUpdater().getClassnodes().values()) {
             for (FieldNode fn : node.fields) {
                 if ((fn.access & Opcodes.ACC_STATIC) == 0) continue;
                 if (fn.desc.equals("Ljava/awt/Canvas;")) {
@@ -310,6 +311,7 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitJump(JumpNode jn) {
                     FieldMemberNode x = (FieldMemberNode) jn.layer(IAND, BALOAD, AALOAD, ISHR, IMUL, GETSTATIC);
                     if (x == null) return;
@@ -331,8 +333,9 @@ public class Client extends GraphVisitor {
         }
 
         @Override
-        public void visit(final Block block) {
+        public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitJump(JumpNode jn) {
                     NumberNode nn = jn.firstNumber();
                     if (nn != null && nn.number() == 800) {
@@ -349,7 +352,7 @@ public class Client extends GraphVisitor {
 
     private class CameraPY extends BlockVisitor {
 
-        private int added = 0;
+        private static final int added = 0;
 
         @Override
         public boolean validate() {
@@ -357,8 +360,9 @@ public class Client extends GraphVisitor {
         }
 
         @Override
-        public void visit(final Block block) {
+        public void visit(Block block) {
             block.tree().accept(new NodeVisitor() {
+                @Override
                 public void visitField(FieldMemberNode fmn) {
                     if (fmn.opcode() == PUTSTATIC) {
                         NumberNode nn = (NumberNode) fmn.layer(IMUL, IAND, D2I, DMUL, LDC);
@@ -367,7 +371,7 @@ public class Client extends GraphVisitor {
                             nn = (NumberNode) fmn.layer(IMUL, IAND, SIPUSH);
                             if (nn != null && nn.number() == 0x07FF) {
                                 String name = "camera" + (mul > 0 ? "Pitch" : "Yaw");
-                                if (hooks.containsKey(name)) return;
+                                if (getHooks().containsKey(name)) return;
                                 addHook(new FieldHook(name, fmn.fin()));
                             }
                         }
@@ -389,6 +393,7 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitJump(JumpNode jn) {
                     if (jn.opcode() == IF_ICMPLE || jn.opcode() == IF_ICMPGE) {
                         int push = jn.opcode() == IF_ICMPLE ? 60 : -20;
@@ -416,10 +421,11 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitField(FieldMemberNode fmn) {
                     if (fmn.opcode() == PUTSTATIC && fmn.desc().equals("I")) {
                         if (fmn.layer(IMUL, IAND, IADD, IDIV) != null) {
-                            hooks.put("mapAngle", new FieldHook("mapAngle", fmn.fin()));
+                            getHooks().put("mapAngle", new FieldHook("mapAngle", fmn.fin()));
                             lock.set(true);
                         }
                     }
@@ -438,6 +444,7 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitJump(JumpNode jn) {
                     if (jn.opcode() == IF_ICMPNE) {
                         FieldMemberNode fmn = (FieldMemberNode) jn.layer(IMUL, GETSTATIC);
@@ -467,6 +474,7 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitJump(JumpNode jn) {
                     if (jn.opcode() == IF_ICMPNE) {
                         FieldMemberNode fmn = (FieldMemberNode) jn.layer(IMUL, GETSTATIC);
@@ -496,6 +504,7 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitMethod(MethodMemberNode mmn) {
                     if (mmn.opcode() == INVOKESTATIC) {
                         if (mmn.child(0) != null && mmn.child(0).opcode() == IADD) {
@@ -509,10 +518,10 @@ public class Client extends GraphVisitor {
                                         FieldMemberNode baseX = x.parent().next().firstField();
                                         FieldMemberNode y = (FieldMemberNode) yBlock.layer(IMUL, GETSTATIC);
                                         FieldMemberNode baseY = y.parent().next().firstField();
-                                        hooks.put("hintX", new FieldHook("hintX", x.fin()));
-                                        hooks.put("baseX", new FieldHook("baseX", baseX.fin()));
-                                        hooks.put("hintY", new FieldHook("hintY", y.fin()));
-                                        hooks.put("baseY", new FieldHook("baseY", baseY.fin()));
+                                        getHooks().put("hintX", new FieldHook("hintX", x.fin()));
+                                        getHooks().put("baseX", new FieldHook("baseX", baseX.fin()));
+                                        getHooks().put("hintY", new FieldHook("hintY", y.fin()));
+                                        getHooks().put("baseY", new FieldHook("baseY", baseY.fin()));
                                         lock.set(true);
                                     }
                                 }
@@ -536,6 +545,7 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitField(FieldMemberNode fmn) {
                     if (fmn.opcode() == PUTSTATIC && fmn.desc().equals("[I")) {
                         NumberNode nn = (NumberNode) fmn.layer(NEWARRAY, SIPUSH);
@@ -561,6 +571,7 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitMethod(MethodMemberNode mmn) {
                     if (mmn.desc().startsWith("(IIIII")) {
                         AbstractNode x = mmn.child(0);
@@ -582,7 +593,7 @@ public class Client extends GraphVisitor {
                             fields[i] = fmn;
                         }
                         for (int i = 0; i < itr.size(); i++) {
-                            hooks.put(itr.get(i), new FieldHook(itr.get(i), fields[i].fin()));
+                            getHooks().put(itr.get(i), new FieldHook(itr.get(i), fields[i].fin()));
                         }
                         lock.set(true);
                     }
@@ -601,6 +612,7 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitJump(JumpNode jn) {
                     FieldMemberNode fmn = (FieldMemberNode) jn.layer(IAND, BALOAD, AALOAD, AALOAD, GETSTATIC);
                     if (fmn != null && fmn.desc().equals("[[[B")) {
@@ -622,10 +634,11 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitVariable(VariableNode vn) {
                     FieldMemberNode fmn = (FieldMemberNode) vn.layer(ISUB, IALOAD, AALOAD, AALOAD, GETSTATIC);
                     if (fmn != null && fmn.desc().equals("[[[I")) {
-                        hooks.put("tileHeights", new FieldHook("tileHeights", fmn.fin()));
+                        getHooks().put("tileHeights", new FieldHook("tileHeights", fmn.fin()));
                         lock.set(true);
                     }
                 }
@@ -643,13 +656,14 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitVariable(VariableNode vn) {
                     if (vn.opcode() == ASTORE) {
                         TypeNode tn = vn.firstType();
                         if (tn != null && tn.type().equals(clazz("WidgetNode"))) {
                             FieldMemberNode fmn = (FieldMemberNode) vn.layer(INVOKEVIRTUAL, GETSTATIC);
                             if (fmn != null && fmn.desc().equals(desc("HashTable"))) {
-                                hooks.put("widgetNodes", new FieldHook("widgetNodes", fmn.fin()));
+                                getHooks().put("widgetNodes", new FieldHook("widgetNodes", fmn.fin()));
                                 lock.set(true);
                             }
                         }
@@ -669,6 +683,7 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor() {
+                @Override
                 public void visitField(FieldMemberNode fmn) {
                     if (fmn.parent() != null && fmn.parent().opcode() == AALOAD) {
                         if (fmn.desc().equals("[" + desc("Npc"))) {
@@ -694,6 +709,7 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor() {
+                @Override
                 public void visitField(FieldMemberNode fmn) {
                     if (fmn.parent() != null && fmn.parent().opcode() == AALOAD) {
                         if (fmn.desc().equals("[" + desc("Player"))) {
@@ -719,11 +735,12 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visit(AbstractNode n) {
                     if (n.opcode() == AASTORE) {
                         FieldMemberNode fmn = (FieldMemberNode) n.layer(AALOAD, AALOAD, IMUL, GETSTATIC);
                         if (fmn != null && fmn.desc().equals("I")) {
-                            hooks.put("plane", new FieldHook("plane", fmn.fin()));
+                            getHooks().put("plane", new FieldHook("plane", fmn.fin()));
                             lock.set(true);
                         }
                     }
@@ -742,13 +759,14 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitJump(JumpNode jn) {
                     if (jn.opcode() == IF_ICMPNE) {
                         NumberNode nn = jn.firstNumber();
                         if (nn != null && nn.number() == 1000) {
                             FieldMemberNode fmn = (FieldMemberNode) jn.layer(IMUL, GETSTATIC);
                             if (fmn != null && fmn.owner().equals("client") && fmn.desc().equals("I")) {
-                                hooks.put("gameState", new FieldHook("gameState", fmn.fin()));
+                                getHooks().put("gameState", new FieldHook("gameState", fmn.fin()));
                                 lock.set(true);
                             }
                         }
@@ -771,6 +789,7 @@ public class Client extends GraphVisitor {
         public void visit(Block block) {
             if (block.count(new InsnQuery(ILOAD)) >= 4 && block.count(new InsnQuery(ISTORE)) >= 4) {
                 block.tree().accept(new NodeVisitor(this) {
+                    @Override
                     public void visitField(FieldMemberNode fmn) {
                         if (fmn.opcode() == GETSTATIC && fmn.desc().equals("I")) {
                             VariableNode vn = (VariableNode) fmn.preLayer(IMUL, ISTORE);
@@ -784,7 +803,7 @@ public class Client extends GraphVisitor {
                                 } else if (var == 23) {
                                     name = "screenHeight";
                                 }
-                                if (name == null || hooks.containsKey(name))
+                                if (name == null || getHooks().containsKey(name))
                                     return;
                                 added++;
                                 addHook(new FieldHook(name, fmn.fin()));
@@ -812,17 +831,14 @@ public class Client extends GraphVisitor {
                 VariableNode yLoad = (VariableNode) block.tree().layer(INVOKEVIRTUAL, IADD, ILOAD);
                 if (yLoad != null) {
                     block.tree().accept(new NodeVisitor(this) {
+                        @Override
                         public void visitVariable(VariableNode vn) {
                             if (vn.opcode() == ISTORE) {
                                 FieldMemberNode fmn = vn.firstField();
                                 if (fmn != null) {
                                     String name;
-                                    if (vn.var() == yLoad.var()) {
-                                        name = "hoveredRegionTileY";
-                                    } else {
-                                        name = "hoveredRegionTileX";
-                                    }
-                                    if (hooks.containsKey(name))
+                                    name = vn.var() == yLoad.var() ? "hoveredRegionTileY" : "hoveredRegionTileX";
+                                    if (getHooks().containsKey(name))
                                         return;
                                     addHook(new FieldHook(name, fmn.fin()));
                                     added++;

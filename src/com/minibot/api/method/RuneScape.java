@@ -67,8 +67,8 @@ public class RuneScape {
     private static class Node {
 
         private int arg0, arg1, arg2, opcode;
-        private int x = 0;
-        private int y = 0;
+        private int x;
+        private int y;
         private String actionText;
         private String targetText;
 

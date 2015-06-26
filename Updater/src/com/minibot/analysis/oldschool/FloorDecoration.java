@@ -22,12 +22,12 @@ public class FloorDecoration extends GraphVisitor {
     @Override
     public void visit() {
         visit("Region", new FloorHooks());
-        add("model", cn.getField(null, desc("RenderableNode")), literalDesc("RenderableNode"));
+        add("model", getCn().getField(null, desc("RenderableNode")), literalDesc("RenderableNode"));
     }
 
     private class FloorHooks extends BlockVisitor {
 
-        private int added = 0;
+        private int added;
 
         @Override
         public boolean validate() {
@@ -37,8 +37,9 @@ public class FloorDecoration extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitField(FieldMemberNode fmn) {
-                    if (fmn.opcode() == PUTFIELD && fmn.owner().equals(cn.name) && fmn.desc().equals("I")) {
+                    if (fmn.opcode() == PUTFIELD && fmn.owner().equals(getCn().name) && fmn.desc().equals("I")) {
                         VariableNode vn = (VariableNode) fmn.layer(IMUL, ILOAD);
                         if (vn == null) vn = (VariableNode) fmn.layer(IADD, IMUL, ILOAD);
                         if (vn != null) {
@@ -56,7 +57,7 @@ public class FloorDecoration extends GraphVisitor {
                             }
                             if (name == null)
                                 return;
-                            hooks.put(name, new FieldHook(name, fmn.fin()));
+                            getHooks().put(name, new FieldHook(name, fmn.fin()));
                             added++;
                         }
                     }

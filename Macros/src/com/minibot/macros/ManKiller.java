@@ -31,9 +31,9 @@ public class ManKiller extends Macro implements Renderable {
     private static final Tile BANK_BOOTH = new Tile(3096, 3493, 0);
     private static final Tile DOOR = new Tile(3101, 3509, 0);
 
-    private int looted = 0;
-    private int profit = 0;
-    private int startExp = 0;
+    private int looted;
+    private int profit;
+    private int startExp;
 
     @Override
     public void atStart() {

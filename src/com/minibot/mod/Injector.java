@@ -15,13 +15,13 @@ public class Injector {
     private final JarArchive arch;
     private final List<Transform> transforms;
 
-    public Injector(final JarArchive arch) {
+    public Injector(JarArchive arch) {
         this.arch = arch;
-        this.transforms = new ArrayList<>();
+        transforms = new ArrayList<>();
     }
 
     public Map<String, byte[]> inject() {
-        getTransforms().forEach(t -> t.inject(arch.build()));
+        transforms.forEach(t -> t.inject(arch.build()));
         Map<String, byte[]> out = new HashMap<>();
         for (ClassNode cn : arch.build().values()) {
             ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);

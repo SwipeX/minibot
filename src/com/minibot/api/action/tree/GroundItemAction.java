@@ -12,6 +12,7 @@ public class GroundItemAction extends EntityAction {
         return entityId();
     }
 
+    @Override
     public int actionIndex() {
         return opcode - ActionOpcodes.GROUND_ITEM_ACTION_0;
     }

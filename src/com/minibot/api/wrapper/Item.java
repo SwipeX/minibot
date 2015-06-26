@@ -16,8 +16,8 @@ import java.awt.*;
  */
 public class Item implements Identifiable {
 
-    private int id;
-    private int amount;
+    private final int id;
+    private final int amount;
     private int index;
     private Source source = Source.INVENTORY;
     private WidgetComponent comp;
@@ -50,6 +50,7 @@ public class Item implements Identifiable {
         return comp;
     }
 
+    @Override
     public int id() {
         return id;
     }

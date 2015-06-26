@@ -6,6 +6,7 @@ import jdk.internal.org.objectweb.asm.tree.ClassNode;
 import java.util.Map;
 
 public class InterfaceImpl implements Transform {
+
     @Override
     public void inject(Map<String, ClassNode> classes) {
         for (ClassNode cn : classes.values()) {

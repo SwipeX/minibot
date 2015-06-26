@@ -5,4 +5,5 @@ package com.minibot.client;
  * originally not in the client, but was injected before initialization.
  */
 public @interface Artificial {
+
 }

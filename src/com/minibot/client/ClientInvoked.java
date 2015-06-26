@@ -5,4 +5,5 @@ package com.minibot.client;
  * i.e callbacks
  */
 public @interface ClientInvoked {
+
 }

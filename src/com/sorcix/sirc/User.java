@@ -45,7 +45,7 @@ public final class User {
 	/** The prefix. */
 	private char prefix;
 	/** Custom address to send messages to. */
-	private String address = null;
+	private String address;
 	/** Username of this user (or null if unknown). */
 	private final String userName;
 	/** Mode character for voice. */
@@ -80,7 +80,7 @@ public final class User {
 	 * @param irc The IrcConnection used to send messages to this
 	 *            user.
 	 */
-	public User(final String nick, final IrcConnection irc) {
+	public User(String nick, IrcConnection irc) {
 		this(nick, null, null, null, irc);
 	}
 	
@@ -94,20 +94,20 @@ public final class User {
 	 * @param irc The IrcConnection used to send messages to this
 	 *            user.
 	 */
-	protected User(final String nick, final String user, final String host, final String realName, final IrcConnection irc) {
-		this.setNick(nick);
+	protected User(String nick, String user, String host, String realName, IrcConnection irc) {
+        setNick(nick);
 		this.realName = realName;
-		this.userName = user;
-		this.hostName = host;
+        userName = user;
+        hostName = host;
 		this.irc = irc;
-		this.address = this.getNick();
+        address = this.nick;
 	}
 	
 	@Override
-	public boolean equals(final Object user) {
+	public boolean equals(Object user) {
 		try {
-			return ((User) user).getNick().equalsIgnoreCase(this.nick);
-		} catch (final Exception ex) {
+            return ((User) user).nick.equalsIgnoreCase(nick);
+		} catch (Exception ex) {
 			return false;
 		}
 	}
@@ -117,7 +117,7 @@ public final class User {
 	 * @return The address used to send messages to this user.
 	 */
 	private String getAddress() {
-		return this.address;
+		return address;
 	}
 	
 	/**
@@ -126,7 +126,7 @@ public final class User {
 	 * @return The hostname, or null if unknown.
 	 */
 	public String getHostName() {
-		return this.hostName;
+		return hostName;
 	}
 	
 	/**
@@ -135,7 +135,7 @@ public final class User {
 	 * @return The nickname.
 	 */
 	public String getNick() {
-		return this.nick;
+		return nick;
 	}
 	
 	/**
@@ -144,7 +144,7 @@ public final class User {
 	 * @return Lowercase nickname.
 	 */
 	public String getNickLower() {
-		return this.nickLower;
+		return nickLower;
 	}
 	
 	/**
@@ -153,7 +153,7 @@ public final class User {
 	 * @return The prefix.
 	 */
 	public char getPrefix() {
-		return this.prefix;
+		return prefix;
 	}
 	
 	/**
@@ -162,11 +162,11 @@ public final class User {
 	 * @return The username.
 	 */
 	public String getUserName() {
-		return this.userName;
+		return userName;
 	}
 
 	public String getRealName() {
-		return this.realName != null ? this.realName : this.nick;
+		return realName != null ? realName : nick;
 	}
 
 	/**
@@ -176,7 +176,7 @@ public final class User {
 	 * @since 1.1.0
 	 */
 	public boolean hasAdmin() {
-		return this.getPrefix() == User.PREFIX_ADMIN;
+        return prefix == User.PREFIX_ADMIN;
 	}
 	
 	/**
@@ -186,7 +186,7 @@ public final class User {
 	 * @since 1.1.0
 	 */
 	public boolean hasFounder() {
-		return this.getPrefix() == User.PREFIX_FOUNDER;
+        return prefix == User.PREFIX_FOUNDER;
 	}
 	
 	/**
@@ -196,7 +196,7 @@ public final class User {
 	 * @since 1.1.0
 	 */
 	public boolean hasHalfOp() {
-		return this.getPrefix() == User.PREFIX_HALF_OP;
+        return prefix == User.PREFIX_HALF_OP;
 	}
 	
 	/**
@@ -206,7 +206,7 @@ public final class User {
 	 * @since 1.1.0
 	 */
 	public boolean hasOperator() {
-		return this.getPrefix() == User.PREFIX_OPERATOR;
+        return prefix == User.PREFIX_OPERATOR;
 	}
 	
 	/**
@@ -216,7 +216,7 @@ public final class User {
 	 * @since 1.1.0
 	 */
 	public boolean hasVoice() {
-		return this.getPrefix() == User.PREFIX_VOICE;
+        return prefix == User.PREFIX_VOICE;
 	}
 	
 	/**
@@ -227,7 +227,7 @@ public final class User {
 	 * @see IrcConnection#isUs(User)
 	 */
 	public boolean isUs() {
-		return this.irc.isUs(this);
+		return irc.isUs(this);
 	}
 	
 	/**
@@ -236,8 +236,8 @@ public final class User {
 	 * @param message The message to send.
 	 * @see #sendMessage(String)
 	 */
-	public void send(final String message) {
-		this.sendMessage(message);
+	public void send(String message) {
+        sendMessage(message);
 	}
 	
 	/**
@@ -245,8 +245,8 @@ public final class User {
 	 * 
 	 * @param action The action to send.
 	 */
-	public void sendAction(final String action) {
-		this.sendCtcpAction(action);
+	public void sendAction(String action) {
+        sendCtcpAction(action);
 	}
 	
 	/**
@@ -255,8 +255,8 @@ public final class User {
 	 * 
 	 * @param command Command to send.
 	 */
-	public void sendCtcp(final String command) {
-		this.irc.getOutput().send("PRIVMSG " + this.getAddress() + " :" + IrcPacket.CTCP + command + IrcPacket.CTCP);
+	public void sendCtcp(String command) {
+        irc.getOutput().send("PRIVMSG " + address + " :" + IrcPacket.CTCP + command + IrcPacket.CTCP);
 	}
 	
 	/**
@@ -265,9 +265,9 @@ public final class User {
 	 * @param action The action to send.
 	 * @see #sendCtcp(String)
 	 */
-	protected void sendCtcpAction(final String action) {
-		if ((action != null) && (action.length() != 0)) {
-			this.sendCtcp("ACTION " + action);
+	protected void sendCtcpAction(String action) {
+		if ((action != null) && (!action.isEmpty())) {
+            sendCtcp("ACTION " + action);
 		}
 	}
 	
@@ -275,7 +275,7 @@ public final class User {
 	 * Sends a CTCP CLIENTINFO command.
 	 */
 	public void sendCtcpClientInfo() {
-		this.sendCtcp("CLIENTINFO");
+        sendCtcp("CLIENTINFO");
 	}
 	
 	/**
@@ -284,8 +284,8 @@ public final class User {
 	 * @return The timestamp sent to this user.
 	 */
 	public long sendCtcpPing() {
-		final Long time = System.currentTimeMillis();
-		this.sendCtcp("PING " + time.toString());
+		Long time = System.currentTimeMillis();
+        sendCtcp("PING " + time);
 		return time;
 	}
 	
@@ -295,8 +295,8 @@ public final class User {
 	 * 
 	 * @param command Command to send.
 	 */
-	protected void sendCtcpReply(final String command) {
-		this.sendCtcpReply(command, false);
+	protected void sendCtcpReply(String command) {
+        sendCtcpReply(command, false);
 	}
 	
 	/**
@@ -306,11 +306,11 @@ public final class User {
 	 * @param command Command to send.
 	 * @param skipQueue Whether to skip the outgoing message queue.
 	 */
-	protected void sendCtcpReply(final String command, final boolean skipQueue) {
+	protected void sendCtcpReply(String command, boolean skipQueue) {
 		if (skipQueue) {
-			this.irc.getOutput().sendNow("NOTICE " + this.getAddress() + " :" + IrcPacket.CTCP + command + IrcPacket.CTCP);
+            irc.getOutput().sendNow("NOTICE " + address + " :" + IrcPacket.CTCP + command + IrcPacket.CTCP);
 		} else {
-			this.irc.getOutput().send("NOTICE " + this.getAddress() + " :" + IrcPacket.CTCP + command + IrcPacket.CTCP);
+            irc.getOutput().send("NOTICE " + address + " :" + IrcPacket.CTCP + command + IrcPacket.CTCP);
 		}
 	}
 	
@@ -318,7 +318,7 @@ public final class User {
 	 * Sends a CTCP VERSION command to this user.
 	 */
 	public void sendCtcpVersion() {
-		this.sendCtcp("VERSION");
+        sendCtcp("VERSION");
 	}
 	
 	/**
@@ -326,8 +326,8 @@ public final class User {
 	 * 
 	 * @param message The message to send.
 	 */
-	public void sendMessage(final String message) {
-		this.irc.getOutput().send("PRIVMSG " + this.getAddress() + " :" + message);
+	public void sendMessage(String message) {
+        irc.getOutput().send("PRIVMSG " + address + " :" + message);
 	}
 	
 	/**
@@ -335,8 +335,8 @@ public final class User {
 	 * 
 	 * @param message The notice to send.
 	 */
-	public void sendNotice(final String message) {
-		this.irc.getOutput().send("NOTICE " + this.getAddress() + " :" + message);
+	public void sendNotice(String message) {
+        irc.getOutput().send("NOTICE " + address + " :" + message);
 	}
 	
 	/**
@@ -347,14 +347,11 @@ public final class User {
 	 * 
 	 * @param address The address to use.
 	 */
-	public void setCustomAddress(final String address) {
+	public void setCustomAddress(String address) {
 		if (address == null) {
-			this.address = this.getNick();
-		} else if (address.startsWith("@")) {
-			this.address = this.getNick() + address;
-		} else {
-			this.address = address;
-		}
+            this.address = nick;
+		} else
+            this.address = address.startsWith("@") ? nick + address : address;
 	}
 	
 	/**
@@ -363,11 +360,11 @@ public final class User {
 	 * @param mode The mode character.
 	 * @param toggle True to enable the mode, false to disable.
 	 */
-	public void setMode(final char mode, final boolean toggle) {
+	public void setMode(char mode, boolean toggle) {
 		if (toggle) {
-			this.setMode("+" + mode);
+            setMode("+" + mode);
 		} else {
-			this.setMode("-" + mode);
+            setMode("-" + mode);
 		}
 	}
 	
@@ -380,8 +377,8 @@ public final class User {
 	 * 
 	 * @param mode The mode to change.
 	 */
-	public void setMode(final String mode) {
-		this.irc.getOutput().send("MODE " + this.getAddress() + " " + mode);
+	public void setMode(String mode) {
+        irc.getOutput().send("MODE " + address + " " + mode);
 	}
 	
 	/**
@@ -393,31 +390,27 @@ public final class User {
 		if (nick == null)
 			return;
 		if (User.USER_PREFIX.indexOf(nick.charAt(0)) >= 0) {
-			this.prefix = nick.charAt(0);
+            prefix = nick.charAt(0);
 			nick = nick.substring(1);
 		}
 		this.nick = nick;
-		this.nickLower = nick.toLowerCase();
+        nickLower = nick.toLowerCase();
 		// TODO: Check whether addresses like nick!user@server are
 		// allowed
-		if ((this.address != null) && this.address.contains("@")) {
-			this.address = this.nick + "@" + this.address.split("@", 2)[1];
-		} else {
-			this.address = this.nick;
-		}
+        address = (address != null) && address.contains("@") ? this.nick + "@" + address.split("@", 2)[1] : this.nick;
 	}
 	
 	@Override
 	public String toString() {
-		return this.getNick();
-	}
+        return nick;
+    }
 	
 	/**
 	 * Updates this User object with data from given User.
 	 * 
 	 * @param user The fresh User object.
 	 */
-	protected void updateUser(final User user) {
+	protected void updateUser(User user) {
 		//TODO: Unfinished method?
 	}
 }

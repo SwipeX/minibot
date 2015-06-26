@@ -19,11 +19,9 @@ import java.util.concurrent.TimeUnit;
 @Manifest(name = "Falconry", author = "Swipe", version = "1.0.0", description = "Hunts Kebbits")
 public class Falconry extends Macro implements Renderable {
     boolean started;
-    private int SKILL_HUNTER = 21;
-    private int start_exp = 0;
+    private int start_exp;
     private long start_time;
-    private String NPC = "Spotted kebbit";//Dark kebbits = bad exp
-    private String FALCON = "Gyr Falcon";
+    private final String FALCON = "Gyr Falcon";
 
 
     @Override
@@ -31,6 +29,7 @@ public class Falconry extends Macro implements Renderable {
         Minibot.instance().client().resetMouseIdleTime();
         if (!started) {
             started = true;
+            int SKILL_HUNTER = 21;
             start_exp = Game.experiences()[SKILL_HUNTER];
             start_time = System.currentTimeMillis();
         }
@@ -48,6 +47,7 @@ public class Falconry extends Macro implements Renderable {
                 Time.sleep(500);
             }
         } else {
+            String NPC = "Spotted kebbit";
             Npc kebbit = Npcs.nearestByName(NPC);
             if (kebbit != null) {
                 Point screen = kebbit.screen();

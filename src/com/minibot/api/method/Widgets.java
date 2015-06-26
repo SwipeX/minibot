@@ -157,5 +157,4 @@ public class Widgets {
         RSWidget[][] widgets = raw();
         return widgets != null && widgets.length >= parent && widgets[parent] != null;
     }
-
 }

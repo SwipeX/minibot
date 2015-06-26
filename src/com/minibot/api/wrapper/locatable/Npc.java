@@ -42,6 +42,7 @@ public class Npc extends Character<RSNpc> implements Identifiable {
         return definition;
     }
 
+    @Override
     public void processAction(int opcode, String action) {
         String name = name();
         if (name == null)
@@ -49,6 +50,7 @@ public class Npc extends Character<RSNpc> implements Identifiable {
         RuneScape.processAction(new NpcAction(opcode, index), action, name, 0, 0);
     }
 
+    @Override
     public void processAction(String action) {
         if (definition == null) return;
         String[] actions = definition.getActions();
@@ -59,6 +61,7 @@ public class Npc extends Character<RSNpc> implements Identifiable {
             processAction(ActionOpcodes.NPC_ACTION_0 + index, action);
     }
 
+    @Override
     public String name() {
         RSNpcDefinition def = definition();
         return def == null ? null : def.getName();

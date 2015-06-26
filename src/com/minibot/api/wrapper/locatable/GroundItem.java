@@ -21,7 +21,7 @@ import java.util.Arrays;
  */
 public class GroundItem extends Wrapper<RSItem> implements Locatable {
 
-    private int plane;
+    private final int plane;
     private int x;
     private int y;
 
@@ -90,6 +90,7 @@ public class GroundItem extends Wrapper<RSItem> implements Locatable {
         return (int) Projection.distance(Players.local(), this);
     }
 
+    @Override
     public void processAction(int opcode, String action) {
         String name = name();
         if (name == null)
@@ -97,6 +98,7 @@ public class GroundItem extends Wrapper<RSItem> implements Locatable {
         RuneScape.processAction(new GroundItemAction(opcode, id(), localX(), localY()), action, name, 0, 0);
     }
 
+    @Override
     public void processAction(String action) {
         RSItemDefinition definition = definition();
         if (definition == null)

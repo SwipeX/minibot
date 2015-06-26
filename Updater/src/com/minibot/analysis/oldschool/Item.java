@@ -33,14 +33,15 @@ public class Item extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitMethod(MethodMemberNode mmn) {
                     if (mmn.opcode() == INVOKEVIRTUAL && mmn.desc().startsWith("(I")) {
                         FieldMemberNode id = (FieldMemberNode) mmn.layer(INVOKESTATIC, IMUL, GETFIELD);
-                        if (id != null && id.owner().equals(cn.name) && id.desc().equals("I")) {
+                        if (id != null && id.owner().equals(getCn().name) && id.desc().equals("I")) {
                             FieldMemberNode stack = (FieldMemberNode) mmn.layer(IMUL, GETFIELD);
                             if (stack != null && stack.desc().equals("I")) {
-                                hooks.put("id", new FieldHook("id", id.fin()));
-                                hooks.put("stackSize", new FieldHook("stackSize", stack.fin()));
+                                getHooks().put("id", new FieldHook("id", id.fin()));
+                                getHooks().put("stackSize", new FieldHook("stackSize", stack.fin()));
                                 lock.set(true);
                             }
                         }

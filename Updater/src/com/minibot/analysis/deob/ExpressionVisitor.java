@@ -11,7 +11,7 @@ import org.objectweb.asm.commons.cfg.tree.node.NumberNode;
  */
 public class ExpressionVisitor extends BlockVisitor {
 
-    private int fixed = 0;
+    private int fixed;
 
     @Override
     public String toString() {
@@ -26,6 +26,7 @@ public class ExpressionVisitor extends BlockVisitor {
     @Override
     public void visit(Block block) {
         block.tree().accept(new NodeVisitor() {
+            @Override
             public void visitOperation(ArithmeticNode an) {
                 if (an.adding() || an.subtracting()) {
                     if (an.firstField() != null) {

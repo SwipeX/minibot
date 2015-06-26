@@ -16,23 +16,25 @@ public class GameCanvas extends Canvas implements Renderable {
 
     public static final int INPUT_MOUSE = 0x2;
     public static final int INPUT_KEYBOARD = 0x4;
-    private static List<Renderable> renderables = new CopyOnWriteArrayList<>();
+    private static final List<Renderable> renderables = new CopyOnWriteArrayList<>();
     private final BufferedImage raw;
     private final BufferedImage backBuffer;
 
     private final EventQueue queue;
 
-    public int input = INPUT_MOUSE | INPUT_KEYBOARD;
-    public int mouseX = 0, mouseY = 0;
+    private int input = INPUT_MOUSE | INPUT_KEYBOARD;
+    private int mouseX;
+    private int mouseY;
 
     public GameCanvas() {
-        this.raw = new BufferedImage(Toolkit.getDefaultToolkit().getScreenSize().width,
+        raw = new BufferedImage(Toolkit.getDefaultToolkit().getScreenSize().width,
                 Toolkit.getDefaultToolkit().getScreenSize().height, BufferedImage.TYPE_INT_ARGB);
-        this.backBuffer = new BufferedImage(Toolkit.getDefaultToolkit().getScreenSize().width,
+        backBuffer = new BufferedImage(Toolkit.getDefaultToolkit().getScreenSize().width,
                 Toolkit.getDefaultToolkit().getScreenSize().height, BufferedImage.TYPE_INT_ARGB);
         requestFocusInWindow();
         queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
         queue.push(new EventQueue() {
+            @Override
             public void dispatchEvent(AWTEvent evt) {
                 if (!evt.getSource().equals(this)) {
                     super.dispatchEvent(evt);
@@ -76,7 +78,7 @@ public class GameCanvas extends Canvas implements Renderable {
 
     private void push(AWTEvent evt) {
         if (!evt.getSource().equals(this)) {
-            super.dispatchEvent(evt);
+            dispatchEvent(evt);
             return;
         }
         if (!evt.getSource().equals("bot")) {
@@ -85,7 +87,7 @@ public class GameCanvas extends Canvas implements Renderable {
                 return;
             }
         }
-        super.dispatchEvent(evt);
+        dispatchEvent(evt);
     }
 
     public void pressMouse(boolean left) {
@@ -170,5 +172,28 @@ public class GameCanvas extends Canvas implements Renderable {
     public static void removeRenderable(Renderable renderable) {
         renderables.remove(renderable);
     }
-}
 
+    public int getInput() {
+        return input;
+    }
+
+    public void setInput(int input) {
+        this.input = input;
+    }
+
+    public int getMouseX() {
+        return mouseX;
+    }
+
+    public void setMouseX(int mouseX) {
+        this.mouseX = mouseX;
+    }
+
+    public int getMouseY() {
+        return mouseY;
+    }
+
+    public void setMouseY(int mouseY) {
+        this.mouseY = mouseY;
+    }
+}

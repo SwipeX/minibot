@@ -20,8 +20,16 @@ public abstract class RandomEvent implements Renderable {
         });
     }
 
-    public boolean solving = false;
+    private boolean solving;
 
     public abstract boolean validate();
     public abstract void run();
+
+    public boolean solving() {
+        return solving;
+    }
+
+    public void setSolving(boolean solving) {
+        this.solving = solving;
+    }
 }

@@ -39,86 +39,86 @@ package com.sorcix.sirc;
 public abstract class IrcAdaptor implements ServerListener, MessageListener, ModeListener {
 	
 	@Override
-	public void onAction(final IrcConnection irc, final User sender, final Channel target, final String action) {}
+	public void onAction(IrcConnection irc, User sender, Channel target, String action) {}
 	
 	@Override
-	public void onAction(final IrcConnection irc, final User sender, final String action) {}
+	public void onAction(IrcConnection irc, User sender, String action) {}
 	
 	@Override
-	public void onAdmin(final IrcConnection irc, final Channel channel, final User sender, final User user) {}
+	public void onAdmin(IrcConnection irc, Channel channel, User sender, User user) {}
 	
 	@Override
-	public void onConnect(final IrcConnection irc) {}
+	public void onConnect(IrcConnection irc) {}
 	
 	@Override
-	public void onCtcpReply(final IrcConnection irc, final User sender, final String command, final String message) {}
+	public void onCtcpReply(IrcConnection irc, User sender, String command, String message) {}
 	
 	@Override
-	public void onDeAdmin(final IrcConnection irc, final Channel channel, final User sender, final User user) {}
+	public void onDeAdmin(IrcConnection irc, Channel channel, User sender, User user) {}
 	
 	@Override
-	public void onDeFounder(final IrcConnection irc, final Channel channel, final User sender, final User user) {}
+	public void onDeFounder(IrcConnection irc, Channel channel, User sender, User user) {}
 	
 	@Override
-	public void onDeHalfop(final IrcConnection irc, final Channel channel, final User sender, final User user) {}
+	public void onDeHalfop(IrcConnection irc, Channel channel, User sender, User user) {}
 	
 	@Override
-	public void onDeOp(final IrcConnection irc, final Channel channel, final User sender, final User user) {}
+	public void onDeOp(IrcConnection irc, Channel channel, User sender, User user) {}
 	
 	@Override
-	public void onDeVoice(final IrcConnection irc, final Channel channel, final User sender, final User user) {}
+	public void onDeVoice(IrcConnection irc, Channel channel, User sender, User user) {}
 	
 	@Override
-	public void onDisconnect(final IrcConnection irc) {}
+	public void onDisconnect(IrcConnection irc) {}
 	
 	@Override
-	public void onFounder(final IrcConnection irc, final Channel channel, final User sender, final User user) {}
+	public void onFounder(IrcConnection irc, Channel channel, User sender, User user) {}
 	
 	@Override
-	public void onHalfop(final IrcConnection irc, final Channel channel, final User sender, final User user) {}
+	public void onHalfop(IrcConnection irc, Channel channel, User sender, User user) {}
 	
 	@Override
-	public void onInvite(final IrcConnection irc, final User sender, final User user, final Channel channel) {}
+	public void onInvite(IrcConnection irc, User sender, User user, Channel channel) {}
 	
 	@Override
-	public void onJoin(final IrcConnection irc, final Channel channel, final User user) {}
+	public void onJoin(IrcConnection irc, Channel channel, User user) {}
 	
 	@Override
-	public void onKick(final IrcConnection irc, final Channel channel, final User sender, final User user, final String message) {}
+	public void onKick(IrcConnection irc, Channel channel, User sender, User user, String message) {}
 	
 	@Override
-	public void onMessage(final IrcConnection irc, final User sender, final Channel target, final String message) {}
+	public void onMessage(IrcConnection irc, User sender, Channel target, String message) {}
 	
 	@Override
-	public void onMode(final IrcConnection irc, final Channel channel, final User sender, final String mode) {}
+	public void onMode(IrcConnection irc, Channel channel, User sender, String mode) {}
 	
 	@Override
-	public void onMotd(final IrcConnection irc, final String motd) {}
+	public void onMotd(IrcConnection irc, String motd) {}
 	
 	@Override
-	public void onNick(final IrcConnection irc, final User oldUser, final User newUser) {}
+	public void onNick(IrcConnection irc, User oldUser, User newUser) {}
 	
 	@Override
-	public void onNotice(final IrcConnection irc, final User sender, final Channel target, final String message) {}
+	public void onNotice(IrcConnection irc, User sender, Channel target, String message) {}
 	
 	@Override
-	public void onNotice(final IrcConnection irc, final User sender, final String message) {}
+	public void onNotice(IrcConnection irc, User sender, String message) {}
 	
 	@Override
-	public void onOp(final IrcConnection irc, final Channel channel, final User sender, final User user) {}
+	public void onOp(IrcConnection irc, Channel channel, User sender, User user) {}
 	
 	@Override
-	public void onPart(final IrcConnection irc, final Channel channel, final User user, String message) {}
+	public void onPart(IrcConnection irc, Channel channel, User user, String message) {}
 	
 	@Override
-	public void onPrivateMessage(final IrcConnection irc, final User sender, final String message) {}
+	public void onPrivateMessage(IrcConnection irc, User sender, String message) {}
 	
 	@Override
-	public void onQuit(final IrcConnection irc, final User user, String message) {}
+	public void onQuit(IrcConnection irc, User user, String message) {}
 	
 	@Override
-	public void onTopic(final IrcConnection irc, final Channel channel, final User sender, final String topic) {}
+	public void onTopic(IrcConnection irc, Channel channel, User sender, String topic) {}
 	
 	@Override
-	public void onVoice(final IrcConnection irc, final Channel channel, final User sender, final User user) {}
+	public void onVoice(IrcConnection irc, Channel channel, User sender, User user) {}
 }

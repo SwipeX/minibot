@@ -14,13 +14,13 @@ import java.awt.*;
  */
 public class WidgetComponent extends Wrapper<RSWidget> {
 
-    private int index;
+    private final int index;
     private int ownerId;
 
     public WidgetComponent(int ownerId, RSWidget raw) {
         super(raw);
         this.ownerId = ownerId;
-        this.index = -1;
+        index = -1;
     }
 
     public WidgetComponent(RSWidget raw, int index) {

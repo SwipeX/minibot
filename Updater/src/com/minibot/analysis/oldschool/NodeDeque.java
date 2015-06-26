@@ -39,16 +39,17 @@ public class NodeDeque extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitJump(JumpNode jn) {
                     if (jn.opcode() == IF_ACMPNE) {
                         FieldMemberNode fmn = jn.firstField();
                         String node = desc("Node");
                         if (fmn != null && fmn.desc().equals(node)) {
-                            hooks.put("tail", new FieldHook("tail", fmn.fin()));
-                            for (FieldNode fn : cn.fields) {
+                            getHooks().put("tail", new FieldHook("tail", fmn.fin()));
+                            for (FieldNode fn : getCn().fields) {
                                 if (fn.desc.equals(node)) {
                                     if (!fn.name.equals(fmn.name())) {
-                                        hooks.put("head", new FieldHook("head", fn));
+                                        getHooks().put("head", new FieldHook("head", fn));
                                         break;
                                     }
                                 }
@@ -62,8 +63,8 @@ public class NodeDeque extends GraphVisitor {
     }
 
 	private void methods() {
-		for (MethodNode mn : cn.methods) {
-			if (mn.desc.equals("()L" + clazz("Node") + ";") && mn.referenced(updater.archive.build().get("client"))) {
+		for (MethodNode mn : getCn().methods) {
+			if (mn.desc.equals("()L" + clazz("Node") + ";") && mn.referenced(getUpdater().getArchive().build().get("client"))) {
 				int count = 0;
 				search: {
 					for (AbstractInsnNode ain : mn.instructions.toArray()) {
@@ -74,9 +75,9 @@ public class NodeDeque extends GraphVisitor {
 						}
 					}
 					if (count == 4) {
-                        hooks.put("current", new InvokeHook("current", mn));
+                        getHooks().put("current", new InvokeHook("current", mn));
 					} else if (count == 3) {
-						hooks.put("next", new InvokeHook("next", mn));
+						getHooks().put("next", new InvokeHook("next", mn));
 					}
 				}
 			}

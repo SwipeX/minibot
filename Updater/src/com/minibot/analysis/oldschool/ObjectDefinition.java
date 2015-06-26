@@ -25,13 +25,13 @@ public class ObjectDefinition extends GraphVisitor {
 
     @Override
     public void visit() {
-        add("name", cn.getField(null, "Ljava/lang/String;"), "Ljava/lang/String;");
-        add("actions", cn.getField(null, "[Ljava/lang/String;"), "[Ljava/lang/String;");
+        add("name", getCn().getField(null, "Ljava/lang/String;"), "Ljava/lang/String;");
+        add("actions", getCn().getField(null, "[Ljava/lang/String;"), "[Ljava/lang/String;");
         visit(new Id());
         visit(new TransformIds());
         visit(new TransformIndex());
-        for (MethodNode mn : cn.methods) {
-            if (!Modifier.isStatic(mn.access) && mn.desc.endsWith("L" + cn.name + ";")) {
+        for (MethodNode mn : getCn().methods) {
+            if (!Modifier.isStatic(mn.access) && mn.desc.endsWith("L" + getCn().name + ";")) {
                 addHook(new InvokeHook("transform", mn));
             }
         }
@@ -47,10 +47,11 @@ public class ObjectDefinition extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitField(FieldMemberNode fmn) {
-                    if (fmn.opcode() == GETFIELD && fmn.owner().equals(cn.name) && fmn.desc().equals("I")) {
+                    if (fmn.opcode() == GETFIELD && fmn.owner().equals(getCn().name) && fmn.desc().equals("I")) {
                         if (fmn.preLayer(IMUL, ISHL, IADD, IADD, I2L) != null) {
-                            hooks.put("id", new FieldHook("id", fmn.fin()));
+                            getHooks().put("id", new FieldHook("id", fmn.fin()));
                             lock.set(true);
                         }
                     }
@@ -69,11 +70,12 @@ public class ObjectDefinition extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visit(AbstractNode n) {
                     if (n.opcode() == ARETURN) {
                         FieldMemberNode fmn = (FieldMemberNode) n.layer(INVOKESTATIC, IALOAD, GETFIELD);
-                        if (fmn != null && fmn.owner().equals(cn.name) && fmn.desc().equals("[I")) {
-                            hooks.put("transformIds", new FieldHook("transformIds", fmn.fin()));
+                        if (fmn != null && fmn.owner().equals(getCn().name) && fmn.desc().equals("[I")) {
+                            getHooks().put("transformIds", new FieldHook("transformIds", fmn.fin()));
                             lock.set(true);
                         }
                     }
@@ -90,12 +92,13 @@ public class ObjectDefinition extends GraphVisitor {
         }
 
         @Override
-        public void visit(final Block block) {
+        public void visit(Block block) {
             block.tree().accept(new NodeVisitor() {
+                @Override
                 public void visitVariable(VariableNode vn) {
                     if (vn.opcode() == ISTORE && vn.var() == 2) {
                         FieldMemberNode fmn = (FieldMemberNode) vn.layer(INVOKESTATIC, IMUL, GETFIELD);
-                        if (fmn != null && fmn.owner().equals(cn.name) && fmn.first(ALOAD) != null) {
+                        if (fmn != null && fmn.owner().equals(getCn().name) && fmn.first(ALOAD) != null) {
                             addHook(new FieldHook("transformIndex", fmn.fin()));
                             lock.set(true);
                         }

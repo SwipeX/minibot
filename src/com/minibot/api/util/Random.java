@@ -25,7 +25,7 @@ public class Random {
         return GEN.nextBoolean();
     }
 
-    public static <T> T nextElement(T[] elements) {
+    public static <T> T nextElement(T... elements) {
         return elements[nextInt(elements.length - 1)];
     }
 

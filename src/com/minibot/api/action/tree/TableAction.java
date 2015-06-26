@@ -12,6 +12,7 @@ public class TableAction extends AbstractTableAction {
         return index < 0 || index > 4 ? -1 : ActionOpcodes.TABLE_ACTION_0 + index;
     }
 
+    @Override
     public int actionIndex() {
         return opcode - ActionOpcodes.TABLE_ACTION_0;
     }

@@ -5,7 +5,15 @@ package com.minibot.util.io;
  */
 public abstract class InternetCallback {
 
-    public int length = -1;
+    private int length = -1;
 
     public abstract void onDownload(int percent);
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
 }

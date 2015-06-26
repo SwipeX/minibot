@@ -15,7 +15,6 @@ public class RenderableNode extends GraphVisitor {
 
     @Override
     public void visit() {
-        add("height", cn.getField(null, "I"), "I");
+        add("height", getCn().getField(null, "I"), "I");
     }
 }
-

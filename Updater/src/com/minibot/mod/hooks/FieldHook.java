@@ -14,12 +14,12 @@ import static org.objectweb.asm.Opcodes.*;
  */
 public class FieldHook extends Hook {
 
-    public String clazz;
-    public String field;
-    public String fieldDesc;
-    public boolean isStatic;
+    private String clazz;
+    private String field;
+    private String fieldDesc;
+    private boolean isStatic;
 
-    public int multiplier = -1;
+    private int multiplier = -1;
 
     public FieldHook(String name, String clazz, String field, String fieldDesc, boolean isStatic) {
         super(name);
@@ -77,5 +77,45 @@ public class FieldHook extends Hook {
         out.writeUTF(Crypto.encrypt(fieldDesc));
         out.writeBoolean(isStatic);
         out.writeInt(multiplier);
+    }
+
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
+    }
+
+    public String getFieldDesc() {
+        return fieldDesc;
+    }
+
+    public void setFieldDesc(String fieldDesc) {
+        this.fieldDesc = fieldDesc;
+    }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    public void setIsStatic(boolean isStatic) {
+        this.isStatic = isStatic;
+    }
+
+    public int getMultiplier() {
+        return multiplier;
+    }
+
+    public void setMultiplier(int multiplier) {
+        this.multiplier = multiplier;
     }
 }

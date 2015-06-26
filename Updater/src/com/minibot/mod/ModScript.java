@@ -23,14 +23,14 @@ public class ModScript {
             out.writeUTF(hash);
             out.writeInt(visitors.size());
             for (GraphVisitor gv : visitors) {
-                ClassNode cn = gv.cn;
+                ClassNode cn = gv.getCn();
                 out.writeBoolean(cn != null);
                 if (cn == null)
                     continue;
                 out.writeUTF(Crypto.encrypt(cn.name));
                 out.writeUTF(Crypto.encrypt(gv.id()));
-                out.writeInt(gv.hooks.size());
-                for (Map.Entry<String, Hook> entry : gv.hooks.entrySet()) {
+                out.writeInt(gv.getHooks().size());
+                for (Map.Entry<String, Hook> entry : gv.getHooks().entrySet()) {
                     Hook hook = entry.getValue();
                     hook.writeToEncryptedStream(out);
                 }

@@ -10,10 +10,12 @@ public class ObjectAction extends EntityAction {
         super(opcode, uid, localX, localY);
     }
 
+    @Override
     public int actionIndex() {
         return opcode - ActionOpcodes.OBJECT_ACTION_0;
     }
 
+    @Override
     public int entityId() { //Arg0 is the UID, not the direct getId of the entity
         return objectId();
     }

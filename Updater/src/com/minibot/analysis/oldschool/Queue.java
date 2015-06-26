@@ -15,6 +15,6 @@ public class Queue extends GraphVisitor {
 
     @Override
     public void visit() {
-        add("head", cn.getField(null, desc("CacheableNode")), literalDesc("CacheableNode"));
+        add("head", getCn().getField(null, desc("CacheableNode")), literalDesc("CacheableNode"));
     }
 }

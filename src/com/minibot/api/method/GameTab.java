@@ -5,8 +5,8 @@ import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
 
 /**
- * @author <a href="mailto:t@sedlar.me">Tyler Sedlar</a>
- * @since Oct 16, 2014 - 8:35 PM
+ * @author Tyler Sedlar
+ * @since Oct 16, 2014
  */
 public enum GameTab {
 
@@ -51,9 +51,8 @@ public enum GameTab {
             if (component.textureId() == -1) {
                 component.processAction(ActionOpcodes.WIDGET_ACTION, 1, action, "");
                 Time.sleep(300, 600);
-                return viewing();
             }
-            return true;
+            return viewing();
         }
         return false;
     }

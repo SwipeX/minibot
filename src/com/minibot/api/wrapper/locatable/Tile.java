@@ -12,7 +12,9 @@ import java.util.Objects;
  */
 public class Tile implements Locatable {
 
-    private int x, y, plane;
+    private final int x;
+    private final int y;
+    private int plane;
 
     public Tile(int x, int y) {
         this.x = x;

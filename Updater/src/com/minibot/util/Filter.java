@@ -6,5 +6,5 @@ package com.minibot.util;
  */
 public interface Filter<E> {
 
-    public boolean accept(E e);
+    boolean accept(E e);
 }

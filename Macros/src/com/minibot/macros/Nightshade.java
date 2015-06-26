@@ -23,7 +23,7 @@ import java.awt.*;
 @Manifest(name = "Nightshade", author = "Tyler", version = "1.0.0", description = "Collects nightshade")
 public class Nightshade extends Macro implements Renderable {
 
-    private static final int COCONUT_PRICE = 910, VIAL_PRICE = 2, WEAPON_POISON_PRICE = 6160;
+    private static final int COCONUT_PRICE = 924, VIAL_PRICE = 2, BERRY_PRICE = 2490, WEAPON_POISON_PRICE = 5500;
     private static final int SAPPHIRE_LANTERN = 4702, SKAVID_MAP = 2376;
     private static final int COMMA_FORMAT = ValueFormat.COMMAS;
     private static final int THOUSAND_FORMAT = ValueFormat.THOUSANDS | ValueFormat.PRECISION(2);
@@ -42,7 +42,7 @@ public class Nightshade extends Macro implements Renderable {
         return name != null && name.equals("Cave nightshade");
     };
 
-    private int looted = 0;
+    private int looted;
 
     private boolean teleport() {
         Item ring = Inventory.first(RING_FILTER);
@@ -143,9 +143,9 @@ public class Nightshade extends Macro implements Renderable {
                 } else {
                     if (loot()) {
                         looted++;
-                    } else {
-                        hop();
-                    }
+                    }// else {
+                    //    hop();
+                    //}
                 }
             }
         }
@@ -158,7 +158,7 @@ public class Nightshade extends Macro implements Renderable {
         g.drawString("Runtime: " + Time.format(runtime()), 13, yOff += 15);
         String fLooted = ValueFormat.format(looted, COMMA_FORMAT);
         g.drawString("Looted: " + fLooted + " (" + hourly(looted) + "/HR)", 13, yOff += 15);
-        int per = (WEAPON_POISON_PRICE - (COCONUT_PRICE + VIAL_PRICE));
+        int per = WEAPON_POISON_PRICE - (COCONUT_PRICE + VIAL_PRICE + BERRY_PRICE);
         int profit = looted * per;
         String fProfit = ValueFormat.format(profit, COMMA_FORMAT);
         String fProfitHr = ValueFormat.format(hourly(profit), THOUSAND_FORMAT);

@@ -58,6 +58,7 @@ public class MacroSelector extends JDialog {
         setModal(true);
         setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
         addComponentListener(new ComponentAdapter() {
+            @Override
             public void componentHidden(ComponentEvent e) {
                 Minibot.instance().setMacroRunning(false);
             }
@@ -65,6 +66,7 @@ public class MacroSelector extends JDialog {
         JPanel container = new JPanel(new BorderLayout());
         container.setPreferredSize(new Dimension(500, 300));
         model = new DefaultTableModel() {
+            @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -75,6 +77,7 @@ public class MacroSelector extends JDialog {
         table = new JTable(model);
         table.setFillsViewportHeight(true);
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                            boolean hasFocus, int row, int column) {
                 super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -154,12 +157,16 @@ public class MacroSelector extends JDialog {
 
     private class MacroVector extends Vector<String> {
 
-        public final MacroDefinition def;
+        private final MacroDefinition def;
 
         public MacroVector(MacroDefinition def, String... strings) {
             this.def = def;
             for (String string : strings)
                 add(string);
+        }
+
+        public MacroDefinition getDef() {
+            return def;
         }
     }
 

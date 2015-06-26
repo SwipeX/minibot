@@ -15,8 +15,7 @@ public class Region extends GraphVisitor {
 
     @Override
     public void visit() {
-        add("tiles", cn.getField(null, "[[[" + desc("Tile")), "[[[" + literalDesc("Tile"));
-        add("objects", cn.getField(null, "[" + desc("InteractableObject")), "[" + literalDesc("InteractableObject"));
+        add("tiles", getCn().getField(null, "[[[" + desc("Tile")), "[[[" + literalDesc("Tile"));
+        add("objects", getCn().getField(null, "[" + desc("InteractableObject")), "[" + literalDesc("InteractableObject"));
     }
 }
-

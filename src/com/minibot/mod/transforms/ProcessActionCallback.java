@@ -9,16 +9,17 @@ import jdk.internal.org.objectweb.asm.tree.*;
 import java.util.Map;
 
 public class ProcessActionCallback implements Transform {
+
     @Override
     public void inject(Map<String, ClassNode> classes) {
         InvokeHook meth = ModScript.getInvokeHook("Client#processAction");
         if (meth == null)
             throw new RuntimeException("#processAction hook broke?");
         for (ClassNode cn : classes.values()) {
-            if (!cn.name.equals(meth.clazz))
+            if (!cn.name.equals(meth.getClazz()))
                 continue;
             for (MethodNode mn : cn.methods) {
-                if (!mn.name.equals(meth.method) || !mn.desc.equals(meth.desc))
+                if (!mn.name.equals(meth.getMethod()) || !mn.desc.equals(meth.getDesc()))
                     continue;
                 InsnList stack = new InsnList();
                 stack.add(new VarInsnNode(Opcodes.ILOAD, 0));

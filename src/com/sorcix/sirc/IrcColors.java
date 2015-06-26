@@ -106,7 +106,7 @@ public final class IrcColors {
 	 * @param color The color number to use.
 	 * @return Colorized text.
 	 */
-	public static String color(final String text, final int color) {
+	public static String color(String text, int color) {
 		return IrcColors.COLOR + color + text + IrcColors.RESET;
 	}
 	
@@ -121,7 +121,7 @@ public final class IrcColors {
 	 * @param background The color number to use as background color.
 	 * @return Colorized text.
 	 */
-	public static String color(final String text, final int color, final int background) {
+	public static String color(String text, int color, int background) {
 		return IrcColors.COLOR + color + "," + background + text + IrcColors.RESET;
 	}
 	
@@ -131,7 +131,7 @@ public final class IrcColors {
 	 * @param input Text to clear.
 	 * @return Given text without markup.
 	 */
-	protected static String remove(final String input) {
+	protected static String remove(String input) {
 		return IrcColors.remove(new StringBuffer(input)).toString();
 	}
 	
@@ -151,18 +151,18 @@ public final class IrcColors {
 				// <colorIndicator><int>[<int>][[,<int>[<int>]]
 				if (c == 3) {
 					c = buf.charAt(++j);
-					if (('0' <= c) && (c <= '9')) { // first int
+					if ((c >= '0') && (c <= '9')) { // first int
 						c = buf.charAt(++j);
-						if (('0' <= c) && (c <= '9')) {
+						if ((c >= '0') && (c <= '9')) {
 							c = buf.charAt(++j); // second int
 						}
 					}
 					if (c == ',') {
 						c = buf.charAt(++j); // comma
 					}
-					if (('0' <= c) && (c <= '9')) { // first int
+					if ((c >= '0') && (c <= '9')) { // first int
 						c = buf.charAt(++j);
-						if (('0' <= c) && (c <= '9')) {
+						if ((c >= '0') && (c <= '9')) {
 							c = buf.charAt(++j); // second int
 						}
 					}
@@ -172,7 +172,7 @@ public final class IrcColors {
 				} else if ((c == 31) || (c == 2) || (c == 15) || (c == 22)) {
 					j++;
 				}
-			} catch (final StringIndexOutOfBoundsException exc) {
+			} catch (StringIndexOutOfBoundsException exc) {
 				// we got the end of the string with a call to
 				// charAt(++iIndexEnd)
 				// nothing

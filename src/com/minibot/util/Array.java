@@ -7,7 +7,7 @@ package com.minibot.util;
 public class Array {
 
     @SuppressWarnings("unchecked")
-    public static <E> E[] sizeUp(E[] array) {
+    public static <E> E[] sizeUp(E... array) {
         Class<?> arrayType = array.getClass().getComponentType();
         E[] newArray = (E[]) java.lang.reflect.Array.newInstance(arrayType, array.length + 1);
         System.arraycopy(array, 0, newArray, 0, array.length);

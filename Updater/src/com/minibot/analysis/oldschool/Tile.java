@@ -20,10 +20,10 @@ public class Tile extends GraphVisitor {
 
     @Override
     public void visit() {
-        add("objects", cn.getField(null, "[" + desc("InteractableObject")), "[" + literalDesc("InteractableObject"));
-        add("wallDecoration", cn.getField(null, desc("WallDecoration")), literalDesc("WallDecoration"));
-        add("floorDecoration", cn.getField(null, desc("FloorDecoration")), literalDesc("FloorDecoration"));
-        add("boundary", cn.getField(null, desc("Boundary")), literalDesc("Boundary"));
+        add("objects", getCn().getField(null, "[" + desc("InteractableObject")), "[" + literalDesc("InteractableObject"));
+        add("wallDecoration", getCn().getField(null, desc("WallDecoration")), literalDesc("WallDecoration"));
+        add("floorDecoration", getCn().getField(null, desc("FloorDecoration")), literalDesc("FloorDecoration"));
+        add("boundary", getCn().getField(null, desc("Boundary")), literalDesc("Boundary"));
         visit(new TileHooks());
     }
 
@@ -39,8 +39,9 @@ public class Tile extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitField(FieldMemberNode fmn) {
-                    if (fmn.opcode() == PUTFIELD && fmn.owner().equals(cn.name) && fmn.desc().equals("I")) {
+                    if (fmn.opcode() == PUTFIELD && fmn.owner().equals(getCn().name) && fmn.desc().equals("I")) {
                         VariableNode vn = (VariableNode) fmn.layer(IMUL, ILOAD);
                         if (vn == null) vn = (VariableNode) fmn.layer(DUP_X1, IMUL, ILOAD);
                         if (vn != null) {
@@ -53,7 +54,7 @@ public class Tile extends GraphVisitor {
                                 name = "y";
                             }
                             if (name == null) return;
-                            hooks.put(name, new FieldHook(name, fmn.fin()));
+                            getHooks().put(name, new FieldHook(name, fmn.fin()));
                             added++;
                         }
                     }
@@ -62,5 +63,3 @@ public class Tile extends GraphVisitor {
         }
     }
 }
-
-

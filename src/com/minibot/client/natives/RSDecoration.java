@@ -11,5 +11,6 @@ public interface RSDecoration extends ClientNative {
     int getPlane();
     int getId();
     int getFlags();
+
     RSRenderableNode getModel();
 }

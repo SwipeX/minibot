@@ -37,9 +37,10 @@ public class WidgetNode extends GraphVisitor {
         public void visit(Block block) {
             if (block.count(ALOAD) == 2 && block.count(IMUL) == 1 && block.count(GETFIELD) == 1) {
                 block.tree().accept(new NodeVisitor() {
+                    @Override
                     public void visitJump(JumpNode jn) {
                         FieldMemberNode fmn = (FieldMemberNode) jn.layer(IMUL, GETFIELD);
-                        if (fmn != null && fmn.owner().equals(cn.name) && fmn.children() == 1 && fmn.first(ALOAD) != null) {
+                        if (fmn != null && fmn.owner().equals(getCn().name) && fmn.children() == 1 && fmn.first(ALOAD) != null) {
                             addHook(new FieldHook("id", fmn.fin()));
                             lock.set(true);
                         }

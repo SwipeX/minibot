@@ -6,6 +6,7 @@ public abstract class SpellOnCharacter extends SpellOnEntityAction {
         super(opcode, entityId, 0, 0);
     }
 
+    @Override
     public final int significantArgs() {
         return ARG0;
     }

@@ -15,6 +15,7 @@ public abstract class ButtonAction extends Action {
         this(opcode, 0, widgetUid);
     }
 
+    @Override
     public final int significantArgs() {
         return ARG1|ARG2;
     }
@@ -41,7 +42,7 @@ public abstract class ButtonAction extends Action {
         return null;
     }
 
-    public static int buttonForOpcode(final int opcode) {
+    public static int buttonForOpcode(int opcode) {
         switch (Action.pruneOpcode(opcode)) {
             case ActionOpcodes.BUTTON_INPUT: {
                 return Widgets.BUTTON_INPUT;

@@ -12,14 +12,17 @@ import java.lang.reflect.Method;
  */
 public class InvokeHook extends Hook {
 
-    public String clazz, method, desc;
-    public int predicate;
-    public String predicateType;
-    public Class<?> predicateTypeClass;
+    private int predicate;
+
+    private String clazz;
+    private String method;
+    private String desc;
+    private String predicateType;
+    private Class<?> predicateTypeClass;
 
     @Override
     protected void readData(DataInputStream in) throws IOException {
-        name = Crypto.decrypt(in.readUTF());
+        setName(Crypto.decrypt(in.readUTF()));
         clazz = Crypto.decrypt(in.readUTF());
         method = Crypto.decrypt(in.readUTF());
         desc = Crypto.decrypt(in.readUTF());
@@ -31,7 +34,7 @@ public class InvokeHook extends Hook {
         return predicateType.equals("I") ? int.class : (predicateType.equals("B") ? byte.class : short.class);
     }
 
-    private Method findMethod(Class<?>[] parameterTypes) {
+    private Method findMethod(Class<?>... parameterTypes) {
         try {
             Method[] methods = ModScript.classes().loadClass(clazz).getDeclaredMethods();
             main:
@@ -91,17 +94,14 @@ public class InvokeHook extends Hook {
         return null;
     }
 
-    public Object invoke(Object instance, Class<?>[] parameterTypes, Object[] values) {
+    public Object invoke(Object instance, Class<?>[] parameterTypes, Object... values) {
         try {
             if (predicate != Integer.MAX_VALUE) {
                 Object predicateValue;
                 if (predicateTypeClass == int.class) {
                     predicateValue = predicate;
-                } else if (predicateTypeClass == byte.class) {
-                    predicateValue = (byte) predicate;
-                } else {
-                    predicateValue = (short) predicate;
-                }
+                } else
+                    predicateValue = predicateTypeClass == byte.class ? (byte) predicate : (short) predicate;
                 Class<?>[] newParameterTypes = new Class<?>[parameterTypes.length + 1];
                 if (parameterTypes.length > 0)
                     System.arraycopy(parameterTypes, 0, newParameterTypes, 0, parameterTypes.length);
@@ -127,18 +127,66 @@ public class InvokeHook extends Hook {
 
 
     public Object invoke(Object instance) {
-        return invoke(instance, new Class<?>[0], new Object[0]);
+        return invoke(instance, new Class<?>[0]);
     }
 
     public Object invoke() {
         return invoke(null);
     }
 
-    public Object invokeStatic(Class<?>[] classes, Object[] values) {
+    public Object invokeStatic(Class<?>[] classes, Object... values) {
         return invoke(null, classes, values);
     }
 
     public Object invokeStatic() {
-        return invokeStatic(new Class<?>[0], new Object[0]);
+        return invokeStatic(new Class<?>[0]);
+    }
+
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public int getPredicate() {
+        return predicate;
+    }
+
+    public void setPredicate(int predicate) {
+        this.predicate = predicate;
+    }
+
+    public String getPredicateType() {
+        return predicateType;
+    }
+
+    public void setPredicateType(String predicateType) {
+        this.predicateType = predicateType;
+    }
+
+    public Class<?> getPredicateTypeClass() {
+        return predicateTypeClass;
+    }
+
+    public void setPredicateTypeClass(Class<?> predicateTypeClass) {
+        this.predicateTypeClass = predicateTypeClass;
     }
 }

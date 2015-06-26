@@ -54,21 +54,18 @@ public abstract class Action implements ActionFilter { // An action has the abil
     public static final Map<Integer, String> OP2NAME;
 
     static {
-
         Field[] opz = ActionOpcodes.class.getDeclaredFields();
-        HashMap<Integer, String> map0 =
-                new HashMap<Integer, String>(opz.length);
+        HashMap<Integer, String> map0 = new HashMap<>(opz.length);
         for (Field op0 : opz) {
             op0.setAccessible(true);
             try {
-                final int op_code = op0.getInt(null);
-                final String name = op0.getName();
+                int op_code = op0.getInt(null);
+                String name = op0.getName();
                 map0.put(op_code, name);
             } catch (IllegalAccessException ignored) {
             }
         }
         OP2NAME = Collections.unmodifiableMap(map0);
-
     }
 
     public Action(int opcode, int arg0, int arg1, int arg2) {
@@ -150,7 +147,7 @@ public abstract class Action implements ActionFilter { // An action has the abil
 
     /**
      * Returns the defined name of an opcode. This function looks up
-     * the paired name from the hashmap {@link com.minibot.api.action.tree.Action#OP2NAME}.
+     * the paired name from the hashmap {@link Action#OP2NAME}.
      * If the returned value is null, then the action is unknown
      * or not defined.
      *
@@ -242,11 +239,10 @@ public abstract class Action implements ActionFilter { // An action has the abil
                 return new SpellOnWidgetAction(arg1, arg2);
             case USE_ITEM:
                 return new UseItemAction(arg0, arg1, arg2);
-            default: {
+            default:
                 String formatted = format(opcode, arg0, arg1, arg2);
                 System.err.println("WARNING: Unknown action: " + formatted);
                 return new UnknownAction(opcode, arg0, arg1, arg2);
-            }
         }
     }
 
@@ -258,12 +254,12 @@ public abstract class Action implements ActionFilter { // An action has the abil
         return filter.accept(opcode, arg0, arg1, arg2);
     }
 
+    @Override
     public boolean accept(int opcode, int arg0, int arg1, int arg2) {
         if (this.opcode != opcode)
             return false;
         int sig = significantArgs();
-        return !(((sig & ARG0) != 0) && this.arg0 != arg0) &&
-                !(((sig & ARG1) != 0) && this.arg1 != arg1) &&
+        return !(((sig & ARG0) != 0) && this.arg0 != arg0) && !(((sig & ARG1) != 0) && this.arg1 != arg1) &&
                 !(((sig & ARG2) != 0) && this.arg2 != arg2);
     }
 

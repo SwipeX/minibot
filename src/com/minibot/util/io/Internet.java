@@ -126,11 +126,11 @@ public class Internet {
             while ((n = in.read(buf, 0, BUFFER_SIZE)) > 0) {
                 out.write(buf, 0, n);
                 downloaded += n;
-                if (manager != null && manager.length != -1)
-                    manager.onDownload(((downloaded * 100) / manager.length));
+                if (manager != null && manager.getLength() != -1)
+                    manager.onDownload(((downloaded * 100) / manager.getLength()));
             }
             if (manager != null)
-                manager.length = -1;
+                manager.setLength(-1);
             return out.toByteArray();
         }
     }
@@ -144,14 +144,14 @@ public class Internet {
             if (timeout != -1)
                 connection.setConnectTimeout(timeout);
             if (manager != null)
-                manager.length = connection.getContentLength();
+                manager.setLength(connection.getContentLength());
             try (InputStream stream = connection.getInputStream()) {
                 File file = new File(target);
                 file.getParentFile().mkdirs();
                 try (FileOutputStream out = new FileOutputStream(file)) {
                     out.write(downloadBinary(stream, manager));
                     if (manager != null)
-                        manager.length = -1;
+                        manager.setLength(-1);
                     return file;
                 }
             } catch (IOException e) {

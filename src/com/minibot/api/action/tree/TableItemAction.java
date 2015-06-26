@@ -20,6 +20,7 @@ public class TableItemAction extends AbstractTableAction {
                 && op <= ActionOpcodes.ITEM_ACTION_4;
     }
 
+    @Override
     public int actionIndex() {
         return opcode - ActionOpcodes.ITEM_ACTION_0;
     }
@@ -38,10 +39,10 @@ public class TableItemAction extends AbstractTableAction {
   */
     @Override
     public String toString() {
-        final int parent = parent();
-        final int child = child();
-        final int index = itemIndex();
-        final int address = tableUid();
+        int parent = parent();
+        int child = child();
+        int index = itemIndex();
+        int address = tableUid();
         return "ItemAction:[TableAddress(" + address + "," + index + ")=<" + parent + "#" + child + "#" + index +
                 "> | ItemId=" + itemId() + " | ItemIndex=" + itemIndex() + " | ActionIndex=" + actionIndex() + "]";
     }

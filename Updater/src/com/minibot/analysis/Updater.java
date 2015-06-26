@@ -30,23 +30,24 @@ import java.util.stream.Collectors;
 /**
  * @author Tyler Sedlar
  */
-public abstract class Updater extends Thread implements Runnable {
+public abstract class Updater extends Thread {
 
-    public boolean print = false;
-    private boolean updated = false;
+    private boolean print;
 
-    public final File file;
+    private final File file;
     public final String hash;
-    public JarArchive archive;
-    public Map<String, ClassNode> classnodes;
-    protected Map<ClassNode, Map<MethodNode, FlowGraph>> graphs = new HashMap<>();
-    public GraphVisitor[] visitors;
+    private JarArchive archive;
+    private Map<String, ClassNode> classnodes;
+    private Map<ClassNode, Map<MethodNode, FlowGraph>> graphs = new HashMap<>();
+    private GraphVisitor[] visitors;
 
-    public int revision;
+    private int revision;
 
-    public String callbacks, classes, hooks;
+    private String callbacks;
+    private String classes;
+    private String hooks;
 
-    public final StringBuilder builder = new StringBuilder();
+    private final StringBuilder builder = new StringBuilder();
 
     public abstract String getType();
 
@@ -78,20 +79,21 @@ public abstract class Updater extends Thread implements Runnable {
         if (file == null) {
             Crawler crawler = new Crawler(Crawler.GameType.OSRS);
             crawler.crawl();
+            boolean updated;
             if ((updated = crawler.outdated()))
                 crawler.download();
             if (closeOnOld && !updated) {
                 this.file = null;
-                this.hash = null;
+                hash = null;
                 return;
             }
-            file = new File(crawler.pack);
+            file = new File(crawler.getPack());
         }
         this.file = file;
-        this.archive = new JarArchive(file);
-        this.classnodes = archive.build();
+        archive = new JarArchive(file);
+        classnodes = archive.build();
         this.visitors = visitors;
-        this.hash = getHash();
+        hash = getHash();
     }
 
     public GraphVisitor visitor(String visitor) {
@@ -116,6 +118,7 @@ public abstract class Updater extends Thread implements Runnable {
         for (ClassNode cn : classnodes.values())
             factories.put(cn.name, new ClassFactory(cn));
         UnusedMethodTransform umt = new UnusedMethodTransform() {
+            @Override
             public void populateEntryPoints(List<ClassMethod> entries) {
                 for (ClassFactory factory : factories.values()) {
                     entries.addAll(factory.findMethods(cm -> cm.method.name.length() > 2));
@@ -140,11 +143,11 @@ public abstract class Updater extends Thread implements Runnable {
         };
         umt.transform(classnodes);
         for (GraphVisitor gv : visitors)
-            gv.updater = this;
+            gv.setUpdater(this);
         for (GraphVisitor gv : visitors) {
             for (ClassNode cn : classnodes.values()) {
                 if (gv.validate(cn)) {
-                    gv.cn = cn;
+                    gv.setCn(cn);
                     break;
                 }
             }
@@ -203,66 +206,64 @@ public abstract class Updater extends Thread implements Runnable {
         int classes = 0;
         int totalHooks = 0;
         int hooks = 0;
-        Set<GraphVisitor> visitors = new TreeSet<>(new Comparator<GraphVisitor>() {
-            public int compare(GraphVisitor g1, GraphVisitor g2) {
-                return g1.id().compareTo(g2.id());
-            }
+        Set<GraphVisitor> visitors = new TreeSet<>((g1, g2) -> {
+            return g1.id().compareTo(g2.id());
         });
         Collections.addAll(visitors, this.visitors);
         long start = System.nanoTime();
         for (GraphVisitor visitor : this.visitors) {
-            if (visitor.cn != null)
+            if (visitor.getCn() != null)
             visitor.visit();
         }
         long end = System.nanoTime();
         for (GraphVisitor gv : visitors) {
             totalClasses++;
-            if (gv.cn == null) {
+            if (gv.getCn() == null) {
                 appendLine(gv.id() + " as 'BROKEN'");
                 continue;
             }
             if (print) {
-                appendLine(gv.id() + " as '" + gv.cn.name + "'");
+                appendLine(gv.id() + " as '" + gv.getCn().name + "'");
                 appendLine(" ^ implements " + gv.iface());
             }
-            if (gv.cn == null)
+            if (gv.getCn() == null)
                 continue;
             classes++;
-            hooks += gv.hooks.size();
+            hooks += gv.getHooks().size();
             VisitorInfo info = gv.getClass().getAnnotation(VisitorInfo.class);
             if (info == null)
                 continue;
             totalHooks += info.hooks().length;
-            for (Hook hook : gv.hooks.values()) {
+            for (Hook hook : gv.getHooks().values()) {
                 if (hook instanceof FieldHook) {
                     FieldHook fh = (FieldHook) hook;
-                    if (fh.fieldDesc.equals("I")) {
-                        if (fh.multiplier == -1) {
-                            BigInteger bigInt = iv.inverseFor(fh.clazz, fh.field);
+                    if (fh.getFieldDesc().equals("I")) {
+                        if (fh.getMultiplier() == -1) {
+                            BigInteger bigInt = iv.inverseFor(fh.getClazz(), fh.getField());
                             if (bigInt != null) {
-                                fh.multiplier = bigInt.intValue();
+                                fh.setMultiplier(bigInt.intValue());
                             }
                         }
                     }
-                    if (!fh.isStatic)
-                        fh.clazz = gv.cn.name;
+                    if (!fh.isStatic())
+                        fh.setClazz(gv.getCn().name);
                 } else if (hook instanceof InvokeHook) {
                     InvokeHook ih = (InvokeHook) hook;
-                    OpaquePredicateVisitor.OpaquePredicate predicate = opv.get(ih.clazz + "." + ih.method + ih.desc);
+                    OpaquePredicateVisitor.OpaquePredicate predicate = opv.get(ih.getClazz() + "." + ih.getMethod() + ih.getDesc());
                     if (predicate != null)
-                        ih.setOpaquePredicate(predicate.predicate, predicate.predicateType);
+                        ih.setOpaquePredicate(predicate.predicate, predicate.getPredicateType());
                 }
                 if (print) {
                     appendLine(" " + hook.getOutput());
                 }
             }
             for (String hook : info.hooks()) {
-                if (!gv.hooks.containsKey(hook)) {
+                if (!gv.getHooks().containsKey(hook)) {
                     appendLine(" @ BROKEN: " + gv.id() + "#" + hook);
                     //gv.hooks.put(hook, new BrokenHook(hook));
                 }
             }
-            gv.hooks.keySet().stream().filter(hook -> !Arrays.asList(info.hooks()).contains(hook)).forEach(hook ->
+            gv.getHooks().keySet().stream().filter(hook -> !Arrays.asList(info.hooks()).contains(hook)).forEach(hook ->
                     System.out.println("not in @info --> " + hook)
             );
         }
@@ -302,13 +303,13 @@ public abstract class Updater extends Thread implements Runnable {
 
     public void refactor(File target) throws IOException {
         for (GraphVisitor visitor : visitors) {
-            if (visitor.cn == null) continue;
-            for (Hook hook : visitor.hooks.values()) {
+            if (visitor.getCn() == null) continue;
+            for (Hook hook : visitor.getHooks().values()) {
                 if (hook instanceof FieldHook) {
                     FieldHook fh = (FieldHook) hook;
-                    FieldNode fn = classnodes.get(fh.clazz).getField(fh.field, null, false);
+                    FieldNode fn = classnodes.get(fh.getClazz()).getField(fh.getField(), null, false);
                     if (fn == null) continue;
-                    String newName = fh.name + "";
+                    String newName = fh.name;
                     if (newName.length() == 1)
                         newName += "Value";
                     Assembly.rename(classnodes.values(), fn, newName);
@@ -316,9 +317,89 @@ public abstract class Updater extends Thread implements Runnable {
             }
         }
         for (GraphVisitor visitor : visitors) {
-            if (visitor.cn == null) continue;
-            Assembly.rename(classnodes.values(), visitor.cn, visitor.id());
+            if (visitor.getCn() == null) continue;
+            Assembly.rename(classnodes.values(), visitor.getCn(), visitor.id());
         }
         archive.write(target);
+    }
+
+    public boolean isPrint() {
+        return print;
+    }
+
+    public void setPrint(boolean print) {
+        this.print = print;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public JarArchive getArchive() {
+        return archive;
+    }
+
+    public void setArchive(JarArchive archive) {
+        this.archive = archive;
+    }
+
+    public Map<String, ClassNode> getClassnodes() {
+        return classnodes;
+    }
+
+    public void setClassnodes(Map<String, ClassNode> classnodes) {
+        this.classnodes = classnodes;
+    }
+
+    public Map<ClassNode, Map<MethodNode, FlowGraph>> getGraphs() {
+        return graphs;
+    }
+
+    public void setGraphs(Map<ClassNode, Map<MethodNode, FlowGraph>> graphs) {
+        this.graphs = graphs;
+    }
+
+    public GraphVisitor[] getVisitors() {
+        return visitors;
+    }
+
+    public void setVisitors(GraphVisitor... visitors) {
+        this.visitors = visitors;
+    }
+
+    public int getRevision() {
+        return revision;
+    }
+
+    public void setRevision(int revision) {
+        this.revision = revision;
+    }
+
+    public String getCallbacks() {
+        return callbacks;
+    }
+
+    public void setCallbacks(String callbacks) {
+        this.callbacks = callbacks;
+    }
+
+    public String getClasses() {
+        return classes;
+    }
+
+    public void setClasses(String classes) {
+        this.classes = classes;
+    }
+
+    public String getHooks() {
+        return hooks;
+    }
+
+    public void setHooks(String hooks) {
+        this.hooks = hooks;
+    }
+
+    public StringBuilder getBuilder() {
+        return builder;
     }
 }

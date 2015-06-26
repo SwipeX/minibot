@@ -45,7 +45,7 @@ public class Minibot extends JFrame implements Runnable {
         super("Minibot");
         setBackground(Color.BLACK);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.crawler = new Crawler(Crawler.GameType.OSRS);
+        crawler = new Crawler(Crawler.GameType.OSRS);
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
         connection = new Connection(Connection.DEFAULT_IRC);
         addCloseListener();
@@ -59,15 +59,13 @@ public class Minibot extends JFrame implements Runnable {
         Frame[] frames = Frame.getFrames();
         for (Frame f : frames) {
             f.addWindowListener(new WindowAdapter() {
+                @Override
                 public void windowClosing(WindowEvent e) {
                     Macro current = MacroSelector.current();
                     if (current != null) {
                         String name;
                         Player local = Players.local();
-                        if (local != null)
-                            name = local.name();
-                        else
-                            name = Minibot.instance().client().getUsername();//this would be the email and would require manual fixing
+                        name = local != null ? local.name() : Minibot.instance().client().getUsername();
                         connection().script(1, name, current.getClass().getSimpleName());
                     }
                 }
@@ -83,7 +81,7 @@ public class Minibot extends JFrame implements Runnable {
         return instance;
     }
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         instance = new Minibot();
     }
 
@@ -105,13 +103,13 @@ public class Minibot extends JFrame implements Runnable {
         Configuration.setup();
         crawler.crawl();
         if (crawler.isOutdated())
-            crawler.download(() -> System.out.println("Downloaded: " + crawler.percent + "%"));
+            crawler.download(() -> System.out.println("Downloaded: " + crawler.getPercent() + "%"));
         try {
-            ModScript.load(Files.readAllBytes(Paths.get(crawler.modscript)), Integer.toString(crawler.getHash()));
+            ModScript.load(Files.readAllBytes(Paths.get(crawler.getModscript())), Integer.toString(crawler.getHash()));
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse modscript");
         }
-        Injector injector = new Injector(new JarArchive(new File(crawler.pack)));
+        Injector injector = new Injector(new JarArchive(new File(crawler.getPack())));
         injector.getTransforms().add(new ProcessActionCallback());
         injector.getTransforms().add(new ProcessActionInvoker());
         injector.getTransforms().add(new InterfaceImpl());
@@ -132,7 +130,7 @@ public class Minibot extends JFrame implements Runnable {
         ModScript.setClassLoader(classloader);
         Container container = getContentPane();
         container.setBackground(Color.BLACK);
-        this.client = (RSClient) crawler.start(classloader);
+        client = (RSClient) crawler.start(classloader);
         container.add(client.asApplet());
         container.add(GameMenu.component(), BorderLayout.NORTH);
         pack();

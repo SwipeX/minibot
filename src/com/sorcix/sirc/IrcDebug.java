@@ -40,7 +40,7 @@ public final class IrcDebug {
 	/**
 	 * Whether debug output is enabled.
 	 */
-	private static boolean enabled = false;
+	private static boolean enabled;
 	/**
 	 * The {@link PrintStream} to use for debug output.
 	 */
@@ -61,7 +61,7 @@ public final class IrcDebug {
 	 * 
 	 * @param line The message to log.
 	 */
-	protected static void log(final String line) {
+	protected static void log(String line) {
 		if (IrcDebug.enabled) {
 			IrcDebug.out.println("[" + System.currentTimeMillis() + "] " + line);
 			IrcDebug.out.flush();
@@ -73,7 +73,7 @@ public final class IrcDebug {
 	 * 
 	 * @param enable True to enable debug output, false to disable it.
 	 */
-	public static void setEnabled(final boolean enable) {
+	public static void setEnabled(boolean enable) {
 		IrcDebug.enabled = enable;
 	}
 	
@@ -82,7 +82,7 @@ public final class IrcDebug {
 	 * 
 	 * @param out The new stream for debug output.
 	 */
-	public static void setLogStream(final PrintStream out) {
+	public static void setLogStream(PrintStream out) {
 		if (out != null) {
 			IrcDebug.out = out;
 		}

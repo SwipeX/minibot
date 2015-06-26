@@ -8,10 +8,12 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
- * Created by root on 5/15/15.
+ * @author root
+ * @since 5/15/15.
  */
 public class GameMenu {
-    private static JMenuBar menuBar;
+
+    private static final JMenuBar menuBar;
 
     static {
         menuBar = new JMenuBar();

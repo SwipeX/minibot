@@ -17,15 +17,16 @@ import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by tim on 6/1/15.
+ * @author Tim Dekker
+ * @since 6/1/15.
  */
 @Manifest(name = "Prayer9", author = "Swipe", version = "1.0.0", description = "Drinks prayer potions")
 public class Prayer9 extends Macro implements Renderable {
+
     int lastExp = 0;
     int holder = 0;
     int startExp = -1;
     private long start_time;
-    private Tile start;
     private Tile alt;
     private long lastMove;
 
@@ -33,7 +34,7 @@ public class Prayer9 extends Macro implements Renderable {
     public void run() {
         Minibot.instance().client().resetMouseIdleTime();
         if (startExp == -1) {
-            start = Players.local().location();
+            Tile start = Players.local().location();
             alt = start.derive(-4, 0);
             startExp = Game.experiences()[Skills.RANGE];
             start_time = System.currentTimeMillis();

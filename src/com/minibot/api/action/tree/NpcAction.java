@@ -12,6 +12,7 @@ public class NpcAction extends CharacterAction {
         super(opcode, npcIndex);
     }
 
+    @Override
     public int actionIndex() {
         return opcode - ActionOpcodes.NPC_ACTION_0;
     }

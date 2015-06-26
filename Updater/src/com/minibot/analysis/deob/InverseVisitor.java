@@ -23,8 +23,8 @@ import java.util.Map;
  */
 public class InverseVisitor extends MethodVisitor implements Opcodes {
 
-    public final Map<String, List<BigInteger>> decoders = new HashMap<>();
-    public final Map<String, List<BigInteger>> encoders = new HashMap<>();
+    private final Map<String, List<BigInteger>> decoders = new HashMap<>();
+    private final Map<String, List<BigInteger>> encoders = new HashMap<>();
 
     private final Map<String, ClassFactory> classes;
 
@@ -67,6 +67,14 @@ public class InverseVisitor extends MethodVisitor implements Opcodes {
                 map.get(key).add(mod.quotient);
             }
         }
+    }
+
+    public Map<String, List<BigInteger>> getDecoders() {
+        return decoders;
+    }
+
+    public Map<String, List<BigInteger>> getEncoders() {
+        return encoders;
     }
 
     private class Modulus {

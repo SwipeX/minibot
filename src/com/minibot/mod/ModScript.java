@@ -38,10 +38,10 @@ public class ModScript {
     }
 
     public static String getDefinedName(String key) {
-        for (String definedName : CLASS_MAP.keySet()) {
-            String internalName = CLASS_MAP.get(definedName);
+        for (Map.Entry<String, String> stringStringEntry : CLASS_MAP.entrySet()) {
+            String internalName = stringStringEntry.getValue();
             if (internalName != null && internalName.equals(key)) {
-                return definedName;
+                return stringStringEntry.getKey();
             }
         }
         return null;
@@ -54,9 +54,9 @@ public class ModScript {
     public static int multiplyValueByDecoder(int value, String hook) {
         try {
             FieldHook fh = FIELD_HOOK_MAP.get(hook);
-            if (fh.multiplier == -1)
+            if (fh.getMultiplier() == -1)
                 return value;
-            return value * fh.multiplier;
+            return value * fh.getMultiplier();
         } catch (Exception e) {
             return value;
         }
@@ -65,9 +65,9 @@ public class ModScript {
     public static int multiplyValueByEncoder(int value, String hook) {
         try {
             FieldHook fh = FIELD_HOOK_MAP.get(hook);
-            if (fh.multiplier == -1)
+            if (fh.getMultiplier() == -1)
                 return value;
-            BigInteger num = BigInteger.valueOf(fh.multiplier);
+            BigInteger num = BigInteger.valueOf(fh.getMultiplier());
             return value * num.modInverse(new BigInteger(String.valueOf(1L << 32))).intValue();
         } catch (Exception e) {
             return value;
@@ -108,10 +108,10 @@ public class ModScript {
                                 continue;
                             if (hook instanceof FieldHook) {
                                 FieldHook fh = (FieldHook) hook;
-                                FIELD_HOOK_MAP.put(id + "#" + fh.name, fh);
+                                FIELD_HOOK_MAP.put(id + "#" + fh.getName(), fh);
                             } else if (hook instanceof InvokeHook) {
                                 InvokeHook ih = (InvokeHook) hook;
-                                INVOKE_HOOK_MAP.put(id + "#" + ih.name, ih);
+                                INVOKE_HOOK_MAP.put(id + "#" + ih.getName(), ih);
                             }
                         }
                     }

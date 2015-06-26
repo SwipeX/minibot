@@ -40,7 +40,7 @@ public final class NickNameException extends Exception {
 	 * 
 	 * @param string Error string.
 	 */
-	public NickNameException(final String string) {
+	public NickNameException(String string) {
 		super(string);
 	}
 }

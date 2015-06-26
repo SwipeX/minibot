@@ -6,17 +6,18 @@ import com.sorcix.sirc.Channel;
 import com.sorcix.sirc.IrcConnection;
 
 /**
- * Created by tim on 6/3/15.
+ * @author Tim Dekker
+ * @since 6/3/15.
  */
 public class Connection {
+
     public static final String DEFAULT_IRC = "irc.foonetic.net";
     public static final String DEFAULT_CHANNEL = "Minibot";
-    private IrcConnection instance;
     private Channel channel;
 
     public Connection(String server) {
         try {
-            instance = new IrcConnection(server);
+            IrcConnection instance = new IrcConnection(server);
             instance.setNick("Mini-" + Random.nextInt(0, 100000));
             instance.connect();
             channel = instance.createChannel(DEFAULT_CHANNEL);

@@ -12,9 +12,10 @@ public abstract class EntityAction extends Action {
 
     public EntityAction(int opcode, int entityId, int localX, int localY) {
         super(opcode, entityId, localX, localY);
-        this.type = op2EntityType(opcode); // Must match with the respected opcode
+        type = op2EntityType(opcode); // Must match with the respected opcode
     }
 
+    @Override
     public int significantArgs() {
         return SIG_ALL;
     }

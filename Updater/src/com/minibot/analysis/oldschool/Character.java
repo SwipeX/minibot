@@ -22,7 +22,7 @@ public class Character extends GraphVisitor {
 
     @Override
     public void visit() {
-        visitIfM(new PositionHooks(), m -> m.desc.startsWith("(L" + cn.name + ";I") && (m.access & ACC_STATIC) != 0);
+        visitIfM(new PositionHooks(), m -> m.desc.startsWith("(L" + getCn().name + ";I") && (m.access & ACC_STATIC) != 0);
         visitAll(new HealthHooks());
         visitAll(new InteractingIndex());
         visitAll(new Animation());
@@ -30,7 +30,7 @@ public class Character extends GraphVisitor {
 
     private class PositionHooks extends BlockVisitor {
 
-        private int added = 0;
+        private int added;
 
         @Override
         public boolean validate() {
@@ -48,9 +48,9 @@ public class Character extends GraphVisitor {
                             return;
                         for (AbstractNode delegate : delegates) {
                             FieldMemberNode fmn = (FieldMemberNode) delegate;
-                            if (!fmn.owner().equals(cn.name))
+                            if (!fmn.owner().equals(getCn().name))
                                 continue;
-                            addHook(new FieldHook(hooks.containsKey("x") ? "y" : "x", fmn.fin()));
+                            addHook(new FieldHook(getHooks().containsKey("x") ? "y" : "x", fmn.fin()));
                             added++;
                         }
                     }
@@ -69,20 +69,21 @@ public class Character extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitOperation(ArithmeticNode an) {
                     if (an.opcode() == IDIV) {
                         an = an.firstOperation();
                         if (an != null && an.opcode() == IMUL) {
                             FieldMemberNode health = (FieldMemberNode) an.layer(IMUL, GETFIELD);
-                            if (health != null && health.opcode() == GETFIELD && health.owner().equals(cn.name) &&
+                            if (health != null && health.opcode() == GETFIELD && health.owner().equals(getCn().name) &&
                                     health.desc().equals("I")) {
                                 an = an.nextOperation();
                                 if (an != null && an.opcode() == IMUL) {
                                     FieldMemberNode max = an.firstField();
-                                    if (max != null && max.opcode() == GETFIELD && max.owner().equals(cn.name) &&
+                                    if (max != null && max.opcode() == GETFIELD && max.owner().equals(getCn().name) &&
                                             max.desc().equals("I")) {
-                                        hooks.put("health", new FieldHook("health", health.fin()));
-                                        hooks.put("maxHealth", new FieldHook("maxHealth", max.fin()));
+                                        getHooks().put("health", new FieldHook("health", health.fin()));
+                                        getHooks().put("maxHealth", new FieldHook("maxHealth", max.fin()));
                                         lock.set(true);
                                     }
                                 }
@@ -104,13 +105,14 @@ public class Character extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visit(AbstractNode n) {
                     if (n.opcode() == AALOAD) {
                         FieldMemberNode fmn = n.firstField();
                         if (fmn != null && fmn.desc().equals("[" + desc("Npc"))) {
                             fmn = (FieldMemberNode) n.layer(IMUL, GETFIELD);
-                            if (fmn != null && fmn.owner().equals(cn.name) && fmn.desc().equals("I")) {
-                                hooks.put("interactingIndex", new FieldHook("interactingIndex", fmn.fin()));
+                            if (fmn != null && fmn.owner().equals(getCn().name) && fmn.desc().equals("I")) {
+                                getHooks().put("interactingIndex", new FieldHook("interactingIndex", fmn.fin()));
                                 lock.set(true);
                             }
                         }
@@ -130,13 +132,14 @@ public class Character extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitField(FieldMemberNode fmn) {
                     if (fmn.owner().equals(clazz("AnimationSequence")) && fmn.desc().equals("I")) {
                         NumberNode nn = (NumberNode) fmn.layer(INVOKESTATIC, IMUL, LDC);
                         fmn = (FieldMemberNode) fmn.layer(INVOKESTATIC, IMUL, GETFIELD);
                         if (fmn != null && nn != null) {
                             FieldHook fh = new FieldHook("animation", fmn.fin());
-                            fh.multiplier = nn.number();
+                            fh.setMultiplier(nn.number());
                             addHook(fh);
                             lock.set(true);
                         }

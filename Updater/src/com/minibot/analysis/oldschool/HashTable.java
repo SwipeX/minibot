@@ -22,7 +22,7 @@ public class HashTable extends GraphVisitor {
 
     @Override
     public void visit() {
-        add("buckets", cn.getField(null, "[" + desc("Node")), "[" + literalDesc("Node"));
+        add("buckets", getCn().getField(null, "[" + desc("Node")), "[" + literalDesc("Node"));
         visit(new NodeHooks());
         visit(new InfoHooks());
     }
@@ -37,16 +37,17 @@ public class HashTable extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitJump(JumpNode jn) {
                     if (jn.opcode() == IF_ACMPEQ && jn.first(AALOAD) != null) {
                         FieldMemberNode tail = jn.firstField();
                         String node = desc("Node");
-                        if (tail != null && tail.owner().equals(cn.name) && tail.desc().equals(node)) {
-                            hooks.put("tail", new FieldHook("tail", tail.fin()));
-                            for (FieldNode fn : cn.fields) {
+                        if (tail != null && tail.owner().equals(getCn().name) && tail.desc().equals(node)) {
+                            getHooks().put("tail", new FieldHook("tail", tail.fin()));
+                            for (FieldNode fn : getCn().fields) {
                                 if (fn.desc.equals(node)) {
                                     if (!fn.name.equals(tail.name())) {
-                                        hooks.put("head", new FieldHook("head", fn));
+                                        getHooks().put("head", new FieldHook("head", fn));
                                         break;
                                     }
                                 }
@@ -69,14 +70,15 @@ public class HashTable extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitJump(JumpNode jn) {
                     if (jn.opcode() == IF_ICMPGE) {
                         FieldMemberNode index = jn.firstField();
-                        if (index != null && index.owner().equals(cn.name) && index.desc().equals("I")) {
+                        if (index != null && index.owner().equals(getCn().name) && index.desc().equals("I")) {
                             FieldMemberNode size = index.nextField();
-                            if (size != null && size.owner().equals(cn.name) && size.desc().equals("I")) {
-                                hooks.put("index", new FieldHook("index", index.fin()));
-                                hooks.put("size", new FieldHook("size", size.fin()));
+                            if (size != null && size.owner().equals(getCn().name) && size.desc().equals("I")) {
+                                getHooks().put("index", new FieldHook("index", index.fin()));
+                                getHooks().put("size", new FieldHook("size", size.fin()));
                                 lock.set(true);
                             }
                         }
@@ -86,4 +88,3 @@ public class HashTable extends GraphVisitor {
         }
     }
 }
-

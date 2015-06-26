@@ -15,7 +15,7 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public class ComparisonVisitor extends BlockVisitor {
 
-    private int fixed = 0;
+    private int fixed;
 
     @Override
     public String toString() {
@@ -30,6 +30,7 @@ public class ComparisonVisitor extends BlockVisitor {
     @Override
     public void visit(Block block) {
         block.tree().accept(new NodeVisitor() {
+            @Override
             public void visitJump(JumpNode jn) {
                 if (jn.children() == 2) {
                     if (jn.opcode() == IF_ACMPEQ || jn.opcode() == IF_ACMPNE) {

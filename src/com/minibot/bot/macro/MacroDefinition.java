@@ -21,5 +21,4 @@ public class MacroDefinition {
     public Manifest manifest() {
         return manifest;
     }
- 
 }

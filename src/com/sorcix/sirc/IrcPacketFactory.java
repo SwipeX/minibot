@@ -2,7 +2,7 @@ package com.sorcix.sirc;
 
 public final class IrcPacketFactory {
 
-	protected static IrcPacket createAWAY(final String reason) {
+	protected static IrcPacket createAWAY(String reason) {
 		return new IrcPacket(null, "AWAY", null, reason);
 	}
 
@@ -10,25 +10,24 @@ public final class IrcPacketFactory {
 		return new IrcPacket(null, "MOTD", null, null);
 	}
 
-	protected static IrcPacket createNAMES(final String channel) {
+	protected static IrcPacket createNAMES(String channel) {
 		return new IrcPacket(null, "NAMES", channel, null);
 	}
 
-	protected static IrcPacket createNICK(final String nick) {
+	protected static IrcPacket createNICK(String nick) {
 		return new IrcPacket(null, "NICK", nick, null);
 	}
 
-	protected static IrcPacket createPASS(final String password) {
+	protected static IrcPacket createPASS(String password) {
 		return new IrcPacket(null, "PASS", password, null);
 	}
 
-	protected static IrcPacket createQUIT(final String message) {
+	protected static IrcPacket createQUIT(String message) {
 		return new IrcPacket(null, "QUIT", null, message);
 	}
 
-	protected static IrcPacket createUSER(final String username,
-			final String realname) {
+	protected static IrcPacket createUSER(String username,
+			String realname) {
 		return new IrcPacket(null, "USER", username + " Sorcix.com *", realname);
 	}
-
 }

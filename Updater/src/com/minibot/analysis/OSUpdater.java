@@ -23,7 +23,7 @@ import java.util.jar.JarFile;
  */
 public class OSUpdater extends Updater {
 
-    private static boolean server =  new File("/usr/share/nginx/html/data/").exists();
+    private static final boolean server =  new File("/usr/share/nginx/html/data/").exists();
 
     private static GraphVisitor[] createVisitors() {
         return new GraphVisitor[]{
@@ -44,10 +44,10 @@ public class OSUpdater extends Updater {
 
     @Override
     public String getHash() {
-        try (JarFile jar = new JarFile(file)) {
+        try (JarFile jar = new JarFile(getFile())) {
             return Integer.toString(jar.getManifest().hashCode());
         } catch (IOException | NullPointerException e) {
-            return file.getName().replace(".jar", "");
+            return getFile().getName().replace(".jar", "");
         }
     }
 
@@ -68,18 +68,21 @@ public class OSUpdater extends Updater {
 
     @Override
     public int getRevision(Map<ClassNode, Map<MethodNode, FlowGraph>> graphs) {
-        ClassNode client = classnodes.get("client");
+        ClassNode client = getClassnodes().get("client");
         MethodNode init = client.getMethodByName("init");
         FlowGraph graph = graphs.get(client).get(init);
-        final AtomicInteger revision = new AtomicInteger(0);
+        AtomicInteger revision = new AtomicInteger(0);
         for (Block block : graph) {
             new BlockVisitor() {
+                @Override
                 public boolean validate() {
                     return revision.get() == 0;
                 }
 
+                @Override
                 public void visit(Block block) {
                     block.tree().accept(new NodeVisitor(this) {
+                        @Override
                         public void visitNumber(NumberNode nn) {
                             if (nn != null && nn.opcode() == SIPUSH) {
                                 if ((nn = nn.nextNumber()) != null && nn.opcode() == SIPUSH) {
@@ -108,10 +111,10 @@ public class OSUpdater extends Updater {
         this(file, createVisitors(), closeOnOld);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String... args) throws Exception {
         Updater updater = new OSUpdater(null, false);
 //        Updater updater = new OSUpdater(new File("78.jar"), false);
-        updater.print = true;
+        updater.setPrint(true);
         updater.run();
     }
 }

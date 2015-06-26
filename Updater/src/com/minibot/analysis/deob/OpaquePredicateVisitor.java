@@ -125,13 +125,16 @@ public class OpaquePredicateVisitor extends MethodVisitor {
     public static class OpaquePredicate {
 
         public final int predicate;
-        public final Class<?> predicateType;
+        private final Class<?> predicateType;
 
         public OpaquePredicate(int predicate, Class<?> predicateType) {
             this.predicate = predicate;
             this.predicateType = predicateType;
         }
 
+        public Class<?> getPredicateType() {
+            return predicateType;
+        }
     }
     public OpaquePredicate get(String method) {
         return PREDICATES.get(method);

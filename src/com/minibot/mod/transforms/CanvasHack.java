@@ -9,6 +9,7 @@ import jdk.internal.org.objectweb.asm.tree.MethodNode;
 import java.util.Map;
 
 public class CanvasHack implements Transform {
+
     @Override
     public void inject(Map<String, ClassNode> classes) {
         ClassNode cn = classes.get(ModScript.getClass("Canvas"));

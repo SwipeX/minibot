@@ -36,8 +36,9 @@ public class WallDecoration extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitField(FieldMemberNode fmn) {
-                    if (fmn.opcode() == PUTFIELD && fmn.owner().equals(cn.name)) {
+                    if (fmn.opcode() == PUTFIELD && fmn.owner().equals(getCn().name)) {
                         if (fmn.desc().equals("I")) {
                             VariableNode vn = (VariableNode) fmn.layer(IMUL, ILOAD);
                             if (vn == null) vn = (VariableNode) fmn.layer(IADD, IMUL, ILOAD);
@@ -58,7 +59,7 @@ public class WallDecoration extends GraphVisitor {
                                 }
                                 if (name == null)
                                     return;
-                                hooks.put(name, new FieldHook(name, fmn.fin()));
+                                getHooks().put(name, new FieldHook(name, fmn.fin()));
                                 added++;
                             }
                         } else if (fmn.desc().equals(desc("RenderableNode"))) {
@@ -73,7 +74,7 @@ public class WallDecoration extends GraphVisitor {
                                 }
                                 if (name == null)
                                     return;
-                                hooks.put(name, new FieldHook(name, fmn.fin()));
+                                getHooks().put(name, new FieldHook(name, fmn.fin()));
                                 added++;
                             }
                         }

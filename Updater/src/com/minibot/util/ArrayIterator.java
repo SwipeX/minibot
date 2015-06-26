@@ -7,9 +7,9 @@ import java.util.Iterator;
  */
 public class ArrayIterator<E> implements Iterator<E> {
 
-    private E[] elements;
+    private final E[] elements;
 
-    private int index = 0;
+    private int index;
 
     @SafeVarargs
     public ArrayIterator(E... elements) {

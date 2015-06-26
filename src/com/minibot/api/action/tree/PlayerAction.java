@@ -15,6 +15,7 @@ public class PlayerAction extends CharacterAction {
         return arg0;
     }
 
+    @Override
     public int actionIndex() {
         return opcode - ActionOpcodes.PLAYER_ACTION_0;
     }

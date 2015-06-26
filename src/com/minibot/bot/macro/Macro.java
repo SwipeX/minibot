@@ -19,6 +19,7 @@ public abstract class Macro {
     public final void start() {
         Macro macro = this;
         thread = new Thread() {
+            @Override
             public void run() {
                 username = Minibot.instance().client().getUsername();
                 password = Minibot.instance().client().getPassword();
@@ -26,11 +27,11 @@ public abstract class Macro {
                 main: while (!isInterrupted() && Minibot.instance().isMacroRunning()) {
                     for (RandomEvent random : RandomEvent.SOLVERS) {
                         if (random.validate()) {
-                            random.solving = true;
+                            random.setSolving(true);
                             random.run();
                             continue main;
                         } else {
-                            random.solving = false;
+                            random.setSolving(false);
                         }
                     }
                     macro.run();
@@ -81,5 +82,4 @@ public abstract class Macro {
             }
         }
     }
-
 }

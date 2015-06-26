@@ -87,7 +87,7 @@ public class Ground {
 
     public static GroundItem nearestByFilter(int dist, Filter<GroundItem> filter) {
         Deque<GroundItem> loaded = findByFilter(dist, filter);
-        if (loaded.size() == 0)
+        if (loaded.isEmpty())
             return null;
         int distance = Integer.MAX_VALUE;
         GroundItem nearest = null;

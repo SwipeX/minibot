@@ -127,6 +127,7 @@ public class GameObject extends Wrapper<ClientNative> implements Locatable {
         RuneScape.processAction(Action.valueOf(opcode, uid(), realLocalX, realLocalY), action, name);
     }
 
+    @Override
     public void processAction(int opcode, String action) {
         processAction(opcode, action, -1, -1);
     }
@@ -143,6 +144,7 @@ public class GameObject extends Wrapper<ClientNative> implements Locatable {
             processAction(ActionOpcodes.OBJECT_ACTION_0 + index, action, realLocalX, realLocalY);
     }
 
+    @Override
     public void processAction(String action) {
         processAction(action, -1, -1);
     }

@@ -30,9 +30,10 @@ public class DefinitionInvoker implements Transform {
         MethodNode mn = new MethodNode(ACC_PUBLIC, "transform", "()L" + PACKAGE + "RS" + defined + ";", null, null);
         InvokeHook ih = ModScript.serveInvoke(defined + "#transform");
         mn.instructions.add(new VarInsnNode(ALOAD, 0));
-        if (ih.predicate != Integer.MAX_VALUE)
-            mn.instructions.add(new LdcInsnNode(ih.predicate));
-        mn.instructions.add(new MethodInsnNode(INVOKEVIRTUAL, ih.clazz, ih.method, ih.desc, false));
+        assert ih != null;
+        if (ih.getPredicate() != Integer.MAX_VALUE)
+            mn.instructions.add(new LdcInsnNode(ih.getPredicate()));
+        mn.instructions.add(new MethodInsnNode(INVOKEVIRTUAL, ih.getClazz(), ih.getMethod(), ih.getDesc(), false));
         mn.instructions.add(new InsnNode(ARETURN));
         node.methods.add(mn);
     }
@@ -41,9 +42,10 @@ public class DefinitionInvoker implements Transform {
         MethodNode mn = new MethodNode(ACC_PUBLIC, "load" + defined, "(I)L" + PACKAGE + "RS" + defined + ";", null, null);
         InvokeHook ih = ModScript.serveInvoke("Client#load" + defined);
         mn.instructions.add(new VarInsnNode(ILOAD, 1));
-        if (ih.predicate != Integer.MAX_VALUE)
-            mn.instructions.add(new LdcInsnNode(ih.predicate));
-        mn.instructions.add(new MethodInsnNode(INVOKESTATIC, ih.clazz, ih.method, ih.desc, false));
+        assert ih != null;
+        if (ih.getPredicate() != Integer.MAX_VALUE)
+            mn.instructions.add(new LdcInsnNode(ih.getPredicate()));
+        mn.instructions.add(new MethodInsnNode(INVOKESTATIC, ih.getClazz(), ih.getMethod(), ih.getDesc(), false));
         mn.instructions.add(new InsnNode(ARETURN));
         client.methods.add(mn);
     }

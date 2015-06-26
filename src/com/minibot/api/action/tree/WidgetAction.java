@@ -71,12 +71,12 @@ public class WidgetAction extends Action {
 
     @Override
     public String toString() {
-        final int UID = widgetUid();
-        final int parent = widgetUid() >> 16;
-        final int child = widgetUid() & 0xffff;
-        final int index = widgetIndex();
-        final int action = actionIndex();
-        final int type = isType2() ? 2 : 1;
+        int UID = widgetUid();
+        int parent = widgetUid() >> 16;
+        int child = widgetUid() & 0xffff;
+        int index = widgetIndex();
+        int action = actionIndex();
+        int type = isType2() ? 2 : 1;
         return "WidgetAction:[Address=<" + parent + "#" + child + "#" + index + "> | ActonIndex=" + action +
                 " | ActionType=" + type + "]" /*+ get()*/;
     }

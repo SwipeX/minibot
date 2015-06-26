@@ -9,7 +9,7 @@ public class Canvas extends GraphVisitor {
 
     @Override
     public String iface() {
-        return updater.getAccessorPackage() + "/input/Canvas";
+        return getUpdater().getAccessorPackage() + "/input/Canvas";
     }
 
     @Override

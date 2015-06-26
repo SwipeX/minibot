@@ -8,6 +8,7 @@ import jdk.internal.org.objectweb.asm.tree.*;
 import java.util.Map;
 
 public class ProcessActionInvoker implements Transform {
+
     @Override
     public void inject(Map<String, ClassNode> classes) {
         InvokeHook meth = ModScript.getInvokeHook("Client#processAction");
@@ -24,9 +25,9 @@ public class ProcessActionInvoker implements Transform {
         stack.add(new VarInsnNode(Opcodes.ALOAD, 6));
         stack.add(new VarInsnNode(Opcodes.ILOAD, 7));
         stack.add(new VarInsnNode(Opcodes.ILOAD, 8));
-        if (meth.predicate != Integer.MAX_VALUE)
-            stack.add(new LdcInsnNode(meth.predicate));
-        stack.add(new MethodInsnNode(INVOKESTATIC, meth.clazz, meth.method, meth.desc, false));
+        if (meth.getPredicate() != Integer.MAX_VALUE)
+            stack.add(new LdcInsnNode(meth.getPredicate()));
+        stack.add(new MethodInsnNode(INVOKESTATIC, meth.getClazz(), meth.getMethod(), meth.getDesc(), false));
         stack.add(new InsnNode(RETURN));
         invoker.instructions = stack;
         client.methods.add(invoker);

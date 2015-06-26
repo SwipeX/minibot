@@ -64,59 +64,33 @@ public class ChinchompaHunter extends Macro implements Renderable {
                     obj.processAction("Check");
                 else
                     obj.processAction("Dismantle");
-                Time.sleep(new Condition() {
-                    public boolean validate() {
-                        return Objects.topAt(next) != null && Players.local().animation() != -1;
-                    }
-                }, 1500L);
+                Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() != -1, 1500L);
                 Time.sleep(400, 500);
-                Time.sleep(new Condition() {
-                    public boolean validate() {
-                        return Objects.topAt(next) != null && Players.local().animation() == -1;
-                    }
-                }, 1500L);
+                Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() == -1, 1500L);
                 Time.sleep(800, 1200);
             } else if (obj == null && (items == null || items.isEmpty())) {
                 if (!Players.local().location().equals(next)) {
                     Walking.walkTo(next);
-                    Time.sleep(new Condition() {
-                        public boolean validate() {
-                            return Players.local().location().equals(next);
-                        }
+                    Time.sleep(() -> {
+                        return Players.local().location().equals(next);
                     }, 2000L);
                 }
                 Item trap = Inventory.first(item -> item.name().equals("Box trap"));
                 if (trap != null) {
                     if (Players.local().location().equals(next)) {
                         trap.processAction(ActionOpcodes.ITEM_ACTION_0, "Lay");
-                        Time.sleep(new Condition() {
-                            public boolean validate() {
-                                return Objects.topAt(next) != null && Players.local().animation() != -1;
-                            }
-                        }, 1500L);
+                        Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() != -1, 1500L);
                         Time.sleep(400, 500);
-                        Time.sleep(new Condition() {
-                            public boolean validate() {
-                                return Objects.topAt(next) != null && Players.local().animation() == -1;
-                            }
-                        }, 1500L);
+                        Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() == -1, 1500L);
                     }
                 }
             } else if (items != null && !items.isEmpty()) {
                 GroundItem item = items.getFirst();
                 if (item != null) {
                     item.processAction(ActionOpcodes.GROUND_ITEM_ACTION_3, "Lay");
-                    Time.sleep(new Condition() {
-                        public boolean validate() {
-                            return Objects.topAt(next) != null && Players.local().animation() != -1;
-                        }
-                    }, 1500L);
+                    Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() != -1, 1500L);
                     Time.sleep(400, 500);
-                    Time.sleep(new Condition() {
-                        public boolean validate() {
-                            return Objects.topAt(next) != null && Players.local().animation() == -1;
-                        }
-                    }, 1500L);
+                    Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() == -1, 1500L);
                 }
             }
         }

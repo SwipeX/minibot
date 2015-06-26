@@ -1,6 +1,7 @@
 package com.minibot.client.natives;
 
 public interface RSInteractableObject extends ClientNative {
+
     int getPlane();
     int getWorldX();
     int getWorldY();

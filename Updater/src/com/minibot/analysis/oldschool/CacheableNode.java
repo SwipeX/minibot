@@ -34,15 +34,16 @@ public class CacheableNode extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitJump(JumpNode jn) {
                     if (jn.opcode() == IFNONNULL) {
                         FieldMemberNode fmn = jn.firstField();
-                        if (fmn != null && fmn.desc().equals("L" + cn.name + ";")) {
-                            hooks.put("previous", new FieldHook("previous", fmn.fin()));
-                            for (FieldNode fn : cn.fields) {
-                                if (fn.desc.equals("L" + cn.name + ";")) {
+                        if (fmn != null && fmn.desc().equals("L" + getCn().name + ";")) {
+                            getHooks().put("previous", new FieldHook("previous", fmn.fin()));
+                            for (FieldNode fn : getCn().fields) {
+                                if (fn.desc.equals("L" + getCn().name + ";")) {
                                     if (!fn.name.equals(fmn.name())) {
-                                        hooks.put("next", new FieldHook("next", fn));
+                                        getHooks().put("next", new FieldHook("next", fn));
                                         break;
                                     }
                                 }

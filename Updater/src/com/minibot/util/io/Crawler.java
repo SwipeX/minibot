@@ -14,26 +14,48 @@ import java.util.jar.JarInputStream;
 
 public class Crawler {
 
+    public static int[] getWORLDS() {
+        return WORLDS;
+    }
+
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    public String getHome() {
+        return home;
+    }
+
+    public String getConfig() {
+        return config;
+    }
+
+    public String getPack() {
+        return pack;
+    }
+
     public enum GameType {
         OSRS, RS3
     }
 
-    public final Map<String, String> parameters = new HashMap<>();
+    private final Map<String, String> parameters = new HashMap<>();
 
-    public static final int[] WORLDS = {
+    private static final int[] WORLDS = {
             1, 2, 5, 6, 9, 10, 13, 14, 17, 21, 22, 26, 29, 30, 33, 34, 38,
             41, 42, 45, 46, 49, 50, 53, 54, 58, 61, 62, 66, 70, 74, 77, 78
     };
 
-    public final String home, config, pack;
+    private final String home;
+    private final String config;
+    private final String pack;
 
     private int hash = -1;
 
     public Crawler(GameType type) {
-        this.home = "http://" + (type == GameType.OSRS ? "oldschool" : "world") +
+        home = "http://" + (type == GameType.OSRS ? "oldschool" : "world") +
                 (type == GameType.OSRS ? WORLDS[(int) (Math.random() * WORLDS.length)] : 1) + ".runescape.com/";
-        this.config = home + "jav_config.ws";
-        this.pack = Configuration.CACHE + (type == GameType.OSRS ? "os" : "rs3") + "_pack.jar";
+        config = home + "jav_config.ws";
+        pack = Configuration.CACHE + (type == GameType.OSRS ? "os" : "rs3") + "_pack.jar";
     }
 
     private int getLocalHash() {

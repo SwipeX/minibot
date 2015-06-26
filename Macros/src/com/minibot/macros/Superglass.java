@@ -12,6 +12,7 @@ import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
+import com.minibot.ui.MacroSelector;
 
 import java.awt.*;
 
@@ -24,7 +25,7 @@ public class Superglass extends Macro implements Renderable {
 
     private static int casts;
     private static boolean cast;
-    private static boolean staff = true;
+    private static boolean staff;
 
     private static final int MOLTEN_PRICE = 150;
     private static final int SAND_PRICE = 50;
@@ -86,7 +87,7 @@ public class Superglass extends Macro implements Renderable {
                 Time.sleep(300, 500);
             } else {
                 System.out.println("No sand");
-                interrupt();
+                MacroSelector.halt();
             }
         }
         if (Inventory.first(SEAWEED_FILTER) == null) {
@@ -96,7 +97,7 @@ public class Superglass extends Macro implements Renderable {
                 Time.sleep(300, 500);
             } else {
                 System.out.println("No seaweed");
-                interrupt();
+                MacroSelector.halt();
             }
         }
         if (Bank.close()) {

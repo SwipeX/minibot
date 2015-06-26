@@ -17,20 +17,21 @@ import java.util.jar.JarInputStream;
 
 public class Crawler {
 
-    public final Map<String, String> parameters = new HashMap<>();
-    public final GameType type;
-    public final String pack, modscript;
+    private final Map<String, String> parameters = new HashMap<>();
+    private final GameType type;
+    private final String pack;
+    private final String modscript;
     private final String home, config;
-    public int percent = 0;
+    private int percent;
 
     private int hash = -1;
 
     public Crawler(GameType type) {
         this.type = type;
-        this.pack = Configuration.CACHE + (type == GameType.OSRS ? "os" : "rs3") + "_pack.jar";
-        this.modscript = Configuration.CACHE + (type == GameType.OSRS ? "oldschool" : "modern") + ".dat";
-        this.home = "http://oldschool6.runescape.com/";
-        this.config = home + "jav_config.ws";
+        pack = Configuration.CACHE + (type == GameType.OSRS ? "os" : "rs3") + "_pack.jar";
+        modscript = Configuration.CACHE + (type == GameType.OSRS ? "oldschool" : "modern") + ".dat";
+        home = "http://oldschool6.runescape.com/";
+        config = home + "jav_config.ws";
     }
 
     public Applet start(ClassLoader classloader) {
@@ -51,12 +52,15 @@ public class Crawler {
         }
     }
 
-    public AppletStub getEnvironment(final Applet applet) {
+    public AppletStub getEnvironment(Applet applet) {
+
         return new AppletStub() {
+            @Override
             public boolean isActive() {
                 return true;
             }
 
+            @Override
             public URL getDocumentBase() {
                 try {
                     return new URL(parameters.get("codebase"));
@@ -65,6 +69,7 @@ public class Crawler {
                 }
             }
 
+            @Override
             public URL getCodeBase() {
                 try {
                     return new URL(parameters.get("codebase"));
@@ -73,15 +78,18 @@ public class Crawler {
                 }
             }
 
+            @Override
             public String getParameter(String name) {
                 return parameters.get(name);
             }
 
+            @Override
             public void appletResize(int width, int height) {
                 Dimension size = new Dimension(width, height);
                 applet.setSize(size);
             }
 
+            @Override
             public AppletContext getAppletContext() {
                 return null;
             }
@@ -152,9 +160,10 @@ public class Crawler {
         }
     }
 
-    public boolean download(String target, final Runnable callback) {
+    public boolean download(String target, Runnable callback) {
         hash = getRemoteHash();
         return Internet.download(home + parameters.get("initial_jar"), target, new InternetCallback() {
+            @Override
             public void onDownload(int p) {
                 percent = p;
                 if (callback != null)
@@ -171,7 +180,7 @@ public class Crawler {
         return download(pack);
     }
 
-    public boolean download(final Runnable callback) {
+    public boolean download(Runnable callback) {
         return download(pack, callback);
     }
 
@@ -182,6 +191,30 @@ public class Crawler {
         } catch (NumberFormatException e) {
             return new Dimension(765, 503);
         }
+    }
+
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    public GameType getType() {
+        return type;
+    }
+
+    public String getPack() {
+        return pack;
+    }
+
+    public String getModscript() {
+        return modscript;
+    }
+
+    public int getPercent() {
+        return percent;
+    }
+
+    public void setPercent(int percent) {
+        this.percent = percent;
     }
 
     public enum GameType {

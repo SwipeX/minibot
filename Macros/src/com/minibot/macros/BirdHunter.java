@@ -59,30 +59,20 @@ public class BirdHunter extends Macro implements Renderable {
 				} else {
 					obj.processAction("Dismantle");
 				}
-				Time.sleep(new Condition() {
-					public boolean validate() {
-						return Objects.topAt(next) == null && Players.local().animation() == -1;
-					}
-				}, Random.nextInt(1500, 2500));
+				Time.sleep(() -> Objects.topAt(next) == null && Players.local().animation() == -1, Random.nextInt(1500, 2500));
 			} else if (obj == null && (items == null || items.isEmpty())) {
 				if (!Players.local().location().equals(next)) {
 					Walking.walkTo(next);
-					Time.sleep(new Condition() {
-						public boolean validate() {
-							return Players.local().location().equals(next);
-						}
-					}, Random.nextInt(2500, 4000));
+					Time.sleep(() -> {
+                        return Players.local().location().equals(next);
+                    }, Random.nextInt(2500, 4000));
 				}
 				Item snare = Inventory.first(item -> item.name().equals("Bird snare"));
 				if (snare != null) {
 					if (Players.local().location().equals(next)) {
 						snare.processAction(ActionOpcodes.ITEM_ACTION_0, "Lay");
 						Time.sleep(300, 400);
-						if (Time.sleep(new Condition() {
-							public boolean validate() {
-								return Players.local().animation() == -1;
-							}
-						}, Random.nextInt(2750, 4000))) {
+						if (Time.sleep(() -> Players.local().animation() == -1, Random.nextInt(2750, 4000))) {
 							Walking.walkTo(next.derive(0, 1));
 						}
 					}
@@ -91,11 +81,7 @@ public class BirdHunter extends Macro implements Renderable {
 				GroundItem item = items.getFirst();
 				if (item != null) {
 					item.processAction(ActionOpcodes.GROUND_ITEM_ACTION_3, "Lay");
-					Time.sleep(new Condition() {
-						public boolean validate() {
-							return Objects.topAt(next) != null && Players.local().animation() == -1;
-						}
-					}, Random.nextInt(2750, 4000));
+					Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() == -1, Random.nextInt(2750, 4000));
 				}
 			}
 		} else {

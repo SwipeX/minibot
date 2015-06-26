@@ -48,7 +48,7 @@ public class PinSolver extends RandomEvent {
         return false;
     }
 
-    private boolean inputPin(char[] pin) {
+    private boolean inputPin(char... pin) {
         for (char c : pin) {
             if (!inputNumber(Integer.parseInt(Character.toString(c))))
                 return false;

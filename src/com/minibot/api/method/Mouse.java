@@ -11,11 +11,11 @@ import java.awt.*;
 public class Mouse {
 
     public static int x() {
-        return Minibot.instance().canvas().mouseX;
+        return Minibot.instance().canvas().getMouseX();
     }
 
     public static int y() {
-        return Minibot.instance().canvas().mouseY;
+        return Minibot.instance().canvas().getMouseY();
     }
 
     public static Point location() {

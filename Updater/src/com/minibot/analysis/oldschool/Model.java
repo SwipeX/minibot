@@ -13,6 +13,7 @@ import org.objectweb.asm.tree.ClassNode;
  */
 @VisitorInfo(hooks = {})
 public class Model extends GraphVisitor {
+
     @Override
     public boolean validate(ClassNode cn) {
         return cn.superName.equals(clazz("RenderableNode")) && cn.fieldCount("[I") > 10;

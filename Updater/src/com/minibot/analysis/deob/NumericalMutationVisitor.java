@@ -15,7 +15,7 @@ import org.objectweb.asm.tree.MethodNode;
  */
 public class NumericalMutationVisitor extends BlockVisitor {
 
-    private int fixed = 0;
+    private int fixed;
 
     @Override
     public String toString() {
@@ -30,6 +30,7 @@ public class NumericalMutationVisitor extends BlockVisitor {
     @Override
     public void visit(Block block) {
         block.tree().accept(new NodeVisitor() {
+            @Override
             public void visitOperation(ArithmeticNode an) { // orders by FIELD_MEMBER_NODE NUMBER_NODE ARITHMETIC_NODE
                 if (an.children() == 2 && !an.bitwise()) {
                     NumberNode nn = an.firstNumber();

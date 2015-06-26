@@ -38,6 +38,7 @@ public class NightmareZone extends Macro implements Renderable {
         }
         if (prayerThread == null) {
             prayerThread = new Thread() {
+                @Override
                 public void run() {
                     while (true) {
                         if (Game.levels()[Skills.PRAYER] <= 0)

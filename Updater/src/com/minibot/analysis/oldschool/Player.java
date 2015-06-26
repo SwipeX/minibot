@@ -15,6 +15,6 @@ public class Player extends GraphVisitor {
 
     @Override
     public void visit() {
-        add("name", cn.getField(null, "Ljava/lang/String;"));
+        add("name", getCn().getField(null, "Ljava/lang/String;"));
     }
 }

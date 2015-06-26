@@ -1,11 +1,12 @@
 package com.minibot.bot.breaks;
 
 /**
- * Created by tim on 5/29/15.
+ * @author Tim Dekker
+ * @since 5/29/15.
  */
 public abstract class BreakHandler {
 
-    private int index = 0;
+    private static final int index = 0;
     protected int[] lengths;
     protected long[] times;
 
@@ -34,5 +35,4 @@ public abstract class BreakHandler {
     public long remaining() {
         return activated() ? end() - System.currentTimeMillis() : -1;
     }
-
 }

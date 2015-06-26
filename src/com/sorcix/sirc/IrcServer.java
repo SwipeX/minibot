@@ -51,7 +51,7 @@ public class IrcServer {
 	 * 
 	 * @param address The server address.
 	 */
-	public IrcServer(final String address) {
+	public IrcServer(String address) {
 		this(address, IrcServer.DEFAULT_PORT, null, false);
 	}
 	
@@ -63,7 +63,7 @@ public class IrcServer {
 	 * @param password The password to use (or null).
 	 * @param secure Whether to use SSL.
 	 */
-	public IrcServer(final String address, final int port, final String password, final boolean secure) {
+	public IrcServer(String address, int port, String password, boolean secure) {
 		this.address = address;
 		this.port = port;
 		this.password = password;
@@ -76,7 +76,7 @@ public class IrcServer {
 	 * @param address The server address.
 	 * @param password The server port.
 	 */
-	public IrcServer(final String address, final String password) {
+	public IrcServer(String address, String password) {
 		this(address, IrcServer.DEFAULT_PORT, password, false);
 	}
 	
@@ -86,7 +86,7 @@ public class IrcServer {
 	 * @return The server address.
 	 */
 	public String getAddress() {
-		return this.address;
+		return address;
 	}
 	
 	/**
@@ -95,7 +95,7 @@ public class IrcServer {
 	 * @return The server password, or {@code null}.
 	 */
 	public String getPassword() {
-		return this.password;
+		return password;
 	}
 	
 	/**
@@ -104,7 +104,7 @@ public class IrcServer {
 	 * @return The server port.
 	 */
 	public int getPort() {
-		return this.port;
+		return port;
 	}
 	
 	/**
@@ -113,7 +113,7 @@ public class IrcServer {
 	 * @return True if this server is using SSL, false otherwise.
 	 */
 	public boolean isSecure() {
-		return this.secure;
+		return secure;
 	}
 	
 	/**
@@ -121,7 +121,7 @@ public class IrcServer {
 	 * 
 	 * @param address The new server address.
 	 */
-	protected void setAddress(final String address) {
+	protected void setAddress(String address) {
 		this.address = address;
 	}
 	
@@ -130,7 +130,7 @@ public class IrcServer {
 	 * 
 	 * @param password The new server password.
 	 */
-	protected void setPassword(final String password) {
+	protected void setPassword(String password) {
 		this.password = password;
 	}
 	
@@ -139,7 +139,7 @@ public class IrcServer {
 	 * 
 	 * @param port The new server port.
 	 */
-	protected void setPort(final int port) {
+	protected void setPort(int port) {
 		this.port = port;
 	}
 	
@@ -148,7 +148,7 @@ public class IrcServer {
 	 * 
 	 * @param secure Whether this server is using SSL.
 	 */
-	protected void setSecure(final boolean secure) {
+	protected void setSecure(boolean secure) {
 		this.secure = secure;
 	}
 }

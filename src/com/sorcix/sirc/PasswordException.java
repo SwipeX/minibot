@@ -40,7 +40,7 @@ public final class PasswordException extends Exception {
 	 * 
 	 * @param string Error string.
 	 */
-	public PasswordException(final String string) {
+	public PasswordException(String string) {
 		super(string);
 	}
 }

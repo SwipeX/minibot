@@ -40,21 +40,21 @@ package com.sorcix.sirc;
 public final class IrcPacket {
 
 	/** Arguments separated by a space */
-	private String arguments = null;
+	private String arguments;
 	/** The numeric server reply. */
 	private int cmdNumeric = -1;
 	/** The IRC command. */
-	private String command = null;
+	private final String command;
 	/** Whether this is a CTCP command or not. */
-	private boolean ctcp = false;
+	private boolean ctcp;
 	/** The message (basically anything behind the colon). */
-	private String message = null;
+	private String message;
 	/** Whether this is a numeric server reply. */
-	private boolean numeric = false;
+	private boolean numeric;
 	/** The sender. */
-	private String prefix = null;
+	private final String prefix;
 	/** The sender user object. */
-	private User sender = null;
+	private User sender;
 	/** Unknown command sent to IRC server. */
 	protected static final int ERR_UNKNOWNCOMMAND = 421;
 	/** Termination of an RPL_MOTD list. */
@@ -80,60 +80,60 @@ public final class IrcPacket {
 	 * @param irc
 	 *            The IrcConnection used to send messages.
 	 */
-	protected IrcPacket(String line, final IrcConnection irc) {
+	protected IrcPacket(String line, IrcConnection irc) {
 		line = IrcColors.remove(line);
-		final int locLineStart = line.indexOf(':') + 1;
+		int locLineStart = line.indexOf(':') + 1;
 		int locCommand;
 		// some messages don't have a prefix
 		if ((locLineStart > 1) || (locLineStart < 0)) {
 			locCommand = 0;
-			this.prefix = null;
+            prefix = null;
 		} else {
 			// space between sender and command
 			locCommand = line.indexOf(' ', locLineStart + 1);
 			// retrieve sender
-			this.prefix = line.substring(locLineStart, locCommand);
+            prefix = line.substring(locLineStart, locCommand);
 		}
 		// space between command and receiver
-		final int locArgs = line.indexOf(' ', locCommand + 1);
+		int locArgs = line.indexOf(' ', locCommand + 1);
 		// retrieve command
-		this.command = line.substring(locCommand + 1, locArgs);
+        command = line.substring(locCommand + 1, locArgs);
 		// colon between arguments and message
-		final int locMsg = line.indexOf(':', locArgs);
+		int locMsg = line.indexOf(':', locArgs);
 		// if there are arguments, save them
 		if ((locMsg - locArgs) > 1) {
-			this.arguments = line.substring(locArgs + 1, locMsg - 1);
+            arguments = line.substring(locArgs + 1, locMsg - 1);
 		} else if (locMsg < 0) {
 			// there is no message, so arguments go to the end
-			this.arguments = line.substring(locArgs + 1);
+            arguments = line.substring(locArgs + 1);
 		}
 		// If there is a message, save it
 		if (locMsg > 0) {
-			this.message = line.substring(locMsg + 1);
+            message = line.substring(locMsg + 1);
 			// check if this message is a CTCP request
-			if (this.message.startsWith(IrcPacket.CTCP)
-					&& this.message.endsWith(IrcPacket.CTCP)) {
-				this.ctcp = true;
-				this.message = this.message.substring(1,
-						this.message.length() - 1);
+			if (message.startsWith(IrcPacket.CTCP)
+					&& message.endsWith(IrcPacket.CTCP)) {
+                ctcp = true;
+                message = message.substring(1,
+                        message.length() - 1);
 			}
 		}
 		// check if the command is a server reply
-		this.cmdNumeric = this.getInteger(this.command);
-		if (this.cmdNumeric != -1) {
+        cmdNumeric = getInteger(command);
+		if (cmdNumeric != -1) {
 			// numeric server response
-			this.numeric = true;
+            numeric = true;
 		}
 		// if possible, parse the sender into a user object
 		// TODO: Get this out of here, this shouldn't be in IrcPacket..
-		if ((this.prefix != null) && (this.prefix.indexOf('!') > 0)) {
-			final String[] stuff = this.prefix.split("@|!");
+		if ((prefix != null) && (prefix.indexOf('!') > 0)) {
+			String[] stuff = prefix.split("@|!");
 			if (stuff.length == 3) {
-				this.sender = new User(stuff[0], stuff[1], stuff[2], null, irc);
+                sender = new User(stuff[0], stuff[1], stuff[2], null, irc);
 			} else if (stuff.length == 1)
-				this.sender = new User(stuff[0], irc);
+                sender = new User(stuff[0], irc);
 		} else if (prefix != null) {
-			this.sender = new User(this.prefix, irc);
+            sender = new User(prefix, irc);
 		}
 	}
 
@@ -149,8 +149,8 @@ public final class IrcPacket {
 	 * @param message
 	 *            The message, or {@code null}.
 	 */
-	protected IrcPacket(final String prefix, final String command,
-			final String arguments, final String message) {
+	protected IrcPacket(String prefix, String command,
+			String arguments, String message) {
 		this.prefix = prefix;
 		this.command = command;
 		this.arguments = arguments;
@@ -163,7 +163,7 @@ public final class IrcPacket {
 	 * @return Arguments string, or {@code null} if there were none.
 	 */
 	public String getArguments() {
-		return this.arguments;
+		return arguments;
 	}
 
 	/**
@@ -172,7 +172,7 @@ public final class IrcPacket {
 	 * @return Arguments array, or {@code null} if there were none.
 	 */
 	public String[] getArgumentsArray() {
-		return this.arguments != null ? this.arguments.split(" ") : null;
+		return arguments != null ? arguments.split(" ") : null;
 	}
 
 	/**
@@ -181,7 +181,7 @@ public final class IrcPacket {
 	 * @return The command string.
 	 */
 	public String getCommand() {
-		return this.command;
+		return command;
 	}
 
 	/**
@@ -191,10 +191,10 @@ public final class IrcPacket {
 	 *            String to parse.
 	 * @return Integer value, or -1 if the string is not an integer.
 	 */
-	private int getInteger(final String parse) {
+	private int getInteger(String parse) {
 		try {
 			return Integer.parseInt(parse);
-		} catch (final NumberFormatException ex) {
+		} catch (NumberFormatException ex) {
 			return -1;
 		}
 	}
@@ -205,7 +205,7 @@ public final class IrcPacket {
 	 * @return Message string, or {@code null} if there was none.
 	 */
 	public String getMessage() {
-		return this.message;
+		return message;
 	}
 
 	/**
@@ -214,7 +214,7 @@ public final class IrcPacket {
 	 * @return The command integer.
 	 */
 	public int getNumericCommand() {
-		return this.cmdNumeric;
+		return cmdNumeric;
 	}
 
 	/**
@@ -224,7 +224,7 @@ public final class IrcPacket {
 	 * @return The sender string.
 	 */
 	public String getPrefix() {
-		return this.prefix;
+		return prefix;
 	}
 
 	/**
@@ -233,17 +233,16 @@ public final class IrcPacket {
 	 * @return IRC String containing the data in this object.
 	 */
 	protected String getRaw() {
-		final StringBuffer buffer = new StringBuffer();
-
-		if ((this.prefix != null) && (this.prefix.length() > 0)) {
-			buffer.append(":").append(this.prefix).append(" ");
+		StringBuilder buffer = new StringBuilder();
+		if ((prefix != null) && (!prefix.isEmpty())) {
+			buffer.append(":").append(prefix).append(" ");
 		}
-		buffer.append(this.command);
-		if ((this.arguments != null) && (this.arguments.length() > 0)) {
-			buffer.append(" ").append(this.arguments);
+		buffer.append(command);
+		if ((arguments != null) && (!arguments.isEmpty())) {
+			buffer.append(" ").append(arguments);
 		}
-		if ((this.message != null) && (this.message.length() > 0)) {
-			buffer.append(" :").append(this.message);
+		if ((message != null) && (!message.isEmpty())) {
+			buffer.append(" :").append(message);
 		}
 		return buffer.toString();
 	}
@@ -255,7 +254,7 @@ public final class IrcPacket {
 	 *         user.
 	 */
 	public User getSender() {
-		return this.sender;
+		return sender;
 	}
 
 	/**
@@ -264,7 +263,7 @@ public final class IrcPacket {
 	 * @return True if there were arguments.
 	 */
 	public boolean hasArguments() {
-		return (this.arguments != null) && (this.arguments.length() > 0);
+		return (arguments != null) && (!arguments.isEmpty());
 	}
 
 	/**
@@ -273,7 +272,7 @@ public final class IrcPacket {
 	 * @return True if there was a message.
 	 */
 	public boolean hasMessage() {
-		return (this.message != null) && (this.message.trim().length() > 0);
+		return (message != null) && (!message.trim().isEmpty());
 	}
 
 	/**
@@ -282,7 +281,7 @@ public final class IrcPacket {
 	 * @return True if this message was sent using CTCP, false otherwise.
 	 */
 	public boolean isCtcp() {
-		return this.ctcp;
+		return ctcp;
 	}
 
 	/**
@@ -291,6 +290,6 @@ public final class IrcPacket {
 	 * @return True if this line is a numeric reply.
 	 */
 	public boolean isNumeric() {
-		return this.numeric;
+		return numeric;
 	}
 }

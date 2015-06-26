@@ -5,6 +5,7 @@ package com.minibot.api.method;
  * @since 5/17/15
  */
 public class Skills {
+
     public static final int ATTACK = 0;
     public static final int DEFENSE = 1;
     public static final int STRENGTH = 2;

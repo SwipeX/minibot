@@ -8,7 +8,15 @@ import java.io.IOException;
  */
 public abstract class Hook {
 
-    public String name;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     private enum Type {
 
@@ -18,7 +26,7 @@ public abstract class Hook {
         private final int id;
         private final Class<? extends Hook> clazz;
 
-        private Type(int id, Class<? extends Hook> clazz) {
+        Type(int id, Class<? extends Hook> clazz) {
             this.id = id;
             this.clazz = clazz;
         }
@@ -33,8 +41,9 @@ public abstract class Hook {
     }
 
     private interface ID {
-        public static final byte FIELD = 0;
-        public static final byte INVOKE = 1;
+
+        byte FIELD = 0;
+        byte INVOKE = 1;
     }
 
     protected abstract void readData(DataInputStream in) throws IOException;
@@ -44,6 +53,7 @@ public abstract class Hook {
         Class<? extends Hook> clazz = Type.forID(type);
         Hook hook;
         try {
+            assert clazz != null;
             hook = clazz.newInstance();
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();

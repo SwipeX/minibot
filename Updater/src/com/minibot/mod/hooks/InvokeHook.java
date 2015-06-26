@@ -11,9 +11,11 @@ import java.io.IOException;
  */
 public class InvokeHook extends Hook {
 
-    public String clazz, method, desc;
-    public int predicate = Integer.MAX_VALUE;
-    public Class<?> predicateType = int.class;
+    private String clazz;
+    private String method;
+    private String desc;
+    private int predicate = Integer.MAX_VALUE;
+    private Class<?> predicateType = int.class;
 
     public InvokeHook(String name, String clazz, String method, String desc) {
         super(name);
@@ -62,5 +64,45 @@ public class InvokeHook extends Hook {
         out.writeUTF(Crypto.encrypt(desc));
         out.writeInt(predicate);
         out.writeUTF(Crypto.encrypt(predicateType == int.class ? "I" : (predicateType == byte.class ? "B" : "S")));
+    }
+
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public int getPredicate() {
+        return predicate;
+    }
+
+    public void setPredicate(int predicate) {
+        this.predicate = predicate;
+    }
+
+    public Class<?> getPredicateType() {
+        return predicateType;
+    }
+
+    public void setPredicateType(Class<?> predicateType) {
+        this.predicateType = predicateType;
     }
 }

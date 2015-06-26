@@ -4,7 +4,6 @@ import com.minibot.Minibot;
 
 import java.awt.*;
 
-//first some dank login code
  public class Login {
  
     public static final Point LOGIN = new Point(370, 325);

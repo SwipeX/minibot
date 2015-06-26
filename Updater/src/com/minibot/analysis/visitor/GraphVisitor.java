@@ -18,13 +18,13 @@ import java.util.function.Predicate;
 
 public abstract class GraphVisitor implements Opcodes {
 
-    public final Map<String, Hook> hooks = new HashMap<>();
+    private final Map<String, Hook> hooks = new HashMap<>();
 
-    public Updater updater;
-    public ClassNode cn = null;
-    public FlowGraph graph;
+    private Updater updater;
+    private ClassNode cn;
+    private FlowGraph graph;
 
-    private String id = null;
+    private String id;
 
     public abstract boolean validate(ClassNode cn);
 
@@ -64,7 +64,7 @@ public abstract class GraphVisitor implements Opcodes {
 
     public String key(String hook) {
         FieldHook fh = (FieldHook) hooks.get(hook);
-        return fh != null ? fh.clazz + "." + fh.field : null;
+        return fh != null ? fh.getClazz() + "." + fh.getField() : null;
     }
 
     public final void addHook(Hook hook) {
@@ -151,7 +151,7 @@ public abstract class GraphVisitor implements Opcodes {
     }
 
     public final void visitAll(MethodVisitor mv) {
-        for (ClassNode cn : updater.classnodes.values()) {
+        for (ClassNode cn : updater.getClassnodes().values()) {
             for (MethodNode mn : cn.methods)
                 mn.accept(mv);
         }
@@ -162,6 +162,34 @@ public abstract class GraphVisitor implements Opcodes {
         if (h == null)
             return null;
         FieldHook fh = (FieldHook) h;
-        return fh.clazz + "." + fh.field;
+        return fh.getClazz() + "." + fh.getField();
+    }
+
+    public Map<String, Hook> getHooks() {
+        return hooks;
+    }
+
+    public Updater getUpdater() {
+        return updater;
+    }
+
+    public void setUpdater(Updater updater) {
+        this.updater = updater;
+    }
+
+    public ClassNode getCn() {
+        return cn;
+    }
+
+    public void setCn(ClassNode cn) {
+        this.cn = cn;
+    }
+
+    public FlowGraph getGraph() {
+        return graph;
+    }
+
+    public void setGraph(FlowGraph graph) {
+        this.graph = graph;
     }
 }

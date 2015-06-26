@@ -14,6 +14,6 @@ public class Npc extends GraphVisitor {
 
     @Override
     public void visit() {
-        add("definition", cn.getField(null, desc("NpcDefinition")), literalDesc("NpcDefinition"));
+        add("definition", getCn().getField(null, desc("NpcDefinition")), literalDesc("NpcDefinition"));
     }
 }

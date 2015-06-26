@@ -41,8 +41,8 @@ public abstract class AbstractTableAction extends Action {
     }
 
     public WidgetComponent table() {
-        final int parent = parent();
-        final int child = child();
+        int parent = parent();
+        int child = child();
         return Widgets.get(parent, child);
     }
 

@@ -1,7 +1,8 @@
 package com.minibot.bot.breaks;
 
 /**
- * Created by tim on 6/1/15.
+ * @author Tim Dekker
+ * @since 6/1/15.
  */
 public class RotationHandler extends BreakHandler {
 

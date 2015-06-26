@@ -23,7 +23,7 @@ public class ItemDefinition extends GraphVisitor {
 
     @Override
     public void visit() {
-        add("name", cn.getField(null, "Ljava/lang/String;"), "Ljava/lang/String;");
+        add("name", getCn().getField(null, "Ljava/lang/String;"), "Ljava/lang/String;");
         visitAll(new Id());
         visitAll(new ActionHooks());
     }
@@ -38,13 +38,14 @@ public class ItemDefinition extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitMethod(MethodMemberNode rn) {
                     if (rn.opcode() == INVOKESTATIC && rn.desc().startsWith("(Ljava/lang/String;Ljava/lang/String;II")) {
                         NumberNode nn = rn.firstNumber();
                         if (nn != null && nn.number() == 1005) {
                             FieldMemberNode fmn = (FieldMemberNode) rn.layer(IMUL, GETFIELD);
-                            if (fmn != null && fmn.owner().equals(cn.name)) {
-                                hooks.put("id", new FieldHook("id", fmn.fin()));
+                            if (fmn != null && fmn.owner().equals(getCn().name)) {
+                                getHooks().put("id", new FieldHook("id", fmn.fin()));
                                 lock.set(true);
                             }
                         }
@@ -55,7 +56,7 @@ public class ItemDefinition extends GraphVisitor {
     }
     private class ActionHooks extends BlockVisitor {
 
-        private int added = 0;
+        private int added;
 
         @Override
         public boolean validate() {
@@ -65,8 +66,9 @@ public class ItemDefinition extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
+                @Override
                 public void visitField(FieldMemberNode fmn) {
-                    if (fmn.opcode() == GETFIELD && fmn.owner().equals(cn.name) && fmn.desc().equals("[Ljava/lang/String;")) {
+                    if (fmn.opcode() == GETFIELD && fmn.owner().equals(getCn().name) && fmn.desc().equals("[Ljava/lang/String;")) {
                         AbstractNode parent = fmn.parent();
                         if (parent != null && parent.opcode() == AASTORE) {
                             NumberNode nn = (NumberNode) parent.layer(ISUB, BIPUSH);
@@ -79,7 +81,7 @@ public class ItemDefinition extends GraphVisitor {
                                 } else {
                                     return;
                                 }
-                                if (hooks.containsKey(name))
+                                if (getHooks().containsKey(name))
                                     return;
                                 addHook(new FieldHook(name, fmn.fin()));
                                 added++;
