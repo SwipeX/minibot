@@ -3,7 +3,6 @@ package com.minibot.macros;
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.*;
-import com.minibot.api.util.Condition;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
@@ -117,11 +116,45 @@ public class ChinchompaHunter extends Macro implements Renderable {
         return act.contains("Check") || !act.contains("Investigate");
     }
 
+    private boolean flowering(Tile t) {
+        GameObject[] objects = Objects.allAt(t);
+        if (objects != null) {
+            for (GameObject object : objects) {
+                if (object != null) {
+                    RSObjectDefinition def = object.definition();
+                    if (def != null) {
+                        String name = def.getName();
+                        if (name != null && name.equals("Flowers"))
+                            return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private int trapCount() {
+        int count = Inventory.items(item -> item.name().equals("Box trap")).size();
+        Tile[] tiles = new Tile[]{tile.derive(-1, 1), tile.derive(-1, -1), tile, tile.derive(1, -1), tile.derive(1, 1)};
+        for (Tile t : tiles) {
+            GameObject obj = Objects.topAt(t);
+            if (obj != null) {
+                RSObjectDefinition def = obj.definition();
+                if (def != null) {
+                    String name = def.getName();
+                    if (name != null && name.contains("trap"))
+                        count++;
+                }
+            }
+        }
+        return count;
+    }
+
     /**
      * @return the maximum number of traps that can be used at current level.
      */
     private int trapSize() {
-        return Game.realLevels()[SKILL_HUNTER] / 20 + 1;
+        return Math.min(trapCount(), Game.realLevels()[SKILL_HUNTER] / 20 + 1);
     }
 
     private Tile[] traps() {
@@ -135,13 +168,15 @@ public class ChinchompaHunter extends Macro implements Renderable {
             case 4:
                 return new Tile[]{tile.derive(-1, 0), tile.derive(0, -1), tile.derive(1, 0), tile.derive(0, 1)};
             case 5:
-                return new Tile[]{tile.derive(-1, 1), tile.derive(-1, -1), tile, tile.derive(1, -1), tile.derive(1, 1),};
+                return new Tile[]{tile.derive(-1, 1), tile.derive(-1, -1), tile, tile.derive(1, -1), tile.derive(1, 1)};
         }
         return new Tile[]{};
     }
 
     public Tile getNext() {
         for (Tile tile : traps()) {
+            if (flowering(tile))
+                continue;
             GameObject obj = Objects.topAt(tile);
             if (obj == null)
                 return tile;
