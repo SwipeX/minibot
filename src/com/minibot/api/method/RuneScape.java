@@ -49,7 +49,12 @@ public class RuneScape {
         processAction(action.arg0, action.arg1, action.arg2, action.opcode, actionText, targetText, 50, 50);
     }
 
-    public static void processAction(int arg0, int arg1, int arg2, int opcode, String actionText, String targetText, int x, int y) {
+    public static void processAction(Action action) {
+        processAction(action, null, null);
+    }
+
+    public static void processAction(int arg0, int arg1, int arg2, int opcode, String actionText, String targetText,
+                                     int x, int y) {
         if (!Game.isLoggedIn())
             return;
         Node node = new Node();
