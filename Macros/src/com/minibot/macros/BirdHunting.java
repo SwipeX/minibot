@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  * @since 5/11/15
  */
 @Manifest(name = "BirdHunter", author = "Swipe", version = "1.0.0", description = "Hunts Birds")
-public class BirdHunter extends Macro implements Renderable {
+public class BirdHunting extends Macro implements Renderable {
 
 	private static final int POS_Y = 12;
 	private static final int SKILL_HUNTER = 21;
@@ -38,6 +38,10 @@ public class BirdHunter extends Macro implements Renderable {
 	private Tile tile;
 	private int startExperience;
 	private long startTime;
+	public static final Filter<GameObject> SNARE_FILTER = o -> {
+		String name = o.name();
+		return name != null && name.equals("Bird snare");
+	};
 
 	@Override
 	public void run() {
@@ -53,14 +57,15 @@ public class BirdHunter extends Macro implements Renderable {
 				RSItemDefinition def = groundItem.definition();
 				return groundItem.location().equals(next) && def != null && def.getName().equals("Bird snare");
 			});
-			GameObject obj = Objects.topAt(next);
+			GameObject obj = objectAt(next, SNARE_FILTER);
 			if (triggered(obj)) {
 				if (Arrays.asList(obj.definition().getActions()).contains("Check")) {
 					obj.processAction("Check");
 				} else {
 					obj.processAction("Dismantle");
 				}
-				Time.sleep(() -> Objects.topAt(next) == null && Players.local().animation() == -1, Random.nextInt(1500, 2500));
+				Time.sleep(() -> objectAt(next, SNARE_FILTER) == null && Players.local().animation() == -1,
+						Random.nextInt(1500, 2500));
 			} else if (obj == null && (items == null || items.isEmpty())) {
 				if (!Players.local().location().equals(next)) {
 					Walking.walkTo(next);
@@ -152,19 +157,16 @@ public class BirdHunter extends Macro implements Renderable {
 
 	public Tile getNext() {
 		// No trap
-        Tile[] traps = traps();
+		Tile[] traps = traps();
         for (Tile tile : traps) {
-			GameObject obj = objectAt(tile, o -> {
-				String name = o.name();
-				return name != null && name.equals("Bird snare");
-			});
+			GameObject obj = objectAt(tile, SNARE_FILTER);
 			if (obj == null) {
 				return tile;
 			}
 		}
         // Triggered
 		for (Tile tile : traps) {
-			GameObject obj = Objects.topAt(tile);
+			GameObject obj = objectAt(tile, SNARE_FILTER);
 			if (obj != null && triggered(obj)) {
 				return tile;
 			}
