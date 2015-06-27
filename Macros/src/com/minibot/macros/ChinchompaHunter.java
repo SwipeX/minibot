@@ -5,6 +5,7 @@ import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.GroundItem;
@@ -21,8 +22,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Calculations for red chins only.
- *
  * @author Tim Dekker
  * @author Tyler Sedlar
  * @since 5/11/15
@@ -30,10 +29,29 @@ import java.util.concurrent.TimeUnit;
 @Manifest(name = "Chinchompa Hunter", author = "Tim/Tyler", version = "1.0.0", description = "Hunts Chinchompas")
 public class ChinchompaHunter extends Macro implements Renderable {
 
-    private static final int EXP_EACH = 265;
-    private static final int PRICE_CACHED = 1290;
+    private enum ChinType {
+        REGULAR(198.4D, 700), RED(265D, 1330), BLACK(315D, 1980);
+
+        public final double exp;
+        public final int price;
+
+        ChinType(double exp, int price) {
+            this.exp = exp;
+            this.price = price;
+        }
+    }
+
+    private static final ChinType CHIN_TYPE = ChinType.BLACK;
+
+    private static final double EXP_EACH = CHIN_TYPE.exp;
+    private static final int PRICE_CACHED = CHIN_TYPE.price;
     private static final int Y_POS = 12;
     private static final long FIFTEEN_MINUTES = 15 * 60 * 1000;
+
+    public static final Filter<GameObject> TRAP_FILTER = o -> {
+        String name = o.name();
+        return name != null && (name.equals("Box trap") || name.equals("Shaking box"));
+    };
 
     private static Tile tile;
 
@@ -57,15 +75,15 @@ public class ChinchompaHunter extends Macro implements Renderable {
                 RSItemDefinition def = groundItem.definition();
                 return groundItem.location().equals(next) && def != null && def.getName().equals("Box trap");
             });
-            GameObject obj = Objects.topAt(next);
+            GameObject obj = objectAt(next, TRAP_FILTER);
             if (triggered(obj)) {
                 if (Arrays.asList(obj.definition().getActions()).contains("Check"))
                     obj.processAction("Check");
                 else
                     obj.processAction("Dismantle");
-                Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() != -1, 1500L);
+                Time.sleep(() -> objectAt(next, TRAP_FILTER) != null && Players.local().animation() != -1, 1500L);
                 Time.sleep(400, 500);
-                Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() == -1, 1500L);
+                Time.sleep(() -> objectAt(next, TRAP_FILTER) != null && Players.local().animation() == -1, 1500L);
                 Time.sleep(800, 1200);
             } else if (obj == null && (items == null || items.isEmpty())) {
                 if (!Players.local().location().equals(next)) {
@@ -96,7 +114,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
         //reporting stats
         if (lastReport == -1 || System.currentTimeMillis() - lastReport > FIFTEEN_MINUTES) {
             int gain = Game.experiences()[SKILL_HUNTER] - startExp;
-            int amount = gain / EXP_EACH;
+            int amount = (int) ((double) gain / EXP_EACH);
             Minibot.connection().chin(Players.local().name(), amount - lastChins, (int) ((System.currentTimeMillis() - lastReport) / 1000));
             lastReport = System.currentTimeMillis();
             lastChins = amount;
@@ -173,11 +191,22 @@ public class ChinchompaHunter extends Macro implements Renderable {
         return new Tile[]{};
     }
 
+    private GameObject objectAt(Tile t, Filter<GameObject> filter) {
+        GameObject[] objects = Objects.allAt(t);
+        if (objects == null)
+            return null;
+        for (GameObject obj : objects) {
+            if (obj != null && filter.accept(obj))
+                return obj;
+        }
+        return null;
+    }
+
     public Tile getNext() {
         for (Tile tile : traps()) {
             if (flowering(tile))
                 continue;
-            GameObject obj = Objects.topAt(tile);
+            GameObject obj = objectAt(tile, TRAP_FILTER);
             if (obj == null)
                 return tile;
         }
@@ -203,7 +232,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
     public void render(Graphics2D g) {
         long timeDiff = System.currentTimeMillis() - startTime;
         int gain = Game.experiences()[SKILL_HUNTER] - startExp;
-        int amount = gain / EXP_EACH;
+        int amount = (int) ((double) gain / EXP_EACH);
         int profit = amount * PRICE_CACHED;
         g.setColor(Color.YELLOW);
         g.drawString("Time: " + format(timeDiff), 10, Y_POS);
