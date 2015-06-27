@@ -2,8 +2,10 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.action.tree.WidgetAction;
-import com.minibot.api.method.*;
+import com.minibot.api.method.Bank;
+import com.minibot.api.method.Inventory;
+import com.minibot.api.method.Npcs;
+import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
