@@ -7,6 +7,7 @@ import com.minibot.api.util.Condition;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.GroundItem;
@@ -138,11 +139,25 @@ public class BirdHunter extends Macro implements Renderable {
 		return new Tile[]{};
 	}
 
+	private GameObject objectAt(Tile t, Filter<GameObject> filter) {
+		GameObject[] objects = Objects.allAt(t);
+		if (objects == null)
+			return null;
+		for (GameObject obj : objects) {
+			if (obj != null && filter.accept(obj))
+				return obj;
+		}
+		return null;
+	}
+
 	public Tile getNext() {
 		// No trap
         Tile[] traps = traps();
         for (Tile tile : traps) {
-			GameObject obj = Objects.topAt(tile);
+			GameObject obj = objectAt(tile, o -> {
+				String name = o.name();
+				return name != null && name.equals("Bird snare");
+			});
 			if (obj == null) {
 				return tile;
 			}
