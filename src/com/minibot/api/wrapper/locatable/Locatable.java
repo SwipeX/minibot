@@ -5,9 +5,8 @@ package com.minibot.api.wrapper.locatable;
  */
 public interface Locatable {
 
-    public Tile location();
+    Tile location();
 
-    public int distance(Locatable locatable);
-
-    public int distance();
+    int distance(Locatable locatable);
+    int distance();
 }

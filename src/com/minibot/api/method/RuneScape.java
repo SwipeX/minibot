@@ -12,6 +12,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  * @since 4/4/15.
  */
 public class RuneScape {
+
     public static boolean MODEL_RENDERING_ENABLED = true;
     public static boolean LANDSCAPE_RENDERING_ENABLED = true;
     private static final Queue<Node> queue = new ArrayBlockingQueue<>(2000);

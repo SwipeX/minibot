@@ -13,7 +13,8 @@ import java.awt.*;
  * @since 4/4/15.
  */
 public class Player extends Character<RSPlayer> {
-    int index;
+
+    private final int index;
 
     public Player(RSPlayer raw, int index) {
         super(raw);

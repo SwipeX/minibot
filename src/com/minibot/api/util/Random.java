@@ -25,6 +25,7 @@ public class Random {
         return GEN.nextBoolean();
     }
 
+    @SafeVarargs
     public static <T> T nextElement(T... elements) {
         return elements[nextInt(elements.length - 1)];
     }

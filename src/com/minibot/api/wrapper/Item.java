@@ -19,6 +19,7 @@ public class Item implements Identifiable {
     private final int id;
     private final int amount;
     private int index;
+
     private Source source = Source.INVENTORY;
     private WidgetComponent comp;
 
@@ -163,6 +164,7 @@ public class Item implements Identifiable {
 
 
     public enum Source {
+
         INVENTORY(0), BANK(1), EQUIPMENT(2);
 
         private final int type;
