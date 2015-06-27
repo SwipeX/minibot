@@ -41,7 +41,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
         }
     }
 
-    private static final ChinType CHIN_TYPE = ChinType.BLACK;
+    private static final ChinType CHIN_TYPE = ChinType.RED;
 
     private static final double EXP_EACH = CHIN_TYPE.exp;
     private static final int PRICE_CACHED = CHIN_TYPE.price;
