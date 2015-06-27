@@ -26,7 +26,8 @@ public class Area implements Locatable {
     public boolean contains(Locatable locatable) {
         if (locatable != null) {
             Tile tile = locatable.location();
-            return tile != null && tile.x() >= from.x() && tile.y() >= from.y() && tile.x() <= to.x() && tile.y() <= to.y();
+            return tile != null && tile.x() >= from.x() && tile.y() >= from.y() &&
+                    tile.x() <= to.x() && tile.y() <= to.y() && tile.plane() == from.plane();
         }
         return false;
     }

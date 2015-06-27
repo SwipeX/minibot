@@ -25,7 +25,7 @@ public class Superglass extends Macro implements Renderable {
 
     private static int casts;
     private static boolean cast;
-    private static boolean staff = true;
+    private static boolean staff;
 
     private static final int MOLTEN_PRICE = 150;
     private static final int SAND_PRICE = 50;
@@ -75,7 +75,7 @@ public class Superglass extends Macro implements Renderable {
         Item molten = Inventory.first(MOLTEN_FILTER);
         if (molten != null) {
             molten.processAction("Deposit-All");
-            Time.sleep(300, 500);
+            //Time.sleep(300, 500);
         }
         if ((!staff && Inventory.first(FIRE_FILTER) == null) || Inventory.first(ASTRAL_FILTER) == null) {
             interrupt();
@@ -84,21 +84,21 @@ public class Superglass extends Macro implements Renderable {
             Item sand = Bank.first(SAND_FILTER);
             if (sand != null) {
                 sand.processAction("Withdraw-13");
-                Time.sleep(300, 500);
-            } else {
+                //Time.sleep(300, 500);
+            }/* else {
                 System.out.println("No sand");
                 MacroSelector.halt();
-            }
+            }*/
         }
         if (Inventory.first(SEAWEED_FILTER) == null) {
             Item seaweed = Bank.first(SEAWEED_FILTER);
             if (seaweed != null) {
                 seaweed.processAction("Withdraw-13");
-                Time.sleep(300, 500);
-            } else {
+                //Time.sleep(300, 500);
+            }/* else {
                 System.out.println("No seaweed");
                 MacroSelector.halt();
-            }
+            }*/
         }
         if (Bank.close()) {
             cast = false;

@@ -1,17 +1,16 @@
 package com.minibot.macros;
 
-import com.minibot.api.method.Ground;
-import com.minibot.api.method.Objects;
 import com.minibot.api.method.Players;
 import com.minibot.api.util.Renderable;
-import com.minibot.api.wrapper.locatable.GameObject;
-import com.minibot.api.wrapper.locatable.GroundItem;
 import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 
 /**
  * @author Tyler Sedlar
@@ -24,9 +23,15 @@ public class Test extends Macro implements Renderable {
 
     @Override
     public void run() {
-        GameObject object = Objects.nearestByName("Flowers");
-        if (object != null)
-            System.out.println("NIGGERED");
+        Player local = Players.local();
+        if (local != null) {
+            if (tile == null || !local.location().equals(tile)) {
+                tile = local.location();
+                StringSelection stringSelection = new StringSelection("new Tile(" + tile.x() + ", " + tile.y() + ", " + tile.plane() + ")");
+                Clipboard clpbrd = Toolkit.getDefaultToolkit ().getSystemClipboard ();
+                clpbrd.setContents(stringSelection, null);
+            }
+        }
     }
 
     @Override
