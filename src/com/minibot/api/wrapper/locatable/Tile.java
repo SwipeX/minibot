@@ -14,11 +14,10 @@ public class Tile implements Locatable {
 
     private final int x;
     private final int y;
-    private int plane;
+    private final int plane;
 
     public Tile(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this(x, y, 0);
     }
 
     public Tile(int x, int y, int plane) {
@@ -93,6 +92,7 @@ public class Tile implements Locatable {
         return Players.local().distance(this);
     }
 
+    @Override
     public int hashCode() {
         return Objects.hash(x, y, plane);
     }

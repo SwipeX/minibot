@@ -50,7 +50,7 @@ public enum GameTab {
         if (component != null) {
             if (component.textureId() == -1) {
                 component.processAction(ActionOpcodes.WIDGET_ACTION, 1, action, "");
-                Time.sleep(300, 600);
+                Time.sleep(150, 300);
             }
             return viewing();
         }

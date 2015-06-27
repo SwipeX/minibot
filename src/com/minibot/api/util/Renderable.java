@@ -8,5 +8,5 @@ import java.awt.*;
  */
 public interface Renderable {
 
-    public void render(Graphics2D g);
+    void render(Graphics2D g);
 }
