@@ -15,7 +15,7 @@ public class UseItemAction extends AbstractTableAction {
 
     @Override
     public String toString() {
-        return "UseItemAction:[Address(uid=" + tableUid() + ")=<" + parent() + "#" + child() + "> | ItemId= " +
+        return "UseItemAction [Address(uid=" + tableUid() + ")=<" + parent() + "#" + child() + "> | ItemId= " +
                 itemId() + " | ItemIndex=" + itemIndex() + " | ActionIndex=" + actionIndex() + "]" /*+ getItem()*/;
     }
 }

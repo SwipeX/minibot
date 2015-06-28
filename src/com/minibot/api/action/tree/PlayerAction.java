@@ -37,6 +37,6 @@ public class PlayerAction extends CharacterAction {
 
     @Override
     public String toString() {
-        return "PlayerAction[" + playerIndex() + "](" + "@" + actionIndex() + ") on " + player();
+        return "PlayerAction [player-index=" + playerIndex() + " | action-index=" + actionIndex() + " | on " + player();
     }
 }

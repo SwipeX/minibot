@@ -43,7 +43,7 @@ public class TableItemAction extends AbstractTableAction {
         int child = child();
         int index = itemIndex();
         int address = tableUid();
-        return "ItemAction:[TableAddress(" + address + "," + index + ")=<" + parent + "#" + child + "#" + index +
+        return "ItemAction [TableAddress(" + address + "," + index + ")=<" + parent + "#" + child + "#" + index +
                 "> | ItemId=" + itemId() + " | ItemIndex=" + itemIndex() + " | ActionIndex=" + actionIndex() + "]";
     }
 }
