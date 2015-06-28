@@ -115,8 +115,11 @@ public class Nightshade extends Macro implements Renderable {
         return true;
     }
 
-    private boolean hop() {
-        return false; // TODO: add world hopping
+    @Override
+    public void atStart() {
+        if (Players.local() == null) {
+            interrupt();
+        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Bank;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Npcs;
+import com.minibot.api.method.Players;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -50,6 +51,13 @@ public class Humidifier extends Macro implements Renderable {
             return Time.sleep(Bank::viewing, 10000);
         }
         return false;
+    }
+
+    @Override
+    public void atStart() {
+        if (Players.local() == null) {
+            interrupt();
+        }
     }
 
     @Override

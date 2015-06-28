@@ -22,6 +22,13 @@ public class Test extends Macro implements Renderable {
     private Tile tile;
 
     @Override
+    public void atStart() {
+        if (Players.local() == null) {
+            interrupt();
+        }
+    }
+
+    @Override
     public void run() {
         Player local = Players.local();
         if (local != null) {

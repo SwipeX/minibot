@@ -32,6 +32,8 @@ public class Falconry extends Macro implements Renderable {
         Player local = Players.local();
         if (local != null) {
             startExp = Game.experiences()[Skills.HUNTER];
+        } else {
+            interrupt();
         }
     }
 

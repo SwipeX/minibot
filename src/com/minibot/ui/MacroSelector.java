@@ -108,7 +108,6 @@ public class MacroSelector extends JDialog {
         container.add(scrollpane, BorderLayout.NORTH);
         JButton start = new JButton("Start");
         start.setPreferredSize(new Dimension(500, 30));
-        //start.setEnabled(current == null);
         start.addActionListener(e -> {
             if (selected != null) {
                 boolean success = true;

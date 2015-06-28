@@ -94,6 +94,8 @@ public class Agility extends Macro implements Renderable {
                     }
                 }
             }
+        } else {
+            interrupt();
         }
         if (course == null) {
             System.err.println("No suitable course found");

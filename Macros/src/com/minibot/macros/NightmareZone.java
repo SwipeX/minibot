@@ -4,6 +4,7 @@ import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Inventory;
+import com.minibot.api.method.Players;
 import com.minibot.api.method.Skills;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Renderable;
@@ -31,6 +32,9 @@ public class NightmareZone extends Macro implements Renderable {
 
     @Override
     public void atStart() {
+        if (Players.local() == null) {
+            interrupt();
+        }
         startExp = Game.experiences()[Skills.STRENGTH];
     }
 
