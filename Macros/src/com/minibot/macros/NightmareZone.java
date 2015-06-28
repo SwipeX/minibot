@@ -1,7 +1,6 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Skills;
@@ -54,9 +53,9 @@ public class NightmareZone extends Macro implements Renderable {
                             if (j.index() == 27) {
                                 WidgetComponent protect = Widgets.get(271, 18);
                                 if (protect != null) {
-                                    protect.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Activate", "<col=ff9040>Protect from Melee");
+                                    protect.processAction("Activate");
                                     Time.sleep(570, 580);
-                                    protect.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Deactivate", "<col=ff9040>Protect from Melee");
+                                    protect.processAction("Deactivate");
                                     Time.sleep(10, 20);
                                 }
                             }
@@ -70,7 +69,7 @@ public class NightmareZone extends Macro implements Renderable {
             for (int i = 0; i < 2; i++) {
                 WidgetComponent component = Widgets.get(271, 11);
                 if (component != null) {
-                    component.processAction(ActionOpcodes.WIDGET_ACTION, 1, (i == 0 ? "Activate" : "Deactivate"), "<col=ff9040>Rapid Heal");
+                    component.processAction(i == 0 ? "Activate" : "Deactivate");
                     Time.sleep(460, 920);
                 }
             }
@@ -79,7 +78,7 @@ public class NightmareZone extends Macro implements Renderable {
         if (Game.levels()[Skills.CONSTITUTION] == 51) {
             Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("verload"));
             if (abs != null) {
-                abs.processAction(ActionOpcodes.ITEM_ACTION_0, "Drink");
+                abs.processAction("Drink");
                 Time.sleep(1200);
             }
         }
@@ -102,7 +101,7 @@ public class NightmareZone extends Macro implements Renderable {
         if (absorb) {
             Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("Absorption"));
             if (abs != null) {
-                abs.processAction(ActionOpcodes.ITEM_ACTION_0, "Drink");
+                abs.processAction("Drink");
                 Time.sleep(100, 500);
             }
             absorb = false;

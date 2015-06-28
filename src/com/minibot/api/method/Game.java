@@ -1,7 +1,6 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
-import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
@@ -79,7 +78,7 @@ public class Game {
         WidgetComponent component = Widgets.get(160, 21);
         if (component != null && playing()) {
             if (!runEnabled()) {
-                component.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Toggle Run", null);
+                component.processAction("Toggle Run");
             }
             return Time.sleep(Game::runEnabled, Random.nextInt(1500, 2000));
         }

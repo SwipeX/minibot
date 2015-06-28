@@ -12,4 +12,10 @@ public class UseItemAction extends AbstractTableAction {
     public static boolean isInstance(int opcode) {
         return Action.pruneOpcode(opcode) == ActionOpcodes.USE_ITEM;
     }
+
+    @Override
+    public String toString() {
+        return "UseItemAction:[Address(uid=" + tableUid() + ")=<" + parent() + "#" + child() + "> | ItemId= " +
+                itemId() + " | ItemIndex=" + itemIndex() + " | ActionIndex=" + actionIndex() + "]" /*+ getItem()*/;
+    }
 }

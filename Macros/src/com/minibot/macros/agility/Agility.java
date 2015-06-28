@@ -139,10 +139,7 @@ public class Agility extends Macro implements Renderable {
             if (mark != null && current.area().contains(mark)) {
                 status = "Mark of anal spagh00ter";
                 mark.processAction("Take");
-                if (Time.sleep(() -> {
-                    GroundItem mark1 = Ground.nearestByFilter(i -> i != null && i.id() == 11849);
-                    return mark1 == null;
-                }, Random.nextInt(4500, 5700))) {
+                if (Time.sleep(() -> Ground.nearestByFilter(i -> i != null && i.id() == 11849) == null, Random.nextInt(4500, 5700))) {
                     marks++;
                 }
             }

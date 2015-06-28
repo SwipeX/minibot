@@ -1,7 +1,12 @@
 package com.minibot.api.wrapper;
 
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.action.tree.*;
+import com.minibot.api.action.tree.Action;
+import com.minibot.api.action.tree.ItemOnEntityAction;
+import com.minibot.api.action.tree.ItemOnItemAction;
+import com.minibot.api.action.tree.TableItemAction;
+import com.minibot.api.action.tree.UseItemAction;
+import com.minibot.api.action.tree.WidgetAction;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Identifiable;
 import com.minibot.api.wrapper.locatable.GameObject;
@@ -9,7 +14,8 @@ import com.minibot.api.wrapper.locatable.GroundItem;
 import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.util.DefinitionLoader;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Rectangle;
 
 /**
  * @author Tyler Sedlar
@@ -141,7 +147,11 @@ public class Item implements Identifiable {
         if (table()) {
             if (definition() == null)
                 return;
-            processAction(ActionOpcodes.ITEM_ACTION_0 + Action.indexOf(definition().getActions(), action), action);
+            int index = Action.indexOf(definition().getActions(), action);
+            if (action.equals("Use"))
+                processAction(ActionOpcodes.USE_ITEM, action);
+            else if (index >= 0)
+                processAction(ActionOpcodes.ITEM_ACTION_0 + index, action);
         } else {
             int index = Action.indexOf(comp.actions(), action) + 1;
             RuneScape.processAction(new WidgetAction(index > 4, index, this.index, comp.raw.getId()), action, name(), 50, 50);

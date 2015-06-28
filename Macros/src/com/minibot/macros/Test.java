@@ -1,8 +1,10 @@
 package com.minibot.macros;
 
 import com.minibot.api.method.Game;
+import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Players;
 import com.minibot.api.util.Renderable;
+import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
@@ -35,6 +37,14 @@ public class Test extends Macro implements Renderable {
                 StringSelection stringSelection = new StringSelection("new Tile(" + tile.x() + ", " + tile.y() + ", " + tile.plane() + ")");
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 clipboard.setContents(stringSelection, null);
+            }
+            Item f = Inventory.first(i -> {
+                String a = i.name();
+                return a != null && a.equals("Bird snare");
+            });
+            if (f != null) {
+                f.processAction("Use");
+                interrupt();
             }
         }
     }

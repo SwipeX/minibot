@@ -1,7 +1,6 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Ground;
 import com.minibot.api.method.Inventory;
@@ -87,7 +86,7 @@ public class BirdHunting extends Macro implements Renderable {
 				Item snare = Inventory.first(item -> item.name().equals("Bird snare"));
 				if (snare != null) {
 					if (Players.local().location().equals(next)) {
-						snare.processAction(ActionOpcodes.ITEM_ACTION_0, "Lay");
+						snare.processAction("Lay");
 						Time.sleep(300, 400);
 						if (Time.sleep(() -> Players.local().animation() == -1, Random.nextInt(2750, 4000))) {
 							Walking.walkTo(next.derive(0, 1));
@@ -97,7 +96,7 @@ public class BirdHunting extends Macro implements Renderable {
 			} else if (items != null && !items.isEmpty()) {
 				GroundItem item = items.getFirst();
 				if (item != null) {
-					item.processAction(ActionOpcodes.GROUND_ITEM_ACTION_3, "Lay");
+					item.processAction("Lay");
 					Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() == -1, Random.nextInt(2750, 4000));
 				}
 			}

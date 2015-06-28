@@ -1,14 +1,13 @@
 package com.minibot.api.wrapper.locatable;
 
 import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.action.tree.Action;
 import com.minibot.api.action.tree.NpcAction;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Identifiable;
 import com.minibot.client.natives.RSNpc;
 import com.minibot.client.natives.RSNpcDefinition;
 import com.minibot.util.DefinitionLoader;
-
-import java.util.Arrays;
 
 public class Npc extends Character<RSNpc> implements Identifiable {
 
@@ -21,7 +20,7 @@ public class Npc extends Character<RSNpc> implements Identifiable {
         RSNpcDefinition rawDef = raw.getDefinition();
         if (rawDef == null)
             throw new IllegalStateException("bad npc definition!");
-        this.definition = DefinitionLoader.findNpcDefinition(rawDef.getId());
+        definition = DefinitionLoader.findNpcDefinition(rawDef.getId());
     }
 
     public int arrayIndex() {
@@ -52,11 +51,12 @@ public class Npc extends Character<RSNpc> implements Identifiable {
 
     @Override
     public void processAction(String action) {
-        if (definition == null) return;
+        if (definition == null)
+            return;
         String[] actions = definition.getActions();
         if (actions == null)
             return;
-        int index = Arrays.asList(actions).indexOf(action);
+        int index = Action.indexOf(actions, action);
         if (index >= 0)
             processAction(ActionOpcodes.NPC_ACTION_0 + index, action);
     }

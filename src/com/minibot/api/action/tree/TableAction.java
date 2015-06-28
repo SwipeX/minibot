@@ -4,8 +4,8 @@ import com.minibot.api.action.ActionOpcodes;
 
 public class TableAction extends AbstractTableAction {
 
-    public TableAction(int opcode, int item_id, int item_index, int containerUID) {
-        super(opcode, item_id, item_index, containerUID);
+    public TableAction(int opcode, int itemId, int itemIndex, int containerUid) {
+        super(opcode, itemId, itemIndex, containerUid);
     }
 
     public static int actionIndexOpcode(int index) {

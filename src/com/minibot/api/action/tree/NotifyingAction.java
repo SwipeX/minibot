@@ -2,7 +2,7 @@ package com.minibot.api.action.tree;
 
 import com.minibot.api.action.ActionOpcodes;
 
-//Any action that holds no information about what its interaction with,
+//Any action that holds no information about what it's interacting with,
 // or in other words, it has no useful augments.
 public abstract class NotifyingAction extends Action {
 

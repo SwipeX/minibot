@@ -1,7 +1,6 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Players;
@@ -50,14 +49,14 @@ public class Prayer9 extends Macro implements Renderable {
         if (Game.levels()[Skills.PRAYER] < 25) {
             Item prayer = Inventory.first(item -> item != null && item.name() != null && item.name().contains("rayer"));
             if (prayer != null) {
-                prayer.processAction(ActionOpcodes.ITEM_ACTION_0, "Drink");
+                prayer.processAction("Drink");
                 Time.sleep(1800);
             }
         }
         if (Game.levels()[Skills.RANGE] <= Game.realLevels()[Skills.RANGE] + 9) {
             Item ranging = Inventory.first(item -> item != null && item.name() != null && item.name().contains("ang"));
             if (ranging != null) {
-                ranging.processAction(ActionOpcodes.ITEM_ACTION_0, "Drink");
+                ranging.processAction("Drink");
                 Time.sleep(1800);
             }
         }

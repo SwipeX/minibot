@@ -51,7 +51,7 @@ public class ObjectAction extends EntityAction {
 
     @Override
     public String toString() {
-        return "Object Action [object-name(getId=" + entityId() + ")=" + name() + ",action-name(index=" +
+        return "ObjectAction [object-name(getId=" + entityId() + ")=" + name() + ",action-name(index=" +
                 actionIndex() + ")=" + actionName() + ")<" + x() + "," + y() + "," + Game.plane() + "> on object " /*+ getObject()*/;
     }
 }

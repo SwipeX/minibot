@@ -1,7 +1,6 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Bank;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.GameTab;
@@ -70,7 +69,7 @@ public class Superglass extends Macro implements Renderable {
     private boolean openBank() {
         Npc banker = Npcs.nearestByName("Banker");
         if (banker != null) {
-            banker.processAction(ActionOpcodes.NPC_ACTION_2, "Bank");
+            banker.processAction("Bank");
             return Time.sleep(Bank::viewing, 10000);
         }
         return false;
@@ -134,7 +133,7 @@ public class Superglass extends Macro implements Renderable {
                 if (GameTab.MAGIC.open()) {
                     WidgetComponent spell = Widgets.get(218, 110);
                     if (spell != null) {
-                        spell.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Cast", "");
+                        spell.processAction("Cast");
                         casts++;
                         cast = true;
                         Time.sleep(2650, 2950);

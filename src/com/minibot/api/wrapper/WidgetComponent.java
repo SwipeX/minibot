@@ -1,6 +1,7 @@
 package com.minibot.api.wrapper;
 
 import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.action.tree.Action;
 import com.minibot.api.action.tree.WidgetAction;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.method.Widgets;
@@ -166,7 +167,7 @@ public class WidgetComponent extends Wrapper<RSWidget> {
 
     @Override
     public void processAction(int opcode, String action) {
-        processAction(ActionOpcodes.WIDGET_ACTION, 0, action, "");
+        processAction(ActionOpcodes.WIDGET_ACTION, Action.indexOf(actions(), action) + 1, action, "");
     }
 
     public void processAction(int opcode, int actionIndex, String action, String target) {

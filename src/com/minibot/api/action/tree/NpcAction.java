@@ -58,6 +58,6 @@ public class NpcAction extends CharacterAction {
 
     @Override
     public String toString() {
-        return "Npc Interaction [action-name(index=" + actionIndex() + ")=" + actionName() + "] on " + npc();
+        return "NpcAction [action-name(index=" + actionIndex() + ")=" + actionName() + "] on " + npc();
     }
 }
