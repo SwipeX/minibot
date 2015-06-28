@@ -45,7 +45,7 @@ public class ObjectAction extends EntityAction {
         if (actions == null)
             return null;
         int actionIndex = actionIndex();
-        return actionIndex > 0 && actionIndex < actions.length ? actions[actionIndex] : null;
+        return actionIndex >= 0 && actionIndex < actions.length ? actions[actionIndex] : null;
     }
 
     @Override

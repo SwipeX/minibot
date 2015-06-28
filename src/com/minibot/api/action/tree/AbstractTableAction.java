@@ -46,13 +46,6 @@ public abstract class AbstractTableAction extends Action {
         return Widgets.get(parent, child);
     }
 
-   /* public Item getItem() {
-        Widget container = table();
-        if(container == null) return null;
-        return new WidgetItem(container,itemIndex());
-    }
-*/
-
     @Override
     public final boolean accept(int opcode, int arg0, int arg1, int arg2) {
         return this.opcode == opcode && this.arg0 == arg0 && this.arg1 == arg1 && this.arg2 == arg2;

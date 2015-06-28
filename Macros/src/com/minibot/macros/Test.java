@@ -28,13 +28,14 @@ public class Test extends Macro implements Renderable {
             if (tile == null || !local.location().equals(tile)) {
                 tile = local.location();
                 StringSelection stringSelection = new StringSelection("new Tile(" + tile.x() + ", " + tile.y() + ", " + tile.plane() + ")");
-                Clipboard clpbrd = Toolkit.getDefaultToolkit ().getSystemClipboard ();
-                clpbrd.setContents(stringSelection, null);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(stringSelection, null);
             }
         }
     }
 
     @Override
     public void render(Graphics2D g) {
+        g.drawString("Test", 50, 50);
     }
 }

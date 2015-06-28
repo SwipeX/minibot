@@ -24,7 +24,6 @@ import java.awt.*;
 public class Nightshade extends Macro implements Renderable {
 
     private static final int COCONUT_PRICE = 924, VIAL_PRICE = 2, BERRY_PRICE = 2490, WEAPON_POISON_PRICE = 5500;
-    private static final int SAPPHIRE_LANTERN = 4702, SKAVID_MAP = 2376;
     private static final int COMMA_FORMAT = ValueFormat.COMMAS;
     private static final int THOUSAND_FORMAT = ValueFormat.THOUSANDS | ValueFormat.PRECISION(2);
 
@@ -143,9 +142,7 @@ public class Nightshade extends Macro implements Renderable {
                 } else {
                     if (loot()) {
                         looted++;
-                    }// else {
-                    //    hop();
-                    //}
+                    }
                 }
             }
         }

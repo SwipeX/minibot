@@ -3,8 +3,10 @@ package com.minibot.ui;
 import com.minibot.Minibot;
 import com.minibot.api.method.RuneScape;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import java.awt.Component;
 import java.awt.event.ActionListener;
 
 /**
@@ -14,17 +16,18 @@ import java.awt.event.ActionListener;
 public class GameMenu {
 
     private static final JMenuBar menuBar;
+    private static final JMenuItem start;
 
     static {
         menuBar = new JMenuBar();
         JMenu file = new JMenu("File");
         menuBar.add(file);
-        file.add(combine(new JMenuItem("Start"), e -> EventQueue.invokeLater(() -> {
-                    MacroSelector macroSelector = new MacroSelector();
-                    macroSelector.loadMacros();
-                    macroSelector.setVisible(true);
-                })
-        ));
+        start = new JMenuItem("Start");
+        file.add(combine(start, e -> {
+            MacroSelector macroSelector = new MacroSelector();
+            macroSelector.loadMacros();
+            macroSelector.setVisible(true);
+        }));
         file.add(combine(new JMenuItem("Stop"), e -> MacroSelector.halt()));
         JMenu options = new JMenu("Options");
         menuBar.add(options);
@@ -34,6 +37,14 @@ public class GameMenu {
                 }
         ));
         options.add(combine(new JMenuItem("Farming"), e -> Minibot.instance().setFarming(!Minibot.instance().isFarming())));
+    }
+
+    public static JMenuItem start() {
+        return start;
+    }
+
+    public static void setEnabled(boolean enabled) {
+        start.setEnabled(enabled);
     }
 
     public static JMenuItem combine(JMenuItem button, ActionListener listener) {
