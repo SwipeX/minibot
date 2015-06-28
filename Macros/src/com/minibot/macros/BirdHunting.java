@@ -2,7 +2,13 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.method.*;
+import com.minibot.api.method.Game;
+import com.minibot.api.method.Ground;
+import com.minibot.api.method.Inventory;
+import com.minibot.api.method.Objects;
+import com.minibot.api.method.Players;
+import com.minibot.api.method.Skills;
+import com.minibot.api.method.Walking;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -10,17 +16,17 @@ import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.GroundItem;
+import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.client.natives.RSObjectDefinition;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Calculations for red chins only.
@@ -32,24 +38,29 @@ import java.util.concurrent.TimeUnit;
 public class BirdHunting extends Macro implements Renderable {
 
 	private static final int POS_Y = 12;
-	private static final int SKILL_HUNTER = 21;
+    private int startExperience;
 
 	private Tile tile;
-	private int startExperience;
-	private long startTime;
+
 	public static final Filter<GameObject> SNARE_FILTER = o -> {
 		String name = o.name();
 		return name != null && name.equals("Bird snare");
 	};
 
+    @Override
+    public void atStart() {
+        Player local = Players.local();
+        if (local != null) {
+            tile = local.location();
+            startExperience = Game.experiences()[Skills.HUNTER];
+        } else {
+            interrupt();
+        }
+    }
+
 	@Override
 	public void run() {
 		Minibot.instance().client().resetMouseIdleTime();
-		if (tile == null) {
-			tile = Players.local().location();
-			startExperience = Game.experiences()[SKILL_HUNTER];
-			startTime = System.currentTimeMillis();
-		}
 		Tile next = getNext();
 		if (next != null) {
 			Deque<GroundItem> items = Ground.findByFilter(groundItem -> {
@@ -117,7 +128,7 @@ public class BirdHunting extends Macro implements Renderable {
 	 * @return the maximum number of traps that can be used at current level.
 	 */
 	private int trapSize() {
-		return Game.realLevels()[SKILL_HUNTER] / 20 + 1;
+		return Game.realLevels()[Skills.HUNTER] / 20 + 1;
 	}
 
 	private Tile[] traps() {
@@ -173,22 +184,11 @@ public class BirdHunting extends Macro implements Renderable {
         return null;
 	}
 
-	public int hourly(int val, long difference) {
-		return (int) Math.ceil(val * 3600000D / difference);
-	}
-
-	public static String format(long millis) {
-		return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-				TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
-				TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
-	}
-
 	@Override
 	public void render(Graphics2D g) {
-		long diff = System.currentTimeMillis() - startTime;
-		int gain = Game.experiences()[SKILL_HUNTER] - startExperience;
-		g.drawString("Time: " + format(diff), 10, POS_Y);
-		g.drawString("Exp: " + gain, 10, POS_Y + 15);
-		g.drawString("Exp/H: " + hourly(gain, diff), 10, POS_Y + 30);
+		int gained = Game.experiences()[Skills.HUNTER] - startExperience;
+		g.drawString("Time: " + Time.format(runtime()), 10, POS_Y);
+		g.drawString("Exp: " + gained, 10, POS_Y + 15);
+		g.drawString("Exp/H: " + hourly(gained), 10, POS_Y + 30);
 	}
 }

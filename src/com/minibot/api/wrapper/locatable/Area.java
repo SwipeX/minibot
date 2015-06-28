@@ -23,6 +23,10 @@ public class Area implements Locatable {
         return to;
     }
 
+    public int plane() {
+        return location().plane();
+    }
+
     public boolean contains(Locatable locatable) {
         if (locatable != null) {
             Tile tile = locatable.location();

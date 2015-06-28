@@ -2,17 +2,10 @@ package com.minibot.macros.agility;
 
 public class Course {
 
-    private final int radius;
-
     private final Obstacle[] obstacles;
 
-    public Course(int radius, Obstacle... obstacles) {
-        this.radius = radius;
+    public Course(Obstacle... obstacles) {
         this.obstacles = obstacles;
-    }
-
-    public int radius() {
-        return radius;
     }
 
     public Obstacle[] obstacles() {

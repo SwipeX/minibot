@@ -2,7 +2,12 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.method.*;
+import com.minibot.api.method.Bank;
+import com.minibot.api.method.GameTab;
+import com.minibot.api.method.Inventory;
+import com.minibot.api.method.Npcs;
+import com.minibot.api.method.Players;
+import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
@@ -12,9 +17,9 @@ import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
-import com.minibot.ui.MacroSelector;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  * @author Jacob Doiron
@@ -77,7 +82,10 @@ public class Superglass extends Macro implements Renderable {
             molten.processAction("Deposit-All");
             //Time.sleep(300, 500);
         }
-        if ((!staff && Inventory.first(FIRE_FILTER) == null) || Inventory.first(ASTRAL_FILTER) == null) {
+        Item fires = Inventory.first(FIRE_FILTER);
+        Item astrals = Inventory.first(ASTRAL_FILTER);
+        if ((!staff && ((fires != null && fires.amount() < 6) || fires == null))
+                || ((astrals != null && astrals.amount() < 2) || astrals == null)) {
             interrupt();
         }
         if (Inventory.first(SAND_FILTER) == null) {
@@ -105,6 +113,13 @@ public class Superglass extends Macro implements Renderable {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void atStart() {
+        if (Players.local() == null) {
+            interrupt();
+        }
     }
 
     @Override

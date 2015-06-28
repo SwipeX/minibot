@@ -71,7 +71,6 @@ public class WidgetAction extends Action {
 
     @Override
     public String toString() {
-        int UID = widgetUid();
         int parent = widgetUid() >> 16;
         int child = widgetUid() & 0xffff;
         int index = widgetIndex();

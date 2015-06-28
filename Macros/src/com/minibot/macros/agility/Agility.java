@@ -5,6 +5,7 @@ import com.minibot.api.method.Game;
 import com.minibot.api.method.Ground;
 import com.minibot.api.method.Objects;
 import com.minibot.api.method.Players;
+import com.minibot.api.method.Skills;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -24,54 +25,65 @@ import java.awt.Graphics2D;
  * @author Jacob Doiron
  * @since 6/25/2015
  */
-@Manifest(name = "Agility", author = "Jacob", version = "1.1.2", description = "Completes Canifis agility course")
+@Manifest(name = "Agility", author = "Jacob", version = "1.1.4", description = "Completes agility courses")
 public class Agility extends Macro implements Renderable {
 
-    private static final Course GNOME = new Course(0,
-            new Obstacle(23145, "Walk-across", new Area(new Tile(2473, 3436, 0), new Tile(2487, 3439, 0)), new Tile(2474, 3435, 0), new Tile(2474, 3426, 0)),
-            new Obstacle(23134, "Climb-over", new Area(new Tile(2469, 3424, 0), new Tile(2478, 3430, 0)), new Tile(2473, 3425, 0), new Tile(2473, 3423, 1)),
-            new Obstacle(23559, "Climb", new Area(new Tile(2471, 3422, 1), new Tile(2476, 3424, 1)), new Tile(2473, 3422, 1), new Tile(2473, 3420, 2)),
-            new Obstacle(23557, "Walk-on", new Area(new Tile(2472, 3418, 2), new Tile(2477, 3421, 2)), new Tile(2478, 3420, 2), new Tile(2486, 3419, 2)),
-            new Obstacle(23560, "Climb-down", new Area(new Tile(2483, 3418, 2), new Tile(2488, 3421, 2)), new Tile(2486, 3419, 2), new Tile(2487, 3420, 0)),
-            new Obstacle(23135, "Climb-over", new Area(new Tile(2482, 3414, 0), new Tile(2490, 3425, 0)), new Tile(2483, 3426, 0), new Tile(2483, 3431, 0)),
-            new Obstacle(23138, "Squeeze-through", new Area(new Tile(2482, 3427, 0), new Tile(2490, 3432, 0)), new Tile(2484, 3431, 0), new Tile(2484, 3440, 0))
+    private static final Course GNOME = new Course(
+            new Obstacle(23145, "Walk-across", new Area(new Tile(2473, 3436, 0), new Tile(2487, 3439, 0)), new Tile(2474, 3435, 0)),
+            new Obstacle(23134, "Climb-over", new Area(new Tile(2469, 3424, 0), new Tile(2478, 3430, 0)), new Tile(2473, 3425, 0)),
+            new Obstacle(23559, "Climb", new Area(new Tile(2471, 3422, 1), new Tile(2476, 3424, 1)), new Tile(2473, 3422, 1)),
+            new Obstacle(23557, "Walk-on", new Area(new Tile(2472, 3418, 2), new Tile(2477, 3421, 2)), new Tile(2478, 3420, 2)),
+            new Obstacle(23560, "Climb-down", new Area(new Tile(2483, 3418, 2), new Tile(2488, 3421, 2)), new Tile(2486, 3419, 2)),
+            new Obstacle(23135, "Climb-over", new Area(new Tile(2482, 3414, 0), new Tile(2490, 3425, 0)), new Tile(2483, 3426, 0)),
+            new Obstacle(23138, "Squeeze-through", new Area(new Tile(2482, 3427, 0), new Tile(2490, 3432, 0)), new Tile(2484, 3431, 0))
     );
 
-    private static final Course DRAYNOR = new Course(25,
-            new Obstacle(10073, "Climb", new Area(new Tile(3102, 3260, 0), new Tile(3105, 3279, 0)), new Tile(3103, 3279, 0), null),
-            new Obstacle(10074, "Cross", new Area(new Tile(3097, 3277, 3), new Tile(3102, 3281, 3)), new Tile(3098, 3277, 3), null),
-            new Obstacle(10075, "Cross", new Area(new Tile(3088, 3273, 3) , new Tile(3092, 3276, 3)), new Tile(3092, 3276, 3), null),
-            new Obstacle(10077, "Balance", new Area(new Tile(3089, 3265, 3), new Tile(3095, 3267, 3)), new Tile(3089, 3264, 3), null),
-            new Obstacle(10084, "Jump-up", new Area(new Tile(3087, 3257, 3), new Tile(3088, 3261, 3)), new Tile(3088, 3256, 3), null),
-            new Obstacle(10085, "Jump", new Area(new Tile(3087, 3255, 3), new Tile(3094, 3255, 3)), new Tile(3095, 3255, 3), null),
-            new Obstacle(10086, "Climb-down", new Area(new Tile(3096, 3256, 3), new Tile(3101, 3261, 3)), new Tile(3102, 3261, 3), null)
+    private static final Course DRAYNOR = new Course(
+            new Obstacle(10073, "Climb", new Area(new Tile(3102, 3260, 0), new Tile(3105, 3279, 0)), new Tile(3103, 3279, 0)),
+            new Obstacle(10074, "Cross", new Area(new Tile(3097, 3277, 3), new Tile(3102, 3281, 3)), new Tile(3098, 3277, 3)),
+            new Obstacle(10075, "Cross", new Area(new Tile(3088, 3273, 3) , new Tile(3092, 3276, 3)), new Tile(3092, 3276, 3)),
+            new Obstacle(10077, "Balance", new Area(new Tile(3089, 3265, 3), new Tile(3095, 3267, 3)), new Tile(3089, 3264, 3)),
+            new Obstacle(10084, "Jump-up", new Area(new Tile(3087, 3257, 3), new Tile(3088, 3261, 3)), new Tile(3088, 3256, 3)),
+            new Obstacle(10085, "Jump", new Area(new Tile(3087, 3255, 3), new Tile(3094, 3255, 3)), new Tile(3095, 3255, 3)),
+            new Obstacle(10086, "Climb-down", new Area(new Tile(3096, 3256, 3), new Tile(3101, 3261, 3)), new Tile(3102, 3261, 3))
     );
 
-    private static final Course CANIFIS = new Course(25,
-            new Obstacle(10819, "Climb", new Area(new Tile(0, 0, 0), new Tile(0, 0, 0)), new Tile(3505, 3489, 0), new Tile(3506, 3492, 2)),
-            new Obstacle(10820, "Jump", new Area(new Tile(3502, 3488, 2), new Tile(3509, 3497, 2)), new Tile(3505, 3498, 2), new Tile(3502, 3504, 2)),
-            new Obstacle(10821, "Jump", new Area(new Tile(3497, 3504, 2), new Tile(3503, 3506, 2)), new Tile(3496, 3504, 2), new Tile(3492, 3504, 2)),
-            new Obstacle(10828, "Jump", new Area(new Tile(3486, 3499, 2), new Tile(3492, 3504, 2)), new Tile(3485, 3499, 2), new Tile(3479, 3499, 3)),
-            new Obstacle(10822, "Jump", new Area(new Tile(3475, 3492, 3), new Tile(3479, 3499, 3)), new Tile(3478, 3491, 3), new Tile(3478, 3486, 2)),
-            new Obstacle(10831, "Vault", new Area(new Tile(3477, 3481, 2), new Tile(3484, 3487, 2)), new Tile(3480, 3483, 2), new Tile(3489, 3476, 3)),
-            new Obstacle(10823, "Jump", new Area(new Tile(3486, 3469, 3), new Tile(3503, 3478, 2)), new Tile(3503, 3476, 3), new Tile(3510, 3476, 2)),
-            new Obstacle(10832, "Jump", new Area(new Tile(3509, 3475, 2), new Tile(3515, 3482, 2)), new Tile(3510, 3483, 2), new Tile(3510, 3485, 0))
+    private static final Course VARROCK = new Course(
+            new Obstacle(10586, "Climb", new Area(new Tile(3221, 3409, 0), new Tile(3241, 3418, 0)), new Tile(3221, 3414, 0)),
+            new Obstacle(10587, "Cross", new Area(new Tile(3214, 3410, 3), new Tile(3219, 3419, 3)), new Tile(3213, 3414, 3)),
+            new Obstacle(10642, "Leap", new Area(new Tile(3201, 3413, 3) , new Tile(3208, 3418, 3)), new Tile(3200, 3416, 3)),
+            new Obstacle(10777, "Balance", new Area(new Tile(3194, 3416, 1), new Tile(3197, 3416, 1)), new Tile(3191, 3415, 1)),
+            new Obstacle(10778, "Leap", new Area(new Tile(3192, 3402, 3), new Tile(3198, 3406, 3)), new Tile(3193, 3401, 3)),
+            new Obstacle(10779, "Leap", new Area(new Tile(3182, 3382, 3), new Tile(3208, 3400, 3)), new Tile(3209, 3397, 3)),
+            new Obstacle(10780, "Leap", new Area(new Tile(3218, 3393, 3), new Tile(3232, 3402, 3)), new Tile(3233, 3402, 3)),
+            new Obstacle(10781, "Hurdle", new Area(new Tile(3236, 3403, 3), new Tile(3240, 3408, 3)), new Tile(3236, 3409, 3)),
+            new Obstacle(107, "Jump-off", new Area(new Tile(3236, 3410, 3), new Tile(3240, 3415, 3)), new Tile(3236, 3416, 3))
     );
 
-    private static final Course[] COURSES = {GNOME, DRAYNOR, CANIFIS};
+    private static final Course CANIFIS = new Course(
+            new Obstacle(10819, "Climb", new Area(new Tile(0, 0, 0), new Tile(0, 0, 0)), new Tile(3505, 3489, 0)),
+            new Obstacle(10820, "Jump", new Area(new Tile(3502, 3488, 2), new Tile(3509, 3497, 2)), new Tile(3505, 3498, 2)),
+            new Obstacle(10821, "Jump", new Area(new Tile(3497, 3504, 2), new Tile(3503, 3506, 2)), new Tile(3496, 3504, 2)),
+            new Obstacle(10828, "Jump", new Area(new Tile(3486, 3499, 2), new Tile(3492, 3504, 2)), new Tile(3485, 3499, 2)),
+            new Obstacle(10822, "Jump", new Area(new Tile(3475, 3492, 3), new Tile(3479, 3499, 3)), new Tile(3478, 3491, 3)),
+            new Obstacle(10831, "Vault", new Area(new Tile(3477, 3481, 2), new Tile(3484, 3487, 2)), new Tile(3480, 3483, 2)),
+            new Obstacle(10823, "Jump", new Area(new Tile(3486, 3469, 3), new Tile(3503, 3478, 2)), new Tile(3503, 3476, 3)),
+            new Obstacle(10832, "Jump", new Area(new Tile(3509, 3475, 2), new Tile(3515, 3482, 2)), new Tile(3510, 3483, 2))
+    );
+
+    private static final Course[] COURSES = {GNOME, DRAYNOR, VARROCK, CANIFIS};
 
     private static Course course;
 
     private static final int TEXT_FORMAT = ValueFormat.THOUSANDS | ValueFormat.COMMAS | ValueFormat.PRECISION(1);
 
     private static String status = "Nothing";
-    private static int finishPlane;
     private static int startExp;
     private static int marks;
 
     @Override
     public void atStart() {
-        startExp = Game.totalExperience();
+        startExp = Game.experiences()[Skills.AGILITY];
         Player local = Players.local();
         if (local != null) {
             search: for (Course c : COURSES) {
@@ -82,6 +94,12 @@ public class Agility extends Macro implements Renderable {
                     }
                 }
             }
+        } else {
+            interrupt();
+        }
+        if (course == null) {
+            System.err.println("No suitable course found");
+            interrupt();
         }
     }
 
@@ -106,24 +124,22 @@ public class Agility extends Macro implements Renderable {
             if (mark != null && current.area().contains(mark)) {
                 status = "Mark of anal spagh00ter";
                 mark.processAction("Take");
-                Time.sleep(() -> {
+                if (Time.sleep(() -> {
                     GroundItem mark1 = Ground.nearestByFilter(i -> i != null && i.id() == 11849);
                     return mark1 == null;
-                }, Random.nextInt(4500, 5700));
-                marks++;
+                }, Random.nextInt(4500, 5700))) {
+                    marks++;
+                }
             }
-            //finishPlane = current.finish().plane();
-            GameObject nearest = Objects.topAt(current.start());
+            GameObject nearest = Objects.topAt(current.at());
             if (nearest != null) {
                 status = current.id() + " -> " + current.action();
-                //Tile finish = current.finish();
                 Area finish = next.area();
-                for (int i = 0; i < Random.nextInt(1, 3); i++) {
-                    nearest.processAction(current.action(), current.start().localX(), current.start().localY());
-                    Time.sleep(60, 240);
+                for (int i = 0; i < Random.nextInt(2, 5); i++) {
+                    nearest.processAction(current.action(), current.at().localX(), current.at().localY());
+                    Time.sleep(90, 160);
                 }
-                if (Time.sleep(() -> /*finish.distance() <= 3 && local.location().plane() == finishPlane &&
-                        */ finish.contains(local) && local.animation() == -1, Random.nextInt(8500, 12000))) {
+                if (Time.sleep(() -> finish.contains(local) && local.animation() == -1, Random.nextInt(12500, 17500))) {
                     Time.sleep(550, 785);
                 }
             }
@@ -136,7 +152,8 @@ public class Agility extends Macro implements Renderable {
         g.drawString("Status: " + status, 10, 10);
         g.drawString("Time " + Time.format(runtime()), 10, 22);
         g.drawString("Exp: " + ValueFormat.format(Game.totalExperience() - startExp, TEXT_FORMAT) + " (" +
-                ValueFormat.format(hourly(Game.totalExperience() - startExp), TEXT_FORMAT) + "/H)", 10, 34);
-        g.drawString("Marks: " + marks + " (" + hourly(marks) + "/H)", 10, 46);
+                ValueFormat.format(hourly(Game.experiences()[Skills.AGILITY] - startExp), TEXT_FORMAT) + "/H)", 10, 34);
+        g.drawString("Level: " + Game.levels()[Skills.AGILITY], 10, 46);
+        g.drawString("Marks: " + marks + " (" + hourly(marks) + "/H)", 10, 58);
     }
 }

@@ -49,6 +49,7 @@ public class MacroSelector extends JDialog {
             current.interrupt();
         }
         current = null;
+        GameMenu.setEnabled(true);
         Minibot.instance().setMacroRunning(false);
     }
 
@@ -117,6 +118,7 @@ public class MacroSelector extends JDialog {
                     if (local != null)
                         Minibot.connection().script(0, local.name(), manifest.name());
                     current = selected.def.mainClass().newInstance();
+                    GameMenu.setEnabled(false);
                 } catch (Exception err) {
                     err.printStackTrace();
                     success = false;

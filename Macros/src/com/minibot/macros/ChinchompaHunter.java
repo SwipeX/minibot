@@ -2,26 +2,35 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.method.*;
+import com.minibot.api.method.Game;
+import com.minibot.api.method.Ground;
+import com.minibot.api.method.Inventory;
+import com.minibot.api.method.Objects;
+import com.minibot.api.method.Players;
+import com.minibot.api.method.Skills;
+import com.minibot.api.method.Walking;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.GroundItem;
+import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.client.natives.RSObjectDefinition;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
+ * Calculations for red chins only.
+ *
  * @author Tim Dekker
  * @author Tyler Sedlar
  * @since 5/11/15
@@ -30,14 +39,23 @@ import java.util.concurrent.TimeUnit;
 public class ChinchompaHunter extends Macro implements Renderable {
 
     private enum ChinType {
+
         REGULAR(198.4D, 700), RED(265D, 1330), BLACK(315D, 1980);
 
-        public final double exp;
-        public final int price;
+        private final double exp;
+        private final int price;
 
         ChinType(double exp, int price) {
             this.exp = exp;
             this.price = price;
+        }
+
+        public double exp() {
+            return exp;
+        }
+
+        public int price() {
+            return price;
         }
     }
 
@@ -55,20 +73,24 @@ public class ChinchompaHunter extends Macro implements Renderable {
 
     private static Tile tile;
 
-    private static final int SKILL_HUNTER = 21;
     private int startExp;
-    private long startTime;
     private long lastReport = System.currentTimeMillis();
-    private int lastChins = 0;
+    private int lastChins;
+
+    @Override
+    public void atStart() {
+        Player local = Players.local();
+        if (local != null) {
+            tile = Players.local().location();
+            startExp = Game.experiences()[Skills.HUNTER];
+        } else {
+            interrupt();
+        }
+    }
 
     @Override
     public void run() {
         Minibot.instance().client().resetMouseIdleTime();
-        if (tile == null) {
-            tile = Players.local().location();
-            startExp = Game.experiences()[SKILL_HUNTER];
-            startTime = System.currentTimeMillis();
-        }
         Tile next = getNext();
         if (next != null) {
             Deque<GroundItem> items = Ground.findByFilter(groundItem -> {
@@ -113,7 +135,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
         }
         //reporting stats
         if (lastReport == -1 || System.currentTimeMillis() - lastReport > FIFTEEN_MINUTES) {
-            int gain = Game.experiences()[SKILL_HUNTER] - startExp;
+            int gain = Game.experiences()[Skills.HUNTER] - startExp;
             int amount = (int) ((double) gain / EXP_EACH);
             Minibot.connection().chin(Players.local().name(), amount - lastChins, (int) ((System.currentTimeMillis() - lastReport) / 1000));
             lastReport = System.currentTimeMillis();
@@ -172,7 +194,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
      * @return the maximum number of traps that can be used at current level.
      */
     private int trapSize() {
-        return Math.min(trapCount(), Game.realLevels()[SKILL_HUNTER] / 20 + 1);
+        return Math.min(trapCount(), Game.realLevels()[Skills.HUNTER] / 20 + 1);
     }
 
     private Tile[] traps() {
@@ -218,28 +240,17 @@ public class ChinchompaHunter extends Macro implements Renderable {
         return null;
     }
 
-    public int hourly(int val, long difference) {
-        return (int) Math.ceil(val * 3600000D / difference);
-    }
-
-    public static String format(long millis) {
-        return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-                TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
-                TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
-    }
-
     @Override
     public void render(Graphics2D g) {
-        long timeDiff = System.currentTimeMillis() - startTime;
-        int gain = Game.experiences()[SKILL_HUNTER] - startExp;
-        int amount = (int) ((double) gain / EXP_EACH);
+        int gained = Game.experiences()[Skills.HUNTER] - startExp;
+        int amount = (int) ((double) gained / EXP_EACH);
         int profit = amount * PRICE_CACHED;
         g.setColor(Color.YELLOW);
-        g.drawString("Time: " + format(timeDiff), 10, Y_POS);
-        g.drawString("Exp: " + gain, 10, Y_POS + 15);
-        g.drawString("Exp/H: " + hourly(gain, timeDiff), 10, Y_POS + 30);
-        g.drawString(String.format("Caught: %s (%s/H)", amount, hourly(amount, timeDiff)), 10, Y_POS + 45);
+        g.drawString("Time: " + Time.format(runtime()), 10, Y_POS);
+        g.drawString("Exp: " + gained, 10, Y_POS + 15);
+        g.drawString("Exp/H: " + hourly(gained), 10, Y_POS + 30);
+        g.drawString(String.format("Caught: %s (%s/H)", amount, hourly(amount)), 10, Y_POS + 45);
         g.drawString("Profit: " + profit, 10, Y_POS + 60);
-        g.drawString("Profit/H: " + hourly(profit, timeDiff), 10, Y_POS + 75);
+        g.drawString("Profit/H: " + hourly(profit), 10, Y_POS + 75);
     }
 }
