@@ -33,13 +33,14 @@ public class Prayer9 extends Macro implements Renderable {
 
     @Override
     public void atStart() {
+        if (!Game.playing()) {
+            interrupt();
+        }
         Player local = Players.local();
         if (local != null) {
             Tile start = Players.local().location();
             alt = start.derive(-4, 0);
             startExp = Game.experiences()[Skills.RANGE];
-        } else {
-            interrupt();
         }
     }
 

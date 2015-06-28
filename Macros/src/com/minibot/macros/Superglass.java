@@ -3,10 +3,10 @@ package com.minibot.macros;
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Bank;
+import com.minibot.api.method.Game;
 import com.minibot.api.method.GameTab;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Npcs;
-import com.minibot.api.method.Players;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -30,7 +30,7 @@ public class Superglass extends Macro implements Renderable {
 
     private static int casts;
     private static boolean cast;
-    private static boolean staff = true;
+    private static boolean staff;
 
     private static final int MOLTEN_PRICE = 150;
     private static final int SAND_PRICE = 50;
@@ -117,7 +117,7 @@ public class Superglass extends Macro implements Renderable {
 
     @Override
     public void atStart() {
-        if (Players.local() == null) {
+        if (!Game.playing()) {
             interrupt();
         }
     }

@@ -79,12 +79,13 @@ public class ChinchompaHunter extends Macro implements Renderable {
 
     @Override
     public void atStart() {
+        if (!Game.playing()) {
+            interrupt();
+        }
         Player local = Players.local();
         if (local != null) {
             tile = Players.local().location();
             startExp = Game.experiences()[Skills.HUNTER];
-        } else {
-            interrupt();
         }
     }
 

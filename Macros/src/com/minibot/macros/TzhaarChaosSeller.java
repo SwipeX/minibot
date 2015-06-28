@@ -3,21 +3,16 @@ package com.minibot.macros;
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.action.tree.TableAction;
+import com.minibot.api.method.Game;
 import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Players;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
-import com.minibot.api.wrapper.locatable.Player;
-import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
 import java.awt.Graphics2D;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 
 /**
  * @author Tyler Sedlar
@@ -25,6 +20,13 @@ import java.awt.datatransfer.StringSelection;
  */
 @Manifest(name = "Tzhaar Chaos Seller", author = "Tyler", version = "1.0.0", description = "Sells chaos runes")
 public class TzhaarChaosSeller extends Macro implements Renderable {
+
+    @Override
+    public void atStart() {
+        if (!Game.playing()) {
+            interrupt();
+        }
+    }
 
     @Override
     public void run() {

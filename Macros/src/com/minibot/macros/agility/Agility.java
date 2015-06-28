@@ -71,7 +71,16 @@ public class Agility extends Macro implements Renderable {
             new Obstacle(10832, "Jump", new Area(new Tile(3509, 3475, 2), new Tile(3515, 3482, 2)), new Tile(3510, 3483, 2))
     );
 
-    private static final Course[] COURSES = {GNOME, DRAYNOR, VARROCK, CANIFIS};
+    private static final Course SEERS = new Course(
+            new Obstacle(11373, "Climb-up", new Area(new Tile(2704, 3459, 0), new Tile(2731, 3489, 0)), new Tile(2729, 3489, 0)),
+            new Obstacle(11374, "Jump", new Area(new Tile(2721, 3490, 3), new Tile(2730, 3497, 3)), new Tile(2720, 3492, 3)),
+            new Obstacle(11378, "Cross", new Area(new Tile(2705, 3488, 2), new Tile(2714, 3495, 2)), new Tile(2710, 3489, 2)),
+            new Obstacle(11375, "Jump", new Area(new Tile(2710, 3477, 2), new Tile(2715, 3481, 2)), new Tile(2710, 3476, 2)),
+            new Obstacle(11376, "Jump", new Area(new Tile(2700, 3470, 3), new Tile(2715, 3475, 3)), new Tile(2700, 3469, 3)),
+            new Obstacle(11377, "Jump", new Area(new Tile(2698, 3460, 2), new Tile(2702, 3465, 2)), new Tile(2703, 3461, 2))
+    );
+
+    private static final Course[] COURSES = {GNOME, DRAYNOR, VARROCK, CANIFIS, SEERS};
 
     private static Course course;
 
@@ -80,9 +89,13 @@ public class Agility extends Macro implements Renderable {
     private static String status = "Nothing";
     private static int startExp;
     private static int marks;
+    private static int percent;
 
     @Override
     public void atStart() {
+        if (!Game.playing()) {
+            interrupt();
+        }
         startExp = Game.experiences()[Skills.AGILITY];
         Player local = Players.local();
         if (local != null) {
@@ -94,13 +107,12 @@ public class Agility extends Macro implements Renderable {
                     }
                 }
             }
-        } else {
-            interrupt();
         }
         if (course == null) {
             System.err.println("No suitable course found");
             interrupt();
         }
+        percent = Random.nextInt(35, 65);
     }
 
     @Override
@@ -119,6 +131,9 @@ public class Agility extends Macro implements Renderable {
                         break;
                     }
                 }
+            }
+            if (Game.data(Game.RUN_PERCENT) >= percent && !Game.runEnabled()) {
+                Game.setRun();
             }
             GroundItem mark = Ground.nearestByFilter(i -> i != null && i.id() == 11849);
             if (mark != null && current.area().contains(mark)) {
@@ -151,7 +166,7 @@ public class Agility extends Macro implements Renderable {
         g.setColor(Color.CYAN);
         g.drawString("Status: " + status, 10, 10);
         g.drawString("Time " + Time.format(runtime()), 10, 22);
-        g.drawString("Exp: " + ValueFormat.format(Game.totalExperience() - startExp, TEXT_FORMAT) + " (" +
+        g.drawString("Exp: " + ValueFormat.format(Game.experiences()[Skills.AGILITY] - startExp, TEXT_FORMAT) + " (" +
                 ValueFormat.format(hourly(Game.experiences()[Skills.AGILITY] - startExp), TEXT_FORMAT) + "/H)", 10, 34);
         g.drawString("Level: " + Game.levels()[Skills.AGILITY], 10, 46);
         g.drawString("Marks: " + marks + " (" + hourly(marks) + "/H)", 10, 58);

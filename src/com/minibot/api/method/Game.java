@@ -1,6 +1,10 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
+import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.util.Random;
+import com.minibot.api.util.Time;
+import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.Character;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Player;
@@ -14,6 +18,9 @@ public class Game {
     public static final int STATE_CREDENTIALS = 10;
     public static final int STATE_PLAYING = 25;
     public static final int STATE_IN_GAME = 30;
+    public static final int HITPOINTS = 4;
+    public static final int PRAYER = 14;
+    public static final int RUN_PERCENT = 22;
 
     public static int state() {
         return Minibot.instance().client().getGameState();
@@ -50,6 +57,35 @@ public class Game {
         return i;
     }
 
+    public static boolean playing() {
+        return state() >= STATE_PLAYING; // doesn't need widget check, since lobby = 10
+    }
+
+    public static int data(int index) {
+        WidgetComponent component = Widgets.get(160, index);
+        if (component != null && playing()) {
+            String text = component.text();
+            return text != null ? Integer.parseInt(text) : -1;
+        }
+        return -1;
+    }
+
+    public static boolean runEnabled() {
+        WidgetComponent run = Widgets.get(160, 23);
+        return run != null && playing() && run.textureId() == 1065;
+    }
+
+    public static boolean setRun() {
+        WidgetComponent component = Widgets.get(160, 21);
+        if (component != null && playing()) {
+            if (!runEnabled()) {
+                component.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Toggle Run", null);
+            }
+            return Time.sleep(Game::runEnabled, Random.nextInt(1500, 2000));
+        }
+        return false;
+    }
+
     public static int[] varps() {
         int[] settings = Minibot.instance().client().getGameSettings();
         return settings == null ? null : settings.clone();
@@ -58,10 +94,6 @@ public class Game {
     public static int varp(int index) {
         int[] settings = varps();
         return settings.length == 0 || index >= settings.length ? -1 : settings[index];
-    }
-
-    public static boolean isLoggedIn() {
-        return Minibot.instance().client().getGameState() == STATE_IN_GAME;
     }
 
     public static Character getHinted() {

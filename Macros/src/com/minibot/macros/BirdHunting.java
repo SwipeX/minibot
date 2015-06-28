@@ -49,12 +49,13 @@ public class BirdHunting extends Macro implements Renderable {
 
     @Override
     public void atStart() {
+        if (!Game.playing()) {
+            interrupt();
+        }
         Player local = Players.local();
         if (local != null) {
             tile = local.location();
             startExperience = Game.experiences()[Skills.HUNTER];
-        } else {
-            interrupt();
         }
     }
 

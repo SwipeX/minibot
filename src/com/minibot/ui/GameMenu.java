@@ -17,6 +17,7 @@ public class GameMenu {
 
     private static final JMenuBar menuBar;
     private static final JMenuItem start;
+    private static final JMenuItem stop;
 
     static {
         menuBar = new JMenuBar();
@@ -28,7 +29,9 @@ public class GameMenu {
             macroSelector.loadMacros();
             macroSelector.setVisible(true);
         }));
-        file.add(combine(new JMenuItem("Stop"), e -> MacroSelector.halt()));
+        stop = new JMenuItem("Stop");
+        stop.setEnabled(false);
+        file.add(combine(stop, e -> MacroSelector.halt()));
         JMenu options = new JMenu("Options");
         menuBar.add(options);
         options.add(combine(new JMenuItem("Rendering"), e -> {
@@ -45,6 +48,7 @@ public class GameMenu {
 
     public static void setEnabled(boolean enabled) {
         start.setEnabled(enabled);
+        stop.setEnabled(!enabled);
     }
 
     public static JMenuItem combine(JMenuItem button, ActionListener listener) {

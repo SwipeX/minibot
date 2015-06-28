@@ -1,6 +1,7 @@
 package com.minibot.api.action.tree;
 
 import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.method.Game;
 import com.minibot.client.natives.RSObjectDefinition;
 import com.minibot.util.DefinitionLoader;
 
@@ -51,6 +52,6 @@ public class ObjectAction extends EntityAction {
     @Override
     public String toString() {
         return "Object Action [object-name(getId=" + entityId() + ")=" + name() + ",action-name(index=" +
-                actionIndex() + ")=" + actionName() + ")<" + x() + "," + y() + "> on object " /*+ getObject()*/;
+                actionIndex() + ")=" + actionName() + ")<" + x() + "," + y() + "," + Game.plane() + "> on object " /*+ getObject()*/;
     }
 }

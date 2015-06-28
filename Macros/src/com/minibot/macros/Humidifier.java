@@ -3,9 +3,9 @@ package com.minibot.macros;
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Bank;
+import com.minibot.api.method.Game;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Npcs;
-import com.minibot.api.method.Players;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -17,7 +17,8 @@ import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  * @author Tyler Sedlar
@@ -55,7 +56,7 @@ public class Humidifier extends Macro implements Renderable {
 
     @Override
     public void atStart() {
-        if (Players.local() == null) {
+        if (!Game.playing()) {
             interrupt();
         }
     }
