@@ -132,9 +132,8 @@ public class Agility extends Macro implements Renderable {
                     }
                 }
             }
-            if (Game.data(Game.RUN_PERCENT) >= percent && !Game.runEnabled()) {
-                Game.setRun();
-            }
+            if (Game.energy() >= percent && !Game.runEnabled())
+                Game.setRun(true);
             GroundItem mark = Ground.nearestByFilter(i -> i != null && i.id() == 11849);
             if (mark != null && current.area().contains(mark)) {
                 status = "Mark of anal spagh00ter";
