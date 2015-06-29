@@ -109,6 +109,9 @@ public class Minibot extends JFrame implements Runnable {
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse modscript");
         }
+        File randomDat = new File(System.getProperty("user.home") + "/random.dat");
+        if (randomDat.exists())
+            randomDat.setReadOnly();
         Injector injector = new Injector(new JarArchive(new File(crawler.getPack())));
         injector.getTransforms().add(new ProcessActionCallback());
         injector.getTransforms().add(new ProcessActionInvoker());
