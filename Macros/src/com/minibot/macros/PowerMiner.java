@@ -1,5 +1,6 @@
 package com.minibot.macros;
 
+import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.action.tree.ExamineEntityAction;
 import com.minibot.api.method.*;
@@ -40,6 +41,7 @@ public class PowerMiner extends Macro implements Renderable, ChatboxListener {
 
     @Override
     public void run() {
+        Minibot.instance().client().resetMouseIdleTime();
         Deque<GameObject> objects = Objects.loaded(2);
         for (GameObject object : objects) {
             String name = object.name();
