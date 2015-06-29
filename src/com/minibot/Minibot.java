@@ -63,9 +63,8 @@ public class Minibot extends JFrame implements Runnable {
                 public void windowClosing(WindowEvent e) {
                     Macro current = MacroSelector.current();
                     if (current != null) {
-                        String name;
                         Player local = Players.local();
-                        name = local != null ? local.name() : Minibot.instance().client().getUsername();
+                        String name = local != null ? local.name() : Minibot.instance().client().getUsername();
                         connection().script(1, name, current.getClass().getSimpleName());
                     }
                 }
@@ -118,11 +117,11 @@ public class Minibot extends JFrame implements Runnable {
         injector.getTransforms().add(new InterfaceImpl());
         injector.getTransforms().add(new ModelHack());
         injector.getTransforms().add(new CanvasHack());
-        //injector.getTransforms().add(new WidgetPositionHack());
         injector.getTransforms().add(new GetterAdder());
         injector.getTransforms().add(new DefinitionInvoker());
         injector.getTransforms().add(new HoveredRegionTileSetter());
         injector.getTransforms().add(new MiscSetters());
+        injector.getTransforms().add(new WidgetHack());
         Map<String, byte[]> classes = injector.inject();
         RSClassLoader classloader;
         try {

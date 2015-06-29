@@ -37,6 +37,7 @@ public class GameMenu {
         options.add(combine(new JMenuItem("Rendering"), e -> {
                     RuneScape.LANDSCAPE_RENDERING_ENABLED = !RuneScape.LANDSCAPE_RENDERING_ENABLED;
                     RuneScape.MODEL_RENDERING_ENABLED = !RuneScape.MODEL_RENDERING_ENABLED;
+                    RuneScape.WIDGET_RENDERING_ENABLED = !RuneScape.WIDGET_RENDERING_ENABLED;
                 }
         ));
         options.add(combine(new JMenuItem("Farming"), e -> Minibot.instance().setFarming(!Minibot.instance().isFarming())));
