@@ -1,5 +1,6 @@
 package com.minibot.macros;
 
+import com.minibot.Minibot;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -32,6 +33,7 @@ public class WillowChopper extends Macro implements Renderable {
 
     @Override
     public void run() {
+        Minibot.instance().client().resetMouseIdleTime();
         if (Inventory.full()) {
             if (!Bank.viewing()) {
                 Bank.openBooth();
