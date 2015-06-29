@@ -3,7 +3,7 @@ package com.minibot.client.natives;
 public interface RSObjectDefinition extends RSCacheableNode {
 
     int getId();
-    int getVarpIndex();
+    int getTransformIndex();
     int[] getTransformIds();
 
     String getName();
