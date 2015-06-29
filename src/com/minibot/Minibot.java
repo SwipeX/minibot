@@ -63,9 +63,8 @@ public class Minibot extends JFrame implements Runnable {
                 public void windowClosing(WindowEvent e) {
                     Macro current = MacroSelector.current();
                     if (current != null) {
-                        String name;
                         Player local = Players.local();
-                        name = local != null ? local.name() : Minibot.instance().client().getUsername();
+                        String name = local != null ? local.name() : Minibot.instance().client().getUsername();
                         connection().script(1, name, current.getClass().getSimpleName());
                     }
                 }
