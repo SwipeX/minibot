@@ -118,9 +118,11 @@ public class NatureCrafter extends Macro implements Renderable {
                         Time.sleep(() -> NEAR_RUINS.distance() < 5, 7000);
                     }
             } else {
-                if (STORE.distance() > 6) {
-                    if (Game.energy() >= 20 && !Game.runEnabled())
+                if (STORE.distance() > 6 && storeOwner() == null) {
+                    if (Game.energy() >= 20 && !Game.runEnabled()) {
                         Game.setRun(true);
+                        Time.sleep(200, 400);
+                    }
                     Walking.walkTo(STORE);
                     Time.sleep(400, 600);
                 } else {
@@ -162,13 +164,16 @@ public class NatureCrafter extends Macro implements Renderable {
                                 derived.localX(), derived.localY()));
                         if (Time.sleep(() -> Inventory.items().size() != preCount, 5000)) {
                             crafted += essCount;
+                            Time.sleep(2700, 2900);
                         }
                     }
                 }
             } else {
                 if (NEAR_RUINS.distance() > 5) {
-                    if (Game.energy() >= 20 && !Game.runEnabled())
+                    if (Game.energy() >= 20 && !Game.runEnabled()) {
                         Game.setRun(true);
+                        Time.sleep(200, 400);
+                    }
                     Walking.walkTo(NEAR_RUINS);
                     Time.sleep(400, 600);
                 } else {
