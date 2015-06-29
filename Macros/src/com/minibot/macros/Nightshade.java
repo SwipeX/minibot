@@ -66,9 +66,9 @@ public class Nightshade extends Macro implements Renderable {
         if (cave != null) {
             cave.processAction("Enter", CAVE.localX(), CAVE.localY());
             Time.sleep(1500, 1700);
-            RuneScape.processAction(new DialogButtonAction(15007745, -1), "", "");
+            RuneScape.processAction(new DialogButtonAction(15007745, -1));
             Time.sleep(1500, 1700);
-            RuneScape.processAction(new DialogButtonAction(14352384, 1), "", "");
+            RuneScape.processAction(new DialogButtonAction(14352384, 1));
             return true;
         }
         return false;
