@@ -7,8 +7,8 @@ import com.minibot.api.wrapper.WidgetComponent;
 // The rest follow for simplicity through commonality
 public abstract class AbstractTableAction extends Action {
 
-    public AbstractTableAction(int opcode, int item_id, int item_index, int table_uid) {
-        super(opcode, item_id, item_index, table_uid);
+    public AbstractTableAction(int opcode, int itemId, int itemIndex, int tableUid) {
+        super(opcode, itemId, itemIndex, tableUid);
     }
 
     @Override

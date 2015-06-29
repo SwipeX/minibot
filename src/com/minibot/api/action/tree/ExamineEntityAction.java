@@ -5,8 +5,8 @@ import com.minibot.api.wrapper.EntityType;
 
 public class ExamineEntityAction extends EntityAction {
 
-    public ExamineEntityAction(int opcode, int entity_id, int local_x, int local_y) {
-        super(opcode, entity_id, local_x, local_y);
+    public ExamineEntityAction(int opcode, int entityId, int localX, int localY) {
+        super(opcode, entityId, localX, localY);
     }
 
     // Keeps within the scope of examine opcodes

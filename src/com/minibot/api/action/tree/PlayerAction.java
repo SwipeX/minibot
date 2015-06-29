@@ -7,8 +7,8 @@ import com.minibot.client.natives.RSPlayer;
 
 public class PlayerAction extends CharacterAction {
 
-    public PlayerAction(int opcode, int player_index) {
-        super(opcode, player_index);
+    public PlayerAction(int opcode, int playerIndex) {
+        super(opcode, playerIndex);
     }
 
     public int playerIndex() {
@@ -37,6 +37,6 @@ public class PlayerAction extends CharacterAction {
 
     @Override
     public String toString() {
-        return "Player Action[" + playerIndex() + "](" + "@" + actionIndex() + ") on " + player();
+        return "PlayerAction [player-index=" + playerIndex() + " | action-index=" + actionIndex() + " | on " + player();
     }
 }

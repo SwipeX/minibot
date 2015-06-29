@@ -37,7 +37,7 @@ public class ManKiller extends Macro implements Renderable {
 
     @Override
     public void atStart() {
-        if (Players.local() == null) {
+        if (!Game.playing()) {
             interrupt();
         }
         LOOT_PRICES.put("Grimy harralander", 425);

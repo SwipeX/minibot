@@ -42,12 +42,12 @@ public class MacroSelector extends JDialog {
         Player local = Players.local();
         if (local != null)
             Minibot.connection().script(1, local.name(), selected.def.manifest().name());
-        Minibot.instance().canvas();
         if (current instanceof Renderable)
             GameCanvas.removeRenderable((Renderable) current);
         if (current != null) {
-            current.interrupt();
+            current.stop();
         }
+        System.out.println("Stopped " + selected.def.manifest().name() + " by " + selected.def.manifest().author());
         current = null;
         GameMenu.setEnabled(true);
         Minibot.instance().setMacroRunning(false);

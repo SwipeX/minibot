@@ -1,7 +1,6 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Npcs;
@@ -29,11 +28,12 @@ public class Falconry extends Macro implements Renderable {
 
     @Override
     public void atStart() {
+        if (!Game.playing()) {
+            interrupt();
+        }
         Player local = Players.local();
         if (local != null) {
             startExp = Game.experiences()[Skills.HUNTER];
-        } else {
-            interrupt();
         }
     }
 
@@ -52,7 +52,7 @@ public class Falconry extends Macro implements Renderable {
                 //    Walking.walkTo(falcon.location());
                 //    Time.sleep(1000, 2000);
                 //} else {
-                    falcon.processAction(ActionOpcodes.NPC_ACTION_0, "Retrieve");
+                    falcon.processAction("Retrieve");
                     Time.sleep(400, 750);
                 //}
             } else {
@@ -64,7 +64,7 @@ public class Falconry extends Macro implements Renderable {
                     //    Walking.walkTo(kebbit.location());
                     //    Time.sleep(1000, 2000);
                     //} else {
-                        kebbit.processAction(ActionOpcodes.NPC_ACTION_0, "Catch");
+                        kebbit.processAction("Catch");
                         Time.sleep(600, 1100);
                     //}
                 }

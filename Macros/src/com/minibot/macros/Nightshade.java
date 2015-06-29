@@ -117,7 +117,7 @@ public class Nightshade extends Macro implements Renderable {
 
     @Override
     public void atStart() {
-        if (Players.local() == null) {
+        if (!Game.playing()) {
             interrupt();
         }
     }

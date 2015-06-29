@@ -23,7 +23,7 @@ public class WidgetAction extends Action {
         return SIG_ALL;
     }
 
-    // Arg0 is automatically lowered by one when is derived from the client, when its a widgetAction
+    // Arg0 is automatically lowered by one when is derived from the client, when it's a widgetAction
     public int actionIndex() {
         return arg0;
     }
@@ -76,7 +76,7 @@ public class WidgetAction extends Action {
         int index = widgetIndex();
         int action = actionIndex();
         int type = isType2() ? 2 : 1;
-        return "WidgetAction:[Address=<" + parent + "#" + child + "#" + index + "> | ActonIndex=" + action +
+        return "WidgetAction [Address=<" + parent + "#" + child + "#" + index + "> | ActonIndex=" + action +
                 " | ActionType=" + type + "]" /*+ get()*/;
     }
 }

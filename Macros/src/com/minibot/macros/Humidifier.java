@@ -1,11 +1,10 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Bank;
+import com.minibot.api.method.Game;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Npcs;
-import com.minibot.api.method.Players;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -17,7 +16,8 @@ import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  * @author Tyler Sedlar
@@ -47,7 +47,7 @@ public class Humidifier extends Macro implements Renderable {
     private boolean openBank() {
         Npc banker = Npcs.nearestByName("Banker");
         if (banker != null) {
-            banker.processAction(ActionOpcodes.NPC_ACTION_2, "Bank");
+            banker.processAction("Bank");
             return Time.sleep(Bank::viewing, 10000);
         }
         return false;
@@ -55,7 +55,7 @@ public class Humidifier extends Macro implements Renderable {
 
     @Override
     public void atStart() {
-        if (Players.local() == null) {
+        if (!Game.playing()) {
             interrupt();
         }
     }
@@ -86,7 +86,7 @@ public class Humidifier extends Macro implements Renderable {
             if (Inventory.first(JUG_FILTER) != null) {
                 WidgetComponent humidify = Widgets.get(218, 99);
                 if (humidify != null) {
-                    humidify.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Cast", "");
+                    humidify.processAction("Cast");
                     if (Time.sleep(() -> Inventory.first(WATER_JUG_FILTER) != null, 7000)) {
                         int count = Inventory.items(WATER_JUG_FILTER).size();
                         casts++;

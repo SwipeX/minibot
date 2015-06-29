@@ -131,7 +131,7 @@ public interface ActionOpcodes {
     // though a action may be disabled it still enabled if the
     // widget has a actionListener (its non-null).
 
-    // Note: WIDGET_ACTION is ONLY for actions between indexes [0, 4]
+    // Note: WIDGET_ACTION is ONLY for actions between indices [0, 4]
 
     int WIDGET_ACTION   = 57;
 

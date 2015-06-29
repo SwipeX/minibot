@@ -59,9 +59,9 @@ public abstract class Action implements ActionFilter { // An action has the abil
         for (Field op0 : opz) {
             op0.setAccessible(true);
             try {
-                int op_code = op0.getInt(null);
+                int op = op0.getInt(null);
                 String name = op0.getName();
-                map0.put(op_code, name);
+                map0.put(op, name);
             } catch (IllegalAccessException ignored) {
             }
         }

@@ -1,12 +1,11 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Bank;
+import com.minibot.api.method.Game;
 import com.minibot.api.method.GameTab;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Npcs;
-import com.minibot.api.method.Players;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -30,7 +29,7 @@ public class Superglass extends Macro implements Renderable {
 
     private static int casts;
     private static boolean cast;
-    private static boolean staff = true;
+    private static boolean staff;
 
     private static final int MOLTEN_PRICE = 150;
     private static final int SAND_PRICE = 50;
@@ -70,7 +69,7 @@ public class Superglass extends Macro implements Renderable {
     private boolean openBank() {
         Npc banker = Npcs.nearestByName("Banker");
         if (banker != null) {
-            banker.processAction(ActionOpcodes.NPC_ACTION_2, "Bank");
+            banker.processAction("Bank");
             return Time.sleep(Bank::viewing, 10000);
         }
         return false;
@@ -117,7 +116,7 @@ public class Superglass extends Macro implements Renderable {
 
     @Override
     public void atStart() {
-        if (Players.local() == null) {
+        if (!Game.playing()) {
             interrupt();
         }
     }
@@ -134,7 +133,7 @@ public class Superglass extends Macro implements Renderable {
                 if (GameTab.MAGIC.open()) {
                     WidgetComponent spell = Widgets.get(218, 110);
                     if (spell != null) {
-                        spell.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Cast", "");
+                        spell.processAction("Cast");
                         casts++;
                         cast = true;
                         Time.sleep(2650, 2950);

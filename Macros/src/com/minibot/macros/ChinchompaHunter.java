@@ -1,7 +1,6 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Ground;
 import com.minibot.api.method.Inventory;
@@ -79,12 +78,13 @@ public class ChinchompaHunter extends Macro implements Renderable {
 
     @Override
     public void atStart() {
+        if (!Game.playing()) {
+            interrupt();
+        }
         Player local = Players.local();
         if (local != null) {
             tile = Players.local().location();
             startExp = Game.experiences()[Skills.HUNTER];
-        } else {
-            interrupt();
         }
     }
 
@@ -117,7 +117,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
                 Item trap = Inventory.first(item -> item.name().equals("Box trap"));
                 if (trap != null) {
                     if (Players.local().location().equals(next)) {
-                        trap.processAction(ActionOpcodes.ITEM_ACTION_0, "Lay");
+                        trap.processAction("Lay");
                         Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() != -1, 1500L);
                         Time.sleep(400, 500);
                         Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() == -1, 1500L);
@@ -126,7 +126,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
             } else if (items != null && !items.isEmpty()) {
                 GroundItem item = items.getFirst();
                 if (item != null) {
-                    item.processAction(ActionOpcodes.GROUND_ITEM_ACTION_3, "Lay");
+                    item.processAction("Lay");
                     Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() != -1, 1500L);
                     Time.sleep(400, 500);
                     Time.sleep(() -> Objects.topAt(next) != null && Players.local().animation() == -1, 1500L);
