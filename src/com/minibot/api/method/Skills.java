@@ -9,8 +9,8 @@ public class Skills {
     public static final int ATTACK = 0;
     public static final int DEFENSE = 1;
     public static final int STRENGTH = 2;
-    public static final int CONSTITUTION = 3;
-    public static final int RANGE = 4;
+    public static final int HITPOINTS = 3;
+    public static final int RANGED = 4;
     public static final int PRAYER = 5;
     public static final int MAGIC = 6;
     public static final int COOKING = 7;
@@ -29,6 +29,4 @@ public class Skills {
     public static final int RUNECRAFTING = 20;
     public static final int HUNTER = 21;
     public static final int CONSTRUCTION = 22;
-    public static final int SUMMONING = 23;
-    public static final int DUNGEONEERING = 24;
 }

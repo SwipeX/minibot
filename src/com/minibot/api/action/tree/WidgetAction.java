@@ -76,7 +76,7 @@ public class WidgetAction extends Action {
         int index = widgetIndex();
         int action = actionIndex();
         int type = isType2() ? 2 : 1;
-        return "WidgetAction [Address=<" + parent + "#" + child + "#" + index + "> | ActonIndex=" + action +
+        return "WidgetAction [Address=<" + parent + "#" + child + "#" + index + "> | ActionIndex=" + action +
                 " | ActionType=" + type + "]" /*+ get()*/;
     }
 }

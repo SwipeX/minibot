@@ -39,7 +39,7 @@ public class Prayer9 extends Macro implements Renderable {
         if (local != null) {
             Tile start = Players.local().location();
             alt = start.derive(-4, 0);
-            startExp = Game.experiences()[Skills.RANGE];
+            startExp = Game.experiences()[Skills.RANGED];
         }
     }
 
@@ -53,7 +53,7 @@ public class Prayer9 extends Macro implements Renderable {
                 Time.sleep(1800);
             }
         }
-        if (Game.levels()[Skills.RANGE] <= Game.realLevels()[Skills.RANGE] + 9) {
+        if (Game.levels()[Skills.RANGED] <= Game.realLevels()[Skills.RANGED] + 9) {
             Item ranging = Inventory.first(item -> item != null && item.name() != null && item.name().contains("ang"));
             if (ranging != null) {
                 ranging.processAction("Drink");
@@ -66,14 +66,14 @@ public class Prayer9 extends Macro implements Renderable {
     @Override
     public void render(Graphics2D g) {
         g.setColor(Color.CYAN);
-        int gained = Game.experiences()[Skills.RANGE] - startExp;
+        int gained = Game.experiences()[Skills.RANGED] - startExp;
         g.drawString("Time: " + Time.format(runtime()), 10, 10);
         g.drawString("Exp: " + gained, 10, 25);
         g.drawString("Exp/H: " + hourly(gained), 10, 40);
         g.drawString("Last Exp: " + holder, 10, 52);
-        if (Game.experiences()[Skills.RANGE] != lastExp) {
-            holder = (Game.experiences()[Skills.RANGE] - lastExp);
-            lastExp = Game.experiences()[Skills.RANGE];
+        if (Game.experiences()[Skills.RANGED] != lastExp) {
+            holder = (Game.experiences()[Skills.RANGED] - lastExp);
+            lastExp = Game.experiences()[Skills.RANGED];
         }
     }
 }
