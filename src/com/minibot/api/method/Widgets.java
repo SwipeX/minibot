@@ -63,7 +63,7 @@ public class Widgets {
         WidgetComponent[] children = childrenFor(parent);
         if (children != null) {
             for (WidgetComponent wc : children) {
-                if (wc.index() == child)
+                if (wc != null && wc.index() == child)
                     return wc;
             }
         }

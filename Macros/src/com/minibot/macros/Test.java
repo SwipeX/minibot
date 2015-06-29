@@ -1,16 +1,12 @@
 package com.minibot.macros;
 
+import com.minibot.api.method.Game;
 import com.minibot.api.method.Players;
 import com.minibot.api.util.Renderable;
-import com.minibot.api.wrapper.locatable.Player;
-import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.Graphics2D;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
+import java.awt.*;
 
 /**
  * @author Tyler Sedlar
@@ -18,8 +14,6 @@ import java.awt.datatransfer.StringSelection;
  */
 @Manifest(name = "Test", author = "Tyler", version = "1.0.0", description = "For testing purposes")
 public class Test extends Macro implements Renderable {
-
-    private Tile tile;
 
     @Override
     public void atStart() {
@@ -30,19 +24,11 @@ public class Test extends Macro implements Renderable {
 
     @Override
     public void run() {
-        Player local = Players.local();
-        if (local != null) {
-            if (tile == null || !local.location().equals(tile)) {
-                tile = local.location();
-                StringSelection stringSelection = new StringSelection("new Tile(" + tile.x() + ", " + tile.y() + ", " + tile.plane() + ")");
-                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                clipboard.setContents(stringSelection, null);
-            }
-        }
     }
 
     @Override
     public void render(Graphics2D g) {
-        g.drawString("Test", 50, 50);
+        g.drawString(Players.local().location().toString(), 50, 50);
+        g.drawString(Game.runEnabled() + " - " + Game.energy(), 50, 65);
     }
 }
