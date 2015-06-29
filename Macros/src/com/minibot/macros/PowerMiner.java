@@ -65,14 +65,23 @@ public class PowerMiner extends Macro implements Renderable, ChatboxListener {
                 return name != null && name.toLowerCase().contains("ore");
             });
             rock.processAction("Mine");
-            Time.sleep(() -> Players.local().animation() != -1, 5000);
-            Time.sleep(300, 450);
-            Time.sleep(() -> {
-                if (Players.local().animation() == -1)
+            if (Time.sleep(() -> {
+                if (Players.local().animation() != -1)
                     return true;
                 GameObject current = Objects.topAt(rock.location());
                 return current.id() != rock.id();
-            }, 5000);
+            }, 5000)) {
+                GameObject top = Objects.topAt(rock.location());
+                if (top.id() == rock.id()) {
+                    Time.sleep(300, 450);
+                    Time.sleep(() -> {
+                        if (Players.local().animation() == -1)
+                            return true;
+                        GameObject current = Objects.topAt(rock.location());
+                        return current.id() != rock.id();
+                    }, 5000);
+                }
+            }
         }
     }
 
