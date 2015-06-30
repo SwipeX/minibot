@@ -103,9 +103,9 @@ public class PowerMiner extends Macro implements Renderable, ChatboxListener {
         int gained = Game.experiences()[Skills.MINING] - startExp;
         int yOff = 11;
         g.drawString("Runtime: " + Time.format(runtime()), 13, yOff += 15);
-        String fChopped = ValueFormat.format(mined, COMMA_FORMAT);
-        String fChoppedHr = ValueFormat.format(hourly(mined), COMMA_FORMAT);
-        g.drawString("Mined: " + fChopped + " (" + fChoppedHr + "/HR)", 13, yOff += 15);
+        String fMined = ValueFormat.format(mined, COMMA_FORMAT);
+        String fMinedHr = ValueFormat.format(hourly(mined), COMMA_FORMAT);
+        g.drawString("Mined: " + fMined + " (" + fMinedHr + "/HR)", 13, yOff += 15);
         String fExp = ValueFormat.format(gained, COMMA_FORMAT);
         String fExpHr = ValueFormat.format(hourly(gained), THOUSAND_FORMAT);
         g.drawString("Experience: " + fExp + " (" + fExpHr + "/HR)", 13, yOff + 15);
