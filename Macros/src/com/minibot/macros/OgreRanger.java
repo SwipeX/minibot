@@ -41,7 +41,7 @@ public class OgreRanger extends Macro implements Renderable {
     }
 
     private static boolean level() {
-        WidgetComponent component = Widgets.get(233, 0);
+        WidgetComponent component = Widgets.get(233, 2);
         return component != null && component.visible();
     }
 
@@ -64,7 +64,7 @@ public class OgreRanger extends Macro implements Renderable {
                     return (playerTarget != null && playerTarget.maxHealth() > 0) || level();
                 }, Random.nextInt(25000, 32500))) {
                     if (level()) {
-                        RuneScape.processAction(new DialogButtonAction(15269890));
+                        RuneScape.processAction(new DialogButtonAction(15269890, -1));
                         Time.sleep(() -> !level(), Random.nextInt(4500, 6500));
                     } else {
                         Time.sleep(600, 800);

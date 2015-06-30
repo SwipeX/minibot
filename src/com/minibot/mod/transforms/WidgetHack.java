@@ -19,6 +19,7 @@ import java.util.Map;
  * @since 29-06-2015
  */
 public class WidgetHack implements Transform {
+
     @Override
     public void inject(Map<String, ClassNode> classes) {
         ClassNode widget = classes.get(ModScript.getClass("Widget"));

@@ -110,7 +110,7 @@ public class NatureCrafter extends Macro implements Renderable {
     @Override
     public void run() {
         Minibot.instance().client().resetMouseIdleTime();
-        if (Inventory.items(PURE_ESSENCE_FILTER).size() == 0) {
+        if (Inventory.items(PURE_ESSENCE_FILTER).isEmpty()) {
             if (NEAR_ALTAR.distance() < 10) {
                     GameObject portal = Objects.nearestByName("Portal");
                     if (portal != null) {
