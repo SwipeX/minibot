@@ -1,5 +1,6 @@
 package com.minibot.macros;
 
+import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.action.tree.SpellButtonAction;
 import com.minibot.api.action.tree.TableAction;
@@ -45,6 +46,7 @@ public class HighAlch extends Macro implements Renderable {
 
     @Override
     public void run() {
+        Minibot.instance().client().resetMouseIdleTime();
         Item runes = Inventory.first(NATURE_FILTER);
         Item other = Inventory.first(OTHER_FILTER);
         if (runes != null && other != null) {
