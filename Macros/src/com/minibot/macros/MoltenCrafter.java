@@ -1,5 +1,6 @@
 package com.minibot.macros;
 
+import com.minibot.Minibot;
 import com.minibot.api.action.tree.InputButtonAction;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
@@ -54,6 +55,7 @@ public class MoltenCrafter extends Macro implements Renderable, ChatboxListener 
 
     @Override
     public void run() {
+        Minibot.instance().client().resetMouseIdleTime();
         Item molten = Inventory.first(MOLTEN_FILTER);
         if (molten != null) {
             if (Bank.viewing()) {
