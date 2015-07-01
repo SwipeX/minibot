@@ -60,14 +60,14 @@ public class Agility extends Macro implements Renderable {
             new Obstacle(107, "Jump-off", new Area(new Tile(3236, 3410, 3), new Tile(3240, 3415, 3)), null, new Tile(3236, 3416, 3))
     );
 
-    private static final Course CANIFIS = new Course(true, // fix canifis fails
-            new Obstacle(10819, "Climb", new Area(new Tile(0, 0, 0), new Tile(0, 0, 0)), null, new Tile(3505, 3489, 0)),
+    private static final Course CANIFIS = new Course(true,
+            new Obstacle(10819, "Climb", new Area(new Tile(3504, 3484, 0), new Tile(3510, 3491, 0)), null, new Tile(3505, 3489, 0)),
             new Obstacle(10820, "Jump", new Area(new Tile(3502, 3488, 2), new Tile(3509, 3497, 2)), null, new Tile(3505, 3498, 2)),
-            new Obstacle(10821, "Jump", new Area(new Tile(3497, 3504, 2), new Tile(3503, 3506, 2)), new Area(new Tile(0, 0, 0), new Tile(0, 0, 0)), new Tile(3496, 3504, 2)),
-            new Obstacle(10828, "Jump", new Area(new Tile(3486, 3499, 2), new Tile(3492, 3504, 2)), null, new Tile(3485, 3499, 2)),
+            new Obstacle(10821, "Jump", new Area(new Tile(3497, 3504, 2), new Tile(3503, 3506, 2)), null, new Tile(3496, 3504, 2)),
+            new Obstacle(10828, "Jump", new Area(new Tile(3486, 3499, 2), new Tile(3492, 3504, 2)), new Area(new Tile(3481, 3494, 0), new Tile(3484, 3503, 0)), new Tile(3485, 3499, 2)),
             new Obstacle(10822, "Jump", new Area(new Tile(3475, 3492, 3), new Tile(3479, 3499, 3)), null, new Tile(3478, 3491, 3)),
             new Obstacle(10831, "Vault", new Area(new Tile(3477, 3481, 2), new Tile(3484, 3487, 2)), null, new Tile(3480, 3483, 2)),
-            new Obstacle(10823, "Jump", new Area(new Tile(3486, 3469, 3), new Tile(3503, 3478, 2)), new Area(new Tile(0, 0, 0), new Tile(0, 0, 0)), new Tile(3503, 3476, 3)),
+            new Obstacle(10823, "Jump", new Area(new Tile(3486, 3469, 3), new Tile(3503, 3478, 2)), new Area(new Tile(3505, 3470, 0), new Tile(3508, 3480, 0)), new Tile(3503, 3476, 3)),
             new Obstacle(10832, "Jump", new Area(new Tile(3509, 3475, 2), new Tile(3515, 3482, 2)), null, new Tile(3510, 3483, 2))
     );
 

@@ -2,6 +2,7 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.tree.DialogButtonAction;
+import com.minibot.api.method.ChatboxListener;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Npcs;
 import com.minibot.api.method.Players;
@@ -20,13 +21,14 @@ import com.minibot.bot.macro.Manifest;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
 
 /**
  * @author Jacob Doiron
  * @since 06/28/15
  */
 @Manifest(name = "Ogre Killer", author = "Jacob", version = "1.0.0", description = "Kills ogres in the Ardougne cage")
-public class OgreRanger extends Macro implements Renderable {
+public class OgreRanger extends Macro implements Renderable, ChatboxListener {
 
     private static final int TEXT_FORMAT = ValueFormat.THOUSANDS | ValueFormat.COMMAS | ValueFormat.PRECISION(1);
 
@@ -80,6 +82,10 @@ public class OgreRanger extends Macro implements Renderable {
     public void run() {
         Minibot.instance().client().resetMouseIdleTime();
         attack();
+        if (level()) {
+            RuneScape.processAction(new DialogButtonAction(15269890, -1));
+            Time.sleep(() -> !level(), Random.nextInt(4500, 6500));
+        }
     }
 
     @Override
@@ -89,5 +95,12 @@ public class OgreRanger extends Macro implements Renderable {
         g.drawString("Ranged Exp: " + ValueFormat.format(Game.experiences()[Skills.RANGED] - startExp, TEXT_FORMAT) + " (" +
                         ValueFormat.format(hourly(Game.experiences()[Skills.RANGED] - startExp), TEXT_FORMAT) + "/H)", 10, 22);
         g.drawString("Level: " + Game.levels()[Skills.RANGED], 10, 34);
+    }
+
+    @Override
+    public void messageReceived(int type, String sender, String message, String clan) {
+        if (type == 2) {
+            Toolkit.getDefaultToolkit().beep();
+        }
     }
 }
