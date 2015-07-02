@@ -12,9 +12,7 @@ import org.objectweb.asm.commons.cfg.query.InsnQuery;
 import org.objectweb.asm.commons.cfg.tree.NodeTree;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.*;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.*;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ import java.util.List;
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices", "playerIndices",
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
         "hoveredRegionTileX", "hoveredRegionTileY", "experiences", "levels", "realLevels", "username", "password", "loginState",
-        "hintX", "hintY","hintPlayerIndex","hintNpcIndex", "screenWidth", "screenHeight", "screenZoom", "screenState"})
+        "hintX", "hintY", "hintPlayerIndex", "hintNpcIndex", "screenWidth", "screenHeight", "screenZoom", "screenState"})
 public class Client extends GraphVisitor {
 
     @Override
@@ -69,6 +67,73 @@ public class Client extends GraphVisitor {
         visitAll(new ScreenVisitor());
         visitIfM(new ScreenState(), t -> t.desc.startsWith("([L") && t.desc.contains(";IIIIII"));
         visitAll(new HoveredRegionTiles());
+    }
+
+    private void visitMouseIdleTime() {
+        for (ClassNode cn : getUpdater().getClassnodes().values()) {
+            if (!cn.interfaces.contains("java/awt/event/MouseListener"))
+                continue;
+            for (MethodNode meth : cn.methods) {
+                if (!meth.name.equals("mouseExited"))
+                    continue;
+                getUpdater().graphs().get(cn).get(meth).forEach(b -> b.tree().accept(new NodeVisitor() {
+                    @Override
+                    public void visitField(FieldMemberNode fmn) {
+                        if (fmn.opcode() != PUTSTATIC || fmn.children() != 1)
+                            return;
+                        NumberNode iconst_0 = fmn.firstNumber();
+                        if (iconst_0 == null || iconst_0.number() != 0)
+                            return;
+                        addHook(new FieldHook("mouseIdleTime", fmn.fin()));
+                    }
+                }));
+            }
+        }
+    }
+
+    private void visitProcessAction() {
+        for (ClassNode cn : getUpdater().getClassnodes().values()) {
+            cn.methods.stream().filter(mn -> mn.desc.startsWith("(IIIILjava/lang/String;Ljava/lang/String;II") &&
+                    mn.desc.endsWith(")V")).forEach(mn -> addHook(new InvokeHook("processAction", mn)));
+        }
+    }
+
+    private void visitDefLoader(String hook, String visitor, boolean transform) {
+        for (ClassNode cn : getUpdater().getClassnodes().values()) {
+            cn.methods.stream().filter(mn -> mn.desc.endsWith(")" + desc(visitor))).forEach(mn -> {
+                int access = mn.access & ACC_STATIC;
+                if (transform ? access == 0 : access > 0)
+                    addHook(new InvokeHook(hook, cn.name, mn.name, mn.desc));
+            });
+        }
+    }
+
+    private void visitStaticFields() {
+        add("players", getCn().getField(null, "[" + desc("Player"), false));
+        add("npcs", getCn().getField(null, "[" + desc("Npc"), false));
+        String playerDesc = desc("Player");
+        String regionDesc = desc("Region");
+        String widgetDesc = desc("Widget");
+        String objectDesc = desc("InteractableObject");
+        String dequeDesc = desc("NodeDeque");
+        for (ClassNode node : getUpdater().getClassnodes().values()) {
+            for (FieldNode fn : node.fields) {
+                if ((fn.access & Opcodes.ACC_STATIC) == 0) continue;
+                if (fn.desc.equals("Ljava/awt/Canvas;")) {
+                    add("canvas", fn);
+                } else if (playerDesc != null && fn.desc.equals(playerDesc)) {
+                    add("player", fn);
+                } else if (regionDesc != null && fn.desc.equals(regionDesc)) {
+                    add("region", fn);
+                } else if (widgetDesc != null && fn.desc.equals("[[" + widgetDesc)) {
+                    add("widgets", fn);
+                } else if (objectDesc != null && fn.desc.equals("[" + objectDesc)) {
+                    add("objects", fn);
+                } else if (dequeDesc != null && fn.desc.equals("[[[" + dequeDesc)) {
+                    add("groundItems", fn);
+                }
+            }
+        }
     }
 
     private class ScreenVisitor extends BlockVisitor {
@@ -230,73 +295,6 @@ public class Client extends GraphVisitor {
                 addHook(new FieldHook("levels", levels.fin()));
                 addHook(new FieldHook("realLevels", realLevels.fin()));
                 lock.set(true);
-            }
-        }
-    }
-
-    private void visitMouseIdleTime() {
-        for (ClassNode cn : getUpdater().getClassnodes().values()) {
-            if (!cn.interfaces.contains("java/awt/event/MouseListener"))
-                continue;
-            for (MethodNode meth : cn.methods) {
-                if (!meth.name.equals("mouseExited"))
-                    continue;
-                getUpdater().graphs().get(cn).get(meth).forEach(b -> b.tree().accept(new NodeVisitor() {
-                    @Override
-                    public void visitField(FieldMemberNode fmn) {
-                        if (fmn.opcode() != PUTSTATIC || fmn.children() != 1)
-                            return;
-                        NumberNode iconst_0 = fmn.firstNumber();
-                        if (iconst_0 == null || iconst_0.number() != 0)
-                            return;
-                        addHook(new FieldHook("mouseIdleTime", fmn.fin()));
-                    }
-                }));
-            }
-        }
-    }
-
-    private void visitProcessAction() {
-        for (ClassNode cn : getUpdater().getClassnodes().values()) {
-            cn.methods.stream().filter(mn -> mn.desc.startsWith("(IIIILjava/lang/String;Ljava/lang/String;II") &&
-                    mn.desc.endsWith(")V")).forEach(mn -> addHook(new InvokeHook("processAction", mn)));
-        }
-    }
-
-    private void visitDefLoader(String hook, String visitor, boolean transform) {
-        for (ClassNode cn : getUpdater().getClassnodes().values()) {
-            cn.methods.stream().filter(mn -> mn.desc.endsWith(")" + desc(visitor))).forEach(mn -> {
-                int access = mn.access & ACC_STATIC;
-                if (transform ? access == 0 : access > 0)
-                    addHook(new InvokeHook(hook, cn.name, mn.name, mn.desc));
-            });
-        }
-    }
-
-    private void visitStaticFields() {
-        add("players", getCn().getField(null, "[" + desc("Player"), false));
-        add("npcs", getCn().getField(null, "[" + desc("Npc"), false));
-        String playerDesc = desc("Player");
-        String regionDesc = desc("Region");
-        String widgetDesc = desc("Widget");
-        String objectDesc = desc("InteractableObject");
-        String dequeDesc = desc("NodeDeque");
-        for (ClassNode node : getUpdater().getClassnodes().values()) {
-            for (FieldNode fn : node.fields) {
-                if ((fn.access & Opcodes.ACC_STATIC) == 0) continue;
-                if (fn.desc.equals("Ljava/awt/Canvas;")) {
-                    add("canvas", fn);
-                } else if (playerDesc != null && fn.desc.equals(playerDesc)) {
-                    add("player", fn);
-                } else if (regionDesc != null && fn.desc.equals(regionDesc)) {
-                    add("region", fn);
-                } else if (widgetDesc != null && fn.desc.equals("[[" + widgetDesc)) {
-                    add("widgets", fn);
-                } else if (objectDesc != null && fn.desc.equals("[" + objectDesc)) {
-                    add("objects", fn);
-                } else if (dequeDesc != null && fn.desc.equals("[[[" + dequeDesc)) {
-                    add("groundItems", fn);
-                }
             }
         }
     }
