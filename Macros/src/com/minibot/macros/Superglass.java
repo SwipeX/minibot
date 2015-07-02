@@ -2,11 +2,13 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.method.Bank;
+import com.minibot.api.method.ChatboxListener;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.GameTab;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Npcs;
 import com.minibot.api.method.Widgets;
+import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
@@ -24,10 +26,12 @@ import java.awt.Graphics2D;
  * @author Jacob Doiron
  * @since 6/24/2015
  */
-@Manifest(name = "Superglass", author = "Jacob", version = "1.1.0", description = "Makes molten glass")
-public class Superglass extends Macro implements Renderable {
+@Manifest(name = "Superglass", author = "Jacob", version = "1.1.1", description = "Makes molten glass")
+public class Superglass extends Macro implements Renderable, ChatboxListener {
 
     private static int casts;
+    private static int sandFails;
+    private static int seaweedFails;
     private static boolean cast;
     private static boolean staff;
 
@@ -43,27 +47,27 @@ public class Superglass extends Macro implements Renderable {
 
     private static final Filter<Item> SAND_FILTER = i -> {
         String name = i.name();
-        return name != null && name.contains("et of sand");
+        return name != null && name.equals("Bucket of sand");
     };
 
     private static final Filter<Item> SEAWEED_FILTER = i -> {
         String name = i.name();
-        return name != null && name.contains("aweed");
+        return name != null && name.equals("Seaweed");
     };
 
     private static final Filter<Item> MOLTEN_FILTER = i -> {
         String name = i.name();
-        return name != null && name.contains("ten gl");
+        return name != null && name.equals("Molten glass");
     };
 
     private static final Filter<Item> FIRE_FILTER = i -> {
         String name = i.name();
-        return name != null && name.contains("re run");
+        return name != null && name.equals("Fire rune");
     };
 
     private static final Filter<Item> ASTRAL_FILTER = i -> {
         String name = i.name();
-        return name != null && name.contains("ral run");
+        return name != null && name.equals("Astral rune");
     };
 
     private boolean openBank() {
@@ -79,33 +83,25 @@ public class Superglass extends Macro implements Renderable {
         Item molten = Inventory.first(MOLTEN_FILTER);
         if (molten != null) {
             molten.processAction("Deposit-All");
-            //Time.sleep(300, 500);
         }
         Item fires = Inventory.first(FIRE_FILTER);
         Item astrals = Inventory.first(ASTRAL_FILTER);
         if ((!staff && ((fires != null && fires.amount() < 6) || fires == null))
                 || ((astrals != null && astrals.amount() < 2) || astrals == null)) {
+            Game.logout();
             interrupt();
         }
         if (Inventory.first(SAND_FILTER) == null) {
             Item sand = Bank.first(SAND_FILTER);
             if (sand != null) {
                 sand.processAction("Withdraw-13");
-                //Time.sleep(300, 500);
-            }/* else {
-                System.out.println("No sand");
-                MacroSelector.halt();
-            }*/
+            }
         }
         if (Inventory.first(SEAWEED_FILTER) == null) {
             Item seaweed = Bank.first(SEAWEED_FILTER);
             if (seaweed != null) {
                 seaweed.processAction("Withdraw-13");
-                //Time.sleep(300, 500);
-            }/* else {
-                System.out.println("No seaweed");
-                MacroSelector.halt();
-            }*/
+            }
         }
         if (Bank.close()) {
             cast = false;
@@ -124,12 +120,24 @@ public class Superglass extends Macro implements Renderable {
     @Override
     public void run() {
         Minibot.instance().client().resetMouseIdleTime();
-        if (Bank.viewing())
+        if (sandFails >= Random.nextInt(3, 6) || seaweedFails >= Random.nextInt(3, 6)) {
+            Game.logout();
+            interrupt();
+        } else if (sandFails > 0 || seaweedFails > 0) {
+            Time.sleep(1000, 3000);
+        }
+        if (Bank.viewing()) {
             prepareInventory();
-        else {
-            if (cast)
+        } else {
+            if (cast) {
                 openBank();
-            else {
+            } else {
+                if (Inventory.first(SAND_FILTER) != null) {
+                    sandFails = 0;
+                }
+                if (Inventory.first(SEAWEED_FILTER) != null) {
+                    seaweedFails = 0;
+                }
                 if (GameTab.MAGIC.open()) {
                     WidgetComponent spell = Widgets.get(218, 110);
                     if (spell != null) {
@@ -146,9 +154,20 @@ public class Superglass extends Macro implements Renderable {
     @Override
     public void render(Graphics2D g) {
         g.setColor(Color.CYAN);
-        g.drawString("Runtime: " + Time.format(runtime()), 13, 15);
-        g.drawString("Casts: " + ValueFormat.format(casts, TEXT_FORMAT) + " (" + hourly(casts) + "/HR)", 13, 30);
-        g.drawString("Profit: " + ValueFormat.format(PROFIT * casts, TEXT_FORMAT) + " (" +
-                ValueFormat.format(hourly(PROFIT * casts), TEXT_FORMAT) + "/HR)", 13, 45);
+        g.drawString(String.format("Time: %s", Time.format(runtime())), 13, 10);
+        g.drawString(String.format("Casts: %s (%d/H)", ValueFormat.format(casts, TEXT_FORMAT), hourly(casts)), 13, 22);
+        g.drawString(String.format("Profit: %s (%s/H)", ValueFormat.format(PROFIT * casts, TEXT_FORMAT),
+                ValueFormat.format(hourly(PROFIT * casts), TEXT_FORMAT)), 13, 34);
+    }
+
+    @Override
+    public void messageReceived(int type, String sender, String message, String clan) {
+        if (message.contains("You don't have any") && type == 0) {
+            if (message.contains("sand")) {
+                sandFails++;
+            } else if (message.contains("seaweed")) {
+                seaweedFails++;
+            }
+        }
     }
 }

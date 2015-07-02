@@ -50,4 +50,10 @@ public class Area implements Locatable {
     public int distance() {
         return distance(center);
     }
+
+    @Override
+    public String toString() {
+        return String.format("new Area(new Tile(%d, %d, %d), new Tile(%d, %d, %d))", from.x(), from.y(), from.plane(),
+                to.x(), to.y(), to.plane());
+    }
 }

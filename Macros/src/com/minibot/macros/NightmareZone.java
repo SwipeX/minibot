@@ -75,7 +75,7 @@ public class NightmareZone extends Macro implements Renderable {
             }
             lastFlick = System.currentTimeMillis();
         }
-        if (Game.levels()[Skills.CONSTITUTION] == 51) {
+        if (Game.levels()[Skills.HITPOINTS] == 51) {
             Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("verload"));
             if (abs != null) {
                 abs.processAction("Drink");

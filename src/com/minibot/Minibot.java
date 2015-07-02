@@ -122,6 +122,7 @@ public class Minibot extends JFrame implements Runnable {
         injector.getTransforms().add(new HoveredRegionTileSetter());
         injector.getTransforms().add(new MiscSetters());
         injector.getTransforms().add(new WidgetHack());
+        injector.getTransforms().add(new ChatboxCallback());
         Map<String, byte[]> classes = injector.inject();
         RSClassLoader classloader;
         try {

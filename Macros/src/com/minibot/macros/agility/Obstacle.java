@@ -9,12 +9,14 @@ public class Obstacle {
 
     private final String action;
     private final Area area;
+    private final Area fail;
     private final Tile at;
 
-    public Obstacle(int id, String action, Area area, Tile at) {
+    public Obstacle(int id, String action, Area area, Area fail, Tile at) {
         this.id = id;
         this.action = action;
         this.area = area;
+        this.fail = fail;
         this.at = at;
     }
 
@@ -28,6 +30,10 @@ public class Obstacle {
 
     public Area area() {
         return area;
+    }
+
+    public Area fail() {
+        return fail;
     }
 
     public Tile at() {

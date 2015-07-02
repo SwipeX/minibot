@@ -52,7 +52,7 @@ public class RuneScape {
     }
 
     public static void processAction(Action action) {
-        processAction(action, null, null);
+        processAction(action, "", "");
     }
 
     public static void processAction(int arg0, int arg1, int arg2, int opcode, String actionText, String targetText,
