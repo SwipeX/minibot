@@ -67,7 +67,7 @@ public class Client extends GraphVisitor {
         visitAll(new Password());
         visitAll(new LoginState());
         visitAll(new ScreenVisitor());
-        visitAll(new ScreenState());
+        visitIfM(new ScreenState(), t -> t.desc.startsWith("([L") && t.desc.contains(";IIIIII"));
         visitAll(new HoveredRegionTiles());
     }
 
@@ -787,9 +787,8 @@ public class Client extends GraphVisitor {
 
         @Override
         public void visit(Block block) {
-            if (block.count(new InsnQuery(ILOAD)) >= 4 && block.count(new InsnQuery(ISTORE)) >= 4) {
+            if (block.count(new InsnQuery(ISTORE)) > 0) {
                 block.tree().accept(new NodeVisitor(this) {
-                    @Override
                     public void visitField(FieldMemberNode fmn) {
                         if (fmn.opcode() == GETSTATIC && fmn.desc().equals("I")) {
                             VariableNode vn = (VariableNode) fmn.preLayer(IMUL, ISTORE);
