@@ -1,6 +1,8 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
+import com.minibot.api.util.Random;
+import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.Character;
 import com.minibot.api.wrapper.locatable.Npc;
@@ -44,6 +46,15 @@ public class Game {
             if (runEnabled())
                 toggleRun();
         }
+    }
+
+    public static boolean logout() {
+        WidgetComponent c = Widgets.get(182, 6);
+        if (c != null) {
+            c.processAction("Logout");
+            Time.sleep(() -> !playing(), Random.nextInt(7500, 10000));
+        }
+        return false;
     }
 
     public static int state() {
@@ -91,12 +102,8 @@ public class Game {
         return settings.length == 0 || index >= settings.length ? -1 : settings[index];
     }
 
-    public static boolean isLoggedIn() {
-        return Minibot.instance().client().getGameState() == STATE_IN_GAME;
-    }
-
     public static boolean playing() {
-        return Minibot.instance().client().getGameState() >= STATE_PLAYING;
+        return state() >= STATE_PLAYING;
     }
 
     public static Character getHinted() {

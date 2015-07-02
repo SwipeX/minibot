@@ -25,7 +25,7 @@ import java.awt.Graphics2D;
  * @author Jacob Doiron
  * @since 6/25/2015
  */
-@Manifest(name = "Agility", author = "Jacob", version = "1.1.4", description = "Completes agility courses")
+@Manifest(name = "Agility", author = "Jacob", version = "1.1.5", description = "Completes agility courses")
 public class Agility extends Macro implements Renderable {
 
     private static final Course GNOME = new Course(false,
@@ -87,7 +87,9 @@ public class Agility extends Macro implements Renderable {
     private static final int TEXT_FORMAT = ValueFormat.THOUSANDS | ValueFormat.COMMAS | ValueFormat.PRECISION(1);
 
     private static String status = "Nothing";
+
     private static int startExp;
+    private static int obstacle;
     private static int marks;
     private static int percent;
 
@@ -126,6 +128,7 @@ public class Agility extends Macro implements Renderable {
                 for (int i = 0; i < course.obstacles().length; i++) {
                     Obstacle o = course.obstacles()[i];
                     if (o.area() != null && o.area().contains(local)) {
+                        obstacle = i + 1;
                         current = o;
                         next = course.obstacles()[(i + 1) % course.obstacles().length];
                         break;
@@ -164,13 +167,13 @@ public class Agility extends Macro implements Renderable {
     @Override
     public void render(Graphics2D g) {
         g.setColor(Color.CYAN);
-        g.drawString("Status: " + status, 10, 10);
-        g.drawString("Time " + Time.format(runtime()), 10, 22);
-        g.drawString("Exp: " + ValueFormat.format(Game.experiences()[Skills.AGILITY] - startExp, TEXT_FORMAT) + " (" +
-                ValueFormat.format(hourly(Game.experiences()[Skills.AGILITY] - startExp), TEXT_FORMAT) + "/H)", 10, 34);
-        g.drawString("Level: " + Game.levels()[Skills.AGILITY], 10, 46);
+        g.drawString(String.format("[%d/%d]: %s", obstacle, course.obstacles().length, status), 10, 10);
+        g.drawString(String.format("Time %s" ,Time.format(runtime())), 10, 22);
+        g.drawString(String.format("Exp: %s (%s/H)", ValueFormat.format(Game.experiences()[Skills.AGILITY] - startExp, TEXT_FORMAT),
+                ValueFormat.format(hourly(Game.experiences()[Skills.AGILITY] - startExp), TEXT_FORMAT)), 10, 34);
+        g.drawString(String.format("Level: %d", Game.levels()[Skills.AGILITY]), 10, 46);
         if (course.marks()) {
-            g.drawString("Marks: " + marks + " (" + hourly(marks) + "/H)", 10, 58);
+            g.drawString(String.format("Marks: %d (%d/H)", marks, hourly(marks)), 10, 58);
         }
     }
 }

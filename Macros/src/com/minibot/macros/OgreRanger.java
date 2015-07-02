@@ -91,10 +91,10 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
     @Override
     public void render(Graphics2D g) {
         g.setColor(Color.CYAN);
-        g.drawString("Time: " + Time.format(runtime()), 10, 10);
-        g.drawString("Ranged Exp: " + ValueFormat.format(Game.experiences()[Skills.RANGED] - startExp, TEXT_FORMAT) + " (" +
-                        ValueFormat.format(hourly(Game.experiences()[Skills.RANGED] - startExp), TEXT_FORMAT) + "/H)", 10, 22);
-        g.drawString("Level: " + Game.levels()[Skills.RANGED], 10, 34);
+        g.drawString(String.format("Time: %s", Time.format(runtime())), 10, 10);
+        g.drawString(String.format("Ranged Exp: %s (%s/H)", ValueFormat.format(Game.experiences()[Skills.RANGED] - startExp, TEXT_FORMAT),
+                ValueFormat.format(hourly(Game.experiences()[Skills.RANGED] - startExp), TEXT_FORMAT)), 10, 22);
+        g.drawString(String.format("Level: %d", Game.levels()[Skills.RANGED]), 10, 34);
     }
 
     @Override
