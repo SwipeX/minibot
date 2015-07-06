@@ -35,24 +35,21 @@ public class InverseVisitor extends MethodVisitor implements Opcodes {
     @Override
     public void visitFieldInsn(FieldInsnNode fin) {
         if (fin.desc.equals("I")) {
-            if (fin.next() == null || fin.next().next() == null || fin.next().next().next() == null ||
-                    fin.next().next().opcode() == PUTSTATIC || fin.next().next().opcode() == PUTFIELD ||
-                    fin.next().next().next().opcode() == PUTSTATIC || fin.next().next().next().opcode() == PUTFIELD)
+            AbstractInsnNode first = fin.next();
+            if (first == null || first.opcode() == PUTSTATIC || first.opcode() == PUTFIELD)
+                return;
+            AbstractInsnNode second = first.next();
+            if (second == null || second.opcode() == PUTSTATIC || second.opcode() == PUTFIELD)
+                return;
+            AbstractInsnNode third = second.next();
+            if (third == null || third.opcode() == PUTSTATIC || third.opcode() == PUTFIELD)
+                return;
+            if (second.opcode() == IMUL && third.opcode() == IMUL)
                 return;
             LdcInsnNode ldc = Assembly.previous(fin, LDC, 2);
-            if (ldc == null) {
+            if (ldc == null && fin.opcode() != PUTFIELD && fin.opcode() != PUTSTATIC)
                 ldc = Assembly.next(fin, LDC, 2);
-            }
             if (ldc == null || !(ldc.cst instanceof Integer))
-                return;
-            if (ldc.previous() == null || ldc.previous().previous() == null)
-                return;
-            AbstractInsnNode prev = ldc.previous().previous();
-            if (prev == null || prev.previous() == null || prev instanceof LabelNode)
-                return;
-            if (prev instanceof LdcInsnNode && prev.previous() instanceof FieldInsnNode)
-                return;
-            if (prev.opcode() == IMUL && prev.previous() instanceof LdcInsnNode)
                 return;
             int multiplier = (int) ldc.cst;
             if (multiplier % 2 == 0)

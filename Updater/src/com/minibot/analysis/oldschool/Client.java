@@ -12,7 +12,9 @@ import org.objectweb.asm.commons.cfg.query.InsnQuery;
 import org.objectweb.asm.commons.cfg.tree.NodeTree;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.*;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.util.List;
 
@@ -825,24 +827,29 @@ public class Client extends GraphVisitor {
         public void visit(Block block) {
             List<AbstractNode> layer = block.tree().layerAll(ISTORE, GETSTATIC);
             if (layer != null && layer.size() == 2) {
-                VariableNode yLoad = (VariableNode) block.tree().layer(INVOKEVIRTUAL, IADD, ILOAD);
-                if (yLoad != null) {
-                    block.tree().accept(new NodeVisitor(this) {
-                        @Override
-                        public void visitVariable(VariableNode vn) {
-                            if (vn.opcode() == ISTORE) {
-                                FieldMemberNode fmn = vn.firstField();
-                                if (fmn != null) {
-                                    String name;
-                                    name = vn.var() == yLoad.var() ? "hoveredRegionTileY" : "hoveredRegionTileX";
-                                    if (getHooks().containsKey(name))
-                                        return;
-                                    addHook(new FieldHook(name, fmn.fin()));
-                                    added++;
+                VariableNode load = (VariableNode) block.tree().layer(INVOKEVIRTUAL, IADD, ILOAD);
+                if (load != null) {
+                    FieldMemberNode base = (FieldMemberNode) load.parent().layer(IMUL, GETSTATIC);
+                    if (base != null) {
+                        String loadTypeA = base.key().equals(getHookKey("baseX")) ? "hoveredRegionTileX" : "hoveredRegionTileY";
+                        String loadTypeB = loadTypeA.equals("hoveredRegionTileX") ? "hoveredRegionTileY" : "hoveredRegionTileX";
+                        block.tree().accept(new NodeVisitor(this) {
+                            @Override
+                            public void visitVariable(VariableNode vn) {
+                                if (vn.opcode() == ISTORE) {
+                                    FieldMemberNode fmn = vn.firstField();
+                                    if (fmn != null) {
+                                        String name;
+                                        name = vn.var() == load.var() ? loadTypeA : loadTypeB;
+                                        if (getHooks().containsKey(name))
+                                            return;
+                                        addHook(new FieldHook(name, fmn.fin()));
+                                        added++;
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             }
         }
