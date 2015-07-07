@@ -80,7 +80,27 @@ public class Agility extends Macro implements Renderable {
             new Obstacle(11377, "Jump", new Area(new Tile(2698, 3460, 2), new Tile(2702, 3465, 2)), null, new Tile(2703, 3461, 2))
     );
 
-    private static final Course[] COURSES = {GNOME, DRAYNOR, VARROCK, CANIFIS, SEERS};
+    private static final Course RELLEKKA = new Course(true,
+            new Obstacle(11391, "Climb", new Area(new Tile(2622, 3671, 0), new Tile(2654, 3685, 0)), null, new Tile(2625, 3677, 0)),
+            new Obstacle(11392, "Leap", new Area(new Tile(2622, 3672, 3), new Tile(2626, 3676, 3)), null, new Tile(2621, 3669, 3)),
+            new Obstacle(11393, "Cross", new Area(new Tile(2615, 3658, 3), new Tile(2622, 3668, 3)), new Area(new Tile(2621, 3654, 0), new Tile(2625, 3658, 0)), new Tile(2623, 3658, 3)),
+            new Obstacle(11395, "Leap", new Area(new Tile(2626, 3651, 3), new Tile(2630, 3655, 3)), new Area(new Tile(2626, 3650, 0), new Tile(2638, 3658, 0)), new Tile(2629, 3656, 3)),
+            new Obstacle(11396, "Hurdle", new Area(new Tile(2639, 3649, 3), new Tile(2644, 3653, 3)), null, new Tile(2643 ,3654, 3)),
+            new Obstacle(11397, "Cross", new Area(new Tile(2643, 3657, 3), new Tile(2650, 3662, 3)), null, new Tile(2647, 3663, 3)),
+            new Obstacle(11404, "Jump-in", new Area(new Tile(2655, 3665, 3), new Tile(2666, 3685, 3)), null, new Tile(2654, 3676, 3))
+    );
+
+    private static final Course ARDOUGNE = new Course(true,
+            new Obstacle(11405, "Climb-up", new Area(new Tile(2666, 3294, 0), new Tile(2676, 3298, 0)), null, new Tile(2673 ,3298, 0)),
+            new Obstacle(11406, "Jump", new Area(new Tile(2671, 3299, 3), new Tile(2671, 3309, 3)), null, new Tile(2670, 3310, 3)),
+            new Obstacle(11631, "Walk-on", new Area(new Tile(2662, 3318, 3), new Tile(2666, 3318, 3)), null, new Tile(2661, 3318, 3)),
+            new Obstacle(11429, "Jump", new Area(new Tile(2654, 3318, 3), new Tile(2657, 3318, 3)), null, new Tile(2653, 3317, 3)),
+            new Obstacle(11430, "Jump", new Area(new Tile(2653, 3311, 3), new Tile(2653, 3314, 3)), null, new Tile(2653, 3308, 3)),
+            new Obstacle(11633, "Balance-across", new Area(new Tile(2651, 3301, 3), new Tile(2653, 3309, 3)), null, new Tile(2654, 3300, 3)),
+            new Obstacle(11630, "Jump", new Area(new Tile(2656, 3297, 3), new Tile(2657, 3299, 3)), null, new Tile(2656, 3296, 3))
+    );
+
+    private static final Course[] COURSES = {GNOME, DRAYNOR, VARROCK, CANIFIS, SEERS, RELLEKKA, ARDOUGNE};
 
     private static Course course;
 
@@ -155,7 +175,7 @@ public class Agility extends Macro implements Renderable {
                 Area finish = next.area();
                 for (int i = 0; i < Random.nextInt(2, 5); i++) {
                     nearest.processAction(current.action(), current.at().localX(), current.at().localY());
-                    Time.sleep(90, 160);
+                    Time.sleep(160, 260);
                 }
                 if (Time.sleep(() -> (finish.contains(local) || (fail != null && fail.contains(local))) && local.animation() == -1, Random.nextInt(20000, 25000))) {
                     Time.sleep(660, 900);

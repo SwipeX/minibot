@@ -27,7 +27,7 @@ import java.awt.Graphics2D;
 
 /**
  * @author Jacob Doiron
- * @since 6/24/2015
+ * @since 7/02/2015
  */
 @Manifest(name = "WineMaker", author = "Jacob", version = "1.0.0", description = "99 c00k in 26 hours, s0n")
 public class WineMaker extends Macro implements Renderable, ChatboxListener {
