@@ -13,6 +13,7 @@ import com.minibot.api.method.Skills;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
+import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
@@ -33,8 +34,8 @@ public class PowerMiner extends Macro implements Renderable, ChatboxListener {
     private static final int COMMA_FORMAT = ValueFormat.COMMAS;
     private static final int THOUSAND_FORMAT = ValueFormat.THOUSANDS | ValueFormat.PRECISION(2);
 
-    private final Set<Integer> identifiedRockIds = new HashSet<>();
-    private final Set<Integer> validRockIds = new HashSet<>();
+    private final Set<Integer> identifiedRockIds = new HashSet<>(5);
+    private final Set<Integer> validRockIds = new HashSet<>(5);
 
     private int messageCount;
     private boolean valid;
@@ -78,6 +79,15 @@ public class PowerMiner extends Macro implements Renderable, ChatboxListener {
                 String name = i.name();
                 return name != null && name.contains("ore");
             });
+            if (Inventory.full()) {
+                Item uncut = Inventory.first(i -> {
+                    String name = i.name();
+                    return name != null && name.contains("Uncut") && !name.contains("diamond");
+                });
+                if (uncut != null) {
+                    uncut.drop();
+                }
+            }
             rock.processAction("Mine");
             if (Time.sleep(() -> {
                 if (Players.local().animation() != -1)
@@ -115,7 +125,7 @@ public class PowerMiner extends Macro implements Renderable, ChatboxListener {
         g.drawString(String.format("Runtime: %s", Time.format(runtime())), 13, 10);
         g.drawString(String.format("Mined: %s (%s/H)", ValueFormat.format(mined, COMMA_FORMAT),
                 ValueFormat.format(hourly(mined), COMMA_FORMAT)), 13, 22);
-        g.drawString(String.format("Experience: %s (%s/H)", ValueFormat.format(Game.experiences()[Skills.MINING], COMMA_FORMAT),
+        g.drawString(String.format("Experience: %s (%s/H)", ValueFormat.format(Game.experiences()[Skills.MINING] - startExp, COMMA_FORMAT),
                 ValueFormat.format(hourly(Game.experiences()[Skills.MINING] - startExp), THOUSAND_FORMAT)), 13, 34);
     }
 }

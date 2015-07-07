@@ -150,7 +150,6 @@ public class WineMaker extends Macro implements Renderable, ChatboxListener {
         g.drawString(String.format("Level: %d", Game.levels()[Skills.COOKING]), 10, 34);
         g.drawString(String.format("Made: %s (%s/H)", ValueFormat.format(wines, TEXT_FORMAT),
                 ValueFormat.format(hourly(wines), TEXT_FORMAT)), 10, 46);
-
     }
 
     @Override

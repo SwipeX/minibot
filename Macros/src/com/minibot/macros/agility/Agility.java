@@ -92,7 +92,7 @@ public class Agility extends Macro implements Renderable {
 
     private static final Course ARDOUGNE = new Course(true,
             new Obstacle(11405, "Climb-up", new Area(new Tile(2666, 3294, 0), new Tile(2676, 3298, 0)), null, new Tile(2673 ,3298, 0)),
-            new Obstacle(11406, "Jump", new Area(new Tile(2671, 3299, 3), new Tile(2671, 3309, 3)), null, new Tile(2670, 3310, 3)),
+            new Obstacle(11406, "Jump", new Area(new Tile(2671, 3299, 3), new Tile(2671, 3309, 3)), new Area(new Tile(2661, 3308, 0), new Tile(2666, 3320, 0)), new Tile(2670, 3310, 3)),
             new Obstacle(11631, "Walk-on", new Area(new Tile(2662, 3318, 3), new Tile(2666, 3318, 3)), null, new Tile(2661, 3318, 3)),
             new Obstacle(11429, "Jump", new Area(new Tile(2654, 3318, 3), new Tile(2657, 3318, 3)), null, new Tile(2653, 3317, 3)),
             new Obstacle(11430, "Jump", new Area(new Tile(2653, 3311, 3), new Tile(2653, 3314, 3)), null, new Tile(2653, 3308, 3)),
