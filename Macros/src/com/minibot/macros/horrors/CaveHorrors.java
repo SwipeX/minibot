@@ -116,6 +116,8 @@ public class CaveHorrors extends Macro implements Renderable {
                 if (health != -1 && health < 35 && !Bank.viewing()) {
                     Item food = Inventory.firstFood();
                     if (food != null) {
+                        if (protect != null)
+                            protect.processAction("Deactivate");
                         status = "Eating";
                         foodId = food.id();
                         food.processAction("Eat");
@@ -131,27 +133,28 @@ public class CaveHorrors extends Macro implements Renderable {
                             status = "Attacking";
                             Npc bat = findBat();
                             if (bat != null) {
+                                if (protect != null)
+                                    protect.processAction("Deactivate");
                                 Walking.walkTo(UNDERGROUND_CAVE);
                                 Time.sleep(800, 1000);
                             } else {
                                 if (player.interacting()) {
                                     if (protect != null) {
                                         protect.processAction("Activate");
-                                        Time.sleep(570, 580);
+                                        Time.sleep(570, 620);
                                         if (!startedFlick) {
                                             Time.sleep(80, 120);
                                             startedFlick = true;
                                         }
                                         protect.processAction("Deactivate");
-                                        Time.sleep(30, 40);
+                                        Time.sleep(60, 80);
                                     }
                                 } else {
                                     startedFlick = false;
-                                    if (protect != null && Action.indexOf(protect.actions(), "Deactivate") >= 0) {
+                                    if (protect != null)
                                         protect.processAction("Deactivate");
-                                        Time.sleep(600, 800);
-                                    }
-                                    attack();
+                                    if (attack())
+                                        Time.sleep(1500, 2000);
                                 }
                             }
                         }

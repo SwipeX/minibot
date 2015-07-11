@@ -75,7 +75,7 @@ public class Npc extends Character<RSNpc> implements Identifiable {
         if (local != null) {
             boolean interacting = (local.targetIndex() == arrayIndex());
             if (interacting) {
-                return true;
+                return false;
             } else {
                 processAction("Attack");
                 return Time.sleep(() -> local.targetIndex() == arrayIndex(), 10000);
