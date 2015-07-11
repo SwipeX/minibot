@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  */
 public class Inventory {
 
-    public static Filter<Item> FOOD_FILTER = (i -> {
+    public static final Filter<Item> FOOD_FILTER = (i -> {
         RSItemDefinition def = i.definition();
         return def != null && Action.indexOf(def.getActions(), "Eat") >= 0;
     });
@@ -96,6 +96,14 @@ public class Inventory {
                 return item;
         }
         return null;
+    }
+
+    public static boolean containsAll(Filter<Item>... filters) {
+        for (Filter<Item> filter : filters) {
+            if (first(filter) == null)
+                return false;
+        }
+        return true;
     }
 
     public static void dropAll(Filter<Item> filter) {

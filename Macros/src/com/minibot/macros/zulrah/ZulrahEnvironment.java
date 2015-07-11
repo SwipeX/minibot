@@ -17,6 +17,34 @@ public class ZulrahEnvironment {
 
     public static final Tile CAMP = new Tile(2199, 3056, 0);
 
+    private static Tile source, left, right, bottom, topLeft, topRight, centralBottom;
+
+    public static Tile source() {
+        return source;
+    }
+
+    public static void setSource(Tile t) {
+        source = t;
+        left = t.derive(-10, 0);
+        right = t.derive(10, 0);
+        bottom = t.derive(0, -10);
+        topLeft = t.derive(-5, 2);
+        topRight = t.derive(6, 2);
+        centralBottom = t.derive(4, -3);
+    }
+
+    public static Tile topLeft() {
+        return topLeft;
+    }
+
+    public static Tile topRight() {
+        return topRight;
+    }
+
+    public static Tile bottom() {
+        return centralBottom;
+    }
+
     public static boolean atCamp() {
         return CAMP.distance() < 20;
     }
@@ -27,6 +55,28 @@ public class ZulrahEnvironment {
 
     public static Npc findZulrah() {
         return Npcs.nearestByName("Zulrah");
+    }
+
+    public static ZulrahDirection findZulrahDirection() {
+        Npc zulrah = findZulrah();
+        if (zulrah != null && source != null) {
+            Tile zulrahTile = zulrah.location();
+            Tile[] tiles = {left, right, bottom};
+            Tile nearest = null;
+            for (Tile t : tiles) {
+                if (nearest == null || t.distance(zulrahTile) < nearest.distance(zulrahTile))
+                    nearest = t;
+            }
+            assert nearest != null;
+            if (nearest.equals(left)) {
+                return ZulrahDirection.LEFT;
+            } else if (nearest.equals(right)) {
+                return ZulrahDirection.RIGHT;
+            } else if (nearest.equals(bottom)) {
+                return ZulrahDirection.BOTTOM;
+            }
+        }
+        return null;
     }
 
     public static boolean collect() {
@@ -45,7 +95,7 @@ public class ZulrahEnvironment {
             Tile tile = boat.location();
             tile = tile.derive(-1, -1);
             boat.processAction("Board", tile.localX(), tile.localY());
-            if (Time.sleep(Widgets::viewingDialog, 2000)) {
+            if (Time.sleep(Widgets::viewingDialog, 15000)) {
                 Widgets.processDialogOption(0);
                 if (Time.sleep(Widgets::viewingContinue, 5000)) {
                     Widgets.processContinue();

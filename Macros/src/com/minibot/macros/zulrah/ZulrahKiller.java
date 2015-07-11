@@ -1,16 +1,28 @@
 package com.minibot.macros.zulrah;
 
+import com.minibot.api.action.tree.Action;
+import com.minibot.api.method.Bank;
 import com.minibot.api.method.ChatboxListener;
+import com.minibot.api.method.Game;
+import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Players;
+import com.minibot.api.method.Skills;
+import com.minibot.api.method.Walking;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
+import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Player;
+import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
+import com.minibot.client.natives.RSItemDefinition;
+import com.minibot.macros.zulrah.util.MultiNameItemFilter;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Tyler Sedlar
@@ -19,11 +31,113 @@ import java.awt.*;
 @Manifest(name = "Zulrah Killer", author = "Tyler, Jacob", version = "1.0.0", description = "Kills Zulrah")
 public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
 
-    private String status = "N/A";
-    private ZulrahMode mode;
-    private boolean died = false;
-    private boolean collected = false;
-    private boolean reset = false;
+    private static final MultiNameItemFilter FOOD = new MultiNameItemFilter("Monkfish", "Shark", "Manta ray", "Sea turtle", "Tuna potato", "Dark crab");
+    private static final MultiNameItemFilter VENOM = new MultiNameItemFilter("Anti-venom+");
+    private static final MultiNameItemFilter PRAYER = new MultiNameItemFilter("Prayer potion", "Super restore");
+    private static final MultiNameItemFilter TELEPORT = new MultiNameItemFilter("Zul-andra teleport");
+    private static final MultiNameItemFilter CAMELOT = new MultiNameItemFilter("Camelot teleport");
+    private static final MultiNameItemFilter RECOIL = new MultiNameItemFilter("Ring of recoil");
+    private static final MultiNameItemFilter EQUIP = new MultiNameItemFilter("Ring of recoil", "Ava's accumulator");
+
+    private static final Tile BANK = new Tile(2726, 3491, 0);
+
+    private static String status = "N/A";
+    private static ZulrahMode mode;
+    private static ZulrahDirection direction;
+    private static boolean died = false;
+    private static boolean collected = false;
+    private static boolean reset = false;
+
+    private static long venomTimer = -1;
+
+    private static boolean setup() {
+        return Inventory.containsAll(FOOD, VENOM, PRAYER, TELEPORT, CAMELOT, RECOIL);
+    }
+
+    private static boolean prepareInventory() {
+        if (Inventory.full())
+            return true;
+        if (Inventory.first(VENOM) == null) {
+            Item venom = Bank.first(VENOM);
+            if (venom != null) {
+                venom.processAction("Withdraw-1");
+                Time.sleep(200, 300);
+            }
+        }
+        if (Inventory.first(PRAYER) == null) {
+            Item prayer = Bank.first(PRAYER);
+            if (prayer != null) {
+                prayer.processAction("Withdraw-1");
+                Time.sleep(200, 300);
+                prayer.processAction("Withdraw-1");
+                Time.sleep(200, 300);
+            }
+        }
+        if (Inventory.first(TELEPORT) == null) {
+            Item teleport = Bank.first(TELEPORT);
+            if (teleport != null) {
+                teleport.processAction("Withdraw-1");
+                Time.sleep(200, 300);
+                teleport.processAction("Withdraw-1");
+                Time.sleep(200, 300);
+            }
+        }
+        if (Inventory.first(CAMELOT) == null) {
+            Item camelot = Bank.first(CAMELOT);
+            if (camelot != null) {
+                camelot.processAction("Withdraw-1");
+                Time.sleep(200, 300);
+                camelot.processAction("Withdraw-1");
+                Time.sleep(200, 300);
+            }
+        }
+        if (Inventory.first(RECOIL) == null) {
+            Item recoil = Bank.first(RECOIL);
+            if (recoil != null) {
+                recoil.processAction("Withdraw-1");
+                Time.sleep(200, 300);
+                recoil.processAction("Withdraw-1");
+                Time.sleep(200, 300);
+            }
+        }
+        Item food = Bank.first(FOOD);
+        if (food != null) {
+            food.processAction("Withdraw-All");
+            Time.sleep(200, 300);
+        }
+        return true;
+    }
+
+    private static boolean equipAll() { // test for recoil case
+        AtomicReference<String> last = new AtomicReference<>("null");
+        Inventory.apply(i -> {
+            RSItemDefinition definition = i.definition();
+            return definition != null && Action.indexOf(definition.getActions(), "Equip") >= 0 && !last.get().equals("Ring of recoil");
+        }, i -> {
+            i.processAction("Equip");
+            last.set(i.name());
+            Time.sleep(400, 700);
+        });
+        return true;
+    }
+
+    private static boolean teleportCamelot() {
+        Item tab = Inventory.first(CAMELOT);
+        if (tab != null) {
+            tab.processAction("Break");
+            return Time.sleep(() -> ZulrahEnvironment.findZulrah() == null, 10000);
+        }
+        return false;
+    }
+
+    private static boolean teleportZulrah() {
+        Item scroll = Inventory.first(TELEPORT);
+        if (scroll != null) {
+            scroll.processAction("Teleport");
+            return Time.sleep(() -> ZulrahEnvironment.findCollector() != null, 10000);
+        }
+        return false;
+    }
 
     @Override
     public void run() {
@@ -34,6 +148,7 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
         }
         if (zulrah != null) {
             if (!reset) {
+                ZulrahEnvironment.setSource(zulrah.location());
                 died = false;
                 collected = false;
                 reset = true;
@@ -46,13 +161,48 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
                     mode.activate();
                 }
             }
-            // handle anti-venom here
-            // handle eating here
-            // handle running to different location based on 'mode' here
+            direction = ZulrahEnvironment.findZulrahDirection();
+            if (venomTimer == -1 || venomTimer - Time.millis() <= 20000) { // handle anti-venom
+                Item av = Inventory.first(VENOM);
+                if (av != null) {
+                    av.processAction("Drink");
+                    venomTimer = Time.millis() + 300000;
+                    Time.sleep(550, 750);
+                }
+            }
+            // TODO: handle running to different location based on 'mode' here
             Player local = Players.local();
             if (local != null) {
-                if (!local.interacting())
-                    zulrah.attack(); // could also handle switches prior based on 'mode'
+                if (Game.levels()[Skills.PRAYER] < 10) { // handles prayer
+                    Item pot = Inventory.first(PRAYER);
+                    if (pot != null) {
+                        pot.processAction("Drink");
+                        Time.sleep(550, 750);
+                    } else {
+                        if (teleportCamelot()){
+                            Time.sleep(() -> ZulrahEnvironment.findZulrah() == null, 10000);
+                        }
+                    }
+                }
+                if (local.health() <= 41) { // handle eating
+                    int eat = (local.maxHealth() - local.health()) / 20;
+                    for (int i = 0; i < eat; i++) {
+                        Item food = Inventory.firstFood();
+                        if (food != null) {
+                            food.processAction("Eat");
+                            Time.sleep(550, 750);
+                        } else {
+                            if (teleportCamelot()){
+                                Time.sleep(() -> ZulrahEnvironment.findZulrah() == null, 10000);
+                            }
+                            break; // you're screwed, get out
+                        }
+                    }
+                }
+                if (!local.interacting()) {
+                    zulrah.processAction("Attack");
+                    Time.sleep(300, 500);
+                }
             }
         } else {
             mode = null;
@@ -64,31 +214,39 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
                         status = "Collecting items";
                         collected = ZulrahEnvironment.collect();
                     } else {
-                        // teleport to bank
-                        // died = false;
+                        if (equipAll()) {
+                            teleportCamelot();
+                            died = false;
+                        }
                     }
                 } else {
                     status = "Boarding boat";
                     ZulrahEnvironment.boardBoat();
                 }
             } else {
-//                if (setup()) {
-//                    status = "Teleporting to Zulrah";
-//                    // teleport to zulrah
-//                } else {
-//                    if (BANK.distance() > 5) {
-//                        status = "Traveling to bank";
-//                        // travel to bank
-//                    } else {
-//                        if (Bank.viewing()) {
-//                            status = "Preparing inventory";
-//                            // prepareInventory
-//                        } else {
-//                            status = "Opening bank";
-//                            Bank.openBooth();
-//                        }
-//                    }
-//                }
+                if (/*setup()*/ true) {
+                    if (Bank.viewing()) {
+                        status = "Closing bank";
+                        Bank.close();
+                    } else {
+                        status = "Teleporting to Zulrah";
+                        teleportZulrah();
+                    }
+                } else {
+                    if (BANK.distance() > 5) {
+                        status = "Traveling to bank";
+                        Walking.walkTo(BANK);
+                        Time.sleep(600, 800);
+                    } else {
+                        if (Bank.viewing()) {
+                            status = "Preparing inventory";
+                            prepareInventory();
+                        } else {
+                            status = "Opening bank";
+                            Bank.openBooth();
+                        }
+                    }
+                }
             }
         }
     }
@@ -100,7 +258,8 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
         g.drawString("Runtime: " + Time.format(runtime()), 13, yOff += 15);
         g.drawString("Status: " + status, 13, yOff += 15);
         g.drawString("Mode: " + (mode != null ? mode : "N/A"), 13, yOff += 15);
-        g.drawString("Died: " + died, 13, yOff + 15);
+        g.drawString("Died: " + died, 13, yOff += 15);
+        g.drawString("Direction: " + (direction != null ? direction : "N/A"), 13, yOff + 15);
     }
 
     @Override
