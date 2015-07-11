@@ -152,4 +152,16 @@ public class GameObject extends Wrapper<ClientNative> implements Locatable {
     private Point screen() {
         return Projection.groundToViewport(fineX(), fineY());
     }
+
+    public boolean containsAction(String action) {
+        RSObjectDefinition def = definition();
+        if (def != null && def.getActions() != null) {
+            for (String action0 : def.getActions()) {
+                if (action0 != null && action0.equals(action)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

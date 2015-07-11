@@ -114,7 +114,7 @@ public class Game {
         return state() >= STATE_PLAYING;
     }
 
-    public static Character getHinted() {
+    public static Character hinted() {
         int npcIndex = Minibot.instance().client().getHintNpcIndex();
         Npc npc = Npcs.atIndex(npcIndex);
         int playerIndex = Minibot.instance().client().getHintPlayerIndex();
