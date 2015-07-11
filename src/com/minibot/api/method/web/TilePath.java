@@ -28,7 +28,8 @@ public class TilePath {
                 Player local = Players.local();
                 return local != null && (tile.distance() < 3 || Players.local().animation() == -1);
             }, 15000)) {
-                step++;
+                if (tile.distance() < 3)
+                    step++;
             }
         }
     }
