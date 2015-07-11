@@ -126,11 +126,11 @@ public class Inventory {
         a.use(b);
     }
 
-    public int foodCount() {
+    public static int foodCount() {
         return items(FOOD_FILTER).size();
     }
 
-    public Item firstFood() {
+    public static Item firstFood() {
         return first(FOOD_FILTER);
     }
 }

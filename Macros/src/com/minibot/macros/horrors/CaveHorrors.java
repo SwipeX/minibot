@@ -1,11 +1,13 @@
 package com.minibot.macros.horrors;
 
 import com.minibot.api.method.Game;
+import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Npcs;
 import com.minibot.api.method.Players;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
+import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.Character;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Player;
@@ -78,7 +80,11 @@ public class CaveHorrors extends Macro implements Renderable {
             if (player != null) {
                 int health = player.healthPercent();
                 if (health != -1 && health < 35) {
-                    // eat
+                    Item food = Inventory.firstFood();
+                    if (food != null) {
+                        food.processAction("Eat");
+                        Time.sleep(() -> player.healthPercent() != health, 2000);
+                    }
                 } else {
                     if (underground()) {
                         if (!player.interacting())
