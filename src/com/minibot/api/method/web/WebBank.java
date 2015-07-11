@@ -53,18 +53,18 @@ public enum WebBank {
     private final Tile tile;
     private final Type type;
 
-    private WebBank(String name, String action, Tile tile, Type type) {
+    WebBank(String name, String action, Tile tile, Type type) {
         this.name = name;
         this.action = action;
         this.tile = tile;
         this.type = type;
     }
 
-    private WebBank(String name, String action, Tile tile) {
+    WebBank(String name, String action, Tile tile) {
         this(name, action, tile, Type.BANK_BOOTH);
     }
 
-    private WebBank(Tile tile) {
+    WebBank(Tile tile) {
         this("Bank booth", "Bank", tile, Type.BANK_BOOTH);
     }
 
