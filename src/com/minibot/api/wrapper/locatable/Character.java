@@ -53,6 +53,12 @@ public abstract class Character<T extends RSCharacter> extends Wrapper<T> implem
         return raw.getMaxHealth();
     }
 
+    public int healthPercent() {
+        int health = health();
+        int maxHealth = maxHealth();
+        return maxHealth == 0 ? -1 : (int) (((double) health / (double) maxHealth) * 100D);
+    }
+
     public int targetIndex() {
         return raw.getInteractingIndex();
     }

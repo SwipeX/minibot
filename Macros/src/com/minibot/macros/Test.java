@@ -10,8 +10,7 @@ import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.Graphics2D;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
@@ -32,7 +31,7 @@ public class Test extends Macro implements Renderable {
     @Override
     public void atStart() {
         //if (!Game.playing()) {
-          //  interrupt();
+        //  interrupt();
         //}
     }
 
@@ -56,5 +55,8 @@ public class Test extends Macro implements Renderable {
     @Override
     public void render(Graphics2D g) {
         g.drawString("Test " + Game.plane(), 50, 50);
+        g.drawString(Players.local().location().toString(), 50, 75);
+        Player player = Players.local();
+        g.drawString(player.healthPercent() + "", 50, 90);
     }
 }
