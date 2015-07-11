@@ -142,15 +142,6 @@ public class Minibot extends JFrame implements Runnable {
         while (Game.state() < Game.STATE_CREDENTIALS)
             Time.sleep(100);
         DefinitionLoader.loadDefinitions(client);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (!Game.playing())
-                    return;
-                System.out.println(Players.local().location());
-                Time.sleep(2000);
-            }
-        }).start();
     }
 
 
