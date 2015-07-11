@@ -1,12 +1,11 @@
 package com.minibot.macros.horrors;
 
 import com.minibot.api.method.*;
-import com.minibot.api.method.web.WebPath;
+import com.minibot.api.method.web.TilePath;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
 import com.minibot.api.wrapper.Item;
-import com.minibot.api.wrapper.Path;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Player;
@@ -27,6 +26,26 @@ public class CaveHorrors extends Macro implements Renderable {
     private static final Tile BANK = new Tile(3680, 2982, 0);
     private static final Tile CAVE = new Tile(3760, 2973, 0);
     private static final Tile UNDERGROUND_CAVE = new Tile(3748, 9373, 0);
+
+    private static final TilePath BANK_TO_CAVE = new TilePath(
+            new Tile(3679, 3009, 0),
+            new Tile(3702, 3008, 0),
+            new Tile(3726, 3006, 0),
+            new Tile(3757, 3003, 0),
+            new Tile(3762, 2989, 0),
+            new Tile(3755, 2981, 0),
+            new Tile(3760, 2973, 0)
+    );
+
+    private static final TilePath CAVE_TO_BANK = new TilePath(
+            new Tile(3755, 2981, 0),
+            new Tile(3762, 2989, 0),
+            new Tile(3757, 3003, 0),
+            new Tile(3726, 3006, 0),
+            new Tile(3702, 3008, 0),
+            new Tile(3679, 3009, 0),
+            new Tile(3680, 2982, 0)
+    );
 
     private int profit = 0;
     private int foodId = -1;
@@ -88,8 +107,12 @@ public class CaveHorrors extends Macro implements Renderable {
                         attack();
                     } else {
                         if (CAVE.distance() > 5) {
-                            WebPath.build(CAVE).step(Path.Option.TOGGLE_RUN);
+                            if (Game.energy() >= 20)
+                                Game.setRun(true);
+                            BANK_TO_CAVE.step();
+//                            WebPath.build(CAVE).step(Path.Option.TOGGLE_RUN);
                         } else {
+                            BANK_TO_CAVE.reset();
                             GameObject cave = Objects.nearestByName("Cave entrance");
                             if (cave != null) {
                                 cave.processAction("Enter");
@@ -115,9 +138,12 @@ public class CaveHorrors extends Macro implements Renderable {
                             }
                         }
                     } else {
-                        if (BANK.distance() > 5) {
-                            WebPath.build(BANK).step(Path.Option.TOGGLE_RUN);
+                        if (BANK.distance() > 5) {if (Game.energy() >= 20)
+                            Game.setRun(true);
+                            CAVE_TO_BANK.step();
+//                            WebPath.build(BANK).step(Path.Option.TOGGLE_RUN);
                         } else {
+                            CAVE_TO_BANK.reset();
                             if (Bank.viewing()) {
                                 if (Inventory.count() == 1) {
                                     Item food = Bank.first(i -> i.id() == foodId);
