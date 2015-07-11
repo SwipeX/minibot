@@ -34,8 +34,11 @@ public class Game {
 
     private static void toggleRun() {
         WidgetComponent comp = Widgets.get(160, 21);
-        if (comp != null)
+        if (comp != null) {
+            boolean enabled = runEnabled();
             comp.processAction("Toggle Run");
+            Time.sleep(() -> runEnabled() != enabled, 2000);
+        }
     }
 
     public static void setRun(boolean enabled) {
