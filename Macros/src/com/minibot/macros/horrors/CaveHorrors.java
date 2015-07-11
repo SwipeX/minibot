@@ -4,12 +4,15 @@ import com.minibot.api.method.Game;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Npcs;
 import com.minibot.api.method.Players;
+import com.minibot.api.method.web.WebPath;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
 import com.minibot.api.wrapper.Item;
+import com.minibot.api.wrapper.Path;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Player;
+import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.macros.horrors.util.Lootables;
 
@@ -20,6 +23,10 @@ import java.awt.*;
  * @since 7/10/2015
  */
 public class CaveHorrors extends Macro implements Renderable {
+
+    private static final Tile BANK = new Tile(-1, -1, 0);
+    private static final Tile CAVE = new Tile(-1, -1, 0);
+    private static final Tile UNDERGROUND_CAVE = new Tile(-1, -1, 0);
 
     private int profit = 0;
     private int foodId = -1;
@@ -79,6 +86,9 @@ public class CaveHorrors extends Macro implements Renderable {
                         if (underground()) {
                             attack();
                         } else {
+                            if (CAVE.distance() > 5) {
+                                WebPath.build(CAVE).step(Path.Option.TOGGLE_RUN);
+                            }
                             // run yo ass to cave
                         }
                     } else {

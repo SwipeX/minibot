@@ -74,9 +74,11 @@ public class WebPath implements Path {
                 GameObject object;
                 if (vertex.name() != null) {
                     if (vertex.action() != null) {
-                        object = Objects.nearestByFilter(t -> t.location().distance(vertex.getTile()) <= 2 && vertex.name().equals(t.name()) && t.containsAction(vertex.action()));
+                        object = Objects.nearestByFilter(t -> t.location().distance(vertex.getTile()) <= 2 &&
+                                vertex.name().equals(t.name()) && t.containsAction(vertex.action()));
                     } else {
-                        object = Objects.nearestByFilter(t -> t.location().distance(vertex.getTile()) <= 2 && vertex.name().equals(t.name()));
+                        object = Objects.nearestByFilter(t -> t.location().distance(vertex.getTile()) <= 2 &&
+                                vertex.name().equals(t.name()));
                     }
                 } else {
                     object = Objects.nearestByFilter(t -> t.location().distance(vertex.getTile()) <= 2 && t.name() != null);
@@ -98,8 +100,7 @@ public class WebPath implements Path {
             } else {
                 Walking.walkTo(next.getTile());
             }
-            //TODO hook queueSize and add a moving check
-            return Time.sleep(() -> Players.local().animation() == -1, 5000);
+            return Time.sleep(() -> next.getTile().distance() < 3, 5000);
         }
         return false;
     }
