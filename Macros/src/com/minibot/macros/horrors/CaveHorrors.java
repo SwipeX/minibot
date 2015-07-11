@@ -7,6 +7,7 @@ import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.Path;
+import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.api.wrapper.locatable.Tile;
@@ -87,7 +88,17 @@ public class CaveHorrors extends Macro implements Renderable {
                         if (CAVE.distance() > 5) {
                             WebPath.build(CAVE).step(Path.Option.TOGGLE_RUN);
                         } else {
-                            // enter cave
+                            GameObject cave = Objects.nearestByName("Cave entrance");
+                            if (cave != null) {
+                                cave.processAction("Enter");
+                                if (Time.sleep(Widgets::viewingContinue, 2500)) {
+                                    Widgets.processContinue();
+                                    if (Time.sleep(Widgets::viewingDialog, 2500)) {
+                                        Widgets.processDialogOption(0);
+                                        Time.sleep(this::underground, 5000);
+                                    }
+                                }
+                            }
                         }
                     }
                 } else {
@@ -95,7 +106,11 @@ public class CaveHorrors extends Macro implements Renderable {
                         if (UNDERGROUND_CAVE.distance() > 5) {
                             Walking.walkTo(UNDERGROUND_CAVE);
                         } else {
-                            // exit cave
+                            GameObject cave = Objects.nearestByName("Cave");
+                            if (cave != null) {
+                                cave.processAction("Exit");
+                                Time.sleep(() -> !underground(), 5000);
+                            }
                         }
                     } else {
                         if (BANK.distance() > 5) {

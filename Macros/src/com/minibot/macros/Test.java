@@ -1,23 +1,18 @@
 package com.minibot.macros;
 
 import com.minibot.api.method.Game;
-import com.minibot.api.method.Npcs;
+import com.minibot.api.method.Objects;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.Widgets;
-import com.minibot.api.method.projection.Projection;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
-import com.minibot.api.wrapper.locatable.Character;
-import com.minibot.api.wrapper.locatable.Npc;
-import com.minibot.api.wrapper.locatable.Player;
+import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 
 /**
  * @author Tyler Sedlar
@@ -55,6 +50,17 @@ public class Test extends Macro implements Renderable {
 //        if (c != null) {
 //            System.out.println(c.owner().index() + "," + c.index() + "," + c.text() + "," + c.visible());
 //        }
+        GameObject cave = Objects.nearestByName("Cave entrance");
+        if (cave != null) {
+            cave.processAction("Enter");
+            if (Time.sleep(Widgets::viewingContinue, 2500)) {
+                Widgets.processContinue();
+                if (Time.sleep(Widgets::viewingDialog, 2500)) {
+                    Widgets.processDialogOption(0);
+                }
+            }
+        }
+        Time.sleep(5000);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
+import com.minibot.api.action.tree.DialogButtonAction;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.client.natives.RSWidget;
@@ -156,5 +157,25 @@ public class Widgets {
     public static boolean validate(int parent) {
         RSWidget[][] widgets = raw();
         return widgets != null && widgets.length >= parent && widgets[parent] != null;
+    }
+
+    public static boolean viewingContinue() {
+        int uid = 15007745;
+        return Widgets.childrenFor(uid >> 16).length > 0;
+    }
+
+    public static void processContinue() {
+        if (viewingContinue())
+            RuneScape.processAction(new DialogButtonAction(15007745, -1));
+    }
+
+    public static boolean viewingDialog() {
+        int uid = 14352384;
+        return Widgets.childrenFor(uid >> 16).length > 0;
+    }
+
+    public static void processDialogOption(int optionIndex) {
+        if (viewingDialog())
+            RuneScape.processAction(new DialogButtonAction(14352384, optionIndex + 1));
     }
 }
