@@ -84,7 +84,7 @@ public class Tile implements Locatable {
 
     @Override
     public int distance(Locatable locatable) {
-        return locatable.distance(this);
+        return (int) Projection.distance(this, locatable);
     }
 
     @Override

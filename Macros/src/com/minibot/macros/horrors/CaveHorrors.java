@@ -12,6 +12,7 @@ import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
+import com.minibot.bot.macro.Manifest;
 import com.minibot.macros.horrors.util.Lootables;
 
 import java.awt.*;
@@ -20,6 +21,7 @@ import java.awt.*;
  * @author Tyler Sedlar
  * @since 7/10/2015
  */
+@Manifest(name = "Cave Horrors", author = "Tyler", version = "1.0.0", description = "Kills cave horrors")
 public class CaveHorrors extends Macro implements Renderable {
 
     private static final Tile BANK = new Tile(3680, 2982, 0);
@@ -119,7 +121,7 @@ public class CaveHorrors extends Macro implements Renderable {
                             if (Bank.viewing()) {
                                 if (Inventory.count() == 1) {
                                     Item food = Bank.first(i -> i.id() == foodId);
-                                    if (food != null) {
+                                    if (foodId != -1 && food != null) {
                                         food.processAction("Withdraw-10");
                                         Time.sleep(300, 500);
                                         food.processAction("Withdraw-5");
@@ -151,6 +153,6 @@ public class CaveHorrors extends Macro implements Renderable {
         g.drawString("Runtime: " + Time.format(runtime()), 13, yOff += 15);
         String fProfit = ValueFormat.format(profit, ValueFormat.COMMAS);
         String fProfitHr = ValueFormat.format(hourly(profit), ValueFormat.COMMAS);
-        g.drawString("Profit: " + fProfit + " (" + fProfitHr + "/HR)", 13, yOff);
+        g.drawString("Profit: " + fProfit + " (" + fProfitHr + "/HR)", 13, yOff + 15);
     }
 }
