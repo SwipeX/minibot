@@ -3,11 +3,9 @@ package com.minibot.ui;
 import com.minibot.Minibot;
 import com.minibot.api.method.RuneScape;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import java.awt.Component;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  * @author root
@@ -24,23 +22,24 @@ public class GameMenu {
         JMenu file = new JMenu("File");
         menuBar.add(file);
         start = new JMenuItem("Start");
-        file.add(combine(start, e -> {
+        file.add(combine(start, KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK), e -> {
             MacroSelector macroSelector = new MacroSelector();
             macroSelector.loadMacros();
             macroSelector.setVisible(true);
         }));
         stop = new JMenuItem("Stop");
         stop.setEnabled(false);
-        file.add(combine(stop, e -> MacroSelector.halt()));
+        file.add(combine(stop, KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK), e -> MacroSelector.halt()));
         JMenu options = new JMenu("Options");
         menuBar.add(options);
-        options.add(combine(new JMenuItem("Rendering"), e -> {
+        options.add(combine(new JMenuItem("Rendering"), KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK), e -> {
                     RuneScape.LANDSCAPE_RENDERING_ENABLED = !RuneScape.LANDSCAPE_RENDERING_ENABLED;
                     RuneScape.MODEL_RENDERING_ENABLED = !RuneScape.MODEL_RENDERING_ENABLED;
                     RuneScape.WIDGET_RENDERING_ENABLED = !RuneScape.WIDGET_RENDERING_ENABLED;
                 }
         ));
-        options.add(combine(new JMenuItem("Farming"), e -> Minibot.instance().setFarming(!Minibot.instance().isFarming())));
+        options.add(combine(new JMenuItem("Farming"), KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK),
+                e -> Minibot.instance().setFarming(!Minibot.instance().isFarming())));
     }
 
     public static JMenuItem start() {
@@ -52,8 +51,10 @@ public class GameMenu {
         stop.setEnabled(!enabled);
     }
 
-    public static JMenuItem combine(JMenuItem button, ActionListener listener) {
+    public static JMenuItem combine(JMenuItem button, KeyStroke accelerator, ActionListener listener) {
         button.addActionListener(listener);
+        if (accelerator != null)
+            button.setAccelerator(accelerator);
         return button;
     }
 

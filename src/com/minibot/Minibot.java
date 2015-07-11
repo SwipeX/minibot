@@ -22,12 +22,12 @@ import com.minibot.util.io.Crawler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 public class Minibot extends JFrame implements Runnable {
 
@@ -142,8 +142,21 @@ public class Minibot extends JFrame implements Runnable {
         while (Game.state() < Game.STATE_CREDENTIALS)
             Time.sleep(100);
         DefinitionLoader.loadDefinitions(client);
+        canvas().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.isControlDown()) {
+                    if (e.getKeyCode() == KeyEvent.VK_S && MacroSelector.current() == null) {
+                        MacroSelector macroSelector = new MacroSelector();
+                        macroSelector.loadMacros();
+                        macroSelector.setVisible(true);
+                    } else if (e.getKeyCode() == KeyEvent.VK_T && MacroSelector.current() != null) {
+                        MacroSelector.halt();
+                    }
+                }
+            }
+        });
     }
-
 
     public void setFarming(boolean farming) {
         this.farming = farming;
