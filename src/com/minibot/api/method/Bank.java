@@ -36,10 +36,11 @@ public class Bank {
     }
 
     public static void depositAllExcept(Filter<Item> filter) {
-        Inventory.items().stream().filter(item -> !filter.accept(item)).forEach(item -> {
+        Item item;
+        while ((item = Inventory.first(i -> i.id() != -1 && i.amount() > 0 && !filter.accept(i))) != null) {
             item.processAction("Deposit-All");
             Time.sleep(1000, 1200);
-        });
+        }
     }
 
     public static void depositEquipment() {

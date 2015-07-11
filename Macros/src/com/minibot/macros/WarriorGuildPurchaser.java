@@ -8,6 +8,7 @@ import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
+import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.bot.macro.Macro;
@@ -73,10 +74,13 @@ public class WarriorGuildPurchaser extends Macro implements Renderable {
             if (!Bank.viewing()) {
                 Bank.openBooth();
             } else {
-                Bank.depositAllExcept(i -> {
-                    String name = i.name();
-                    return name != null && name.equals("Coins");
-                });
+                Item item = Inventory.first(i -> i.id() == ITEM_ID);
+                if (item != null) {
+                    item.processAction("Deposit-All");
+                    Time.sleep(800, 1200);
+                } else {
+                    Bank.close();
+                }
             }
         } else {
             if (!viewingStore()) {
@@ -89,16 +93,18 @@ public class WarriorGuildPurchaser extends Macro implements Renderable {
             } else {
                 if (buyable())
                     bought += buy();
-                if (lastHop != -1) {
-                    while (Time.millis() - lastHop < 8500)
-                        Time.sleep(50, 100);
+                if (!Inventory.full()) {
+                    if (lastHop != -1) {
+                        while (Time.millis() - lastHop < 8500)
+                            Time.sleep(50, 100);
+                    }
+                    int randIdx;
+                    do {
+                        randIdx = Random.nextInt(MEMBERS_WORLDS.length - 1);
+                    } while (randIdx == worldIndex);
+                    Game.hopWorld(MEMBERS_WORLDS[(worldIndex = randIdx)]);
+                    lastHop = Time.millis();
                 }
-                int randIdx;
-                do {
-                    randIdx = Random.nextInt(MEMBERS_WORLDS.length - 1);
-                } while (randIdx == worldIndex);
-                Game.hopWorld(MEMBERS_WORLDS[(worldIndex = randIdx)]);
-                lastHop = Time.millis();
             }
         }
     }
