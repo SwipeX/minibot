@@ -1,8 +1,14 @@
 package com.minibot.macros.horrors;
 
+import com.minibot.api.method.Game;
+import com.minibot.api.method.Npcs;
+import com.minibot.api.method.Players;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
+import com.minibot.api.wrapper.locatable.Character;
+import com.minibot.api.wrapper.locatable.Npc;
+import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.bot.macro.Macro;
 import com.minibot.macros.horrors.util.Lootables;
 
@@ -22,13 +28,64 @@ public class CaveHorrors extends Macro implements Renderable {
         Lootables.initCaveHorrors();
     }
 
+    private boolean underground() {
+        return Game.plane() == 1;
+    }
+
+    private boolean interacting() {
+        Player player = Players.local();
+        if (player != null) {
+            Character target = player.target();
+            if (target != null) {
+                Character tTarget = target.target();
+                return tTarget != null && tTarget == target;
+            }
+        }
+        return false;
+    }
+
+    private Npc find() {
+        Npc current = Npcs.nearestByFilter(n -> {
+            if (n.dead())
+                return false;
+            String name = n.name();
+            if (name != null && name.equals("Cave horror")) {
+                if (n.targetIsLocalPlayer())
+                    return true;
+            }
+            return false;
+        });
+        return current != null ? current : Npcs.nearestByFilter(n -> {
+            if (n.dead())
+                return false;
+            String name = n.name();
+            return name != null && name.equals("Cave horror") && n.targetIndex() == -1;
+        });
+    }
+
+    private boolean attack() {
+        Npc npc = find();
+        return npc != null && npc.attack();
+    }
+
     @Override
     public void run() {
         int loot = Lootables.loot();
         if (loot != -1) {
             profit += loot;
         } else {
-
+            Player player = Players.local();
+            if (player != null) {
+                int health = player.healthPercent();
+                if (health != -1 && health < 35) {
+                    // eat
+                } else {
+                    if (underground()) {
+                        if (!player.interacting())
+                            attack();
+                    }
+                }
+            }
         }
     }
 

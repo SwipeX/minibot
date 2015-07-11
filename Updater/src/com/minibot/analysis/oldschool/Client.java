@@ -23,8 +23,9 @@ import java.util.List;
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices", "playerIndices",
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
-        "hoveredRegionTileX", "hoveredRegionTileY", "experiences", "levels", "realLevels", "username", "password", "loginState",
-        "hintX", "hintY", "hintPlayerIndex", "hintNpcIndex", "screenWidth", "screenHeight", "screenZoom", "screenState"})
+        "hoveredRegionTileX", "hoveredRegionTileY", "experiences", "levels", "realLevels", "username", "password",
+        "loginState", "hintX", "hintY", "hintPlayerIndex", "hintNpcIndex", "screenWidth", "screenHeight", "screenZoom",
+        "screenState", "localPlayerIndex"})
 public class Client extends GraphVisitor {
 
     @Override
@@ -69,6 +70,7 @@ public class Client extends GraphVisitor {
         visitAll(new ScreenVisitor());
         visitIfM(new ScreenState(), t -> t.desc.startsWith("([L") && t.desc.contains(";IIIIII"));
         visitAll(new HoveredRegionTiles());
+        visitAll(new LocalPlayerIndex());
     }
 
     private void visitMouseIdleTime() {
@@ -853,6 +855,29 @@ public class Client extends GraphVisitor {
                     }
                 }
             }
+        }
+    }
+
+    private class LocalPlayerIndex extends BlockVisitor {
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor() {
+                public void visitField(FieldMemberNode fmn) {
+                    if (fmn.opcode() == PUTSTATIC && fmn.desc().equals("I")) {
+                        FieldMemberNode fmn2 = (FieldMemberNode) fmn.layer(IMUL, ISHL, IMUL, GETSTATIC);
+                        if (fmn2 != null && fmn2.key().equals(fmn.key())) {
+                            addHook(new FieldHook("localPlayerIndex", fmn.fin()));
+                            lock.set(true);
+                        }
+                    }
+                }
+            });
         }
     }
 }

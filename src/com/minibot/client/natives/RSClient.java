@@ -77,4 +77,6 @@ public interface RSClient extends ClientNative {
 
     int getHintNpcIndex();
     int getHintPlayerIndex();
+
+    int getLocalPlayerIndex();
 }

@@ -86,6 +86,19 @@ public abstract class Character<T extends RSCharacter> extends Wrapper<T> implem
         return Projection.groundToViewport(fineX(), fineY());
     }
 
+    public  boolean interacting() {
+        Player player = Players.local();
+        if (player != null) {
+            Character target = player.target();
+            return target != null && target.targetIsLocalPlayer();
+        }
+        return false;
+    }
+
+    public boolean dead() {
+        return maxHealth() > 0 && health() == 0;
+    }
+
     public final Character target() {
         int index = targetIndex();
         if (index == -1 || index == 65535)
@@ -96,7 +109,7 @@ public abstract class Character<T extends RSCharacter> extends Wrapper<T> implem
                 return null;
             if (npcs[index] != null)
                 return new Npc(npcs[index], index);
-        } else if (index - 0x8000 == Players.local().index()) {
+        } else if (index - 0x8000 == Game.localPlayerIndex()) {
             return Players.local();
         } else {
             RSPlayer[] players = Players.raw();
@@ -106,5 +119,10 @@ public abstract class Character<T extends RSCharacter> extends Wrapper<T> implem
                 return new Player(players[index - 0x8000], index - 0x8000);
         }
         return null;
+    }
+
+    public boolean targetIsLocalPlayer() {
+        int targetIndex = targetIndex();
+        return targetIndex != -1 && (targetIndex - 0x8000) == Game.localPlayerIndex();
     }
 }

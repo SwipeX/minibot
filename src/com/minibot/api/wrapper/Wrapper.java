@@ -21,12 +21,12 @@ public abstract class Wrapper<T extends ClientNative> {
     }
 
     public boolean validate() {
-        return raw != null;
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return validate() ? raw.hashCode() : super.hashCode();
+        return super.hashCode();
     }
 
     public abstract void processAction(String action);

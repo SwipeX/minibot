@@ -85,6 +85,14 @@ public class Game {
         return Minibot.instance().client().getExperiences();
     }
 
+    public static int[] playerIndices() {
+        return Minibot.instance().client().getPlayerIndices();
+    }
+
+    public static int localPlayerIndex() {
+        return Minibot.instance().client().getLocalPlayerIndex();
+    }
+
     public static int totalExperience() {
         int i = 0;
         for (int exp : experiences())

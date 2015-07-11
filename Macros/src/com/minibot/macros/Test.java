@@ -1,10 +1,15 @@
 package com.minibot.macros;
 
 import com.minibot.api.method.Game;
+import com.minibot.api.method.Npcs;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.Widgets;
+import com.minibot.api.method.projection.Projection;
 import com.minibot.api.util.Renderable;
+import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
+import com.minibot.api.wrapper.locatable.Character;
+import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
@@ -37,26 +42,24 @@ public class Test extends Macro implements Renderable {
 
     @Override
     public void run() {
-        Player local = Players.local();
-        if (local != null) {
-            if (tile == null || !local.location().equals(tile)) {
-                tile = local.location();
-                StringSelection stringSelection = new StringSelection("new Tile(" + tile.x() + ", " + tile.y() + ", " + tile.plane() + ")");
-                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                clipboard.setContents(stringSelection, null);
-            }
-        }
-        WidgetComponent c = Widgets.byText(s -> s != null && s.contains("RuneScape has been updated!"));
-        if (c != null) {
-            System.out.println(c.owner().index() + "," + c.index() + "," + c.text() + "," + c.visible());
-        }
+//        Player local = Players.local();
+//        if (local != null) {
+//            if (tile == null || !local.location().equals(tile)) {
+//                tile = local.location();
+//                StringSelection stringSelection = new StringSelection("new Tile(" + tile.x() + ", " + tile.y() + ", " + tile.plane() + ")");
+//                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+//                clipboard.setContents(stringSelection, null);
+//            }
+//        }
+//        WidgetComponent c = Widgets.byText(s -> s != null && s.contains("RuneScape has been updated!"));
+//        if (c != null) {
+//            System.out.println(c.owner().index() + "," + c.index() + "," + c.text() + "," + c.visible());
+//        }
     }
 
     @Override
     public void render(Graphics2D g) {
         g.drawString("Test " + Game.plane(), 50, 50);
         g.drawString(Players.local().location().toString(), 50, 75);
-        Player player = Players.local();
-        g.drawString(player.healthPercent() + "", 50, 90);
     }
 }

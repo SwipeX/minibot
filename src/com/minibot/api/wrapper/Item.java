@@ -164,7 +164,7 @@ public class Item implements Identifiable {
         return definition == null ? null : definition.getName();
     }
 
-    private RSItemDefinition definition() {
+    public RSItemDefinition definition() {
         return DefinitionLoader.findItemDefinition(id());
     }
 

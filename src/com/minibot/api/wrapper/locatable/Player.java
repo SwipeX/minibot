@@ -42,7 +42,6 @@ public class Player extends Character<RSPlayer> {
         return index;
     }
 
-
     public String name() {
         return raw.getName();
     }

@@ -3,8 +3,11 @@ package com.minibot.api.wrapper.locatable;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.action.tree.Action;
 import com.minibot.api.action.tree.NpcAction;
+import com.minibot.api.method.Npcs;
+import com.minibot.api.method.Players;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Identifiable;
+import com.minibot.api.util.Time;
 import com.minibot.client.natives.RSNpc;
 import com.minibot.client.natives.RSNpcDefinition;
 import com.minibot.util.DefinitionLoader;
@@ -65,5 +68,19 @@ public class Npc extends Character<RSNpc> implements Identifiable {
     public String name() {
         RSNpcDefinition def = definition();
         return def == null ? null : def.getName();
+    }
+
+    public boolean attack() {
+        Player local = Players.local();
+        if (local != null) {
+            boolean interacting = (local.targetIndex() == arrayIndex());
+            if (interacting) {
+                return true;
+            } else {
+                processAction("Attack");
+                return Time.sleep(() -> local.targetIndex() == arrayIndex(), 10000);
+            }
+        }
+        return false;
     }
 }

@@ -1,11 +1,13 @@
 package com.minibot.api.method;
 
+import com.minibot.api.action.tree.Action;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.Item.Source;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.GroundItem;
+import com.minibot.client.natives.RSItemDefinition;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +18,11 @@ import java.util.function.Consumer;
  * @since 4/4/15.
  */
 public class Inventory {
+
+    public static Filter<Item> FOOD_FILTER = (i -> {
+        RSItemDefinition def = i.definition();
+        return def != null && Action.indexOf(def.getActions(), "Eat") >= 0;
+    });
 
     public static final int INVENTORY_PARENT = 149, BANK_PARENT = 15;
     public static final int INVENTORY_CONTAINER = 0, BANK_CONTAINER = 3;
@@ -117,5 +124,13 @@ public class Inventory {
 
     public static void use(Item a, GameObject b) {
         a.use(b);
+    }
+
+    public int foodCount() {
+        return items(FOOD_FILTER).size();
+    }
+
+    public Item firstFood() {
+        return first(FOOD_FILTER);
     }
 }
