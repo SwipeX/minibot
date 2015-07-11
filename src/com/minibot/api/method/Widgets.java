@@ -159,14 +159,22 @@ public class Widgets {
         return widgets != null && widgets.length >= parent && widgets[parent] != null;
     }
 
+    private static int continueDialogIndex = -1;
+
     public static boolean viewingContinue() {
-        int uid = 15007745;
-        return Widgets.childrenFor(uid >> 16).length > 0;
+        int[] uids = {15007745, 15138818, 14221314};
+        for (int uid : uids) {
+            if (Widgets.childrenFor(uid >> 16).length > 0) {
+                continueDialogIndex = uid;
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void processContinue() {
         if (viewingContinue())
-            RuneScape.processAction(new DialogButtonAction(15007745, -1));
+            RuneScape.processAction(new DialogButtonAction(continueDialogIndex, -1));
     }
 
     public static boolean viewingDialog() {

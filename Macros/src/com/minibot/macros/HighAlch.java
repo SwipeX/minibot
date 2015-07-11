@@ -63,9 +63,9 @@ public class HighAlch extends Macro implements Renderable {
         int casts = (gained / EXP_EACH);
         int yOff = 11;
         g.drawString("Runtime: " + Time.format(runtime()), 13, yOff += 15);
-        String fCrafted = ValueFormat.format(casts, COMMA_FORMAT);
-        String fCraftedHr = ValueFormat.format(hourly(casts), COMMA_FORMAT);
-        g.drawString("Casts: " + fCrafted + " (" + fCraftedHr + "/HR)", 13, yOff += 15);
+        String fCasts = ValueFormat.format(casts, COMMA_FORMAT);
+        String fCastsHr = ValueFormat.format(hourly(casts), COMMA_FORMAT);
+        g.drawString("Casts: " + fCasts + " (" + fCastsHr + "/HR)", 13, yOff += 15);
         String fExp = ValueFormat.format(gained, COMMA_FORMAT);
         String fExpHr = ValueFormat.format(hourly(gained), THOUSAND_FORMAT);
         g.drawString("Experience: " + fExp + " (" + fExpHr + "/HR)", 13, yOff + 15);
