@@ -13,7 +13,7 @@ public interface Path extends Iterable<Tile> {
 
     boolean step(Option... options);
 
-    public static enum Option {
+    enum Option {
 
         TOGGLE_RUN {
             @Override

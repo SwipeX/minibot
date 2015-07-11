@@ -8,7 +8,6 @@ import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
 import com.minibot.api.wrapper.Item;
-import com.minibot.api.wrapper.locatable.Character;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.bot.macro.Macro;
@@ -23,6 +22,7 @@ import java.awt.*;
 public class CaveHorrors extends Macro implements Renderable {
 
     private int profit = 0;
+    private int foodId = -1;
 
     @Override
     public void atStart() {
@@ -70,14 +70,14 @@ public class CaveHorrors extends Macro implements Renderable {
                 if (health != -1 && health < 35) {
                     Item food = Inventory.firstFood();
                     if (food != null) {
+                        foodId = food.id();
                         food.processAction("Eat");
                         Time.sleep(() -> player.healthPercent() != health, 2000);
                     }
                 } else {
                     if (Inventory.foodCount() > 1) {
                         if (underground()) {
-                            if (!player.interacting())
-                                attack();
+                            attack();
                         } else {
                             // run yo ass to cave
                         }
