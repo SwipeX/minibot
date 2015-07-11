@@ -46,6 +46,8 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
                     mode.activate();
                 }
             }
+            // handle anti-venom here
+            // handle eating here
             // handle running to different location based on 'mode' here
             Player local = Players.local();
             if (local != null) {
@@ -105,6 +107,7 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
     public void messageReceived(int type, String sender, String message, String clan) {
         if (message.equals("Oh dear, you are dead!")) {
             died = true;
+            reset = false;
         }
     }
 }
