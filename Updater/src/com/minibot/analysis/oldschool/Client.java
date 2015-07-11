@@ -778,7 +778,7 @@ public class Client extends GraphVisitor {
 
     private class ScreenState extends BlockVisitor {
 
-        private int added = 0;
+        private int added;
 
         @Override
         public boolean validate() {
@@ -789,6 +789,7 @@ public class Client extends GraphVisitor {
         public void visit(Block block) {
             if (block.count(new InsnQuery(ISTORE)) > 0) {
                 block.tree().accept(new NodeVisitor(this) {
+                    @Override
                     public void visitField(FieldMemberNode fmn) {
                         if (fmn.opcode() == GETSTATIC && fmn.desc().equals("I")) {
                             VariableNode vn = (VariableNode) fmn.preLayer(IMUL, ISTORE);
@@ -816,7 +817,7 @@ public class Client extends GraphVisitor {
 
     private class HoveredRegionTiles extends BlockVisitor {
 
-        private int added = 0;
+        private int added;
 
         @Override
         public boolean validate() {

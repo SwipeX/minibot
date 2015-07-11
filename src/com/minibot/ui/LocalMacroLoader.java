@@ -17,7 +17,7 @@ import java.util.jar.JarFile;
  */
 public class LocalMacroLoader extends MacroLoader<File> {
  
-    private final List<MacroDefinition> definitions = new ArrayList<>();
+    private final List<MacroDefinition> definitions = new ArrayList<>(50);
  
     @Override
     public void parse(File root) throws IOException, ClassNotFoundException {

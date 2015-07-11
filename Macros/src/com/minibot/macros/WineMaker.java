@@ -27,7 +27,7 @@ import java.awt.Graphics2D;
 
 /**
  * @author Jacob Doiron
- * @since 6/24/2015
+ * @since 7/02/2015
  */
 @Manifest(name = "WineMaker", author = "Jacob", version = "1.0.0", description = "99 c00k in 26 hours, s0n")
 public class WineMaker extends Macro implements Renderable, ChatboxListener {
@@ -150,7 +150,6 @@ public class WineMaker extends Macro implements Renderable, ChatboxListener {
         g.drawString(String.format("Level: %d", Game.levels()[Skills.COOKING]), 10, 34);
         g.drawString(String.format("Made: %s (%s/H)", ValueFormat.format(wines, TEXT_FORMAT),
                 ValueFormat.format(hourly(wines), TEXT_FORMAT)), 10, 46);
-
     }
 
     @Override
