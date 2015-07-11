@@ -1,15 +1,14 @@
 package com.minibot.macros.horrors;
 
+import com.minibot.api.action.tree.Action;
 import com.minibot.api.method.*;
 import com.minibot.api.method.web.TilePath;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
 import com.minibot.api.wrapper.Item;
-import com.minibot.api.wrapper.locatable.GameObject;
-import com.minibot.api.wrapper.locatable.Npc;
-import com.minibot.api.wrapper.locatable.Player;
-import com.minibot.api.wrapper.locatable.Tile;
+import com.minibot.api.wrapper.WidgetComponent;
+import com.minibot.api.wrapper.locatable.*;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 import com.minibot.macros.horrors.util.Lootables;
@@ -24,7 +23,7 @@ import java.awt.*;
 public class CaveHorrors extends Macro implements Renderable {
 
     private static final Tile BANK = new Tile(3680, 2982, 0);
-    private static final Tile CAVE = new Tile(3760, 2973, 0);
+    private static final Tile CAVE = new Tile(3749, 2973, 0);
     private static final Tile UNDERGROUND_CAVE = new Tile(3748, 9373, 0);
 
     private static final TilePath BANK_TO_CAVE = new TilePath(
@@ -34,7 +33,7 @@ public class CaveHorrors extends Macro implements Renderable {
             new Tile(3757, 3003, 0),
             new Tile(3762, 2989, 0),
             new Tile(3755, 2981, 0),
-            new Tile(3760, 2973, 0)
+            new Tile(3749, 2973, 0)
     );
 
     private static final TilePath CAVE_TO_BANK = new TilePath(
@@ -47,11 +46,17 @@ public class CaveHorrors extends Macro implements Renderable {
             new Tile(3680, 2982, 0)
     );
 
+    private static final Area KILL_ZONE = new Area(new Tile(3717, 9346, 0), new Tile(3769, 9390, 0));
+
     private int profit = 0;
     private int foodId = -1;
 
+    private String status = "";
+    private boolean startedFlick = false;
+
     @Override
     public void atStart() {
+        Lootables.setArea(KILL_ZONE);
         Lootables.initRareDropTable();
         Lootables.initCaveHorrors();
     }
@@ -61,9 +66,16 @@ public class CaveHorrors extends Macro implements Renderable {
         return player != null && player.y() > 9000;
     }
 
+    private Npc findBat() {
+        return Npcs.nearestByFilter(n -> {
+            String name = n.name();
+            return name != null && name.equals("Albino bat") && n.targetIsLocalPlayer();
+        });
+    }
+
     private Npc find() {
         Npc current = Npcs.nearestByFilter(n -> {
-            if (n.dead())
+            if (n.dead() || !KILL_ZONE.contains(n.location()))
                 return false;
             String name = n.name();
             if (name != null && name.equals("Cave horror")) {
@@ -73,7 +85,7 @@ public class CaveHorrors extends Macro implements Renderable {
             return false;
         });
         return current != null ? current : Npcs.nearestByFilter(n -> {
-            if (n.dead())
+            if (n.dead() || !KILL_ZONE.contains(n.location()))
                 return false;
             String name = n.name();
             return name != null && name.equals("Cave horror") && n.targetIndex() == -1;
@@ -87,16 +99,24 @@ public class CaveHorrors extends Macro implements Renderable {
 
     @Override
     public void run() {
-        int loot = Lootables.loot();
-        if (loot != -1) {
-            profit += loot;
+        WidgetComponent protect = Widgets.get(271, 18);
+        if (Lootables.valid()) {
+            startedFlick = false;
+            if (protect != null)
+                protect.processAction("Deactivate");
+            int loot = Lootables.loot();
+            if (loot != -1)
+                profit += loot;
         } else {
             Player player = Players.local();
             if (player != null) {
+                if (Game.energy() >= 20)
+                    Game.setRun(true);
                 int health = player.healthPercent();
                 if (health != -1 && health < 35 && !Bank.viewing()) {
                     Item food = Inventory.firstFood();
                     if (food != null) {
+                        status = "Eating";
                         foodId = food.id();
                         food.processAction("Eat");
                         Time.sleep(() -> player.healthPercent() != health, 2000);
@@ -104,15 +124,44 @@ public class CaveHorrors extends Macro implements Renderable {
                 }
                 if (Inventory.foodCount() > 1) {
                     if (underground()) {
-                        attack();
+                        if (!KILL_ZONE.contains(player)) {
+                            Walking.walkTo(UNDERGROUND_CAVE);
+                            Time.sleep(800, 1000);
+                        } else {
+                            status = "Attacking";
+                            Npc bat = findBat();
+                            if (bat != null) {
+                                Walking.walkTo(UNDERGROUND_CAVE);
+                                Time.sleep(800, 1000);
+                            } else {
+                                if (player.interacting()) {
+                                    if (protect != null) {
+                                        protect.processAction("Activate");
+                                        Time.sleep(570, 580);
+                                        if (!startedFlick) {
+                                            Time.sleep(80, 120);
+                                            startedFlick = true;
+                                        }
+                                        protect.processAction("Deactivate");
+                                        Time.sleep(30, 40);
+                                    }
+                                } else {
+                                    startedFlick = false;
+                                    if (protect != null && Action.indexOf(protect.actions(), "Deactivate") >= 0) {
+                                        protect.processAction("Deactivate");
+                                        Time.sleep(600, 800);
+                                    }
+                                    attack();
+                                }
+                            }
+                        }
                     } else {
                         if (CAVE.distance() > 5) {
-                            if (Game.energy() >= 20)
-                                Game.setRun(true);
+                            status = "Walking to cave";
                             BANK_TO_CAVE.step();
 //                            WebPath.build(CAVE).step(Path.Option.TOGGLE_RUN);
                         } else {
-                            BANK_TO_CAVE.reset();
+                            status = "Entering cave";
                             GameObject cave = Objects.nearestByName("Cave entrance");
                             if (cave != null) {
                                 cave.processAction("Enter");
@@ -129,8 +178,11 @@ public class CaveHorrors extends Macro implements Renderable {
                 } else {
                     if (underground()) {
                         if (UNDERGROUND_CAVE.distance() > 5) {
+                            status = "Walking to cave exit";
                             Walking.walkTo(UNDERGROUND_CAVE);
+                            Time.sleep(800, 1000);
                         } else {
+                            status = "Exiting cave";
                             GameObject cave = Objects.nearestByName("Cave");
                             if (cave != null) {
                                 cave.processAction("Exit");
@@ -138,14 +190,14 @@ public class CaveHorrors extends Macro implements Renderable {
                             }
                         }
                     } else {
-                        if (BANK.distance() > 5) {if (Game.energy() >= 20)
-                            Game.setRun(true);
+                        if (BANK.distance() > 5) {
+                            status = "Walking to bank";
                             CAVE_TO_BANK.step();
 //                            WebPath.build(BANK).step(Path.Option.TOGGLE_RUN);
                         } else {
-                            CAVE_TO_BANK.reset();
                             if (Bank.viewing()) {
                                 if (Inventory.count() == 1) {
+                                    status = "Withdrawing food";
                                     Item food = Bank.first(i -> i.id() == foodId);
                                     if (foodId != -1 && food != null) {
                                         food.processAction("Withdraw-10");
@@ -153,16 +205,19 @@ public class CaveHorrors extends Macro implements Renderable {
                                         food.processAction("Withdraw-5");
                                         Time.sleep(300, 500);
                                     } else {
+                                        status = "Out of food";
                                         System.out.println("Out of food");
                                         interrupt();
                                     }
                                 } else {
+                                    status = "Depositing loot";
                                     Bank.depositAllExcept(i -> {
                                         String name = i.name();
                                         return name != null && name.equals("Sapphire lantern");
                                     });
                                 }
                             } else {
+                                status = "Opening bank";
                                 Bank.openBooth();
                             }
                         }
@@ -179,6 +234,7 @@ public class CaveHorrors extends Macro implements Renderable {
         g.drawString("Runtime: " + Time.format(runtime()), 13, yOff += 15);
         String fProfit = ValueFormat.format(profit, ValueFormat.COMMAS);
         String fProfitHr = ValueFormat.format(hourly(profit), ValueFormat.COMMAS);
-        g.drawString("Profit: " + fProfit + " (" + fProfitHr + "/HR)", 13, yOff + 15);
+        g.drawString("Profit: " + fProfit + " (" + fProfitHr + "/HR)", 13, yOff += 15);
+        g.drawString("Status: " + status, 13, yOff + 15);
     }
 }

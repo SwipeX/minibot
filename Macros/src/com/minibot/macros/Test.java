@@ -50,17 +50,17 @@ public class Test extends Macro implements Renderable {
 //        if (c != null) {
 //            System.out.println(c.owner().index() + "," + c.index() + "," + c.text() + "," + c.visible());
 //        }
-        GameObject cave = Objects.nearestByName("Cave entrance");
-        if (cave != null) {
-            cave.processAction("Enter");
-            if (Time.sleep(Widgets::viewingContinue, 2500)) {
-                Widgets.processContinue();
-                if (Time.sleep(Widgets::viewingDialog, 2500)) {
-                    Widgets.processDialogOption(0);
-                }
-            }
-        }
-        Time.sleep(5000);
+//        GameObject cave = Objects.nearestByName("Cave entrance");
+//        if (cave != null) {
+//            cave.processAction("Enter");
+//            if (Time.sleep(Widgets::viewingContinue, 2500)) {
+//                Widgets.processContinue();
+//                if (Time.sleep(Widgets::viewingDialog, 2500)) {
+//                    Widgets.processDialogOption(0);
+//                }
+//            }
+//        }
+//        Time.sleep(5000);
     }
 
     @Override

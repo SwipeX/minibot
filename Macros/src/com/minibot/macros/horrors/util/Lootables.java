@@ -4,6 +4,7 @@ import com.minibot.api.method.Ground;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
+import com.minibot.api.wrapper.locatable.Area;
 import com.minibot.api.wrapper.locatable.GroundItem;
 
 import java.util.HashMap;
@@ -16,6 +17,17 @@ import java.util.Map;
 public class Lootables {
 
     private static final Map<String, Integer> PRICES = new HashMap<>();
+
+    private static int radius = 20;
+    private static Area area = null;
+
+    public static void setRadius(int radius) {
+        Lootables.radius = radius;
+    }
+
+    public static void setArea(Area area) {
+        Lootables.area = area;
+    }
 
     public static void clear() {
         PRICES.clear();
@@ -42,11 +54,11 @@ public class Lootables {
 
     public static void initCaveHorrors() {
         PRICES.put("Teak logs", 39);
-        PRICES.put("Ranarr weed", 5950);
-        PRICES.put("Avantoe", 1900);
-        PRICES.put("Kwuarm", 2230);
-        PRICES.put("Cadantine", 1830);
-        PRICES.put("Dwarf weed", 1670);
+        PRICES.put("Grimy ranarr weed", 5950);
+        PRICES.put("Grimy avantoe", 1900);
+        PRICES.put("Grimy kwuarm", 2230);
+        PRICES.put("Grimy cadantine", 1830);
+        PRICES.put("Grimy dwarf weed", 1670);
         PRICES.put("Avantoe seed", 560);
         PRICES.put("Kwuarm seed", 1200);
         PRICES.put("Snapdragon seed", 22500);
@@ -64,17 +76,24 @@ public class Lootables {
         return count;
     }
 
-    public static int loot() {
-        GroundItem item = Ground.nearestByFilter(20, i -> {
+    public static boolean valid() {
+        return Ground.nearestByFilter(radius, i -> {
             String name = i.name();
-            return name != null && PRICES.containsKey(name);
+            return name != null && PRICES.containsKey(name) && (area == null || area.contains(i));
+        }) != null;
+    }
+
+    public static int loot() {
+        GroundItem item = Ground.nearestByFilter(radius, i -> {
+            String name = i.name();
+            return name != null && PRICES.containsKey(name) && (area == null || area.contains(i));
         });
         if (item != null) {
             int count = stackCount();
             String name = item.name();
             item.processAction("Take");
             if (Time.sleep(() -> stackCount() != count, 10000))
-                return PRICES.get(name);
+                return (PRICES.get(name) * (stackCount() - count));
         }
         return -1;
     }

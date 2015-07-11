@@ -14,27 +14,26 @@ public class TilePath {
 
     private final Tile[] tiles;
 
-    private int step = 0;
-
     public TilePath(Tile... tiles) {
         this.tiles = tiles;
     }
 
     public void step() {
-        if (step < tiles.length) {
-            Tile tile = tiles[step];
-            Walking.walkTo(tile);
-            if (Time.sleep(() -> {
-                Player local = Players.local();
-                return local != null && (tile.distance() < 3 || Players.local().animation() == -1);
-            }, 15000)) {
-                if (tile.distance() < 3)
-                    step++;
+        Tile farthestTile = null;
+        for (int i = tiles.length - 1; i > 0; i--) {
+            if (tiles[i].distance() < 30) {
+                farthestTile = tiles[i];
+                break;
             }
         }
-    }
-
-    public void reset() {
-        step = 0;
+        if (farthestTile == null)
+            return;
+        final Tile tile = farthestTile;
+        Walking.walkTo(tile);
+        Time.sleep(800, 1000);
+        Time.sleep(() -> {
+            Player local = Players.local();
+            return local != null && tile.distance() < 3;
+        }, 8000);
     }
 }
