@@ -1,9 +1,6 @@
 package com.minibot.macros.horrors;
 
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Npcs;
-import com.minibot.api.method.Players;
+import com.minibot.api.method.*;
 import com.minibot.api.method.web.WebPath;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -24,9 +21,9 @@ import java.awt.*;
  */
 public class CaveHorrors extends Macro implements Renderable {
 
-    private static final Tile BANK = new Tile(-1, -1, 0);
-    private static final Tile CAVE = new Tile(-1, -1, 0);
-    private static final Tile UNDERGROUND_CAVE = new Tile(-1, -1, 0);
+    private static final Tile BANK = new Tile(3680, 2982, 0);
+    private static final Tile CAVE = new Tile(3760, 2973, 0);
+    private static final Tile UNDERGROUND_CAVE = new Tile(3748, 9373, 0);
 
     private int profit = 0;
     private int foodId = -1;
@@ -38,7 +35,8 @@ public class CaveHorrors extends Macro implements Renderable {
     }
 
     private boolean underground() {
-        return Game.plane() == 1;
+        Player player = Players.local();
+        return player != null && player.y() > 9000;
     }
 
     private Npc find() {
@@ -74,28 +72,56 @@ public class CaveHorrors extends Macro implements Renderable {
             Player player = Players.local();
             if (player != null) {
                 int health = player.healthPercent();
-                if (health != -1 && health < 35) {
+                if (health != -1 && health < 35 && !Bank.viewing()) {
                     Item food = Inventory.firstFood();
                     if (food != null) {
                         foodId = food.id();
                         food.processAction("Eat");
                         Time.sleep(() -> player.healthPercent() != health, 2000);
                     }
-                } else {
-                    if (Inventory.foodCount() > 1) {
-                        if (underground()) {
-                            attack();
+                }
+                if (Inventory.foodCount() > 1) {
+                    if (underground()) {
+                        attack();
+                    } else {
+                        if (CAVE.distance() > 5) {
+                            WebPath.build(CAVE).step(Path.Option.TOGGLE_RUN);
                         } else {
-                            if (CAVE.distance() > 5) {
-                                WebPath.build(CAVE).step(Path.Option.TOGGLE_RUN);
-                            }
-                            // run yo ass to cave
+                            // enter cave
+                        }
+                    }
+                } else {
+                    if (underground()) {
+                        if (UNDERGROUND_CAVE.distance() > 5) {
+                            Walking.walkTo(UNDERGROUND_CAVE);
+                        } else {
+                            // exit cave
                         }
                     } else {
-                        if (underground()) {
-                            // run yo ass out
+                        if (BANK.distance() > 5) {
+                            WebPath.build(BANK).step(Path.Option.TOGGLE_RUN);
                         } else {
-                            // run yo ass to bank
+                            if (Bank.viewing()) {
+                                if (Inventory.count() == 1) {
+                                    Item food = Bank.first(i -> i.id() == foodId);
+                                    if (food != null) {
+                                        food.processAction("Withdraw-10");
+                                        Time.sleep(300, 500);
+                                        food.processAction("Withdraw-5");
+                                        Time.sleep(300, 500);
+                                    } else {
+                                        System.out.println("Out of food");
+                                        interrupt();
+                                    }
+                                } else {
+                                    Bank.depositAllExcept(i -> {
+                                        String name = i.name();
+                                        return name != null && name.equals("Sapphire lantern");
+                                    });
+                                }
+                            } else {
+                                Bank.openBooth();
+                            }
                         }
                     }
                 }

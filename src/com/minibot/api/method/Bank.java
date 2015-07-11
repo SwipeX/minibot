@@ -35,6 +35,15 @@ public class Bank {
         }
     }
 
+    public static void depositAllExcept(Filter<Item> filter) {
+        for (Item item : items()) {
+            if (!filter.accept(item)) {
+                item.processAction("Deposit-All");
+                Time.sleep(1000, 1200);
+            }
+        }
+    }
+
     public static void depositEquipment() {
         WidgetComponent depositButton = Widgets.get(BANK_PARENT, DEPOSIT_EQUIPMENT);
         if (depositButton != null) {
@@ -66,11 +75,12 @@ public class Bank {
         if (item != null && amount > 0) {
             String[] actions = item.owner().actions();
             String targetAction = "Withdraw-" + amount;
-            for (String string : actions)
+            for (String string : actions) {
                 if (string.contains(targetAction)) {
                     item.processAction(targetAction);
                     return;
                 }
+            }
             item.processAction("Withdraw-All");
         }
     }
