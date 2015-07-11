@@ -1,6 +1,7 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
+import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
@@ -123,5 +124,22 @@ public class Game {
         int playerIndex = Minibot.instance().client().getHintPlayerIndex();
         Player player = Players.atIndex(playerIndex);
         return npc != null ? npc : (player != null ? player : null);
+    }
+
+    public static boolean hopWorld(int world) {
+        GameTab.LOGOUT.open();
+        WidgetComponent switcher = Widgets.get(182, 1);
+        if (switcher != null) {
+            switcher.processAction("World Switcher");
+            Time.sleep(200, 400);
+        }
+        WidgetComponent parent = Widgets.get(69, 14);
+        if (parent != null) {
+            WidgetComponent component = parent.children()[world];
+            component.processAction("Switch");
+            if (Time.sleep(() -> state() == 45, 5000))
+                return Time.sleep(() -> playing() && state() != 45, 10000);
+        }
+        return false;
     }
 }
