@@ -34,18 +34,6 @@ public class CaveHorrors extends Macro implements Renderable {
         return Game.plane() == 1;
     }
 
-    private boolean interacting() {
-        Player player = Players.local();
-        if (player != null) {
-            Character target = player.target();
-            if (target != null) {
-                Character tTarget = target.target();
-                return tTarget != null && tTarget == target;
-            }
-        }
-        return false;
-    }
-
     private Npc find() {
         Npc current = Npcs.nearestByFilter(n -> {
             if (n.dead())
@@ -86,9 +74,19 @@ public class CaveHorrors extends Macro implements Renderable {
                         Time.sleep(() -> player.healthPercent() != health, 2000);
                     }
                 } else {
-                    if (underground()) {
-                        if (!player.interacting())
-                            attack();
+                    if (Inventory.foodCount() > 1) {
+                        if (underground()) {
+                            if (!player.interacting())
+                                attack();
+                        } else {
+                            // run yo ass to cave
+                        }
+                    } else {
+                        if (underground()) {
+                            // run yo ass out
+                        } else {
+                            // run yo ass to bank
+                        }
                     }
                 }
             }

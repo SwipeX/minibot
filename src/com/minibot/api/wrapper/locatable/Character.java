@@ -82,17 +82,13 @@ public abstract class Character<T extends RSCharacter> extends Wrapper<T> implem
         return distance(Players.local());
     }
 
-    public Point screen(){
+    public Point screen() {
         return Projection.groundToViewport(fineX(), fineY());
     }
 
-    public  boolean interacting() {
-        Player player = Players.local();
-        if (player != null) {
-            Character target = player.target();
-            return target != null && target.targetIsLocalPlayer();
-        }
-        return false;
+    public boolean interacting() {
+        Character target = target();
+        return target != null && target.targetIsLocalPlayer();
     }
 
     public boolean dead() {
