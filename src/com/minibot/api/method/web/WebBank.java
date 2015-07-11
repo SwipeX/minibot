@@ -33,6 +33,7 @@ public enum WebBank {
     ARDOUGNE_SOUTH(new Tile(2655, 3283)),
     FISHING_GUILD(new Tile(2586, 3419)),
     CANIFIS(new Tile(3512, 3480)),
+    MOS_LE_HARMLESS(new Tile(3680, 2982)),
     /**
      * ***********************************Bank chests*************************************
      */
