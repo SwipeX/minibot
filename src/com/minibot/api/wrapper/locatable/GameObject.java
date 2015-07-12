@@ -149,6 +149,21 @@ public class GameObject extends Wrapper<ClientNative> implements Locatable {
         processAction(action, -1, -1);
     }
 
+    public void processFirstAction() {
+        RSObjectDefinition def = definition();
+        if (def != null) {
+            String[] actions = def.getActions();
+            if (actions != null) {
+                for (String action : actions) {
+                    if (action != null) {
+                        processAction(action);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     private Point screen() {
         return Projection.groundToViewport(fineX(), fineY());
     }

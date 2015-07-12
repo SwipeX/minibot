@@ -41,6 +41,16 @@ public class ClueSolver extends Macro implements Renderable {
             Time.sleep(600, 800);
             return;
         }
+        Item casket = Inventory.first(i -> {
+            String name = i.name();
+            return name != null && name.contains("Casket");
+        });
+        if (casket != null) {
+            int stackCount = Inventory.stackCount();
+            casket.processAction("Open");
+            Time.sleep(() -> Inventory.stackCount() != stackCount, 5000);
+            return;
+        }
         Item clueItem = ClueScroll.findInventoryItem();
         if (clueItem != null) {
             clueId = clueItem.id();
