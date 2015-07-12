@@ -157,7 +157,7 @@ public class GameObject extends Wrapper<ClientNative> implements Locatable {
                 for (String action : actions) {
                     if (action != null) {
                         processAction(action);
-                        return;
+                        break;
                     }
                 }
             }
