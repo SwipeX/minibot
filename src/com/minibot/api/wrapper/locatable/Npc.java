@@ -67,7 +67,12 @@ public class Npc extends Character<RSNpc> implements Identifiable {
     @Override
     public String name() {
         RSNpcDefinition def = definition();
-        return def == null ? null : def.getName();
+        return def != null ? def.getName() : null;
+    }
+
+    public int level() {
+        RSNpcDefinition def = definition();
+        return def != null ? def.getLevel() : -1;
     }
 
     public boolean attack() {

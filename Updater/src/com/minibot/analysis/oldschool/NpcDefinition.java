@@ -7,6 +7,7 @@ import com.minibot.mod.hooks.InvokeHook;
 import org.objectweb.asm.commons.cfg.Block;
 import org.objectweb.asm.commons.cfg.BlockVisitor;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
+import org.objectweb.asm.commons.cfg.tree.node.AbstractNode;
 import org.objectweb.asm.commons.cfg.tree.node.FieldMemberNode;
 import org.objectweb.asm.commons.cfg.tree.node.MethodMemberNode;
 import org.objectweb.asm.commons.cfg.tree.node.VariableNode;
@@ -15,7 +16,7 @@ import org.objectweb.asm.tree.MethodNode;
 
 import java.lang.reflect.Modifier;
 
-@VisitorInfo(hooks = {"name", "actions", "id", "transformIds", "transformIndex", "transform"})
+@VisitorInfo(hooks = {"name", "actions", "id", "transformIds", "transformIndex", "level", "transform"})
 public class NpcDefinition extends GraphVisitor {
 
     @Override
@@ -30,11 +31,10 @@ public class NpcDefinition extends GraphVisitor {
         visitAll(new Id());
         visitAll(new TransformIds());
         visitAll(new TransformIndex());
-        for (MethodNode mn : getCn().methods) {
-            if (!Modifier.isStatic(mn.access) && mn.desc.endsWith("L" + getCn().name + ";")) {
-                addHook(new InvokeHook("transform", mn));
-            }
-        }
+        visitAll(new Level());
+        getCn().methods.stream().filter(
+                mn -> !Modifier.isStatic(mn.access) && mn.desc.endsWith("L" + getCn().name + ";")
+        ).forEach(mn -> addHook(new InvokeHook("transform", mn)));
     }
 
     private class Id extends BlockVisitor {
@@ -105,6 +105,33 @@ public class NpcDefinition extends GraphVisitor {
                         if (fmn != null && fmn.owner().equals(getCn().name) && fmn.first(ALOAD) != null) {
                             addHook(new FieldHook("transformIndex", fmn.fin()));
                             lock.set(true);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private class Level extends BlockVisitor {
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor() {
+                public void visitAny(AbstractNode an) {
+                    FieldMemberNode fmn = (FieldMemberNode) an.layer(IMUL, GETFIELD, GETSTATIC);
+                    if (fmn != null && fmn.desc().equals(desc("Player"))) {
+                        an = an.layer(IMUL, GETFIELD, ALOAD);
+                        if (an != null) {
+                            fmn = (FieldMemberNode) an.parent();
+                            if (fmn != null && fmn.owner().equals(clazz("NpcDefinition"))) {
+                                addHook(new FieldHook("level", fmn.fin()));
+                                lock.set(true);
+                            }
                         }
                     }
                 }
