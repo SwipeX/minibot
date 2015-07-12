@@ -8,14 +8,14 @@ import com.minibot.bot.macro.Manifest;
 import com.minibot.macros.zulrah.ZulrahEnvironment;
 import com.minibot.macros.zulrah.ZulrahMode;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 
 /**
  * @author Tyler Sedlar
  * @since 6/24/2015
  */
-@Manifest(name = "Test2", author = "Tyler", version = "1.0.0", description = "For testing purposes")
-public class Test2 extends Macro implements Renderable{
+@Manifest(name = "Test", author = "Tyler", version = "1.0.0", description = "For testing purposes")
+public class Test extends Macro implements Renderable{
 
     @Override
     public void atStart() {
@@ -36,6 +36,7 @@ public class Test2 extends Macro implements Renderable{
 
     @Override
     public void render(Graphics2D g) {
+//        g.drawString("Test " + Game.varp(1021), 50, 50);
         g.drawString(Players.local().location().toString(), 50, 75);
     }
 }
