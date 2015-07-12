@@ -1,19 +1,15 @@
 package com.minibot.bot.macro;
 
 import com.minibot.Minibot;
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Login;
-import com.minibot.api.method.Mouse;
 import com.minibot.api.util.Time;
-import com.minibot.bot.breaks.BreakHandler;
 import com.minibot.bot.random.RandomEvent;
 import com.minibot.ui.MacroSelector;
 
 public abstract class Macro {
 
     private Thread thread;
-    private String username;
-    private String password;
+    private static String username;
+    private static String password;
     private long start;
 
     public final void start() {
@@ -36,7 +32,6 @@ public abstract class Macro {
                     }
                     macro.run();
                     Time.sleep(20, 50);
-                    checkLogin();
                 }
             }
         };
@@ -67,22 +62,11 @@ public abstract class Macro {
 
     public abstract void run();
 
-    private void checkLogin() {
-        BreakHandler handler = Minibot.instance().breakHandler();
-        if (handler != null && handler.activated()) //if no handler/no break, let this continue
-            return;//break is current active
-        if (!Game.playing()) {
-            if (Login.state() == Login.STATE_MAIN_MENU) {
-                Mouse.hop(Login.EXISTING_USER.x, Login.EXISTING_USER.y);
-                Mouse.click(true);
-                Time.sleep(600, 700);
-            } else if (Login.state() == Login.STATE_CREDENTIALS) {
-                Login.setUsername(username);
-                Login.setPassword(password);
-                Mouse.hop(Login.LOGIN.x, Login.LOGIN.y);
-                Mouse.click(true);
-                Time.sleep(600, 700);
-            }
-        }
+    public static String username() {
+        return username;
+    }
+
+    public static String password() {
+        return password;
     }
 }

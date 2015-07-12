@@ -32,13 +32,13 @@ public class GameMenu {
         file.add(combine(stop, KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK), e -> MacroSelector.halt()));
         JMenu options = new JMenu("Options");
         menuBar.add(options);
-        options.add(combine(new JMenuItem("Rendering"), KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK), e -> {
+        options.add(combine(new JCheckBoxMenuItem("!Rendering"), KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK), e -> {
                     RuneScape.LANDSCAPE_RENDERING_ENABLED = !RuneScape.LANDSCAPE_RENDERING_ENABLED;
                     RuneScape.MODEL_RENDERING_ENABLED = !RuneScape.MODEL_RENDERING_ENABLED;
                     RuneScape.WIDGET_RENDERING_ENABLED = !RuneScape.WIDGET_RENDERING_ENABLED;
                 }
         ));
-        options.add(combine(new JMenuItem("Farming"), KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK),
+        options.add(combine(new JCheckBoxMenuItem("Farming"), KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK),
                 e -> Minibot.instance().setFarming(!Minibot.instance().isFarming())));
     }
 
