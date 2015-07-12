@@ -19,7 +19,7 @@ public class Lootables {
     private static final Map<String, Integer> PRICES = new HashMap<>();
 
     private static int radius = 20;
-    private static Area area = null;
+    private static Area area;
 
     public static void setRadius(int radius) {
         Lootables.radius = radius;

@@ -17,8 +17,10 @@ import java.util.jar.JarFile;
  */
 public class LocalMacroLoader extends MacroLoader<File> {
  
-    private final List<MacroDefinition> definitions = new ArrayList<>(50);
- 
+    private final Set<MacroDefinition> definitions = new TreeSet<>((o, o1) -> {
+        return o.manifest().name().compareToIgnoreCase(o1.manifest().name());
+    });
+
     @Override
     public void parse(File root) throws IOException, ClassNotFoundException {
         definitions.clear();

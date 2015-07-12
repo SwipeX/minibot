@@ -17,13 +17,13 @@ import java.awt.*;
  * @author Tyler Sedlar
  * @since 7/11/2015
  */
-@Manifest(name = "Range Guild", author = "Tyler", version = "1.0.0", description = "Does range guild")
-public class RangeGuild extends Macro implements Renderable {
+@Manifest(name = "Ranged Guild", author = "Tyler", version = "1.0.0", description = "Does range guild")
+public class RangedGuild extends Macro implements Renderable {
 
     private static final int COMMA_FORMAT = ValueFormat.COMMAS;
     private static final int THOUSAND_FORMAT = ValueFormat.THOUSANDS | ValueFormat.PRECISION(2);
 
-    private int score = 0;
+    private int score;
 
     private int fireIndex() {
         return Game.varp(156);

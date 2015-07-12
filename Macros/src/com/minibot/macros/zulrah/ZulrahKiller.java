@@ -37,16 +37,16 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
     private static final MultiNameItemFilter TELEPORT = new MultiNameItemFilter("Zul-andra teleport");
     private static final MultiNameItemFilter CAMELOT = new MultiNameItemFilter("Camelot teleport");
     private static final MultiNameItemFilter RECOIL = new MultiNameItemFilter("Ring of recoil");
-    private static final MultiNameItemFilter EQUIP = new MultiNameItemFilter("Ring of recoil", "Ava's accumulator");
 
     private static final Tile BANK = new Tile(2726, 3491, 0);
 
     private static String status = "N/A";
     private static ZulrahMode mode;
     private static ZulrahDirection direction;
-    private static boolean died = false;
-    private static boolean collected = false;
-    private static boolean reset = false;
+    private static boolean died;
+    private static boolean collected;
+    private static boolean reset;
+    private static boolean ring;
 
     private static long venomTimer = -1;
 
@@ -199,6 +199,14 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
                         }
                     }
                 }
+                if (ring) {
+                    Item r = Inventory.first(RECOIL);
+                    if (r != null) {
+                        r.processAction("Equip");
+                        Time.sleep(400, 600);
+                        ring = false;
+                    }
+                }
                 if (!local.interacting()) {
                     zulrah.processAction("Attack");
                     Time.sleep(300, 500);
@@ -267,6 +275,8 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
         if (message.equals("Oh dear, you are dead!")) {
             died = true;
             reset = false;
+        } else if (message.contains("recoil has been")) {
+            ring = true;
         }
     }
 }

@@ -9,7 +9,12 @@ import com.minibot.client.GameCanvas;
  */
 public abstract class RandomEvent implements Renderable {
 
-    public static final RandomEvent[] SOLVERS = {new PinSolver(), new Dismisser()};
+    public static final RandomEvent[] SOLVERS = {new PinSolver(), new Dismisser(), new LoginSolver()};
+
+    private boolean solving;
+
+    public abstract boolean validate();
+    public abstract void run();
 
     static {
         GameCanvas.addRenderable((g) -> {
@@ -19,11 +24,6 @@ public abstract class RandomEvent implements Renderable {
             }
         });
     }
-
-    private boolean solving;
-
-    public abstract boolean validate();
-    public abstract void run();
 
     public boolean solving() {
         return solving;

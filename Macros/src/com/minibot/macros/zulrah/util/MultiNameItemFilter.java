@@ -5,7 +5,7 @@ import com.minibot.api.wrapper.Item;
 
 public class MultiNameItemFilter implements Filter<Item> {
 
-    public final String[] matches;
+    private final String[] matches;
 
     public MultiNameItemFilter(String... matches) {
         this.matches = matches;
