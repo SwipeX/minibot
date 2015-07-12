@@ -104,6 +104,8 @@ public class Web extends Digraph<WebVertex, WebVertex> {
             case 809:
             case 812:
                 return new String[]{"Gate", "Open"};
+            case 492:
+                return new String[]{"Guild door", "Open"};
             default: {
                 System.out.println("UNKNOWN OBJECT FOR VERTEX " + vertex);
                 return new String[2];
