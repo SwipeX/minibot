@@ -31,8 +31,8 @@ public class Fletcher extends Macro implements ChatboxListener, Renderable {
         return name != null && name.equals(LOGS);
     };
 
-    private static final boolean SHORTBOW = true;
-    private static final int MAKE_UID = (SHORTBOW ? 19922950 : -1);
+    private static final boolean SHORTBOW = false;
+    private static final int MAKE_UID = (SHORTBOW ? 19922950 : 19922954);
 
     private int fletched = 0;
     private int cut = 0;
