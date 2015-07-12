@@ -2,7 +2,7 @@ package com.minibot.api.method;
 
 import com.minibot.Minibot;
 
-import java.awt.*;
+import java.awt.Point;
 
 public class Login {
 

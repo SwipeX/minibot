@@ -51,12 +51,16 @@ public class Internet {
         try {
             URL url = new URL(site);
             URLConnection connection = url.openConnection();
-            if (mask) connection = mask(connection);
+            if (mask) {
+                connection = mask(connection);
+            }
             try (InputStream stream = connection.getInputStream()) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 List<String> source = new ArrayList<>();
                 String line;
-                while ((line = reader.readLine()) != null) source.add(line);
+                while ((line = reader.readLine()) != null) {
+                    source.add(line);
+                }
                 return source;
             } catch (IOException e) {
                 return null;
@@ -74,8 +78,9 @@ public class Internet {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             byte[] buf = new byte[BUFFER_SIZE];
             int n;
-            while ((n = in.read(buf, 0, BUFFER_SIZE)) > 0)
+            while ((n = in.read(buf, 0, BUFFER_SIZE)) > 0) {
                 out.write(buf, 0, n);
+            }
             return out.toByteArray();
         }
     }
@@ -84,7 +89,9 @@ public class Internet {
         try {
             URL url = new URL(site);
             URLConnection connection = url.openConnection();
-            if (mask) connection = mask(connection);
+            if (mask) {
+                connection = mask(connection);
+            }
             try (InputStream stream = connection.getInputStream()) {
                 File file = new File(target);
                 try (FileOutputStream out = new FileOutputStream(file)) {

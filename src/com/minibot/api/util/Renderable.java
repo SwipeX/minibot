@@ -1,6 +1,6 @@
 package com.minibot.api.util;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 
 /**
  * @author Tyler Sedlar

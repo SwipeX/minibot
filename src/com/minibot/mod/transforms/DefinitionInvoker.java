@@ -31,8 +31,9 @@ public class DefinitionInvoker implements Transform {
         InvokeHook ih = ModScript.serveInvoke(defined + "#transform");
         mn.instructions.add(new VarInsnNode(ALOAD, 0));
         assert ih != null;
-        if (ih.getPredicate() != Integer.MAX_VALUE)
+        if (ih.getPredicate() != Integer.MAX_VALUE) {
             mn.instructions.add(new LdcInsnNode(ih.getPredicate()));
+        }
         mn.instructions.add(new MethodInsnNode(INVOKEVIRTUAL, ih.getClazz(), ih.getMethod(), ih.getDesc(), false));
         mn.instructions.add(new InsnNode(ARETURN));
         node.methods.add(mn);
@@ -43,8 +44,9 @@ public class DefinitionInvoker implements Transform {
         InvokeHook ih = ModScript.serveInvoke("Client#load" + defined);
         mn.instructions.add(new VarInsnNode(ILOAD, 1));
         assert ih != null;
-        if (ih.getPredicate() != Integer.MAX_VALUE)
+        if (ih.getPredicate() != Integer.MAX_VALUE) {
             mn.instructions.add(new LdcInsnNode(ih.getPredicate()));
+        }
         mn.instructions.add(new MethodInsnNode(INVOKESTATIC, ih.getClazz(), ih.getMethod(), ih.getDesc(), false));
         mn.instructions.add(new InsnNode(ARETURN));
         client.methods.add(mn);

@@ -6,7 +6,7 @@ import com.minibot.api.method.Players;
 import com.minibot.api.method.RuneScape;
 import com.minibot.client.natives.RSPlayer;
 
-import java.awt.*;
+import java.awt.Point;
 
 /**
  * @author Tyler Sedlar
@@ -35,8 +35,9 @@ public class Player extends Character<RSPlayer> {
     public int index() {
         if (index < 0) {
             for (Player player : Players.loaded()) {
-                if (player.name().equals(name()))
+                if (player.name().equals(name())) {
                     return player.index();
+                }
             }
         }
         return index;

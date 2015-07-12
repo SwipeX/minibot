@@ -28,21 +28,24 @@ public class Digraph<V, E> extends HashMap<V, Set<E>> implements Iterable<V> {
     }
 
     public final boolean addVertex(V vertex) {
-        if (super.containsKey(vertex))
+        if (super.containsKey(vertex)) {
             return false;
+        }
         super.put(vertex, new HashSet<>());
         return true;
     }
 
     public final void addEdge(V vertex, E edge) {
-        if (!super.containsKey(vertex))
+        if (!super.containsKey(vertex)) {
             return;
+        }
         super.get(vertex).add(edge);
     }
 
     public final void removeEdge(V vertex, E edge) {
-        if (!super.containsKey(vertex))
+        if (!super.containsKey(vertex)) {
             return;
+        }
         super.get(vertex).remove(edge);
     }
 

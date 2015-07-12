@@ -17,8 +17,7 @@ public class Configuration {
     public static final String CACHE = HOME + "cache" + File.separator;
     public static final String DATA = CACHE + "data" + File.separator;
     public static final String MACROS = HOME + "macros" + File.separator;
-    public static final String[] DIRECTORIES = {CACHE, DATA,MACROS};
-
+    public static final String[] DIRECTORIES = {CACHE, DATA, MACROS};
 
 
     public static boolean isLocal() {
@@ -26,8 +25,9 @@ public class Configuration {
     }
 
     public static void setup() {
-        for (String dir : DIRECTORIES)
+        for (String dir : DIRECTORIES) {
             new File(dir).mkdirs();
+        }
     }
 
     public static String getSystemHome() {

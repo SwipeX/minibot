@@ -5,7 +5,8 @@ import com.minibot.util.Configuration;
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -132,13 +133,16 @@ public class Crawler {
 
     public boolean isOutdated() {
         File gamepack = new File(pack);
-        if (!gamepack.exists())
+        if (!gamepack.exists()) {
             return true;
-        if (hash == -1)
+        }
+        if (hash == -1) {
             hash = getLocalHash();
+        }
         boolean outdated = hash == -1 || hash != getRemoteHash();
-        if (!outdated)
+        if (!outdated) {
             percent = 100;
+        }
         return outdated;
     }
 
@@ -146,11 +150,13 @@ public class Crawler {
         try {
             List<String> source = Internet.read(config);
             for (String line : source) {
-                if (line.startsWith("param="))
+                if (line.startsWith("param=")) {
                     line = line.substring(6);
+                }
                 int idx = line.indexOf("=");
-                if (idx == -1)
+                if (idx == -1) {
                     continue;
+                }
                 parameters.put(line.substring(0, idx), line.substring(idx + 1));
             }
             return true;
@@ -166,8 +172,9 @@ public class Crawler {
             @Override
             public void onDownload(int p) {
                 percent = p;
-                if (callback != null)
+                if (callback != null) {
                     callback.run();
+                }
             }
         }) != null;
     }
@@ -218,6 +225,7 @@ public class Crawler {
     }
 
     public enum GameType {
-        OSRS, RS3
+        OSRS,
+        RS3
     }
 }

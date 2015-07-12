@@ -31,16 +31,16 @@ package com.sorcix.sirc;
  * Thrown when the nickname is already in use.
  */
 public final class NickNameException extends Exception {
-	
-	/** Serial Version ID */
-	private static final long serialVersionUID = -7856391898471344111L;
-	
-	/**
-	 * Creates a new NickNameException.
-	 * 
-	 * @param string Error string.
-	 */
-	public NickNameException(String string) {
-		super(string);
-	}
+
+    /** Serial Version ID */
+    private static final long serialVersionUID = -7856391898471344111L;
+
+    /**
+     * Creates a new NickNameException.
+     *
+     * @param string Error string.
+     */
+    public NickNameException(String string) {
+        super(string);
+    }
 }

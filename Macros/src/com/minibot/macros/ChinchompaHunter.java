@@ -1,13 +1,7 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Ground;
-import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Objects;
-import com.minibot.api.method.Players;
-import com.minibot.api.method.Skills;
-import com.minibot.api.method.Walking;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.filter.Filter;
@@ -39,7 +33,9 @@ public class ChinchompaHunter extends Macro implements Renderable {
 
     private enum ChinType {
 
-        REGULAR(198.4D, 700), RED(265D, 1330), BLACK(315D, 1980);
+        REGULAR(198.4D, 700),
+        RED(265D, 1330),
+        BLACK(315D, 1980);
 
         private final double exp;
         private final int price;
@@ -99,10 +95,11 @@ public class ChinchompaHunter extends Macro implements Renderable {
             });
             GameObject obj = objectAt(next, TRAP_FILTER);
             if (triggered(obj)) {
-                if (Arrays.asList(obj.definition().getActions()).contains("Check"))
+                if (Arrays.asList(obj.definition().getActions()).contains("Check")) {
                     obj.processAction("Check");
-                else
+                } else {
                     obj.processAction("Dismantle");
+                }
                 Time.sleep(() -> objectAt(next, TRAP_FILTER) != null && Players.local().animation() != -1, 1500L);
                 Time.sleep(400, 500);
                 Time.sleep(() -> objectAt(next, TRAP_FILTER) != null && Players.local().animation() == -1, 1500L);
@@ -144,14 +141,17 @@ public class ChinchompaHunter extends Macro implements Renderable {
     }
 
     private boolean triggered(GameObject obj) {
-        if (obj == null)
+        if (obj == null) {
             return false;
+        }
         RSObjectDefinition def = obj.definition();
-        if (def == null)
+        if (def == null) {
             return false;
+        }
         String[] actions = def.getActions();
-        if (actions == null)
+        if (actions == null) {
             return false;
+        }
         List<String> act = Arrays.asList(actions);
         return act.contains("Check") || !act.contains("Investigate");
     }
@@ -164,8 +164,9 @@ public class ChinchompaHunter extends Macro implements Renderable {
                     RSObjectDefinition def = object.definition();
                     if (def != null) {
                         String name = def.getName();
-                        if (name != null && name.equals("Flowers"))
+                        if (name != null && name.equals("Flowers")) {
                             return true;
+                        }
                     }
                 }
             }
@@ -182,8 +183,9 @@ public class ChinchompaHunter extends Macro implements Renderable {
                 RSObjectDefinition def = obj.definition();
                 if (def != null) {
                     String name = def.getName();
-                    if (name != null && name.contains("trap"))
+                    if (name != null && name.contains("trap")) {
                         count++;
+                    }
                 }
             }
         }
@@ -215,27 +217,32 @@ public class ChinchompaHunter extends Macro implements Renderable {
 
     private GameObject objectAt(Tile t, Filter<GameObject> filter) {
         GameObject[] objects = Objects.allAt(t);
-        if (objects == null)
+        if (objects == null) {
             return null;
+        }
         for (GameObject obj : objects) {
-            if (obj != null && filter.accept(obj))
+            if (obj != null && filter.accept(obj)) {
                 return obj;
+            }
         }
         return null;
     }
 
     public Tile getNext() {
         for (Tile tile : traps()) {
-            if (flowering(tile))
+            if (flowering(tile)) {
                 continue;
+            }
             GameObject obj = objectAt(tile, TRAP_FILTER);
-            if (obj == null)
+            if (obj == null) {
                 return tile;
+            }
         }
         for (Tile tile : traps()) {
             GameObject obj = Objects.topAt(tile);
-            if (obj != null && triggered(obj))
+            if (obj != null && triggered(obj)) {
                 return tile;
+            }
         }
         return null;
     }

@@ -1,20 +1,12 @@
 package com.minibot.macros.agility;
 
 import com.minibot.Minibot;
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Ground;
-import com.minibot.api.method.Objects;
-import com.minibot.api.method.Players;
-import com.minibot.api.method.Skills;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
-import com.minibot.api.wrapper.locatable.Area;
-import com.minibot.api.wrapper.locatable.GameObject;
-import com.minibot.api.wrapper.locatable.GroundItem;
-import com.minibot.api.wrapper.locatable.Player;
-import com.minibot.api.wrapper.locatable.Tile;
+import com.minibot.api.wrapper.locatable.*;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
@@ -41,7 +33,7 @@ public class Agility extends Macro implements Renderable {
     private static final Course DRAYNOR = new Course(true, // fix draynor fails
             new Obstacle(10073, "Climb", new Area(new Tile(3102, 3260, 0), new Tile(3105, 3279, 0)), null, new Tile(3103, 3279, 0)),
             new Obstacle(10074, "Cross", new Area(new Tile(3097, 3277, 3), new Tile(3102, 3281, 3)), null, new Tile(3098, 3277, 3)),
-            new Obstacle(10075, "Cross", new Area(new Tile(3088, 3273, 3) , new Tile(3092, 3276, 3)), null, new Tile(3092, 3276, 3)),
+            new Obstacle(10075, "Cross", new Area(new Tile(3088, 3273, 3), new Tile(3092, 3276, 3)), null, new Tile(3092, 3276, 3)),
             new Obstacle(10077, "Balance", new Area(new Tile(3089, 3265, 3), new Tile(3095, 3267, 3)), null, new Tile(3089, 3264, 3)),
             new Obstacle(10084, "Jump-up", new Area(new Tile(3087, 3257, 3), new Tile(3088, 3261, 3)), null, new Tile(3088, 3256, 3)),
             new Obstacle(10085, "Jump", new Area(new Tile(3087, 3255, 3), new Tile(3094, 3255, 3)), null, new Tile(3095, 3255, 3)),
@@ -51,7 +43,7 @@ public class Agility extends Macro implements Renderable {
     private static final Course VARROCK = new Course(true, // fix varrock fails
             new Obstacle(10586, "Climb", new Area(new Tile(3221, 3409, 0), new Tile(3241, 3418, 0)), null, new Tile(3221, 3414, 0)),
             new Obstacle(10587, "Cross", new Area(new Tile(3214, 3410, 3), new Tile(3219, 3419, 3)), new Area(new Tile(0, 0, 0), new Tile(0, 0, 0)), new Tile(3213, 3414, 3)),
-            new Obstacle(10642, "Leap", new Area(new Tile(3201, 3413, 3) , new Tile(3208, 3418, 3)), null, new Tile(3200, 3416, 3)),
+            new Obstacle(10642, "Leap", new Area(new Tile(3201, 3413, 3), new Tile(3208, 3418, 3)), null, new Tile(3200, 3416, 3)),
             new Obstacle(10777, "Balance", new Area(new Tile(3194, 3416, 1), new Tile(3197, 3416, 1)), new Area(new Tile(0, 0, 0), new Tile(0, 0, 0)), new Tile(3191, 3415, 1)),
             new Obstacle(10778, "Leap", new Area(new Tile(3192, 3402, 3), new Tile(3198, 3406, 3)), null, new Tile(3193, 3401, 3)),
             new Obstacle(10779, "Leap", new Area(new Tile(3182, 3382, 3), new Tile(3208, 3400, 3)), null, new Tile(3209, 3397, 3)),
@@ -85,13 +77,13 @@ public class Agility extends Macro implements Renderable {
             new Obstacle(11392, "Leap", new Area(new Tile(2622, 3672, 3), new Tile(2626, 3676, 3)), null, new Tile(2621, 3669, 3)),
             new Obstacle(11393, "Cross", new Area(new Tile(2615, 3658, 3), new Tile(2622, 3668, 3)), new Area(new Tile(2621, 3654, 0), new Tile(2625, 3658, 0)), new Tile(2623, 3658, 3)),
             new Obstacle(11395, "Leap", new Area(new Tile(2626, 3651, 3), new Tile(2630, 3655, 3)), new Area(new Tile(2626, 3650, 0), new Tile(2638, 3658, 0)), new Tile(2629, 3656, 3)),
-            new Obstacle(11396, "Hurdle", new Area(new Tile(2639, 3649, 3), new Tile(2644, 3653, 3)), null, new Tile(2643 ,3654, 3)),
+            new Obstacle(11396, "Hurdle", new Area(new Tile(2639, 3649, 3), new Tile(2644, 3653, 3)), null, new Tile(2643, 3654, 3)),
             new Obstacle(11397, "Cross", new Area(new Tile(2643, 3657, 3), new Tile(2650, 3662, 3)), null, new Tile(2647, 3663, 3)),
             new Obstacle(11404, "Jump-in", new Area(new Tile(2655, 3665, 3), new Tile(2666, 3685, 3)), null, new Tile(2654, 3676, 3))
     );
 
     private static final Course ARDOUGNE = new Course(true,
-            new Obstacle(11405, "Climb-up", new Area(new Tile(2666, 3294, 0), new Tile(2676, 3298, 0)), null, new Tile(2673 ,3298, 0)),
+            new Obstacle(11405, "Climb-up", new Area(new Tile(2666, 3294, 0), new Tile(2676, 3298, 0)), null, new Tile(2673, 3298, 0)),
             new Obstacle(11406, "Jump", new Area(new Tile(2671, 3299, 3), new Tile(2671, 3309, 3)), new Area(new Tile(2661, 3308, 0), new Tile(2666, 3320, 0)), new Tile(2670, 3310, 3)),
             new Obstacle(11631, "Walk-on", new Area(new Tile(2662, 3318, 3), new Tile(2666, 3318, 3)), null, new Tile(2661, 3318, 3)),
             new Obstacle(11429, "Jump", new Area(new Tile(2654, 3318, 3), new Tile(2657, 3318, 3)), new Area(new Tile(2650, 3315, 0), new Tile(2657, 3318, 0)), new Tile(2653, 3317, 3)),
@@ -121,7 +113,8 @@ public class Agility extends Macro implements Renderable {
         startExp = Game.experiences()[Skills.AGILITY];
         Player local = Players.local();
         if (local != null) {
-            search: for (Course c : COURSES) {
+            search:
+            for (Course c : COURSES) {
                 for (Obstacle o : c.obstacles()) {
                     if (o.area().contains(local)) {
                         course = c;
@@ -188,7 +181,7 @@ public class Agility extends Macro implements Renderable {
     public void render(Graphics2D g) {
         g.setColor(Color.CYAN);
         g.drawString(String.format("[%d/%d]: %s", obstacle, course.obstacles().length, status), 10, 10);
-        g.drawString(String.format("Time %s" ,Time.format(runtime())), 10, 22);
+        g.drawString(String.format("Time %s", Time.format(runtime())), 10, 22);
         g.drawString(String.format("Exp: %s (%s/H)", ValueFormat.format(Game.experiences()[Skills.AGILITY] - startExp, TEXT_FORMAT),
                 ValueFormat.format(hourly(Game.experiences()[Skills.AGILITY] - startExp), TEXT_FORMAT)), 10, 34);
         g.drawString(String.format("Level: %d", Game.levels()[Skills.AGILITY]), 10, 46);

@@ -8,5 +8,6 @@ public interface Locatable {
     Tile location();
 
     int distance(Locatable locatable);
+
     int distance();
 }

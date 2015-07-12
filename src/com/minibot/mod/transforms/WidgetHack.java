@@ -26,8 +26,9 @@ public class WidgetHack implements Transform {
         for (ClassNode node : classes.values()) {
             for (MethodNode mn : node.methods) {
                 if (!Modifier.isStatic(mn.access) || !mn.desc.endsWith("V")
-                        || !mn.desc.startsWith("([L" + widget.name + ";IIIIII"))
+                        || !mn.desc.startsWith("([L" + widget.name + ";IIIIII")) {
                     continue;
+                }
                 InsnList setStack = new InsnList();
                 Label label = new Label();
                 LabelNode ln = new LabelNode(label);

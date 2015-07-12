@@ -10,13 +10,13 @@ import java.net.URLClassLoader;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
- 
+
 /**
  * @author Tyler Sedlar
  * @since 4/30/2015
  */
 public class LocalMacroLoader extends MacroLoader<File> {
- 
+
     private final Set<MacroDefinition> definitions = new TreeSet<>((o, o1) -> {
         return o.manifest().name().compareToIgnoreCase(o1.manifest().name());
     });
@@ -31,8 +31,9 @@ public class LocalMacroLoader extends MacroLoader<File> {
             File file = files.pop();
             if (file.isDirectory()) {
                 File[] subFiles = file.listFiles();
-                if (subFiles != null)
+                if (subFiles != null) {
                     Collections.addAll(files, subFiles);
+                }
             } else {
                 if (file.getName().endsWith(".class")) {
                     readClass(classLoader, root, file);
@@ -42,7 +43,7 @@ public class LocalMacroLoader extends MacroLoader<File> {
             }
         }
     }
- 
+
     @SuppressWarnings("unchecked")
     private void readClass(ClassLoader classLoader, File root, File file) throws ClassNotFoundException {
         String className = file.getPath();
@@ -51,10 +52,11 @@ public class LocalMacroLoader extends MacroLoader<File> {
         className = className.substring(0, className.length() - ".class".length());
         className = className.replace(File.separatorChar, '.');
         Class<?> c = classLoader.loadClass(className);
-        if (accept(c))
+        if (accept(c)) {
             definitions.add(new MacroDefinition((Class<? extends Macro>) c));
+        }
     }
- 
+
     @SuppressWarnings("unchecked")
     private void readJar(File file) throws IOException, ClassNotFoundException {
         JarFile jar = new JarFile(file);
@@ -67,12 +69,13 @@ public class LocalMacroLoader extends MacroLoader<File> {
                 name = name.substring(0, name.length() - ".class".length());
                 name = name.replace('/', '.');
                 Class<?> c = ucl.loadClass(name);
-                if (accept(c))
+                if (accept(c)) {
                     definitions.add(new MacroDefinition((Class<? extends Macro>) c));
+                }
             }
         }
     }
- 
+
     @Override
     public MacroDefinition[] definitions() {
         return definitions.toArray(new MacroDefinition[definitions.size()]);

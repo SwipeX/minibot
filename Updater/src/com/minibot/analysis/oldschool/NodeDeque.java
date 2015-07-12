@@ -26,7 +26,7 @@ public class NodeDeque extends GraphVisitor {
     @Override
     public void visit() {
         visit(new NodeHooks());
-	    methods();
+        methods();
     }
 
     private class NodeHooks extends BlockVisitor {
@@ -62,25 +62,26 @@ public class NodeDeque extends GraphVisitor {
         }
     }
 
-	private void methods() {
-		for (MethodNode mn : getCn().methods) {
-			if (mn.desc.equals("()L" + clazz("Node") + ";") && mn.referenced(getUpdater().getArchive().build().get("client"))) {
-				int count = 0;
-				search: {
-					for (AbstractInsnNode ain : mn.instructions.toArray()) {
-						if (ain.opcode() == Opcodes.GETFIELD) {
-							count++;
-						} else if (ain.opcode() == Opcodes.INVOKEVIRTUAL) {
-							break search;
-						}
-					}
-					if (count == 4) {
+    private void methods() {
+        for (MethodNode mn : getCn().methods) {
+            if (mn.desc.equals("()L" + clazz("Node") + ";") && mn.referenced(getUpdater().getArchive().build().get("client"))) {
+                int count = 0;
+                search:
+                {
+                    for (AbstractInsnNode ain : mn.instructions.toArray()) {
+                        if (ain.opcode() == Opcodes.GETFIELD) {
+                            count++;
+                        } else if (ain.opcode() == Opcodes.INVOKEVIRTUAL) {
+                            break search;
+                        }
+                    }
+                    if (count == 4) {
                         getHooks().put("current", new InvokeHook("current", mn));
-					} else if (count == 3) {
-						getHooks().put("next", new InvokeHook("next", mn));
-					}
-				}
-			}
-		}
-	}
+                    } else if (count == 3) {
+                        getHooks().put("next", new InvokeHook("next", mn));
+                    }
+                }
+            }
+        }
+    }
 }

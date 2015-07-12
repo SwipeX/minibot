@@ -18,7 +18,8 @@ import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  * @author Tyler Sedlar
@@ -73,8 +74,9 @@ public class NatureCrafter extends Macro implements Renderable {
         int[] itemIds = storeIds();
         if (itemIds != null) {
             for (int itemId : itemIds) {
-                if (itemId != 0)
+                if (itemId != 0) {
                     count++;
+                }
             }
         }
         return count;
@@ -91,8 +93,9 @@ public class NatureCrafter extends Macro implements Renderable {
 
     private boolean purchase(int opcode, int itemId) {
         int[] itemIds = storeIds();
-        if (itemIds == null)
+        if (itemIds == null) {
             return false;
+        }
         int itemIndex = -1;
         for (int i = 0; i < itemIds.length; i++) {
             if (itemIds[i] == itemId) {
@@ -112,11 +115,11 @@ public class NatureCrafter extends Macro implements Renderable {
         Minibot.instance().client().resetMouseIdleTime();
         if (Inventory.items(PURE_ESSENCE_FILTER).isEmpty()) {
             if (NEAR_ALTAR.distance() < 10) {
-                    GameObject portal = Objects.nearestByName("Portal");
-                    if (portal != null) {
-                        portal.processAction("Use");
-                        Time.sleep(() -> NEAR_RUINS.distance() < 5, 7000);
-                    }
+                GameObject portal = Objects.nearestByName("Portal");
+                if (portal != null) {
+                    portal.processAction("Use");
+                    Time.sleep(() -> NEAR_RUINS.distance() < 5, 7000);
+                }
             } else {
                 if (STORE.distance() > 6 && storeOwner() == null) {
                     if (Game.energy() >= 20 && !Game.runEnabled()) {

@@ -80,8 +80,9 @@ public abstract class Updater extends Thread {
             Crawler crawler = new Crawler(Crawler.GameType.OSRS);
             crawler.crawl();
             boolean updated;
-            if ((updated = crawler.outdated()))
+            if ((updated = crawler.outdated())) {
                 crawler.download();
+            }
             if (closeOnOld && !updated) {
                 this.file = null;
                 hash = null;
@@ -98,7 +99,9 @@ public abstract class Updater extends Thread {
 
     public GraphVisitor visitor(String visitor) {
         for (GraphVisitor gv : visitors) {
-            if (gv.id().equals(visitor)) return gv;
+            if (gv.id().equals(visitor)) {
+                return gv;
+            }
         }
         return null;
     }
@@ -109,14 +112,17 @@ public abstract class Updater extends Thread {
 
     @Override
     public void run() {
-        if (file == null)
+        if (file == null) {
             return;
+        }
         List<ClassNode> remove = classnodes.values().stream().filter(cn -> cn.name.contains("/")).collect(Collectors.toList());
-        for (ClassNode cn : remove)
+        for (ClassNode cn : remove) {
             classnodes.remove(cn.name);
+        }
         Map<String, ClassFactory> factories = new HashMap<>();
-        for (ClassNode cn : classnodes.values())
+        for (ClassNode cn : classnodes.values()) {
             factories.put(cn.name, new ClassFactory(cn));
+        }
         UnusedMethodTransform umt = new UnusedMethodTransform() {
             @Override
             public void populateEntryPoints(List<ClassMethod> entries) {
@@ -132,8 +138,9 @@ public abstract class Updater extends Thread {
                             if (factories.containsKey(iface)) {
                                 ClassFactory impl = factories.get(iface);
                                 if (impl.findMethod(icm -> icm.method.name.equals(cm.method.name) &&
-                                        icm.method.desc.equals(cm.method.desc)) != null)
+                                        icm.method.desc.equals(cm.method.desc)) != null) {
                                     return true;
+                                }
                             }
                         }
                         return false;
@@ -142,8 +149,9 @@ public abstract class Updater extends Thread {
             }
         };
         umt.transform(classnodes);
-        for (GraphVisitor gv : visitors)
+        for (GraphVisitor gv : visitors) {
             gv.setUpdater(this);
+        }
         for (GraphVisitor gv : visitors) {
             for (ClassNode cn : classnodes.values()) {
                 if (gv.validate(cn)) {
@@ -200,8 +208,9 @@ public abstract class Updater extends Thread {
         revision = getRevision(graphs);
         appendLine("----------- R" + revision + " -----------");
         int totalGraphs = 0;
-        for (Map<MethodNode, FlowGraph> map : graphs.values())
+        for (Map<MethodNode, FlowGraph> map : graphs.values()) {
             totalGraphs += map.size();
+        }
         int totalClasses = 0;
         int classes = 0;
         int totalHooks = 0;
@@ -212,8 +221,9 @@ public abstract class Updater extends Thread {
         Collections.addAll(visitors, this.visitors);
         long start = System.nanoTime();
         for (GraphVisitor visitor : this.visitors) {
-            if (visitor.getCn() != null)
-            visitor.visit();
+            if (visitor.getCn() != null) {
+                visitor.visit();
+            }
         }
         long end = System.nanoTime();
         for (GraphVisitor gv : visitors) {
@@ -226,13 +236,15 @@ public abstract class Updater extends Thread {
                 appendLine(gv.id() + " as '" + gv.getCn().name + "'");
                 appendLine(" ^ implements " + gv.iface());
             }
-            if (gv.getCn() == null)
+            if (gv.getCn() == null) {
                 continue;
+            }
             classes++;
             hooks += gv.getHooks().size();
             VisitorInfo info = gv.getClass().getAnnotation(VisitorInfo.class);
-            if (info == null)
+            if (info == null) {
                 continue;
+            }
             totalHooks += info.hooks().length;
             for (Hook hook : gv.getHooks().values()) {
                 if (hook instanceof FieldHook) {
@@ -245,13 +257,15 @@ public abstract class Updater extends Thread {
                             }
                         }
                     }
-                    if (!fh.isStatic())
+                    if (!fh.isStatic()) {
                         fh.setClazz(gv.getCn().name);
+                    }
                 } else if (hook instanceof InvokeHook) {
                     InvokeHook ih = (InvokeHook) hook;
                     OpaquePredicateVisitor.OpaquePredicate predicate = opv.get(ih.getClazz() + "." + ih.getMethod() + ih.getDesc());
-                    if (predicate != null)
+                    if (predicate != null) {
                         ih.setOpaquePredicate(predicate.predicate, predicate.getPredicateType());
+                    }
                 }
                 if (print) {
                     appendLine(" " + hook.getOutput());
@@ -264,7 +278,7 @@ public abstract class Updater extends Thread {
                 }
             }
             gv.getHooks().keySet().stream().filter(hook -> !Arrays.asList(info.hooks()).contains(hook)).forEach(hook ->
-                    System.out.println("not in @info --> " + hook)
+                            System.out.println("not in @info --> " + hook)
             );
         }
         this.classes = classes + "/" + totalClasses;
@@ -303,21 +317,28 @@ public abstract class Updater extends Thread {
 
     public void refactor(File target) throws IOException {
         for (GraphVisitor visitor : visitors) {
-            if (visitor.getCn() == null) continue;
+            if (visitor.getCn() == null) {
+                continue;
+            }
             for (Hook hook : visitor.getHooks().values()) {
                 if (hook instanceof FieldHook) {
                     FieldHook fh = (FieldHook) hook;
                     FieldNode fn = classnodes.get(fh.getClazz()).getField(fh.getField(), null, false);
-                    if (fn == null) continue;
+                    if (fn == null) {
+                        continue;
+                    }
                     String newName = fh.name;
-                    if (newName.length() == 1)
+                    if (newName.length() == 1) {
                         newName += "Value";
+                    }
                     Assembly.rename(classnodes.values(), fn, newName);
                 }
             }
         }
         for (GraphVisitor visitor : visitors) {
-            if (visitor.getCn() == null) continue;
+            if (visitor.getCn() == null) {
+                continue;
+            }
             Assembly.rename(classnodes.values(), visitor.getCn(), visitor.id());
         }
         archive.write(target);

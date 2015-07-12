@@ -2,13 +2,7 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.tree.DialogButtonAction;
-import com.minibot.api.method.ChatboxListener;
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Npcs;
-import com.minibot.api.method.Players;
-import com.minibot.api.method.RuneScape;
-import com.minibot.api.method.Skills;
-import com.minibot.api.method.Widgets;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -52,10 +46,12 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
         if (target == null || (target.maxHealth() > 0 && target.health() <= 0)) {
             Npc npc = Npcs.nearestByFilter(n -> {
                 Character npcTarget = n.target();
-                if (npcTarget != null)
+                if (npcTarget != null) {
                     return npcTarget.equals(Players.local());
-                if (n.health() <= 0 && n.maxHealth() > 0)
+                }
+                if (n.health() <= 0 && n.maxHealth() > 0) {
                     return false;
+                }
                 String name = n.name();
                 return name != null && name.equals("Ogre");
             });

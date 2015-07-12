@@ -2,7 +2,9 @@ package com.minibot.macros.zulrah;
 
 public enum ZulrahDirection {
 
-    LEFT, BOTTOM, RIGHT;
+    LEFT,
+    BOTTOM,
+    RIGHT;
 
     @Override
     public String toString() {

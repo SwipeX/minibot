@@ -23,7 +23,7 @@ import java.util.jar.JarFile;
  */
 public class OSUpdater extends Updater {
 
-    private static final boolean server =  new File("/usr/share/nginx/html/data/").exists();
+    private static final boolean server = new File("/usr/share/nginx/html/data/").exists();
 
     private static GraphVisitor[] createVisitors() {
         return new GraphVisitor[]{

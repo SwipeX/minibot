@@ -14,8 +14,9 @@ public class GetterAdder implements Transform {
         //yuck redo this l8r
         for (FieldHook hook : ModScript.FIELD_HOOK_MAP.values()) {
             ClassNode where = classes.get(hook.isStatic() ? "client" : hook.getClazz());
-            if (where == null)
+            if (where == null) {
                 continue;
+            }
             String retDesc = hook.getFieldDesc().replace("[", "").replace(";", "");
             if (retDesc.startsWith("L") && !retDesc.contains("java") && !retDesc.contains("/")) {
                 String prebuild = "";

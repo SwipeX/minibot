@@ -22,9 +22,9 @@ public class ClueScrollKeyObject extends ClueScroll {
     public final Tile keyWalkDestination, walkingDestination, location;
     public final String keyNpcName, objectName;
 
-    private boolean teleported = false;
-    private boolean keyWalked = false;
-    private boolean walked = false;
+    private boolean teleported;
+    private boolean keyWalked;
+    private boolean walked;
 
     public ClueScrollKeyObject(int id, TeleportLocation teleport, Tile keyWalkDestination, String keyNpcName,
                                String objectName, Tile walkingDestination, Tile location) {
@@ -70,14 +70,10 @@ public class ClueScrollKeyObject extends ClueScroll {
                         Time.sleep(600, 800);
                     } else {
                         status.set("Interacting");
-                        GameObject[] objects = Objects.allAt(location);
-                        for (GameObject object : objects) {
-                            String name = object.name();
-                            if (name != null && name.equals(objectName)) {
-                                object.processFirstAction();
-                                Time.sleep(800, 1200);
-                                break;
-                            }
+                        GameObject object = Objects.findByName(location, objectName);
+                        if (object != null) {
+                            object.processFirstAction();
+                            Time.sleep(800, 1200);
                         }
                     }
                 }

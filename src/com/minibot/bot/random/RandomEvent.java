@@ -14,13 +14,15 @@ public abstract class RandomEvent implements Renderable {
     private boolean solving;
 
     public abstract boolean validate();
+
     public abstract void run();
 
     static {
         GameCanvas.addRenderable((g) -> {
             for (RandomEvent random : SOLVERS) {
-                if (random.solving)
+                if (random.solving) {
                     random.render(g);
+                }
             }
         });
     }

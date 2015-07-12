@@ -42,7 +42,9 @@ public class InteractableObject extends GraphVisitor {
                         VariableNode vn = (VariableNode) fmn.layer(IMUL, ILOAD);
                         if (vn == null) {
                             vn = (VariableNode) fmn.layer(IMUL, ISUB, IADD, ILOAD);
-                            if (vn != null) vn = vn.nextVariable();
+                            if (vn != null) {
+                                vn = vn.nextVariable();
+                            }
                         }
                         if (vn != null) {
                             String name = null;
@@ -61,8 +63,9 @@ public class InteractableObject extends GraphVisitor {
                             } else if (vn.var() == 12) {
                                 name = "id";
                             }
-                            if (name == null)
+                            if (name == null) {
                                 return;
+                            }
                             getHooks().put(name, new FieldHook(name, fmn.fin()));
                             added++;
                         }

@@ -1,16 +1,18 @@
 package com.minibot.macros.clue;
 
-import com.minibot.api.method.*;
+import com.minibot.api.method.Inventory;
+import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 import com.minibot.macros.clue.structure.ClueScroll;
-import com.minibot.macros.clue.structure.location.MediumClueSource;
 import com.minibot.macros.clue.structure.location.ClueSource;
+import com.minibot.macros.clue.structure.location.MediumClueSource;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 

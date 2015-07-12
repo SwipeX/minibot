@@ -59,8 +59,9 @@ public enum GameTab {
 
     public static GameTab current() {
         for (GameTab tab : GameTab.values()) {
-            if (tab.viewing())
+            if (tab.viewing()) {
                 return tab;
+            }
         }
         return null;
     }

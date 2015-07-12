@@ -26,16 +26,19 @@ public class Players {
 
     public static Player[] loaded() {
         RSPlayer[] raws = raw();
-        if (raws == null || raws.length == 0)
+        if (raws == null || raws.length == 0) {
             return new Player[0];
+        }
         int[] indices = Minibot.instance().client().getPlayerIndices();
-        if (indices == null || indices.length == 0)
+        if (indices == null || indices.length == 0) {
             return new Player[0];
+        }
         List<Player> Players = new ArrayList<>(indices.length);
         for (int index : indices) {
             RSPlayer raw = raws[index];
-            if (raw == null)
+            if (raw == null) {
                 continue;
+            }
             Player player = new Player(raw, index);
             Players.add(player);
         }
@@ -44,8 +47,9 @@ public class Players {
 
     public static Player atIndex(int idx) {
         RSPlayer[] raws = raw();
-        if (raws == null || raws.length == 0 || idx < 0 || idx >= raws.length)
+        if (raws == null || raws.length == 0 || idx < 0 || idx >= raws.length) {
             return null;
+        }
         RSPlayer raw = raws[idx];
         return raw == null ? null : new Player(raw, idx);
     }

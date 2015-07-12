@@ -68,27 +68,31 @@ public abstract class GraphVisitor implements Opcodes {
     }
 
     public final void addHook(Hook hook) {
-        if (hook.name == null)
+        if (hook.name == null) {
             return;
+        }
         hooks.put(hook.name, hook);
     }
 
     public final void add(String name, FieldNode fn) {
-        if (name == null || fn == null)
+        if (name == null || fn == null) {
             return;
+        }
         hooks.put(name, new FieldHook(name, fn));
     }
 
     public final void add(String name, FieldNode fn, String returnDesc) {
-        if (name == null || fn == null)
+        if (name == null || fn == null) {
             return;
+        }
         hooks.put(name, new FieldHook(name, fn));
     }
 
     public final void visit(String visitor, BlockVisitor bv) {
         ClassNode cn = updater.visitor(visitor).cn;
-        if (cn == null)
+        if (cn == null) {
             return;
+        }
         for (FlowGraph graph : updater.graphs().get(cn).values()) {
             this.graph = graph;
             for (Block block : graph) {
@@ -109,8 +113,9 @@ public abstract class GraphVisitor implements Opcodes {
             for (FlowGraph graph : map.values()) {
                 this.graph = graph;
                 for (Block block : graph) {
-                    if (bv.validate())
+                    if (bv.validate()) {
                         bv.visit(block);
+                    }
                 }
             }
         }
@@ -118,8 +123,9 @@ public abstract class GraphVisitor implements Opcodes {
     }
 
     public final void visit(MethodVisitor mv) {
-        for (MethodNode mn : cn.methods)
+        for (MethodNode mn : cn.methods) {
             mn.accept(mv);
+        }
     }
 
     public final void visitIf(BlockVisitor bv, Predicate<Block> blockPredicate) {
@@ -127,8 +133,9 @@ public abstract class GraphVisitor implements Opcodes {
             for (FlowGraph graph : map.values()) {
                 this.graph = graph;
                 for (Block block : graph) {
-                    if (bv.validate() && blockPredicate.test(block))
+                    if (bv.validate() && blockPredicate.test(block)) {
                         bv.visit(block);
+                    }
                 }
             }
         }
@@ -138,12 +145,14 @@ public abstract class GraphVisitor implements Opcodes {
     public final void visitIfM(BlockVisitor bv, Predicate<MethodNode> methodPredicate) {
         for (Map<MethodNode, FlowGraph> map : updater.graphs().values()) {
             for (Map.Entry<MethodNode, FlowGraph> graph : map.entrySet()) {
-                if (!methodPredicate.test(graph.getKey()))
+                if (!methodPredicate.test(graph.getKey())) {
                     continue;
+                }
                 this.graph = graph.getValue();
                 for (Block block : this.graph) {
-                    if (bv.validate())
+                    if (bv.validate()) {
                         bv.visit(block);
+                    }
                 }
             }
         }
@@ -152,15 +161,17 @@ public abstract class GraphVisitor implements Opcodes {
 
     public final void visitAll(MethodVisitor mv) {
         for (ClassNode cn : updater.getClassnodes().values()) {
-            for (MethodNode mn : cn.methods)
+            for (MethodNode mn : cn.methods) {
                 mn.accept(mv);
+            }
         }
     }
 
     public String getHookKey(String hook) {
         Hook h = hooks.get(hook);
-        if (h == null)
+        if (h == null) {
             return null;
+        }
         FieldHook fh = (FieldHook) h;
         return fh.getClazz() + "." + fh.getField();
     }

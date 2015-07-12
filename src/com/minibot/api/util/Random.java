@@ -2,7 +2,8 @@ package com.minibot.api.util;
 
 import com.minibot.api.method.projection.Projection;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Shape;
 import java.util.Collection;
 
 public class Random {

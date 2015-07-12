@@ -22,8 +22,9 @@ public enum ZulrahMode {
 
     public boolean activate() {
         for (ZulrahMode zm : ZulrahMode.values()) {
-            if (!zm.equals(this))
+            if (!zm.equals(this)) {
                 zm.deactivate();
+            }
         }
         WidgetComponent component = Widgets.get(PRAYER_BOOK, prayerComponentIndex);
         if (component != null && Action.indexOf(component.actions(), "Activate") >= 0) {

@@ -32,59 +32,59 @@ import java.io.PrintStream;
 /**
  * Handles debug output on sIRC. The default output stream is {@code
  * System.out}, and debug is disabled until you enable it.
- * 
+ *
  * @author Sorcix
  */
 public final class IrcDebug {
-	
-	/**
-	 * Whether debug output is enabled.
-	 */
-	private static boolean enabled;
-	/**
-	 * The {@link PrintStream} to use for debug output.
-	 */
-	private static PrintStream out = System.out;
-	
-	/**
-	 * Checks whether debug output is enabled.
-	 * 
-	 * @return True if debug output is enabled, false otherwise.
-	 */
-	public static boolean isEnabled() {
-		return IrcDebug.enabled;
-	}
-	
-	/**
-	 * Sends a line to the log. All messages are prefixed with the
-	 * current timestamp.
-	 * 
-	 * @param line The message to log.
-	 */
-	protected static void log(String line) {
-		if (IrcDebug.enabled) {
-			IrcDebug.out.println("[" + System.currentTimeMillis() + "] " + line);
-			IrcDebug.out.flush();
-		}
-	}
-	
-	/**
-	 * Enables or disables debug output.
-	 * 
-	 * @param enable True to enable debug output, false to disable it.
-	 */
-	public static void setEnabled(boolean enable) {
-		IrcDebug.enabled = enable;
-	}
-	
-	/**
-	 * Changes the stream used for debug output.
-	 * 
-	 * @param out The new stream for debug output.
-	 */
-	public static void setLogStream(PrintStream out) {
-		if (out != null) {
-			IrcDebug.out = out;
-		}
-	}
+
+    /**
+     * Whether debug output is enabled.
+     */
+    private static boolean enabled;
+    /**
+     * The {@link PrintStream} to use for debug output.
+     */
+    private static PrintStream out = System.out;
+
+    /**
+     * Checks whether debug output is enabled.
+     *
+     * @return True if debug output is enabled, false otherwise.
+     */
+    public static boolean isEnabled() {
+        return IrcDebug.enabled;
+    }
+
+    /**
+     * Sends a line to the log. All messages are prefixed with the
+     * current timestamp.
+     *
+     * @param line The message to log.
+     */
+    protected static void log(String line) {
+        if (IrcDebug.enabled) {
+            IrcDebug.out.println("[" + System.currentTimeMillis() + "] " + line);
+            IrcDebug.out.flush();
+        }
+    }
+
+    /**
+     * Enables or disables debug output.
+     *
+     * @param enable True to enable debug output, false to disable it.
+     */
+    public static void setEnabled(boolean enable) {
+        IrcDebug.enabled = enable;
+    }
+
+    /**
+     * Changes the stream used for debug output.
+     *
+     * @param out The new stream for debug output.
+     */
+    public static void setLogStream(PrintStream out) {
+        if (out != null) {
+            IrcDebug.out = out;
+        }
+    }
 }

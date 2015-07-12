@@ -11,10 +11,18 @@ public class Walking {
     public static void walkTo(Tile tile) {
         int x = tile.localX();
         int y = tile.localY();
-        if (x < 0) x = 0;
-        if (x > MAX_DIST) x = MAX_DIST;
-        if (y < 0) y = 0;
-        if (y > MAX_DIST) y = MAX_DIST;
+        if (x < 0) {
+            x = 0;
+        }
+        if (x > MAX_DIST) {
+            x = MAX_DIST;
+        }
+        if (y < 0) {
+            y = 0;
+        }
+        if (y > MAX_DIST) {
+            y = MAX_DIST;
+        }
         Minibot.instance().client().setHoveredRegionTileX(x);
         Minibot.instance().client().setHoveredRegionTileY(y);
     }

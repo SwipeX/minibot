@@ -30,8 +30,9 @@ public class Combat {
 
     //0 = top left button, 1 = top right, 3 = bottom left, 2 = bottom right
     public static void setStyle(int style) {
-        if (style() == style)
+        if (style() == style) {
             return;
+        }
         int hash = 38862851;
         switch (style) {
             case 1:

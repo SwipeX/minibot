@@ -44,12 +44,14 @@ public class Character extends GraphVisitor {
                 public void visitMethod(MethodMemberNode mmn) {
                     if (mmn.children() >= 3) {
                         List<AbstractNode> delegates = mmn.layerAll(IMUL, GETFIELD);
-                        if (delegates == null || delegates.size() != 2)
+                        if (delegates == null || delegates.size() != 2) {
                             return;
+                        }
                         for (AbstractNode delegate : delegates) {
                             FieldMemberNode fmn = (FieldMemberNode) delegate;
-                            if (!fmn.owner().equals(getCn().name))
+                            if (!fmn.owner().equals(getCn().name)) {
                                 continue;
+                            }
                             addHook(new FieldHook(getHooks().containsKey("x") ? "y" : "x", fmn.fin()));
                             added++;
                         }

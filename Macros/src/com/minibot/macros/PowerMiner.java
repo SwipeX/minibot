@@ -3,13 +3,7 @@ package com.minibot.macros;
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.action.tree.ExamineEntityAction;
-import com.minibot.api.method.ChatboxListener;
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Objects;
-import com.minibot.api.method.Players;
-import com.minibot.api.method.RuneScape;
-import com.minibot.api.method.Skills;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
@@ -63,11 +57,13 @@ public class PowerMiner extends Macro implements Renderable, ChatboxListener {
                         int cachedMessageCount = messageCount;
                         RuneScape.processAction(new ExamineEntityAction(ActionOpcodes.EXAMINE_OBJECT, object.uid(),
                                 object.localX(), object.localY()));
-                        while (messageCount == cachedMessageCount)
+                        while (messageCount == cachedMessageCount) {
                             Time.sleep(50, 100);
+                        }
                         System.out.println(id + " " + (valid ? "valid" : "invalid"));
-                        if (valid)
+                        if (valid) {
                             validRockIds.add(id);
+                        }
                         identifiedRockIds.add(id);
                     }
                 }
@@ -90,8 +86,9 @@ public class PowerMiner extends Macro implements Renderable, ChatboxListener {
             }
             rock.processAction("Mine");
             if (Time.sleep(() -> {
-                if (Players.local().animation() != -1)
+                if (Players.local().animation() != -1) {
                     return true;
+                }
                 GameObject current = Objects.topAt(rock.location());
                 return current != null && current.id() != rock.id();
             }, 5000)) {
@@ -99,8 +96,9 @@ public class PowerMiner extends Macro implements Renderable, ChatboxListener {
                 if (top != null && top.id() == rock.id()) {
                     Time.sleep(300, 450);
                     Time.sleep(() -> {
-                        if (Players.local().animation() == -1)
+                        if (Players.local().animation() == -1) {
                             return true;
+                        }
                         GameObject current = Objects.topAt(rock.location());
                         return current != null && current.id() != rock.id();
                     }, 5000);

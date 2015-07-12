@@ -8,7 +8,7 @@ import com.minibot.api.method.Widgets;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.client.natives.RSWidget;
 
-import java.awt.*;
+import java.awt.Rectangle;
 
 /**
  * @author Tyler Sedlar
@@ -31,13 +31,15 @@ public class WidgetComponent extends Wrapper<RSWidget> {
 
     public WidgetComponent[] children() {
         RSWidget[] children = raw.getChildren();
-        if (children == null)
+        if (children == null) {
             return new WidgetComponent[0];
+        }
         int index = 0;
         WidgetComponent[] array = new WidgetComponent[children.length];
         for (RSWidget widget : children) {
-            if (widget != null)
+            if (widget != null) {
                 array[index] = new WidgetComponent(widget, index);
+            }
             index++;
         }
         return array;
@@ -53,8 +55,9 @@ public class WidgetComponent extends Wrapper<RSWidget> {
 
     public WidgetComponent owner() {
         int uid = ownerId();
-        if (uid == -1)
+        if (uid == -1) {
             return null;
+        }
         int parent = uid >> 16;
         int child = uid & 0xFFFF;
         return Widgets.get(parent, child);
@@ -149,11 +152,13 @@ public class WidgetComponent extends Wrapper<RSWidget> {
     public WidgetComponent child(Filter<WidgetComponent> filter) {
         for (WidgetComponent child : children()) {
             try {
-                if (filter.accept(child))
+                if (filter.accept(child)) {
                     return child;
+                }
                 WidgetComponent result = child.child(filter);
-                if (result != null)
+                if (result != null) {
                     return result;
+                }
             } catch (Exception ignored) {
             }
         }

@@ -22,8 +22,9 @@ public class DijkstraPathfinder {
     }
 
     public WebVertex[] generate(WebVertex src, WebVertex dest) {
-        if (src.index() == dest.index())
+        if (src.index() == dest.index()) {
             return new WebVertex[0];
+        }
         long time = System.currentTimeMillis();
         settled.clear();
         unsettled.clear();
@@ -46,8 +47,9 @@ public class DijkstraPathfinder {
         }
         List<WebVertex> path = new ArrayList<>();
         WebVertex step = dest;
-        if (preds.get(step) == null)
+        if (preds.get(step) == null) {
             return null;
+        }
         path.add(step);
         while (preds.get(step) != null) {
             step = preds.get(step);

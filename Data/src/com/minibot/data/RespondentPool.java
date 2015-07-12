@@ -8,11 +8,12 @@ import com.minibot.data.respondents.Start;
 import java.util.HashMap;
 
 /**
- * Created by tim on 6/3/15.
+ * @author Tim Dekker
+ * @since 6/3/15
  */
 public class RespondentPool {
 
-    private static HashMap<String, Respondent> tasks = new HashMap<>();
+    private static final HashMap<String, Respondent> tasks = new HashMap<>();
 
     static {
         tasks.put("START", new Start());

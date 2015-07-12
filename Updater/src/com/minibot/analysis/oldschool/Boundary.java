@@ -41,7 +41,9 @@ public class Boundary extends GraphVisitor {
                     if (fmn.opcode() == PUTFIELD && fmn.owner().equals(getCn().name)) {
                         if (fmn.desc().equals("I")) {
                             VariableNode vn = (VariableNode) fmn.layer(IMUL, ILOAD);
-                            if (vn == null) vn = (VariableNode) fmn.layer(IADD, IMUL, ILOAD);
+                            if (vn == null) {
+                                vn = (VariableNode) fmn.layer(IADD, IMUL, ILOAD);
+                            }
                             if (vn != null) {
                                 String name = null;
                                 if (vn.var() == 2) {
@@ -57,13 +59,17 @@ public class Boundary extends GraphVisitor {
                                 } else if (vn.var() == 10) {
                                     name = "flags";
                                 }
-                                if (name == null) return;
+                                if (name == null) {
+                                    return;
+                                }
                                 addHook(new FieldHook(name, fmn.fin()));
                                 added++;
                             }
                         } else if (fmn.desc().equals(desc("RenderableNode"))) {
                             VariableNode vn = fmn.firstVariable();
-                            if (vn != null) vn = vn.nextVariable();
+                            if (vn != null) {
+                                vn = vn.nextVariable();
+                            }
                             if (vn != null) {
                                 String name = null;
                                 if (vn.var() == 5) {
@@ -71,8 +77,9 @@ public class Boundary extends GraphVisitor {
                                 } else if (vn.var() == 6) {
                                     name = "backup";
                                 }
-                                if (name == null)
+                                if (name == null) {
                                     return;
+                                }
                                 addHook(new FieldHook(name, fmn.fin()));
                                 getHooks().put(name, new FieldHook(name, fmn.fin()));
                                 added++;

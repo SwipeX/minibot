@@ -1,6 +1,9 @@
 package com.minibot.macros.clue.structure.location;
 
-import com.minibot.api.method.*;
+import com.minibot.api.method.Bank;
+import com.minibot.api.method.Ground;
+import com.minibot.api.method.Npcs;
+import com.minibot.api.method.Players;
 import com.minibot.api.method.web.WebPath;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.filter.Filter;

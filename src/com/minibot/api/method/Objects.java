@@ -21,33 +21,57 @@ public class Objects {
     }
 
     public static GameObject[] allAt(int rx, int ry, int z) {
-        if (rx > 104 || rx < 0 || ry > 104 || ry < 0 || z < 0 || z > 3)
+        if (rx > 104 || rx < 0 || ry > 104 || ry < 0 || z < 0 || z > 3) {
             return new GameObject[0];
+        }
         List<GameObject> objs = new ArrayList<>();
         RSTile[][][] tiles = Minibot.instance().client().getRegion().getTiles();
-        if (tiles == null)
+        if (tiles == null) {
             return new GameObject[0];
+        }
         RSTile tile = tiles[z][rx][ry];
-        if (tile == null)
+        if (tile == null) {
             return new GameObject[0];
+        }
         RSInteractableObject[] entities = tile.getObjects();
         if (entities != null && entities.length > 0) {
             for (RSInteractableObject entity : entities) {
-                if (entity == null)
+                if (entity == null) {
                     continue;
+                }
                 objs.add(new GameObject(entity));
             }
         }
         RSWallDecoration wall = tile.getWallDecoration();
-        if (wall != null)
+        if (wall != null) {
             objs.add(new GameObject(wall));
+        }
         RSFloorDecoration floor = tile.getFloorDecoration();
-        if (floor != null)
+        if (floor != null) {
             objs.add(new GameObject(floor));
+        }
         RSBoundary boundary = tile.getBoundary();
-        if (boundary != null)
+        if (boundary != null) {
             objs.add(new GameObject(boundary));
+        }
         return objs.toArray(new GameObject[objs.size()]);
+    }
+
+    public static GameObject findByFilter(Tile tile, Filter<GameObject> filter) {
+        GameObject[] objects = allAt(tile);
+        for (GameObject object : objects) {
+            if (filter.accept(object)) {
+                return object;
+            }
+        }
+        return null;
+    }
+
+    public static GameObject findByName(Tile tile, String name) {
+        return findByFilter(tile, o -> {
+            String objectName = o.name();
+            return objectName != null && objectName.equals(name);
+        });
     }
 
     public static GameObject topAt(Tile t) {
@@ -63,8 +87,9 @@ public class Objects {
         for (int x = bx; x < bx + 104; x++) {
             for (int y = by; y < by + 104; y++) {
                 Tile t = new Tile(x, y, plane);
-                if (radius == -1 || t.distance() < radius)
+                if (radius == -1 || t.distance() < radius) {
                     Collections.addAll(objects, allAt(t.localX(), t.localY(), t.plane()));
+                }
             }
         }
         return objects;

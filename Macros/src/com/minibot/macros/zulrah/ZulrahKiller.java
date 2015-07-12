@@ -1,14 +1,7 @@
 package com.minibot.macros.zulrah;
 
 import com.minibot.api.action.tree.Action;
-import com.minibot.api.method.Bank;
-import com.minibot.api.method.ChatboxListener;
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Players;
-import com.minibot.api.method.Skills;
-import com.minibot.api.method.Walking;
-import com.minibot.api.method.Widgets;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
@@ -55,8 +48,9 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
     }
 
     private static boolean prepareInventory() {
-        if (Inventory.full())
+        if (Inventory.full()) {
             return true;
+        }
         if (Inventory.first(VENOM) == null) {
             Item venom = Bank.first(VENOM);
             if (venom != null) {
@@ -179,7 +173,7 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
                         pot.processAction("Drink");
                         Time.sleep(550, 750);
                     } else {
-                        if (teleportCamelot()){
+                        if (teleportCamelot()) {
                             Time.sleep(() -> ZulrahEnvironment.findZulrah() == null, 10000);
                         }
                     }
@@ -192,7 +186,7 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
                             food.processAction("Eat");
                             Time.sleep(550, 750);
                         } else {
-                            if (teleportCamelot()){
+                            if (teleportCamelot()) {
                                 Time.sleep(() -> ZulrahEnvironment.findZulrah() == null, 10000);
                             }
                             break; // you're screwed, get out
@@ -214,8 +208,9 @@ public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
             }
         } else {
             mode = null;
-            for (ZulrahMode mode : ZulrahMode.values())
+            for (ZulrahMode mode : ZulrahMode.values()) {
                 mode.deactivate();
+            }
             if (ZulrahEnvironment.atCamp()) {
                 if (died) {
                     if (!collected) {

@@ -27,8 +27,9 @@ public class OpaquePredicateVisitor extends MethodVisitor {
 
     public void accept(MethodNode mn) {
         Type[] types = Type.getArgumentTypes(mn.desc);
-        if (types.length == 0)
+        if (types.length == 0) {
             return;
+        }
         if (types[types.length - 1] == Type.INT_TYPE) {
             predType = int.class;
         } else if (types[types.length - 1] == Type.BYTE_TYPE) {
@@ -105,18 +106,21 @@ public class OpaquePredicateVisitor extends MethodVisitor {
                 ((TypeInsnNode) ain).desc.equals("java/lang/IllegalStateException")))) {
             boolean flip = false;
             AbstractInsnNode arg = jin.previous();
-            if (arg == null)
+            if (arg == null) {
                 return;
+            }
             AbstractInsnNode load = arg.previous();
-            if (load == null)
+            if (load == null) {
                 return;
+            }
             int predicate = numberFor(arg);
             if (predicate == Integer.MAX_VALUE) {
                 predicate = numberFor(load);
                 flip = true;
             }
-            if (predicate == Integer.MAX_VALUE)
+            if (predicate == Integer.MAX_VALUE) {
                 return;
+            }
             predicate = validPredicateFor(jin, predicate, flip);
             PREDICATES.put(key(mn), new OpaquePredicate(predicate, predType));
         }
@@ -136,6 +140,7 @@ public class OpaquePredicateVisitor extends MethodVisitor {
             return predicateType;
         }
     }
+
     public OpaquePredicate get(String method) {
         return PREDICATES.get(method);
     }

@@ -12,10 +12,14 @@ public class Varpbits extends GraphVisitor {
 
     @Override
     public boolean validate(ClassNode cn) {
-        if (cn.name.equals("client")) return false;
+        if (cn.name.equals("client")) {
+            return false;
+        }
         if (cn.getFieldTypeCount() == 0) {
             MethodNode clinit = cn.getMethodByName("<clinit>");
-            if (clinit == null) return false;
+            if (clinit == null) {
+                return false;
+            }
             for (AbstractInsnNode ain : clinit.instructions.toArray()) {
                 if (ain instanceof FieldInsnNode) {
                     FieldInsnNode fin = (FieldInsnNode) ain;

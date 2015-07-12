@@ -1,11 +1,7 @@
 package com.minibot.bot.random;
 
 import com.minibot.api.action.tree.InputButtonAction;
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Login;
-import com.minibot.api.method.Mouse;
-import com.minibot.api.method.RuneScape;
-import com.minibot.api.method.Widgets;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;

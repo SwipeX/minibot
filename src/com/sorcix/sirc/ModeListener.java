@@ -29,110 +29,110 @@ package com.sorcix.sirc;
 
 /**
  * Notified of user mode changes.
- * 
+ *
  * @author Sorcix
  * @see IrcConnection#addModeListener(ModeListener)
  * @see IrcConnection#removeModeListener(ModeListener)
  */
 public interface ModeListener {
-	
-	/**
-	 * Someone was given Admin mode.
-	 * 
-	 * @param irc The {@link IrcConnection} receiving this event.
-	 * @param channel The channel in which the user mode was changed.
-	 * @param sender The user changing this mode.
-	 * @param user The user whose mode was changed.
-	 */
-	void onAdmin(IrcConnection irc, Channel channel, User sender, User user);
-	
-	/**
-	 * Someone lost Admin mode.
-	 * 
-	 * @param irc The {@link IrcConnection} receiving this event.
-	 * @param channel The channel in which the user mode was changed.
-	 * @param sender The user changing this mode.
-	 * @param user The user whose mode was changed.
-	 */
-	void onDeAdmin(IrcConnection irc, Channel channel, User sender, User user);
-	
-	/**
-	 * Someone lost Founder mode.
-	 * 
-	 * @param irc The {@link IrcConnection} receiving this event.
-	 * @param channel The channel in which the user mode was changed.
-	 * @param sender The user changing this mode.
-	 * @param user The user whose mode was changed.
-	 */
-	void onDeFounder(IrcConnection irc, Channel channel, User sender, User user);
-	
-	/**
-	 * Someone lost Half-Operator mode.
-	 * 
-	 * @param irc The {@link IrcConnection} receiving this event.
-	 * @param channel The channel in which the user mode was changed.
-	 * @param sender The user changing this mode.
-	 * @param user The user whose mode was changed.
-	 */
-	void onDeHalfop(IrcConnection irc, Channel channel, User sender, User user);
-	
-	/**
-	 * Someone lost Operator mode.
-	 * 
-	 * @param irc The {@link IrcConnection} receiving this event.
-	 * @param channel The channel in which the user mode was changed.
-	 * @param sender The user changing this mode.
-	 * @param user The user whose mode was changed.
-	 */
-	void onDeOp(IrcConnection irc, Channel channel, User sender, User user);
-	
-	/**
-	 * Someone lost Voice mode.
-	 * 
-	 * @param irc The {@link IrcConnection} receiving this event.
-	 * @param channel The channel in which the user mode was changed.
-	 * @param sender The user changing this mode.
-	 * @param user The user whose mode was changed.
-	 */
-	void onDeVoice(IrcConnection irc, Channel channel, User sender, User user);
-	
-	/**
-	 * Someone was given Founder mode.
-	 * 
-	 * @param irc The {@link IrcConnection} receiving this event.
-	 * @param channel The channel in which the user mode was changed.
-	 * @param sender The user changing this mode.
-	 * @param user The user whose mode was changed.
-	 */
-	void onFounder(IrcConnection irc, Channel channel, User sender, User user);
-	
-	/**
-	 * Someone was given Half-Operator mode.
-	 * 
-	 * @param irc The {@link IrcConnection} receiving this event.
-	 * @param channel The channel in which the user mode was changed.
-	 * @param sender The user changing this mode.
-	 * @param user The user whose mode was changed.
-	 */
-	void onHalfop(IrcConnection irc, Channel channel, User sender, User user);
-	
-	/**
-	 * Someone was given Operator mode.
-	 * 
-	 * @param irc The {@link IrcConnection} receiving this event.
-	 * @param channel The channel in which the user mode was changed.
-	 * @param sender The user changing this mode.
-	 * @param user The user whose mode was changed.
-	 */
-	void onOp(IrcConnection irc, Channel channel, User sender, User user);
-	
-	/**
-	 * Someone was given Voice mode.
-	 * 
-	 * @param irc The {@link IrcConnection} receiving this event.
-	 * @param channel The channel in which the user mode was changed.
-	 * @param sender The user changing this mode.
-	 * @param user The user whose mode was changed.
-	 */
-	void onVoice(IrcConnection irc, Channel channel, User sender, User user);
+
+    /**
+     * Someone was given Admin mode.
+     *
+     * @param irc The {@link IrcConnection} receiving this event.
+     * @param channel The channel in which the user mode was changed.
+     * @param sender The user changing this mode.
+     * @param user The user whose mode was changed.
+     */
+    void onAdmin(IrcConnection irc, Channel channel, User sender, User user);
+
+    /**
+     * Someone lost Admin mode.
+     *
+     * @param irc The {@link IrcConnection} receiving this event.
+     * @param channel The channel in which the user mode was changed.
+     * @param sender The user changing this mode.
+     * @param user The user whose mode was changed.
+     */
+    void onDeAdmin(IrcConnection irc, Channel channel, User sender, User user);
+
+    /**
+     * Someone lost Founder mode.
+     *
+     * @param irc The {@link IrcConnection} receiving this event.
+     * @param channel The channel in which the user mode was changed.
+     * @param sender The user changing this mode.
+     * @param user The user whose mode was changed.
+     */
+    void onDeFounder(IrcConnection irc, Channel channel, User sender, User user);
+
+    /**
+     * Someone lost Half-Operator mode.
+     *
+     * @param irc The {@link IrcConnection} receiving this event.
+     * @param channel The channel in which the user mode was changed.
+     * @param sender The user changing this mode.
+     * @param user The user whose mode was changed.
+     */
+    void onDeHalfop(IrcConnection irc, Channel channel, User sender, User user);
+
+    /**
+     * Someone lost Operator mode.
+     *
+     * @param irc The {@link IrcConnection} receiving this event.
+     * @param channel The channel in which the user mode was changed.
+     * @param sender The user changing this mode.
+     * @param user The user whose mode was changed.
+     */
+    void onDeOp(IrcConnection irc, Channel channel, User sender, User user);
+
+    /**
+     * Someone lost Voice mode.
+     *
+     * @param irc The {@link IrcConnection} receiving this event.
+     * @param channel The channel in which the user mode was changed.
+     * @param sender The user changing this mode.
+     * @param user The user whose mode was changed.
+     */
+    void onDeVoice(IrcConnection irc, Channel channel, User sender, User user);
+
+    /**
+     * Someone was given Founder mode.
+     *
+     * @param irc The {@link IrcConnection} receiving this event.
+     * @param channel The channel in which the user mode was changed.
+     * @param sender The user changing this mode.
+     * @param user The user whose mode was changed.
+     */
+    void onFounder(IrcConnection irc, Channel channel, User sender, User user);
+
+    /**
+     * Someone was given Half-Operator mode.
+     *
+     * @param irc The {@link IrcConnection} receiving this event.
+     * @param channel The channel in which the user mode was changed.
+     * @param sender The user changing this mode.
+     * @param user The user whose mode was changed.
+     */
+    void onHalfop(IrcConnection irc, Channel channel, User sender, User user);
+
+    /**
+     * Someone was given Operator mode.
+     *
+     * @param irc The {@link IrcConnection} receiving this event.
+     * @param channel The channel in which the user mode was changed.
+     * @param sender The user changing this mode.
+     * @param user The user whose mode was changed.
+     */
+    void onOp(IrcConnection irc, Channel channel, User sender, User user);
+
+    /**
+     * Someone was given Voice mode.
+     *
+     * @param irc The {@link IrcConnection} receiving this event.
+     * @param channel The channel in which the user mode was changed.
+     * @param sender The user changing this mode.
+     * @param user The user whose mode was changed.
+     */
+    void onVoice(IrcConnection irc, Channel channel, User sender, User user);
 }

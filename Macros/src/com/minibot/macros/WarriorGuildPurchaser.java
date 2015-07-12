@@ -14,7 +14,8 @@ import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  * @author Tyler Sedlar
@@ -44,8 +45,9 @@ public class WarriorGuildPurchaser extends Macro implements Renderable {
         WidgetComponent comp = Widgets.get(STORE_WIDGET, STORE_ITEMS_COMPONENT);
         if (comp != null) {
             int[] itemStacks = comp.itemStackSizes();
-            if (itemStacks != null)
+            if (itemStacks != null) {
                 return itemStacks[STORE_INDEX] > 0;
+            }
         }
         return false;
     }
@@ -91,12 +93,14 @@ public class WarriorGuildPurchaser extends Macro implements Renderable {
                     Time.sleep(400, 600);
                 }
             } else {
-                if (buyable())
+                if (buyable()) {
                     bought += buy();
+                }
                 if (!Inventory.full()) {
                     if (lastHop != -1) {
-                        while (Time.millis() - lastHop < 8500)
+                        while (Time.millis() - lastHop < 8500) {
                             Time.sleep(50, 100);
+                        }
                     }
                     int randIdx;
                     do {

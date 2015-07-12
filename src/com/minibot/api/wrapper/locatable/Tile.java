@@ -4,7 +4,9 @@ import com.minibot.api.method.Game;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.projection.Projection;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Polygon;
 import java.util.Objects;
 
 /**
@@ -70,8 +72,9 @@ public class Tile implements Locatable {
         Polygon polygon = new Polygon();
         Point[] points = {toViewport(0, 0, 0), toViewport(1, 0, 0), toViewport(1, 1, 0), toViewport(0, 1, 0)};
         for (Point p : points) {
-            if (p == null)
+            if (p == null) {
                 return;
+            }
             polygon.addPoint(p.x, p.y);
         }
         g.draw(polygon);

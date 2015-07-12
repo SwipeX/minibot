@@ -10,6 +10,7 @@ public interface Identifiable {
     /**
      * Throws an {@link UnsupportedOperationException} if this {@link Identifiable}
      * has no name
+     *
      * @return The name assigned to this {@link Identifiable}
      */
     default String name() {

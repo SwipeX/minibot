@@ -11,8 +11,9 @@ public class InterfaceImpl implements Transform {
     public void inject(Map<String, ClassNode> classes) {
         for (ClassNode cn : classes.values()) {
             String def = ModScript.getDefinedName(cn.name);
-            if (def != null)
+            if (def != null) {
                 cn.interfaces.add("com/minibot/client/natives/RS" + def);
+            }
         }
     }
 }

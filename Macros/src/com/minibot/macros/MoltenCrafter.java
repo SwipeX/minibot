@@ -12,7 +12,8 @@ import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  * @author Tyler Sedlar
@@ -109,7 +110,8 @@ public class MoltenCrafter extends Macro implements Renderable, ChatboxListener 
 
     @Override
     public void messageReceived(int type, String sender, String message, String clan) {
-        if (message.contains("You make"))
+        if (message.contains("You make")) {
             crafted++;
+        }
     }
 }

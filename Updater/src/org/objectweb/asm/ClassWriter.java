@@ -2,19 +2,19 @@
  * ASM: a very small and fast Java bytecode manipulation framework
  * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ * notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the copyright holders nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -661,8 +661,8 @@ public class ClassWriter extends ClassVisitor {
 
     @Override
     public final void visit(final int version, final int access,
-            final String name, final String signature, final String superName,
-            final String[] interfaces) {
+                            final String name, final String signature, final String superName,
+                            final String[] interfaces) {
         this.version = version;
         this.access = access;
         this.name = newClass(name);
@@ -693,7 +693,7 @@ public class ClassWriter extends ClassVisitor {
 
     @Override
     public final void visitOuterClass(final String owner, final String name,
-            final String desc) {
+                                      final String desc) {
         enclosingMethodOwner = newClass(owner);
         if (name != null && desc != null) {
             enclosingMethod = newNameType(name, desc);
@@ -702,7 +702,7 @@ public class ClassWriter extends ClassVisitor {
 
     @Override
     public final AnnotationVisitor visitAnnotation(final String desc,
-            final boolean visible) {
+                                                   final boolean visible) {
         if (!ClassReader.ANNOTATIONS) {
             return null;
         }
@@ -722,7 +722,7 @@ public class ClassWriter extends ClassVisitor {
 
     @Override
     public final AnnotationVisitor visitTypeAnnotation(int typeRef,
-            TypePath typePath, final String desc, final boolean visible) {
+                                                       TypePath typePath, final String desc, final boolean visible) {
         if (!ClassReader.ANNOTATIONS) {
             return null;
         }
@@ -751,7 +751,7 @@ public class ClassWriter extends ClassVisitor {
 
     @Override
     public final void visitInnerClass(final String name,
-            final String outerName, final String innerName, final int access) {
+                                      final String outerName, final String innerName, final int access) {
         if (innerClasses == null) {
             innerClasses = new ByteVector();
         }
@@ -782,13 +782,13 @@ public class ClassWriter extends ClassVisitor {
 
     @Override
     public final FieldVisitor visitField(final int access, final String name,
-            final String desc, final String signature, final Object value) {
+                                         final String desc, final String signature, final Object value) {
         return new FieldWriter(this, access, name, desc, signature, value);
     }
 
     @Override
     public final MethodVisitor visitMethod(final int access, final String name,
-            final String desc, final String signature, final String[] exceptions) {
+                                           final String desc, final String signature, final String[] exceptions) {
         return new MethodWriter(this, access, name, desc, signature,
                 exceptions, computeMaxs, computeFrames);
     }
@@ -803,7 +803,7 @@ public class ClassWriter extends ClassVisitor {
 
     /**
      * Returns the bytecode of the class that was build with this class writer.
-     * 
+     *
      * @return the bytecode of the class that was build with this class writer.
      */
     public byte[] toByteArray() {
@@ -1003,7 +1003,7 @@ public class ClassWriter extends ClassVisitor {
     /**
      * Adds a number or string constant to the constant pool of the class being
      * build. Does nothing if the constant pool already contains a similar item.
-     * 
+     *
      * @param cst
      *            the value of the constant to be added to the constant pool.
      *            This parameter must be an {@link Integer}, a {@link Float}, a
@@ -1061,7 +1061,7 @@ public class ClassWriter extends ClassVisitor {
      * build. Does nothing if the constant pool already contains a similar item.
      * <i>This method is intended for {@link org.objectweb.asm.Attribute} sub classes, and is
      * normally not needed by class generators or adapters.</i>
-     * 
+     *
      * @param cst
      *            the value of the constant to be added to the constant pool.
      *            This parameter must be an {@link Integer}, a {@link Float}, a
@@ -1078,7 +1078,7 @@ public class ClassWriter extends ClassVisitor {
      * nothing if the constant pool already contains a similar item. <i>This
      * method is intended for {@link org.objectweb.asm.Attribute} sub classes, and is normally not
      * needed by class generators or adapters.</i>
-     * 
+     *
      * @param value
      *            the String value.
      * @return the index of a new or already existing UTF8 item.
@@ -1099,7 +1099,7 @@ public class ClassWriter extends ClassVisitor {
      * Does nothing if the constant pool already contains a similar item.
      * <i>This method is intended for {@link org.objectweb.asm.Attribute} sub classes, and is
      * normally not needed by class generators or adapters.</i>
-     * 
+     *
      * @param value
      *            the internal name of the class.
      * @return a new or already existing class reference item.
@@ -1120,7 +1120,7 @@ public class ClassWriter extends ClassVisitor {
      * Does nothing if the constant pool already contains a similar item.
      * <i>This method is intended for {@link org.objectweb.asm.Attribute} sub classes, and is
      * normally not needed by class generators or adapters.</i>
-     * 
+     *
      * @param value
      *            the internal name of the class.
      * @return the index of a new or already existing class reference item.
@@ -1134,7 +1134,7 @@ public class ClassWriter extends ClassVisitor {
      * build. Does nothing if the constant pool already contains a similar item.
      * <i>This method is intended for {@link org.objectweb.asm.Attribute} sub classes, and is
      * normally not needed by class generators or adapters.</i>
-     * 
+     *
      * @param methodDesc
      *            method descriptor of the method type.
      * @return a new or already existing method type reference item.
@@ -1155,7 +1155,7 @@ public class ClassWriter extends ClassVisitor {
      * build. Does nothing if the constant pool already contains a similar item.
      * <i>This method is intended for {@link org.objectweb.asm.Attribute} sub classes, and is
      * normally not needed by class generators or adapters.</i>
-     * 
+     *
      * @param methodDesc
      *            method descriptor of the method type.
      * @return the index of a new or already existing method type reference
@@ -1170,7 +1170,7 @@ public class ClassWriter extends ClassVisitor {
      * if the constant pool already contains a similar item. <i>This method is
      * intended for {@link org.objectweb.asm.Attribute} sub classes, and is normally not needed by
      * class generators or adapters.</i>
-     * 
+     *
      * @param tag
      *            the kind of this handle. Must be {@link org.objectweb.asm.Opcodes#H_GETFIELD},
      *            {@link org.objectweb.asm.Opcodes#H_GETSTATIC}, {@link org.objectweb.asm.Opcodes#H_PUTFIELD},
@@ -1188,7 +1188,7 @@ public class ClassWriter extends ClassVisitor {
      * @return a new or an already existing method type reference item.
      */
     Item newHandleItem(final int tag, final String owner, final String name,
-            final String desc) {
+                       final String desc) {
         key4.set(HANDLE_BASE + tag, owner, name, desc);
         Item result = get(key4);
         if (result == null) {
@@ -1211,7 +1211,7 @@ public class ClassWriter extends ClassVisitor {
      * if the constant pool already contains a similar item. <i>This method is
      * intended for {@link org.objectweb.asm.Attribute} sub classes, and is normally not needed by
      * class generators or adapters.</i>
-     * 
+     *
      * @param tag
      *            the kind of this handle. Must be {@link org.objectweb.asm.Opcodes#H_GETFIELD},
      *            {@link org.objectweb.asm.Opcodes#H_GETSTATIC}, {@link org.objectweb.asm.Opcodes#H_PUTFIELD},
@@ -1230,7 +1230,7 @@ public class ClassWriter extends ClassVisitor {
      *         item.
      */
     public int newHandle(final int tag, final String owner, final String name,
-            final String desc) {
+                         final String desc) {
         return newHandleItem(tag, owner, name, desc).index;
     }
 
@@ -1239,7 +1239,7 @@ public class ClassWriter extends ClassVisitor {
      * build. Does nothing if the constant pool already contains a similar item.
      * <i>This method is intended for {@link org.objectweb.asm.Attribute} sub classes, and is
      * normally not needed by class generators or adapters.</i>
-     * 
+     *
      * @param name
      *            name of the invoked method.
      * @param desc
@@ -1248,11 +1248,11 @@ public class ClassWriter extends ClassVisitor {
      *            the bootstrap method.
      * @param bsmArgs
      *            the bootstrap method constant arguments.
-     * 
+     *
      * @return a new or an already existing invokedynamic type reference item.
      */
     Item newInvokeDynamicItem(final String name, final String desc,
-            final Handle bsm, final Object... bsmArgs) {
+                              final Handle bsm, final Object... bsmArgs) {
         // cache for performance
         ByteVector bootstrapMethods = this.bootstrapMethods;
         if (bootstrapMethods == null) {
@@ -1278,7 +1278,8 @@ public class ClassWriter extends ClassVisitor {
         int length = (1 + 1 + argsLength) << 1; // (bsm + argCount + arguments)
         hashCode &= 0x7FFFFFFF;
         Item result = items[hashCode % items.length];
-        loop: while (result != null) {
+        loop:
+        while (result != null) {
             if (result.type != BSM || result.hashCode != hashCode) {
                 result = result.next;
                 continue;
@@ -1323,7 +1324,7 @@ public class ClassWriter extends ClassVisitor {
      * build. Does nothing if the constant pool already contains a similar item.
      * <i>This method is intended for {@link org.objectweb.asm.Attribute} sub classes, and is
      * normally not needed by class generators or adapters.</i>
-     * 
+     *
      * @param name
      *            name of the invoked method.
      * @param desc
@@ -1332,19 +1333,19 @@ public class ClassWriter extends ClassVisitor {
      *            the bootstrap method.
      * @param bsmArgs
      *            the bootstrap method constant arguments.
-     * 
+     *
      * @return the index of a new or already existing invokedynamic reference
      *         item.
      */
     public int newInvokeDynamic(final String name, final String desc,
-            final Handle bsm, final Object... bsmArgs) {
+                                final Handle bsm, final Object... bsmArgs) {
         return newInvokeDynamicItem(name, desc, bsm, bsmArgs).index;
     }
 
     /**
      * Adds a field reference to the constant pool of the class being build.
      * Does nothing if the constant pool already contains a similar item.
-     * 
+     *
      * @param owner
      *            the internal name of the field's owner class.
      * @param name
@@ -1369,7 +1370,7 @@ public class ClassWriter extends ClassVisitor {
      * Does nothing if the constant pool already contains a similar item.
      * <i>This method is intended for {@link org.objectweb.asm.Attribute} sub classes, and is
      * normally not needed by class generators or adapters.</i>
-     * 
+     *
      * @param owner
      *            the internal name of the field's owner class.
      * @param name
@@ -1385,7 +1386,7 @@ public class ClassWriter extends ClassVisitor {
     /**
      * Adds a method reference to the constant pool of the class being build.
      * Does nothing if the constant pool already contains a similar item.
-     * 
+     *
      * @param owner
      *            the internal name of the method's owner class.
      * @param name
@@ -1397,7 +1398,7 @@ public class ClassWriter extends ClassVisitor {
      * @return a new or already existing method reference item.
      */
     Item newMethodItem(final String owner, final String name,
-            final String desc, final boolean itf) {
+                       final String desc, final boolean itf) {
         int type = itf ? IMETH : METH;
         key3.set(type, owner, name, desc);
         Item result = get(key3);
@@ -1414,7 +1415,7 @@ public class ClassWriter extends ClassVisitor {
      * Does nothing if the constant pool already contains a similar item.
      * <i>This method is intended for {@link org.objectweb.asm.Attribute} sub classes, and is
      * normally not needed by class generators or adapters.</i>
-     * 
+     *
      * @param owner
      *            the internal name of the method's owner class.
      * @param name
@@ -1426,14 +1427,14 @@ public class ClassWriter extends ClassVisitor {
      * @return the index of a new or already existing method reference item.
      */
     public int newMethod(final String owner, final String name,
-            final String desc, final boolean itf) {
+                         final String desc, final boolean itf) {
         return newMethodItem(owner, name, desc, itf).index;
     }
 
     /**
      * Adds an integer to the constant pool of the class being build. Does
      * nothing if the constant pool already contains a similar item.
-     * 
+     *
      * @param value
      *            the int value.
      * @return a new or already existing int item.
@@ -1452,7 +1453,7 @@ public class ClassWriter extends ClassVisitor {
     /**
      * Adds a float to the constant pool of the class being build. Does nothing
      * if the constant pool already contains a similar item.
-     * 
+     *
      * @param value
      *            the float value.
      * @return a new or already existing float item.
@@ -1471,7 +1472,7 @@ public class ClassWriter extends ClassVisitor {
     /**
      * Adds a long to the constant pool of the class being build. Does nothing
      * if the constant pool already contains a similar item.
-     * 
+     *
      * @param value
      *            the long value.
      * @return a new or already existing long item.
@@ -1491,7 +1492,7 @@ public class ClassWriter extends ClassVisitor {
     /**
      * Adds a double to the constant pool of the class being build. Does nothing
      * if the constant pool already contains a similar item.
-     * 
+     *
      * @param value
      *            the double value.
      * @return a new or already existing double item.
@@ -1511,7 +1512,7 @@ public class ClassWriter extends ClassVisitor {
     /**
      * Adds a string to the constant pool of the class being build. Does nothing
      * if the constant pool already contains a similar item.
-     * 
+     *
      * @param value
      *            the String value.
      * @return a new or already existing string item.
@@ -1532,7 +1533,7 @@ public class ClassWriter extends ClassVisitor {
      * nothing if the constant pool already contains a similar item. <i>This
      * method is intended for {@link org.objectweb.asm.Attribute} sub classes, and is normally not
      * needed by class generators or adapters.</i>
-     * 
+     *
      * @param name
      *            a name.
      * @param desc
@@ -1546,7 +1547,7 @@ public class ClassWriter extends ClassVisitor {
     /**
      * Adds a name and type to the constant pool of the class being build. Does
      * nothing if the constant pool already contains a similar item.
-     * 
+     *
      * @param name
      *            a name.
      * @param desc
@@ -1567,7 +1568,7 @@ public class ClassWriter extends ClassVisitor {
     /**
      * Adds the given internal name to {@link #typeTable} and returns its index.
      * Does nothing if the type table already contains this internal name.
-     * 
+     *
      * @param type
      *            the internal name to be added to the type table.
      * @return the index of this internal name in the type table.
@@ -1585,7 +1586,7 @@ public class ClassWriter extends ClassVisitor {
      * Adds the given "uninitialized" type to {@link #typeTable} and returns its
      * index. This method is used for UNINITIALIZED types, made of an internal
      * name and a bytecode offset.
-     * 
+     *
      * @param type
      *            the internal name to be added to the type table.
      * @param offset
@@ -1607,7 +1608,7 @@ public class ClassWriter extends ClassVisitor {
 
     /**
      * Adds the given Item to {@link #typeTable}.
-     * 
+     *
      * @param item
      *            the value to be added to the type table.
      * @return the added Item, which a new Item instance with the same value as
@@ -1634,7 +1635,7 @@ public class ClassWriter extends ClassVisitor {
      * method calls {@link #getCommonSuperClass} and caches the result in the
      * {@link #items} hash table to speedup future calls with the same
      * parameters.
-     * 
+     *
      * @param type1
      *            index of an internal name in {@link #typeTable}.
      * @param type2
@@ -1664,7 +1665,7 @@ public class ClassWriter extends ClassVisitor {
      * without actually loading any class, or to take into account the class
      * that is currently being generated by this ClassWriter, which can of
      * course not be loaded since it is under construction.
-     * 
+     *
      * @param type1
      *            the internal name of a class.
      * @param type2
@@ -1700,7 +1701,7 @@ public class ClassWriter extends ClassVisitor {
     /**
      * Returns the constant pool's hash table item which is equal to the given
      * item.
-     * 
+     *
      * @param key
      *            a constant pool item.
      * @return the constant pool's hash table item which is equal to the given
@@ -1717,7 +1718,7 @@ public class ClassWriter extends ClassVisitor {
     /**
      * Puts the given item in the constant pool's hash table. The hash table
      * <i>must</i> not already contains this item.
-     * 
+     *
      * @param i
      *            the item to be added to the constant pool's hash table.
      */
@@ -1746,7 +1747,7 @@ public class ClassWriter extends ClassVisitor {
 
     /**
      * Puts one byte and two shorts into the constant pool.
-     * 
+     *
      * @param b
      *            a byte.
      * @param s1
@@ -1760,7 +1761,7 @@ public class ClassWriter extends ClassVisitor {
 
     /**
      * Puts two bytes and one short into the constant pool.
-     * 
+     *
      * @param b1
      *            a byte.
      * @param b2

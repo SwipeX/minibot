@@ -7,7 +7,9 @@ import org.objectweb.asm.tree.FieldNode;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.ACC_STATIC;
+import static org.objectweb.asm.Opcodes.GETSTATIC;
+import static org.objectweb.asm.Opcodes.PUTSTATIC;
 
 /**
  * @author Tyler Sedlar
@@ -50,11 +52,13 @@ public class FieldHook extends Hook {
     public String getOutput() {
         StringBuilder output = new StringBuilder();
         output.append("# ").append(name).append(" --> ").append(clazz).append('.').append(field);
-        if (multiplier != -1)
+        if (multiplier != -1) {
             output.append(" * ").append(multiplier);
+        }
         output.append(" - ");
-        if (isStatic)
+        if (isStatic) {
             output.append("static ");
+        }
         output.append(fieldDesc);
         return output.toString();
     }

@@ -25,8 +25,9 @@ public class ModScript {
             for (GraphVisitor gv : visitors) {
                 ClassNode cn = gv.getCn();
                 out.writeBoolean(cn != null);
-                if (cn == null)
+                if (cn == null) {
                     continue;
+                }
                 out.writeUTF(Crypto.encrypt(cn.name));
                 out.writeUTF(Crypto.encrypt(gv.id()));
                 out.writeInt(gv.getHooks().size());

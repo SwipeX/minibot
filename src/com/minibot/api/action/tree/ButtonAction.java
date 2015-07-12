@@ -17,7 +17,7 @@ public abstract class ButtonAction extends Action {
 
     @Override
     public final int significantArgs() {
-        return ARG1|ARG2;
+        return ARG1 | ARG2;
     }
 
     // widgetUid is known to be the arg2

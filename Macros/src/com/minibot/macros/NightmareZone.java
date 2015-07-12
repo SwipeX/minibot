@@ -44,10 +44,13 @@ public class NightmareZone extends Macro implements Renderable {
                 @Override
                 public void run() {
                     while (true) {
-                        if (Game.levels()[Skills.PRAYER] <= 0)
+                        if (Game.levels()[Skills.PRAYER] <= 0) {
                             return;
+                        }
                         Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("verload"));
-                        if (abs == null) System.exit(1);
+                        if (abs == null) {
+                            System.exit(1);
+                        }
                         Item j = Inventory.first(item -> item != null && item.name() != null && item.name().contains("cake"));
                         if (j != null) {
                             if (j.index() == 27) {

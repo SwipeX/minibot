@@ -12,7 +12,8 @@ import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 import com.minibot.macros.horrors.util.Lootables;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  * @author Tyler Sedlar
@@ -74,18 +75,21 @@ public class CaveHorrors extends Macro implements Renderable {
 
     private Npc find() {
         Npc current = Npcs.nearestByFilter(n -> {
-            if (n.dead() || !KILL_ZONE.contains(n.location()))
+            if (n.dead() || !KILL_ZONE.contains(n.location())) {
                 return false;
+            }
             String name = n.name();
             if (name != null && name.equals("Cave horror")) {
-                if (n.targetIsLocalPlayer())
+                if (n.targetIsLocalPlayer()) {
                     return true;
+                }
             }
             return false;
         });
         return current != null ? current : Npcs.nearestByFilter(n -> {
-            if (n.dead() || !KILL_ZONE.contains(n.location()))
+            if (n.dead() || !KILL_ZONE.contains(n.location())) {
                 return false;
+            }
             String name = n.name();
             return name != null && name.equals("Cave horror") && n.targetIndex() == -1;
         });
@@ -101,22 +105,26 @@ public class CaveHorrors extends Macro implements Renderable {
         WidgetComponent protect = Widgets.get(271, 18);
         if (Lootables.valid()) {
             startedFlick = false;
-            if (protect != null)
+            if (protect != null) {
                 protect.processAction("Deactivate");
+            }
             int loot = Lootables.loot();
-            if (loot != -1)
+            if (loot != -1) {
                 profit += loot;
+            }
         } else {
             Player player = Players.local();
             if (player != null) {
-                if (Game.energy() >= 20)
+                if (Game.energy() >= 20) {
                     Game.setRun(true);
+                }
                 int health = player.healthPercent();
                 if (health != -1 && health < 35 && !Bank.viewing()) {
                     Item food = Inventory.firstFood();
                     if (food != null) {
-                        if (protect != null)
+                        if (protect != null) {
                             protect.processAction("Deactivate");
+                        }
                         status = "Eating";
                         foodId = food.id();
                         food.processAction("Eat");
@@ -132,8 +140,9 @@ public class CaveHorrors extends Macro implements Renderable {
                             status = "Attacking";
                             Npc bat = findBat();
                             if (bat != null) {
-                                if (protect != null)
+                                if (protect != null) {
                                     protect.processAction("Deactivate");
+                                }
                                 Walking.walkTo(UNDERGROUND_CAVE);
                                 Time.sleep(800, 1000);
                             } else {
@@ -150,10 +159,12 @@ public class CaveHorrors extends Macro implements Renderable {
                                     }
                                 } else {
                                     startedFlick = false;
-                                    if (protect != null)
+                                    if (protect != null) {
                                         protect.processAction("Deactivate");
-                                    if (attack())
+                                    }
+                                    if (attack()) {
                                         Time.sleep(1500, 2000);
+                                    }
                                 }
                             }
                         }

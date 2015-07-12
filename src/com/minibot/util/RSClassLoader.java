@@ -23,12 +23,15 @@ public class RSClassLoader extends ClassLoader {
 
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
-        if (loaded.containsKey(name))
+        if (loaded.containsKey(name)) {
             return loaded.get(name);
-        if (!classes.containsKey(name))
+        }
+        if (!classes.containsKey(name)) {
             return super.loadClass(name);
-        if (defined.containsKey(name))
+        }
+        if (defined.containsKey(name)) {
             return defined.get(name);
+        }
         byte[] def = classes.get(name);
         Class<?> clazz = defineClass(name, def, 0, def.length);
         loaded.put(name, clazz);

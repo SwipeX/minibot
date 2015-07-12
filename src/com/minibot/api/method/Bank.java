@@ -66,9 +66,9 @@ public class Bank {
     /**
      * This function will be able to withdraw- any amount that is on the menu, but will default to Withdraw-All
      *
-     * @param item   - the item wishing to be withdrawn
+     * @param item - the item wishing to be withdrawn
      * @param amount - the amount wishing to be taken
-     *               TODO - withdraw-x without presetting it before starting script
+     * TODO - withdraw-x without presetting it before starting script
      */
     public static void withdraw(Item item, int amount) {
         if (item != null && amount > 0) {
@@ -83,6 +83,7 @@ public class Bank {
             item.processAction("Withdraw-All");
         }
     }
+
     /**
      * see @withdraw above
      */
@@ -117,8 +118,9 @@ public class Bank {
             for (WidgetComponent slot : slots) {
                 int id = slot.itemId();
                 int stack = slot.itemAmount();
-                if (id > 0 && stack > 0)
+                if (id > 0 && stack > 0) {
                     array = Array.add(array, (new Item(slot, Source.BANK, slot.rawIndex())));
+                }
             }
             return array;
         }
@@ -127,8 +129,9 @@ public class Bank {
 
     public static Item first(Filter<Item> filter) {
         for (Item item : items()) {
-            if (item != null && filter.accept(item))
+            if (item != null && filter.accept(item)) {
                 return item;
+            }
         }
         return null;
     }

@@ -28,11 +28,13 @@ public class NpcAction extends CharacterAction {
 
     public Npc npc() {
         int index = npcIndex();
-        if (index < 0 || index > Short.MAX_VALUE)
+        if (index < 0 || index > Short.MAX_VALUE) {
             return null;
+        }
         RSNpc[] npcs = Npcs.raw();
-        if (npcs == null || index < 0 || index >= npcs.length)
+        if (npcs == null || index < 0 || index >= npcs.length) {
             return null;
+        }
         RSNpc npc = npcs[index];
         return npc != null ? new Npc(npc, index) : null;
     }
@@ -49,9 +51,13 @@ public class NpcAction extends CharacterAction {
 
     public String actionName() {
         RSNpcDefinition def = definition();
-        if (def == null) return null;
+        if (def == null) {
+            return null;
+        }
         String[] actions = def.getActions();
-        if (actions == null) return null;
+        if (actions == null) {
+            return null;
+        }
         int actionIndex = actionIndex();
         return actionIndex >= 0 && actionIndex < actions.length ? actions[actionIndex] : null;
     }

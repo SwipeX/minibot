@@ -33,174 +33,177 @@ import java.io.Writer;
 
 /**
  * Output thread, and manages the outgoing message queue.
- * 
+ *
  * @author Sorcix
  */
 class IrcOutput extends Thread {
-	
-	/** The IrcConnection. */
-	private final IrcConnection irc;
-	/** Stream used to write to the IRC server. */
-	private final BufferedWriter out;
-	/** The outgoing message queue. */
-	private final IrcQueue queue;
-	/** Maximum line length. */
-	protected static final int MAX_LINE_LENGTH = 512;
-	
-	/**
-	 * Creates a new output thread.
-	 * 
-	 * @param irc The IrcConnection using this output thread.
-	 * @param out The stream to use for communication.
-	 */
-	protected IrcOutput(final IrcConnection irc, final Writer out) {
-		this.setName("sIRC-OUT:" + irc.getServerAddress() + "-" + irc.getClient().getUserName());
-		this.setPriority(Thread.MIN_PRIORITY);
-		this.setDaemon(true);
-		this.irc = irc;
-		this.queue = new IrcQueue();
-		this.out = new BufferedWriter(out);
-	}
-	
-	/**
-	 * Closes the output stream.
-	 * 
-	 * @throws IOException
-	 * @see IrcConnection#disconnect()
-	 */
-	protected void close() throws IOException {
-		this.out.flush();
-		this.out.close();
-	}
-	
-	/**
-	 * Sends messages from the output queue.
-	 */
-	@Override
-	public void run() {
-		try {
-			boolean running = true;
-			String line;
-			while (running) {
-				Thread.sleep(this.irc.getMessageDelay());
-				line = this.queue.take();
-				if (line != null) {
-					this.sendNow(line);
-				} else {
-					running = false;
-				}
-			}
-		} catch (final InterruptedException e) {
-			// end this thread
-		}/* catch (final IllegalStateException e) {
-			if (this.irc.isConnected()) {
+
+    /** The IrcConnection. */
+    private final IrcConnection irc;
+    /** Stream used to write to the IRC server. */
+    private final BufferedWriter out;
+    /** The outgoing message queue. */
+    private final IrcQueue queue;
+    /** Maximum line length. */
+    protected static final int MAX_LINE_LENGTH = 512;
+
+    /**
+     * Creates a new output thread.
+     *
+     * @param irc The IrcConnection using this output thread.
+     * @param out The stream to use for communication.
+     */
+    protected IrcOutput(IrcConnection irc, Writer out) {
+        setName("sIRC-OUT:" + irc.getServerAddress() + "-" + irc.getClient().getUserName());
+        setPriority(Thread.MIN_PRIORITY);
+        setDaemon(true);
+        this.irc = irc;
+        queue = new IrcQueue();
+        this.out = new BufferedWriter(out);
+    }
+
+    /**
+     * Closes the output stream.
+     *
+     * @see IrcConnection#disconnect()
+     */
+    protected void close() throws IOException {
+        out.flush();
+        out.close();
+    }
+
+    /**
+     * Sends messages from the output queue.
+     */
+    @Override
+    @SuppressWarnings("deprecation")
+    public void run() {
+        try {
+            boolean running = true;
+            String line;
+            while (running) {
+                Thread.sleep(irc.getMessageDelay());
+                line = queue.take();
+                if (line != null) {
+                    sendNow(line);
+                } else {
+                    running = false;
+                }
+            }
+        } catch (InterruptedException e) {
+            // end this thread
+        }/* catch (final IllegalStateException e) {
+            if (this.irc.isConnected()) {
 				this.irc.setConnected(false);
 				this.irc.disconnect();
 			}
 			e.printStackTrace();
 		}*/
-	}
-	
-	/**
-	 * Sends {@link IrcPacket} to the IRC server, using the message queue.
-	 * 
-	 * @param packet The data to send.
-	 */
-	protected synchronized void send(final IrcPacket packet) {
-		if (this.irc.getMessageDelay() == 0) {
-			this.sendNow(packet.getRaw());
-			return;
-		}
-		this.queue.add(packet.getRaw());
-	}
-	
-	/**
-	 * Sends raw line to the IRC server, using the message queue.
-	 * 
-	 * @param line The raw line to send.
-	 * @deprecated Use {@link #send(IrcPacket)} instead.
-	 */
-	@Deprecated
-	protected synchronized void send(final String line) {
-		//TODO: Remove in a future release.
-		if (this.irc.getMessageDelay() == 0) {
-			this.sendNow(line);
-			return;
-		}
-		this.queue.add(line);
-	}
-	
-	/**
-	 * Sends {@link IrcPacket} to the IRC server, without using the message
-	 * queue. This method will ignore any exceptions thrown while
-	 * sending the message.
-	 * 
-	 * @param packet The IrcPacket to send.
-	 */
-	protected synchronized void sendNow(final IrcPacket packet) {
-		try {
-			this.sendNowEx(packet.getRaw());
-		} catch (final Exception ex) {
-			// ignore
-		}
-	}
-	
-	/**
-	 * Sends raw line to the IRC server, without using the message
-	 * queue. This method will ignore any exceptions thrown while
-	 * sending the message.
-	 * 
-	 * @param line The raw line to send.
-	 * @deprecated Use {@link #sendNow(IrcPacket)} instead.
-	 */
-	@Deprecated
-	protected synchronized void sendNow(final String line) {
-		//TODO: Remove in a future release.
-		try {
-			this.sendNowEx(line);
-		} catch (final Exception ex) {
-			throw new IllegalStateException(ex);
-		}
-	}
-	
-	/**
-	 * Sends {@link IrcPacket} to the IRC server, without using the message
-	 * queue.
-	 * 
-	 * @param packet The IrcPacket to send.
-	 * @throws IOException If anything goes wrong while sending this
-	 *             message.
-	 */
-	protected synchronized void sendNowEx(final IrcPacket packet) throws IOException {
-		this.sendNowEx(packet.getRaw());
-	}
-	
-	/**
-	 * Sends raw line to the IRC server, without using the message
-	 * queue.
-	 * 
-	 * @param line The raw line to send.
-	 * @throws IOException If anything goes wrong while sending this
-	 *             message.
-	 */
-	private synchronized void sendNowEx(String line) throws IOException {
-		if (line.length() > (IrcOutput.MAX_LINE_LENGTH - 2)) {
-			line = line.substring(0, IrcOutput.MAX_LINE_LENGTH - 2);
-		}
-		IrcDebug.log(">>> " + line);
-		this.out.write(line + IrcConnection.ENDLINE);
-		this.out.flush();
-	}
+    }
 
-	/**
-	 * Shortcut to quickly send a PONG packet back.
-	 * @param code The code to send with the PONG packet.
-	 */
-	protected void pong(String code) {
-		try {
-			this.sendNowEx("PONG "+code);
-		} catch (final Exception ex) {
-			// ignore
-		}
-	}
+    /**
+     * Sends {@link IrcPacket} to the IRC server, using the message queue.
+     *
+     * @param packet The data to send.
+     */
+    @SuppressWarnings("deprecation")
+    protected synchronized void send(IrcPacket packet) {
+        if (irc.getMessageDelay() == 0) {
+            sendNow(packet.getRaw());
+            return;
+        }
+        queue.add(packet.getRaw());
+    }
+
+    /**
+     * Sends raw line to the IRC server, using the message queue.
+     *
+     * @param line The raw line to send.
+     * @deprecated Use {@link #send(IrcPacket)} instead.
+     */
+    @Deprecated
+    @SuppressWarnings("deprecation")
+    protected synchronized void send(String line) {
+        //TODO: Remove in a future release.
+        if (irc.getMessageDelay() == 0) {
+            sendNow(line);
+            return;
+        }
+        queue.add(line);
+    }
+
+    /**
+     * Sends {@link IrcPacket} to the IRC server, without using the message
+     * queue. This method will ignore any exceptions thrown while
+     * sending the message.
+     *
+     * @param packet The IrcPacket to send.
+     */
+    protected synchronized void sendNow(IrcPacket packet) {
+        try {
+            sendNowEx(packet.getRaw());
+        } catch (Exception ex) {
+            // ignore
+        }
+    }
+
+    /**
+     * Sends raw line to the IRC server, without using the message
+     * queue. This method will ignore any exceptions thrown while
+     * sending the message.
+     *
+     * @param line The raw line to send.
+     * @deprecated Use {@link #sendNow(IrcPacket)} instead.
+     */
+    @Deprecated
+    protected synchronized void sendNow(String line) {
+        //TODO: Remove in a future release.
+        try {
+            sendNowEx(line);
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    /**
+     * Sends {@link IrcPacket} to the IRC server, without using the message
+     * queue.
+     *
+     * @param packet The IrcPacket to send.
+     * @throws IOException If anything goes wrong while sending this
+     * message.
+     */
+    protected synchronized void sendNowEx(IrcPacket packet) throws IOException {
+        sendNowEx(packet.getRaw());
+    }
+
+    /**
+     * Sends raw line to the IRC server, without using the message
+     * queue.
+     *
+     * @param line The raw line to send.
+     * @throws IOException If anything goes wrong while sending this
+     * message.
+     */
+    private synchronized void sendNowEx(String line) throws IOException {
+        if (line.length() > IrcOutput.MAX_LINE_LENGTH - 2) {
+            line = line.substring(0, IrcOutput.MAX_LINE_LENGTH - 2);
+        }
+        IrcDebug.log(">>> " + line);
+        out.write(line + IrcConnection.ENDLINE);
+        out.flush();
+    }
+
+    /**
+     * Shortcut to quickly send a PONG packet back.
+     *
+     * @param code The code to send with the PONG packet.
+     */
+    protected void pong(String code) {
+        try {
+            sendNowEx("PONG " + code);
+        } catch (Exception ex) {
+            // ignore
+        }
+    }
 }

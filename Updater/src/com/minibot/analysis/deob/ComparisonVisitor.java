@@ -35,13 +35,17 @@ public class ComparisonVisitor extends BlockVisitor {
                 if (jn.children() == 2) {
                     if (jn.opcode() == IF_ACMPEQ || jn.opcode() == IF_ACMPNE) {
                         AbstractNode n = jn.first(ACONST_NULL);
-                        if (n == null) return;
+                        if (n == null) {
+                            return;
+                        }
                         AbstractNode swap = jn.firstField();
                         if (swap != null && !((FieldMemberNode) swap).getting()) {
                             return;
                         } else if (swap == null) {
                             swap = jn.first(ALOAD);
-                            if (swap == null) return;
+                            if (swap == null) {
+                                return;
+                            }
                         }
                         if (n.index() < swap.index()) {
                             jn.insn().setOpcode(jn.opcode() == IF_ACMPEQ ? IFNULL : IFNONNULL);
@@ -57,9 +61,13 @@ public class ComparisonVisitor extends BlockVisitor {
                                 return;
                             } else if (swap == null) {
                                 other = jn.firstOperation();
-                                if (other == null) return;
+                                if (other == null) {
+                                    return;
+                                }
                                 swap = other.firstField();
-                                if (swap == null) return;
+                                if (swap == null) {
+                                    return;
+                                }
                             }
                             if (n.index() < swap.index()) {
                                 MethodNode mn = jn.method();
@@ -67,7 +75,9 @@ public class ComparisonVisitor extends BlockVisitor {
                                 mn.instructions.remove(ain);
                                 AbstractNode farthest = swap;
                                 if (other != null) {
-                                    if (other.index() > swap.index()) farthest = other;
+                                    if (other.index() > swap.index()) {
+                                        farthest = other;
+                                    }
                                 }
                                 mn.instructions.insert(farthest.insn(), ain);
                                 fixed++;

@@ -41,8 +41,9 @@ public class InvokeHook extends Hook {
     @Override
     public String getOutput() {
         String out = "& " + name + " --> " + clazz + "." + method + desc;
-        if (predicate != Integer.MAX_VALUE)
+        if (predicate != Integer.MAX_VALUE) {
             out += " [" + predicate + "] - " + predicateType;
+        }
         return out;
     }
 

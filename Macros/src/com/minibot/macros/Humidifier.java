@@ -1,11 +1,7 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.method.Bank;
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Npcs;
-import com.minibot.api.method.Widgets;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
@@ -65,8 +61,9 @@ public class Humidifier extends Macro implements Renderable {
         Minibot.instance().client().resetMouseIdleTime();
         if (Bank.viewing()) {
             Item water = Inventory.first(WATER_JUG_FILTER);
-            if (water != null)
+            if (water != null) {
                 water.processAction("Deposit-All");
+            }
             Item invJug = Inventory.first(JUG_FILTER);
             if (invJug == null) {
                 Item bankJug = Bank.first(JUG_FILTER);

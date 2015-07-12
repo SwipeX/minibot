@@ -16,13 +16,15 @@ public class CanvasHack implements Transform {
         cn.superName = "com/minibot/client/GameCanvas";
         nig:
         for (MethodNode mn : cn.methods) {
-            if (!mn.name.equals("<init>"))
+            if (!mn.name.equals("<init>")) {
                 continue;
+            }
             for (AbstractInsnNode ain : mn.instructions.toArray()) {
                 if (ain instanceof MethodInsnNode) {
                     MethodInsnNode meth = (MethodInsnNode) ain;
-                    if (!meth.owner.contains("Canvas"))
+                    if (!meth.owner.contains("Canvas")) {
                         continue;
+                    }
                     meth.owner = "com/minibot/client/GameCanvas";
                     break nig;
                 }
