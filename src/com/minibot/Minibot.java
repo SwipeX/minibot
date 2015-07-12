@@ -2,6 +2,7 @@ package com.minibot;
 
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Players;
+import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.bot.breaks.BreakHandler;
@@ -11,7 +12,17 @@ import com.minibot.client.GameCanvas;
 import com.minibot.client.natives.RSClient;
 import com.minibot.mod.Injector;
 import com.minibot.mod.ModScript;
-import com.minibot.mod.transforms.*;
+import com.minibot.mod.transforms.CanvasHack;
+import com.minibot.mod.transforms.ChatboxCallback;
+import com.minibot.mod.transforms.DefinitionInvoker;
+import com.minibot.mod.transforms.GetterAdder;
+import com.minibot.mod.transforms.HoveredRegionTileSetter;
+import com.minibot.mod.transforms.InterfaceImpl;
+import com.minibot.mod.transforms.MiscSetters;
+import com.minibot.mod.transforms.ModelHack;
+import com.minibot.mod.transforms.ProcessActionCallback;
+import com.minibot.mod.transforms.ProcessActionInvoker;
+import com.minibot.mod.transforms.WidgetHack;
 import com.minibot.ui.GameMenu;
 import com.minibot.ui.MacroSelector;
 import com.minibot.util.Configuration;
@@ -20,14 +31,22 @@ import com.minibot.util.JarArchive;
 import com.minibot.util.RSClassLoader;
 import com.minibot.util.io.Crawler;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JFrame;
+import javax.swing.JPopupMenu;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Frame;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 public class Minibot extends JFrame implements Runnable {
 
@@ -152,6 +171,12 @@ public class Minibot extends JFrame implements Runnable {
                         macroSelector.setVisible(true);
                     } else if (e.getKeyCode() == KeyEvent.VK_T && MacroSelector.current() != null) {
                         MacroSelector.halt();
+                    } else if (e.getKeyCode() == KeyEvent.VK_R) {
+                        RuneScape.LANDSCAPE_RENDERING_ENABLED = !RuneScape.LANDSCAPE_RENDERING_ENABLED;
+                        RuneScape.MODEL_RENDERING_ENABLED = !RuneScape.MODEL_RENDERING_ENABLED;
+                        RuneScape.WIDGET_RENDERING_ENABLED = !RuneScape.WIDGET_RENDERING_ENABLED;
+                    } else if (e.getKeyCode() == KeyEvent.VK_F) {
+                        instance.setFarming(!Minibot.instance().isFarming());
                     }
                 }
             }

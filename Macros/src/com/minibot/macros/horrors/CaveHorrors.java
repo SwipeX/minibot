@@ -1,6 +1,5 @@
 package com.minibot.macros.horrors;
 
-import com.minibot.api.action.tree.Action;
 import com.minibot.api.method.*;
 import com.minibot.api.method.web.TilePath;
 import com.minibot.api.util.Renderable;
@@ -48,11 +47,11 @@ public class CaveHorrors extends Macro implements Renderable {
 
     private static final Area KILL_ZONE = new Area(new Tile(3717, 9346, 0), new Tile(3769, 9390, 0));
 
-    private int profit = 0;
+    private int profit;
     private int foodId = -1;
 
     private String status = "";
-    private boolean startedFlick = false;
+    private boolean startedFlick;
 
     @Override
     public void atStart() {
