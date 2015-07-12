@@ -14,6 +14,10 @@ import com.minibot.bot.macro.Macro;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+/**
+ * @author Jacob Doiron
+ * @since 7/11/15
+ */
 public class LoginSolver extends RandomEvent {
 
     private static WidgetComponent component;
@@ -39,10 +43,10 @@ public class LoginSolver extends RandomEvent {
                 component = Widgets.get(378, 6);
                 return component != null && component.visible();
             }, Random.nextInt(7500, 10000));
-            if (component != null && component.visible()) {
-                RuneScape.processAction(new InputButtonAction(24772614));
-                Time.sleep(Game::playing, Random.nextInt(5000, 7500));
-            }
+        }
+        if (component != null && component.visible()) {
+            RuneScape.processAction(new InputButtonAction(24772614));
+            Time.sleep(Game::playing, Random.nextInt(5000, 7500));
         }
     }
 
