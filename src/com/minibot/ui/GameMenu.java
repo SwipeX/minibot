@@ -16,6 +16,8 @@ public class GameMenu {
     private static final JMenuBar menuBar;
     private static final JMenuItem start;
     private static final JMenuItem stop;
+    private static final JCheckBoxMenuItem render;
+    private static final JCheckBoxMenuItem farm;
 
     static {
         menuBar = new JMenuBar();
@@ -32,13 +34,15 @@ public class GameMenu {
         file.add(combine(stop, KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK), e -> MacroSelector.halt()));
         JMenu options = new JMenu("Options");
         menuBar.add(options);
-        options.add(combine(new JCheckBoxMenuItem("!Rendering"), KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK), e -> {
+        render = new JCheckBoxMenuItem("!Rendering");
+        options.add(combine(render, KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK), e -> {
                     RuneScape.LANDSCAPE_RENDERING_ENABLED = !RuneScape.LANDSCAPE_RENDERING_ENABLED;
                     RuneScape.MODEL_RENDERING_ENABLED = !RuneScape.MODEL_RENDERING_ENABLED;
                     RuneScape.WIDGET_RENDERING_ENABLED = !RuneScape.WIDGET_RENDERING_ENABLED;
                 }
         ));
-        options.add(combine(new JCheckBoxMenuItem("Farming"), KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK),
+        farm = new JCheckBoxMenuItem("Farming");
+        options.add(combine(farm, KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK),
                 e -> Minibot.instance().setFarming(!Minibot.instance().isFarming())));
     }
 
@@ -49,6 +53,14 @@ public class GameMenu {
     public static void setEnabled(boolean enabled) {
         start.setEnabled(enabled);
         stop.setEnabled(!enabled);
+    }
+
+    public static void setRender() {
+        render.setState(!render.getState());
+    }
+
+    public static void setFarm() {
+        farm.setState(!farm.getState());
     }
 
     public static JMenuItem combine(JMenuItem button, KeyStroke accelerator, ActionListener listener) {

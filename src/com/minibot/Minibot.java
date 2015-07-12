@@ -175,8 +175,10 @@ public class Minibot extends JFrame implements Runnable {
                         RuneScape.LANDSCAPE_RENDERING_ENABLED = !RuneScape.LANDSCAPE_RENDERING_ENABLED;
                         RuneScape.MODEL_RENDERING_ENABLED = !RuneScape.MODEL_RENDERING_ENABLED;
                         RuneScape.WIDGET_RENDERING_ENABLED = !RuneScape.WIDGET_RENDERING_ENABLED;
+                        GameMenu.setRender();
                     } else if (e.getKeyCode() == KeyEvent.VK_F) {
                         instance.setFarming(!Minibot.instance().isFarming());
+                        GameMenu.setFarm();
                     }
                 }
             }
