@@ -141,4 +141,14 @@ public class Inventory {
     public static Item firstFood() {
         return first(FOOD_FILTER);
     }
+
+    public static int stackCount() {
+        int count = 0;
+        for (Item item : items()) {
+            int amount = item.amount();
+            if (amount != -1)
+                count += amount;
+        }
+        return count;
+    }
 }

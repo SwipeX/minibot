@@ -4,9 +4,11 @@ package com.minibot.api.wrapper.locatable;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.action.tree.GroundItemAction;
 import com.minibot.api.method.Game;
+import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.method.projection.Projection;
+import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Wrapper;
 import com.minibot.client.natives.RSItem;
 import com.minibot.client.natives.RSItemDefinition;
@@ -112,5 +114,11 @@ public class GroundItem extends Wrapper<RSItem> implements Locatable {
         } else {
             processAction(ActionOpcodes.GROUND_ITEM_ACTION_0 + index, action);
         }
+    }
+
+    public boolean take() {
+        int count = Inventory.stackCount();
+        processAction("Take");
+        return Time.sleep(() -> Inventory.stackCount() != count, 15000);
     }
 }
