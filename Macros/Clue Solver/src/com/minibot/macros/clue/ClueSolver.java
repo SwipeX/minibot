@@ -23,10 +23,10 @@ public class ClueSolver extends Macro implements Renderable {
 
     private static final ClueSource SOURCE = new MediumClueSource();
 
-    private AtomicBoolean rewarded = new AtomicBoolean(false);
+    private final AtomicBoolean rewarded = new AtomicBoolean(false);
+    private final AtomicReference<String> status = new AtomicReference<>();
     private int clueId = -1;
     private ClueScroll scroll;
-    private AtomicReference<String> status = new AtomicReference<>();
 
     @Override
     public void atStart() {
