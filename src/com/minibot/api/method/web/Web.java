@@ -61,7 +61,6 @@ public class Web extends Digraph<WebVertex, WebVertex> {
         }
     }
 
-    //top fukin kek rite here m8
     private String[] interactDataFor(int vertex) {
         switch (vertex) {
             case 135:
