@@ -7,7 +7,7 @@ import com.minibot.api.wrapper.Item;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 import com.minibot.macros.clue.structure.ClueScroll;
-import com.minibot.macros.clue.structure.location.ClueMediumSource;
+import com.minibot.macros.clue.structure.location.MediumClueSource;
 import com.minibot.macros.clue.structure.location.ClueSource;
 
 import java.awt.*;
@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Manifest(name = "Clue Solver", author = "Tyler, Jacob", version = "1.0.0", description = "Solves clues")
 public class ClueSolver extends Macro implements Renderable {
 
-    private static final ClueSource SOURCE = new ClueMediumSource();
+    private static final ClueSource SOURCE = new MediumClueSource();
 
     private AtomicBoolean rewarded = new AtomicBoolean(false);
     private int clueId = -1;
