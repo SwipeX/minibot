@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Tyler Sedlar
  * @since 7/11/2015
  */
-@Manifest(name = "Clue Solver", author = "Tyler, Jacob", version = "1.0.0", description = "Solves clues")
+@Manifest(name = "Clue Solver", author = "Tyler/Jacob", version = "1.0.0", description = "Solves clues")
 public class ClueSolver extends Macro implements Renderable {
 
     private static final ClueSource SOURCE = new MediumClueSource();

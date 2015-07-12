@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Tyler Sedlar
  * @since 7/11/2015
  */
-@Manifest(name = "Zulrah Killer", author = "Tyler, Jacob", version = "1.0.0", description = "Kills Zulrah")
+@Manifest(name = "Zulrah Killer", author = "Tyler/Jacob", version = "1.0.0", description = "Kills Zulrah")
 public class ZulrahKiller extends Macro implements Renderable, ChatboxListener {
 
     private static final MultiNameItemFilter FOOD = new MultiNameItemFilter("Monkfish", "Shark", "Manta ray", "Sea turtle", "Tuna potato", "Dark crab");
