@@ -91,8 +91,10 @@ public class ClueScrollKeyObject extends ClueScroll {
                         return name != null && name.contains("Key");
                     });
                     if (key != null) {
+                        status.set("Taking key");
                         key.take();
                     } else {
+                        status.set("Killing key-holder");
                         Npc npc = Npcs.nearestByName(keyNpcName);
                         if (npc != null)
                             npc.attack();
