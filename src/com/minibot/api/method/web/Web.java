@@ -34,8 +34,9 @@ public class Web extends Digraph<WebVertex, WebVertex> {
                 String type = kek[1];
                 int x = Integer.parseInt(kek[2]), y = Integer.parseInt(kek[3]), z = Integer.parseInt(kek[4]);
                 int[] edges = new int[kek.length - 5];
-                for (int i = 0; i < kek.length - 5; i++)
+                for (int i = 0; i < kek.length - 5; i++) {
                     edges[i] = Integer.parseInt(kek[i + 5]);
+                }
                 if (type.equals("object")) {
                     String[] data = interactDataFor(index);
                     super.addVertex(new ObjectVertex(index, x, y, z, edges, data[0], data[1]));
