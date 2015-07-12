@@ -47,10 +47,10 @@ public class MacroSelector extends JDialog {
         if (current != null) {
             current.stop();
         }
-        System.out.println("Stopped " + selected.def.manifest().name() + " by " + selected.def.manifest().author());
         current = null;
-        GameMenu.setEnabled(true);
         Minibot.instance().setMacroRunning(false);
+        GameMenu.setEnabled();
+        System.out.println("Stopped " + selected.def.manifest().name() + " by " + selected.def.manifest().author());
     }
 
     public MacroSelector() {
@@ -118,7 +118,7 @@ public class MacroSelector extends JDialog {
                     if (local != null)
                         Minibot.connection().script(0, local.name(), manifest.name());
                     current = selected.def.mainClass().newInstance();
-                    GameMenu.setEnabled(false);
+                    GameMenu.setEnabled();
                 } catch (Exception err) {
                     err.printStackTrace();
                     success = false;
@@ -167,7 +167,7 @@ public class MacroSelector extends JDialog {
                 add(string);
         }
 
-        public MacroDefinition getDef() {
+        public MacroDefinition def() {
             return def;
         }
     }

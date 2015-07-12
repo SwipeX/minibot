@@ -43,16 +43,16 @@ public class GameMenu {
         ));
         farm = new JCheckBoxMenuItem("Farming");
         options.add(combine(farm, KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK),
-                e -> Minibot.instance().setFarming(!Minibot.instance().isFarming())));
+                e -> Minibot.instance().setFarming(!Minibot.instance().farming())));
     }
 
     public static JMenuItem start() {
         return start;
     }
 
-    public static void setEnabled(boolean enabled) {
-        start.setEnabled(enabled);
-        stop.setEnabled(!enabled);
+    public static void setEnabled() {
+        start.setEnabled(!start.isEnabled());
+        stop.setEnabled(!start.isEnabled());
     }
 
     public static void setRender() {

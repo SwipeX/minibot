@@ -53,8 +53,8 @@ public class Minibot extends JFrame implements Runnable {
     private static Minibot instance;
     private final Crawler crawler;
     private RSClient client;
-    private String username;
-    private String password;
+    //private String username;
+    //private String password;
     private boolean macroRunning;
     private boolean farming;
     private BreakHandler breakHandler;
@@ -177,7 +177,7 @@ public class Minibot extends JFrame implements Runnable {
                         RuneScape.WIDGET_RENDERING_ENABLED = !RuneScape.WIDGET_RENDERING_ENABLED;
                         GameMenu.setRender();
                     } else if (e.getKeyCode() == KeyEvent.VK_F) {
-                        instance.setFarming(!Minibot.instance().isFarming());
+                        instance.setFarming(!Minibot.instance().farming());
                         GameMenu.setFarm();
                     }
                 }
@@ -189,11 +189,11 @@ public class Minibot extends JFrame implements Runnable {
         this.farming = farming;
     }
 
-    public boolean isFarming() {
+    public boolean farming() {
         return farming;
     }
 
-    public boolean isMacroRunning() {
+    public boolean macroRunning() {
         return macroRunning;
     }
 

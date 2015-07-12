@@ -20,7 +20,7 @@ public abstract class Macro {
                 username = Minibot.instance().client().getUsername();
                 password = Minibot.instance().client().getPassword();
                 atStart();
-                main: while (!isInterrupted() && Minibot.instance().isMacroRunning()) {
+                main: while (!isInterrupted() && Minibot.instance().macroRunning()) {
                     for (RandomEvent random : RandomEvent.SOLVERS) {
                         if (random.validate()) {
                             random.setSolving(true);

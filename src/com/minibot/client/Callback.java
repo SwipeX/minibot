@@ -23,7 +23,7 @@ public class Callback {
     @ClientInvoked
     public static void onEngineTick() {
         RuneScape.processActions();
-        if (Minibot.instance().isFarming())
+        if (Minibot.instance().farming())
             Time.sleep(80);
     }
 }
