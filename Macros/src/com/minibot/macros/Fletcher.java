@@ -1,5 +1,6 @@
 package com.minibot.macros;
 
+import com.minibot.Minibot;
 import com.minibot.api.action.tree.DialogButtonAction;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
@@ -63,6 +64,7 @@ public class Fletcher extends Macro implements ChatboxListener, Renderable {
 
     @Override
     public void run() {
+        Minibot.instance().client().resetMouseIdleTime();
         Item logs = Inventory.first(LOG_FILTER);
         if (logs != null) {
             if (Bank.viewing()) {
