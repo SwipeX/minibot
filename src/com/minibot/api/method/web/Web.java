@@ -69,6 +69,9 @@ public class Web extends Digraph<WebVertex, WebVertex> {
             case 310:
             case 805:
             case 806:
+            case 820:
+            case 821:
+            case 822:
                 return new String[]{"Door", "Open"};
             case 312:
                 return new String[]{"Staircase", "Climb-down"};
