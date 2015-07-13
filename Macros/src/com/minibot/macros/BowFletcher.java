@@ -20,8 +20,8 @@ import java.awt.Graphics2D;
  * @author Tyler Sedlar
  * @since 7/11/2015
  */
-@Manifest(name = "Fletcher", author = "Tyler", version = "1.0.0", description = "Fletches bows")
-public class Fletcher extends Macro implements ChatboxListener, Renderable {
+@Manifest(name = "BowFletcher", author = "Tyler", version = "1.0.0", description = "Fletches bows")
+public class BowFletcher extends Macro implements ChatboxListener, Renderable {
 
     private static final int TEXT_FORMAT = ValueFormat.THOUSANDS | ValueFormat.COMMAS | ValueFormat.PRECISION(1);
 
