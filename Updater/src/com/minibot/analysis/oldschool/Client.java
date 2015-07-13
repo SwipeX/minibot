@@ -23,7 +23,7 @@ import java.util.List;
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices", "playerIndices",
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
-        "hoveredRegionTileX", "hoveredRegionTileY", "experiences", "levels", "realLevels", "username", "password",
+        "hoveredRegionTileX", "hoveredRegionTileY","itemContainers", "experiences", "levels", "realLevels", "username", "password",
         "loginState", "hintX", "hintY", "hintPlayerIndex", "hintNpcIndex", "screenWidth", "screenHeight", "screenZoom",
         "screenState", "localPlayerIndex"})
 public class Client extends GraphVisitor {

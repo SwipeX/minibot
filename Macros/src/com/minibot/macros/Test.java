@@ -1,5 +1,6 @@
 package com.minibot.macros;
 
+import com.minibot.api.method.Equipment;
 import com.minibot.api.method.Players;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.wrapper.locatable.Npc;
@@ -40,6 +41,7 @@ public class Test extends Macro implements Renderable {
 
     @Override
     public void render(Graphics2D g) {
+        g.drawString(Equipment.Slot.HEAD.getItemId()+"",100,100);
 //        g.drawString("Test " + Game.varp(1021), 50, 50);
         g.drawString(local != null ? Players.local().location().toString() : "null", 50, 75);
     }
