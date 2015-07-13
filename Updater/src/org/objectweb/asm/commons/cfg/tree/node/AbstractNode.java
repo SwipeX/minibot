@@ -124,6 +124,16 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
         }
     }
 
+    public AbstractNode last(int opcode) {
+        AbstractNode last = null;
+        for (AbstractNode n : this) {
+            if (n.opcode() == opcode) {
+                last = n;
+            }
+        }
+        return last;
+    }
+
     public AbstractInsnNode[] collapse() {
         if (instructions != null) {
             return instructions;

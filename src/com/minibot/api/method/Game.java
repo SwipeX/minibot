@@ -1,7 +1,6 @@
 package com.minibot.api.method;
 
 import com.minibot.Minibot;
-import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
@@ -23,8 +22,9 @@ public class Game {
         WidgetComponent comp = Widgets.get(160, 22);
         if (comp != null) {
             String text = comp.text();
-            if (text != null)
+            if (text != null) {
                 return Integer.parseInt(text.trim());
+            }
         }
         return -1;
     }
@@ -44,11 +44,13 @@ public class Game {
 
     public static void setRun(boolean enabled) {
         if (enabled) {
-            if (!runEnabled())
+            if (!runEnabled()) {
                 toggleRun();
+            }
         } else {
-            if (runEnabled())
+            if (runEnabled()) {
                 toggleRun();
+            }
         }
     }
 
@@ -99,8 +101,9 @@ public class Game {
 
     public static int totalExperience() {
         int i = 0;
-        for (int exp : experiences())
+        for (int exp : experiences()) {
             i += exp;
+        }
         return i;
     }
 
@@ -137,8 +140,9 @@ public class Game {
         if (parent != null) {
             WidgetComponent component = parent.children()[world];
             component.processAction("Switch");
-            if (Time.sleep(() -> state() == 45, 5000))
+            if (Time.sleep(() -> state() == 45, 5000)) {
                 return Time.sleep(() -> playing() && state() != 45, 10000);
+            }
         }
         return false;
     }

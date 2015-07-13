@@ -7,7 +7,10 @@ import java.io.File;
  */
 public enum OS {
 
-    WINDOWS, MAC, LINUX, UNKNOWN;
+    WINDOWS,
+    MAC,
+    LINUX,
+    UNKNOWN;
 
     public static String getHomeDirectory() {
         switch (get()) {
@@ -54,8 +57,9 @@ public enum OS {
     public static OS get() {
         String os = System.getProperty("os.name");
         for (OS o : OS.values()) {
-            if (os.contains(o.toString()))
+            if (os.contains(o.toString())) {
                 return o;
+            }
         }
         return UNKNOWN;
     }

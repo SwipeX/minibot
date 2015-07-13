@@ -35,8 +35,9 @@ public class Inventory {
         boolean bank = Bank.viewing();
         WidgetComponent inventory = Widgets.get(bank ? BANK_PARENT : INVENTORY_PARENT, bank ? BANK_CONTAINER : INVENTORY_CONTAINER);
         List<Item> items = new LinkedList<>();
-        if (inventory == null)
+        if (inventory == null) {
             return items;
+        }
         if (inventory.validate()) {
             if (bank) {
                 int index = 0;
@@ -45,8 +46,9 @@ public class Inventory {
                     int stack = slot.itemAmount();
                     if (id > 0 && stack > 0) {
                         Item item = new Item(slot, Source.INVENTORY, index);
-                        if (!filter.accept(item))
+                        if (!filter.accept(item)) {
                             continue;
+                        }
                         items.add(item);
                     }
                     index++;
@@ -55,15 +57,17 @@ public class Inventory {
                 int[] itemIds = inventory.itemIds();
                 int[] itemAmounts = inventory.itemStackSizes();
                 if (itemIds != null && itemAmounts != null) {
-                    if (itemIds.length != itemAmounts.length)
+                    if (itemIds.length != itemAmounts.length) {
                         throw new IllegalStateException("Internal Data Mismatch");
+                    }
                     for (int i = 0; i < itemIds.length; i++) {
                         int id = itemIds[i];
                         int stack = itemAmounts[i];
                         if (id > 0 && stack > 0) {
                             Item item = new Item(id - 1, stack, i);
-                            if (!filter.accept(item))
+                            if (!filter.accept(item)) {
                                 continue;
+                            }
                             item.setComponent(inventory);
                             items.add(item);
                         }
@@ -92,16 +96,18 @@ public class Inventory {
 
     public static Item first(Filter<Item> filter) {
         for (Item item : items()) {
-            if (item != null && filter.accept(item))
+            if (item != null && filter.accept(item)) {
                 return item;
+            }
         }
         return null;
     }
 
     public static boolean containsAll(Filter<Item>... filters) {
         for (Filter<Item> filter : filters) {
-            if (first(filter) == null)
+            if (first(filter) == null) {
                 return false;
+            }
         }
         return true;
     }
@@ -146,8 +152,9 @@ public class Inventory {
         int count = 0;
         for (Item item : items()) {
             int amount = item.amount();
-            if (amount != -1)
+            if (amount != -1) {
                 count += amount;
+            }
         }
         return count;
     }

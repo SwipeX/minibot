@@ -17,8 +17,9 @@ public class MiscSetters implements Transform {
     public void inject(Map<String, ClassNode> classes) {
         //setter -> resetMouseIdleTime
         FieldHook hook = ModScript.getFieldHook("Client#mouseIdleTime");
-        if (hook == null)
+        if (hook == null) {
             throw new RuntimeException("hook broke?");
+        }
         MethodNode setter = new MethodNode(ACC_PUBLIC, "resetMouseIdleTime", "()V", null, null);
         setter.instructions.add(new InsnNode(ICONST_0));
         setter.instructions.add(new FieldInsnNode(PUTSTATIC, hook.getClazz(), hook.getField(), hook.getFieldDesc()));
@@ -31,8 +32,9 @@ public class MiscSetters implements Transform {
         //onEngineTick
         ClassNode engine = classes.get(classes.get("client").superName);
         for (MethodNode run : engine.methods) {
-            if (!run.name.equals("run") || !run.desc.equals("()V"))
+            if (!run.name.equals("run") || !run.desc.equals("()V")) {
                 continue;
+            }
             for (AbstractInsnNode ain : run.instructions.toArray()) {
                 if (ain.getOpcode() == PUTSTATIC && backtrack(ain, INVOKEVIRTUAL)) {
                     run.instructions.insert(ain, new MethodInsnNode(INVOKESTATIC, Callback.class.getName().replace('.', '/'),
@@ -53,8 +55,9 @@ public class MiscSetters implements Transform {
 
     private boolean backtrack(AbstractInsnNode ain, int insn) {
         for (int i = 0; i < 5 && (ain = ain.getPrevious()) != null; i++) {
-            if (ain.getOpcode() == insn)
+            if (ain.getOpcode() == insn) {
                 return true;
+            }
         }
         return false;
     }

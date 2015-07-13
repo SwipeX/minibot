@@ -31,16 +31,16 @@ package com.sirc;
  * Thrown when the server password was wrong.
  */
 public final class PasswordException extends Exception {
-	
-	/** Serial Version ID */
-	private static final long serialVersionUID = -7856391898471344111L;
-	
-	/**
-	 * Creates a new PasswordException.
-	 * 
-	 * @param string Error string.
-	 */
-	public PasswordException(final String string) {
-		super(string);
-	}
+
+    /** Serial Version ID */
+    private static final long serialVersionUID = -7856391898471344111L;
+
+    /**
+     * Creates a new PasswordException.
+     *
+     * @param string Error string.
+     */
+    public PasswordException(String string) {
+        super(string);
+    }
 }

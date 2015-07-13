@@ -56,8 +56,9 @@ public class DefinitionLoader {
 
     private static boolean loadObjectDefinitions(RSClient client) {
         InvokeHook invoke = ModScript.serveInvoke("Client#loadObjectDefinition");
-        if (invoke == null)
+        if (invoke == null) {
             return false;
+        }
         try {
             Map<Integer, RSObjectDefinition> data = new HashMap<>();
             for (int i = 0; i < 30000; i++) {
@@ -82,8 +83,9 @@ public class DefinitionLoader {
 
     private static boolean loadNpcDefinitions(RSClient client) {
         InvokeHook invoke = ModScript.serveInvoke("Client#loadNpcDefinition");
-        if (invoke == null)
+        if (invoke == null) {
             return false;
+        }
         try {
             Map<Integer, RSNpcDefinition> data = new HashMap<>();
             for (int i = 0; i < 20000; i++) {
@@ -109,16 +111,18 @@ public class DefinitionLoader {
 
     private static boolean loadItemDefinitions(RSClient client) {
         InvokeHook invoke = ModScript.serveInvoke("Client#loadItemDefinition");
-        if (invoke == null)
+        if (invoke == null) {
             return false;
+        }
         try {
             Map<Integer, RSItemDefinition> data = new HashMap<>();
             for (int i = 0; i < 20000; i++) {
                 RSItemDefinition raw = client.loadItemDefinition(i);
                 if (raw != null) {
                     String name = raw.getName();
-                    if (name != null && !name.equals(NULL))
+                    if (name != null && !name.equals(NULL)) {
                         data.put(i, raw);
+                    }
                 }
             }
             ITEM_DEFINITIONS.putAll(data);

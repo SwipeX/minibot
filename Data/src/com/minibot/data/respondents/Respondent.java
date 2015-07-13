@@ -1,8 +1,10 @@
 package com.minibot.data.respondents;
 
 /**
- * Created by tim on 6/3/15.
+ * @author Tim Dekker
+ * @since 6/3/15
  */
 public interface Respondent {
-    Runnable getRunnable(String[] commands);
+
+    Runnable getRunnable(String... commands);
 }

@@ -28,11 +28,12 @@ public class PlayerAction extends CharacterAction {
 
     public Player player() {
         int index = playerIndex();
-        if (index < 0 || index > Players.MAX_PLAYERS)
+        if (index < 0 || index > Players.MAX_PLAYERS) {
             return null;
+        }
         RSPlayer[] players = Players.raw();
         RSPlayer player = players[index];
-        return players != null && index >= 0 && index < players.length && player !=null ? new Player(player,index) : null;
+        return players != null && index >= 0 && index < players.length && player != null ? new Player(player, index) : null;
     }
 
     @Override

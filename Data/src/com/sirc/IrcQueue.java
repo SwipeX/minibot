@@ -31,65 +31,65 @@ import java.util.ArrayDeque;
 
 /**
  * Outgoing message queue.
- * 
+ *
  * @author Sorcix
  */
 final class IrcQueue {
-	
-	/** Message Queue. */
-	private final ArrayDeque<String> queue;
-	
-	/**
-	 * Creates a new outgoing message queue.
-	 */
-	protected IrcQueue() {
-		this.queue = new ArrayDeque<String>(8);
-	}
-	
-	/**
-	 * Adds raw message to queue.
-	 * 
-	 * @param line The raw IRC line to add to the queue.
-	 */
-	protected void add(final String line) {
-		synchronized (this.queue) {
-			this.queue.addLast(line);
-			this.queue.notify();
-		}
-	}
-	
-	/**
-	 * Adds raw message to the front of the queue. This should only be
-	 * used for urgent messages, as other will be delayed even more if
-	 * this is used frequently.
-	 * 
-	 * @param line The raw IRC line to add to the queue.
-	 */
-	protected void addToFront(final String line) {
-		synchronized (this.queue) {
-			this.queue.addFirst(line);
-			this.queue.notify();
-		}
-	}
-	
-	/**
-	 * Takes a raw line from the queue.
-	 * 
-	 * @return A raw IRC line to be sent.
-	 */
-	protected String take() {
-		String line;
-		synchronized (this.queue) {
-			if (this.queue.isEmpty()) {
-				try {
-					this.queue.wait();
-				} catch (final InterruptedException e) {
-					return null;
-				}
-			}
-			line = this.queue.getFirst();
-			this.queue.removeFirst();
-			return line;
-		}
-	}
+
+    /** Message Queue. */
+    private final ArrayDeque<String> queue;
+
+    /**
+     * Creates a new outgoing message queue.
+     */
+    protected IrcQueue() {
+        queue = new ArrayDeque<>(8);
+    }
+
+    /**
+     * Adds raw message to queue.
+     *
+     * @param line The raw IRC line to add to the queue.
+     */
+    protected void add(String line) {
+        synchronized (queue) {
+            queue.addLast(line);
+            queue.notify();
+        }
+    }
+
+    /**
+     * Adds raw message to the front of the queue. This should only be
+     * used for urgent messages, as other will be delayed even more if
+     * this is used frequently.
+     *
+     * @param line The raw IRC line to add to the queue.
+     */
+    protected void addToFront(String line) {
+        synchronized (queue) {
+            queue.addFirst(line);
+            queue.notify();
+        }
+    }
+
+    /**
+     * Takes a raw line from the queue.
+     *
+     * @return A raw IRC line to be sent.
+     */
+    protected String take() {
+        String line;
+        synchronized (queue) {
+            if (queue.isEmpty()) {
+                try {
+                    queue.wait();
+                } catch (InterruptedException e) {
+                    return null;
+                }
+            }
+            line = queue.getFirst();
+            queue.removeFirst();
+            return line;
+        }
+    }
 }

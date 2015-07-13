@@ -24,10 +24,12 @@ public class Seagull extends Macro {
         if (force || target == null || (target.maxHealth() > 0 && target.health() <= 0)) {
             Npc npc = Npcs.nearestByFilter(n -> {
                 Character npcTarget = n.target();
-                if (npcTarget != null)
+                if (npcTarget != null) {
                     return npcTarget == Players.local();
-                if (n.health() <= 0 && n.maxHealth() > 0)
+                }
+                if (n.health() <= 0 && n.maxHealth() > 0) {
                     return false;
+                }
                 String name = n.name();
                 return name != null && name.equals("Seagull");
             });

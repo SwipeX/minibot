@@ -43,8 +43,9 @@ public class InvokeHook extends Hook {
                     Class<?>[] types = m.getParameterTypes();
                     if (types.length == parameterTypes.length) {
                         for (int i = 0; i < types.length; i++) {
-                            if (types[i] != parameterTypes[i])
+                            if (types[i] != parameterTypes[i]) {
                                 continue main;
+                            }
                         }
                         String returnType = m.getGenericReturnType().getTypeName();
                         switch (returnType) {
@@ -78,11 +79,13 @@ public class InvokeHook extends Hook {
                             }
                         }
                         if (desc.contains(")L")) {
-                            if (!desc.endsWith(")L" + returnType + ";"))
+                            if (!desc.endsWith(")L" + returnType + ";")) {
                                 continue;
+                            }
                         } else {
-                            if (!desc.endsWith(")" + returnType))
+                            if (!desc.endsWith(")" + returnType)) {
                                 continue;
+                            }
                         }
                         return m;
                     }
@@ -100,16 +103,19 @@ public class InvokeHook extends Hook {
                 Object predicateValue;
                 if (predicateTypeClass == int.class) {
                     predicateValue = predicate;
-                } else
+                } else {
                     predicateValue = predicateTypeClass == byte.class ? (byte) predicate : (short) predicate;
+                }
                 Class<?>[] newParameterTypes = new Class<?>[parameterTypes.length + 1];
-                if (parameterTypes.length > 0)
+                if (parameterTypes.length > 0) {
                     System.arraycopy(parameterTypes, 0, newParameterTypes, 0, parameterTypes.length);
+                }
                 newParameterTypes[newParameterTypes.length - 1] = predicateTypeClass;
                 parameterTypes = newParameterTypes;
                 Object[] newValues = new Object[values.length + 1];
-                if (values.length > 0)
+                if (values.length > 0) {
                     System.arraycopy(values, 0, newValues, 0, values.length);
+                }
                 newValues[newValues.length - 1] = predicateValue;
                 values = newValues;
             }

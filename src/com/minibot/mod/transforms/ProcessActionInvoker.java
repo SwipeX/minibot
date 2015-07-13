@@ -12,8 +12,9 @@ public class ProcessActionInvoker implements Transform {
     @Override
     public void inject(Map<String, ClassNode> classes) {
         InvokeHook meth = ModScript.getInvokeHook("Client#processAction");
-        if (meth == null)
+        if (meth == null) {
             throw new RuntimeException("#processAction hook broke?");
+        }
         ClassNode client = classes.get("client");
         MethodNode invoker = new MethodNode(ACC_PUBLIC, "processAction", "(IIIILjava/lang/String;Ljava/lang/String;II)V", null, null);
         InsnList stack = new InsnList();
@@ -25,8 +26,9 @@ public class ProcessActionInvoker implements Transform {
         stack.add(new VarInsnNode(Opcodes.ALOAD, 6));
         stack.add(new VarInsnNode(Opcodes.ILOAD, 7));
         stack.add(new VarInsnNode(Opcodes.ILOAD, 8));
-        if (meth.getPredicate() != Integer.MAX_VALUE)
+        if (meth.getPredicate() != Integer.MAX_VALUE) {
             stack.add(new LdcInsnNode(meth.getPredicate()));
+        }
         stack.add(new MethodInsnNode(INVOKESTATIC, meth.getClazz(), meth.getMethod(), meth.getDesc(), false));
         stack.add(new InsnNode(RETURN));
         invoker.instructions = stack;

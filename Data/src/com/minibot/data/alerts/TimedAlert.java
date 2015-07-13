@@ -1,16 +1,17 @@
 package com.minibot.data.alerts;
 
 /**
- * Created by tim on 6/5/15.
+ * @author Tim Dekker
+ * @since 6/5/15
  */
 public abstract class TimedAlert implements Alert {
 
     protected long interval = 15 * 60 * 1000; // 15 MIN
-    private long lastTime;
+    private final long lastTime;
 
     public TimedAlert(long interval) {
         this.interval = interval;
-        this.lastTime = System.currentTimeMillis();
+        lastTime = System.currentTimeMillis();
     }
 
     @Override

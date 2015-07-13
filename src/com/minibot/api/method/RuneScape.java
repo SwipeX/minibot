@@ -57,8 +57,9 @@ public class RuneScape {
 
     public static void processAction(int arg0, int arg1, int arg2, int opcode, String actionText, String targetText,
                                      int x, int y) {
-        if (!Game.playing())
+        if (!Game.playing()) {
             return;
+        }
         Node node = new Node();
         node.arg0 = arg0;
         node.arg1 = arg1;

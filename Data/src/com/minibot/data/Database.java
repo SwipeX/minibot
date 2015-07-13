@@ -3,9 +3,11 @@ package com.minibot.data;
 import java.sql.*;
 
 /**
- * Created by tim on 6/3/15.
+ * @author Tim Dekker
+ * @since 6/3/15
  */
 public class Database {
+
     private static Connection connection;
 
     static {
@@ -13,8 +15,10 @@ public class Database {
             Class.forName("org.h2.Driver");
             connection = DriverManager.getConnection("jdbc:h2:~/minibot");
             Statement stat = connection.createStatement();
-            stat.execute("CREATE TABLE IF NOT EXISTS activity(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY, name VARCHAR(255), macro VARCHAR(255), type INT, stamp TIMESTAMP)");
-            stat.execute("CREATE TABLE IF NOT EXISTS chin(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY, name VARCHAR(255), chins INT, runtime INT, stamp TIMESTAMP)");
+            stat.execute("CREATE TABLE IF NOT EXISTS activity(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY, " +
+                    "name VARCHAR(255), macro VARCHAR(255), type INT, stamp TIMESTAMP)");
+            stat.execute("CREATE TABLE IF NOT EXISTS chin(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY, " +
+                    "name VARCHAR(255), chins INT, runtime INT, stamp TIMESTAMP)");
             stat.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,7 +50,8 @@ public class Database {
     //type = 1 = stop
     public static void activity(int type, String name, String macro) {
         try {
-            PreparedStatement stat = connection.prepareStatement(String.format("insert into activity(name, macro, type, stamp) values('%s','%s', %s, ?)", name, macro, type));
+            PreparedStatement stat = connection.prepareStatement(String.format("insert into activity(name, macro, " +
+                    "type, stamp) values('%s','%s', %s, ?)", name, macro, type));
             stat.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
             stat.execute();
             stat.close();
@@ -57,7 +62,8 @@ public class Database {
 
     public static void chin(String name, int chins, int runtime) {
         try {
-            PreparedStatement stat = connection.prepareStatement(String.format("insert into chin(name, chins, runtime, stamp) values('%s', %s, %s, ?)", name, chins, runtime));
+            PreparedStatement stat = connection.prepareStatement(String.format("insert into chin(name, chins, " +
+                    "runtime, stamp) values('%s', %s, %s, ?)", name, chins, runtime));
             stat.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
             stat.execute();
             stat.close();
@@ -65,5 +71,4 @@ public class Database {
             e.printStackTrace();
         }
     }
-
 }

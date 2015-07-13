@@ -14,7 +14,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
@@ -40,17 +42,19 @@ public class MacroSelector extends JDialog {
 
     public static void halt() {
         Player local = Players.local();
-        if (local != null)
+        if (local != null) {
             Minibot.connection().script(1, local.name(), selected.def.manifest().name());
-        if (current instanceof Renderable)
+        }
+        if (current instanceof Renderable) {
             GameCanvas.removeRenderable((Renderable) current);
+        }
         if (current != null) {
             current.stop();
         }
-        System.out.println("Stopped " + selected.def.manifest().name() + " by " + selected.def.manifest().author());
         current = null;
-        GameMenu.setEnabled(true);
         Minibot.instance().setMacroRunning(false);
+        GameMenu.setEnabled();
+        System.out.println("Stopped " + selected.def.manifest().name() + " by " + selected.def.manifest().author());
     }
 
     public MacroSelector() {
@@ -96,11 +100,13 @@ public class MacroSelector extends JDialog {
         columns.getColumn(1).setPreferredWidth(100);
         columns.getColumn(2).setPreferredWidth(300);
         table.getSelectionModel().addListSelectionListener(e -> {
-            if (e.getValueIsAdjusting())
+            if (e.getValueIsAdjusting()) {
                 return;
+            }
             int row = table.getSelectedRow();
-            if (row < 0)
+            if (row < 0) {
                 return;
+            }
             selected = (MacroVector) model.getDataVector().get(row);
         });
         JScrollPane scrollpane = new JScrollPane(table);
@@ -115,10 +121,11 @@ public class MacroSelector extends JDialog {
                     Manifest manifest = selected.def.manifest();
                     System.out.println("Started " + manifest.name() + " by " + manifest.author());
                     Player local = Players.local();
-                    if (local != null)
+                    if (local != null) {
                         Minibot.connection().script(0, local.name(), manifest.name());
+                    }
                     current = selected.def.mainClass().newInstance();
-                    GameMenu.setEnabled(false);
+                    GameMenu.setEnabled();
                 } catch (Exception err) {
                     err.printStackTrace();
                     success = false;
@@ -127,8 +134,9 @@ public class MacroSelector extends JDialog {
                     Minibot.instance().setMacroRunning(true);
                     current().start();
                     Minibot.instance().canvas();
-                    if (current() instanceof Renderable)
+                    if (current() instanceof Renderable) {
                         GameCanvas.addRenderable((Renderable) current());
+                    }
                 } else {
                     Minibot.instance().setMacroRunning(false);
                     halt();
@@ -149,8 +157,9 @@ public class MacroSelector extends JDialog {
         try {
             loader.parse(new File(Configuration.MACROS));
             MacroDefinition[] definitions = loader.definitions();
-            for (MacroDefinition def : definitions)
+            for (MacroDefinition def : definitions) {
                 addMacro(def);
+            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -163,11 +172,12 @@ public class MacroSelector extends JDialog {
 
         public MacroVector(MacroDefinition def, String... strings) {
             this.def = def;
-            for (String string : strings)
+            for (String string : strings) {
                 add(string);
+            }
         }
 
-        public MacroDefinition getDef() {
+        public MacroDefinition def() {
             return def;
         }
     }

@@ -54,8 +54,9 @@ public class ModScript {
     public static int multiplyValueByDecoder(int value, String hook) {
         try {
             FieldHook fh = FIELD_HOOK_MAP.get(hook);
-            if (fh.getMultiplier() == -1)
+            if (fh.getMultiplier() == -1) {
                 return value;
+            }
             return value * fh.getMultiplier();
         } catch (Exception e) {
             return value;
@@ -65,8 +66,9 @@ public class ModScript {
     public static int multiplyValueByEncoder(int value, String hook) {
         try {
             FieldHook fh = FIELD_HOOK_MAP.get(hook);
-            if (fh.getMultiplier() == -1)
+            if (fh.getMultiplier() == -1) {
                 return value;
+            }
             BigInteger num = BigInteger.valueOf(fh.getMultiplier());
             return value * num.modInverse(new BigInteger(String.valueOf(1L << 32))).intValue();
         } catch (Exception e) {
@@ -104,8 +106,9 @@ public class ModScript {
                         int hookCount = in.readInt();
                         for (int j = 0; j < hookCount; j++) {
                             Hook hook = Hook.readDataStream(in);
-                            if (hook == null)
+                            if (hook == null) {
                                 continue;
+                            }
                             if (hook instanceof FieldHook) {
                                 FieldHook fh = (FieldHook) hook;
                                 FIELD_HOOK_MAP.put(id + "#" + fh.getName(), fh);

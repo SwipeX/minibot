@@ -3,10 +3,11 @@ package com.minibot.bot.random;
 import com.minibot.api.method.Npcs;
 import com.minibot.api.method.Players;
 import com.minibot.api.util.Time;
-import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Character;
+import com.minibot.api.wrapper.locatable.Npc;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  * @author Tyler Sedlar

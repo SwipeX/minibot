@@ -2,19 +2,19 @@
  * ASM: a very small and fast Java bytecode manipulation framework
  * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ * notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the copyright holders nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -1331,8 +1331,9 @@ public class ClassReader {
                         u += 4;
                     }
                     LabelNode[] labelNodes = new LabelNode[table.length];
-                    for (int i = 0; i < labelNodes.length; i++)
+                    for (int i = 0; i < labelNodes.length; i++) {
                         labelNodes[i] = new LabelNode(table[i]);
+                    }
                     mv.visitTableSwitchInsn(new TableSwitchInsnNode(min, max, new LabelNode(labels[label]), labelNodes));
                     break;
                 }
@@ -1351,8 +1352,9 @@ public class ClassReader {
                         u += 8;
                     }
                     LabelNode[] labelNodes = new LabelNode[values.length];
-                    for (int i = 0; i < labelNodes.length; i++)
+                    for (int i = 0; i < labelNodes.length; i++) {
                         labelNodes[i] = new LabelNode(values[i]);
+                    }
                     mv.visitLookupSwitchInsn(new LookupSwitchInsnNode(new LabelNode(labels[label]), keys, labelNodes));
                     break;
                 }
@@ -1491,11 +1493,13 @@ public class ClassReader {
                 if ((readByte(tanns[i]) >> 1) == (0x40 >> 1)) {
                     int v = readAnnotationTarget(context, tanns[i]);
                     LabelNode[] startNodes = new LabelNode[context.start.length];
-                    for (int j = 0; j < startNodes.length; j++)
+                    for (int j = 0; j < startNodes.length; j++) {
                         startNodes[j] = new LabelNode(context.start[j]);
+                    }
                     LabelNode[] endNodes = new LabelNode[context.end.length];
-                    for (int j = 0; j < endNodes.length; j++)
+                    for (int j = 0; j < endNodes.length; j++) {
                         endNodes[i] = new LabelNode(context.end[j]);
+                    }
                     v = readAnnotationValues(v + 2, c, true,
                             mv.visitLocalVariableAnnotation(new LocalVariableAnnotationNode(context.typeRef,
                                     context.typePath, startNodes, endNodes, context.index, readUTF8(v, c)), true));
@@ -1507,11 +1511,13 @@ public class ClassReader {
                 if ((readByte(itanns[i]) >> 1) == (0x40 >> 1)) {
                     int v = readAnnotationTarget(context, itanns[i]);
                     LabelNode[] startNodes = new LabelNode[context.start.length];
-                    for (int j = 0; j < startNodes.length; j++)
+                    for (int j = 0; j < startNodes.length; j++) {
                         startNodes[j] = new LabelNode(context.start[j]);
+                    }
                     LabelNode[] endNodes = new LabelNode[context.end.length];
-                    for (int j = 0; j < endNodes.length; j++)
+                    for (int j = 0; j < endNodes.length; j++) {
                         endNodes[j] = new LabelNode(context.end[j]);
+                    }
                     v = readAnnotationValues(v + 2, c, true,
                             mv.visitLocalVariableAnnotation(new LocalVariableAnnotationNode(context.typeRef,
                                     context.typePath, startNodes, endNodes, context.index, readUTF8(v, c)), false));

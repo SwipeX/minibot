@@ -10,7 +10,8 @@ import jdk.internal.org.objectweb.asm.tree.*;
  */
 public final class ASMFactory implements Opcodes {
 
-    private ASMFactory() {}
+    private ASMFactory() {
+    }
 
     /**
      * pass custom desc because known array descs e.g: getX[] -> Player[]
@@ -18,8 +19,9 @@ public final class ASMFactory implements Opcodes {
     public static MethodNode createGetter(FieldHook hook, String returnDesc) {
         MethodNode dankMeth = new MethodNode(ACC_PUBLIC, methodifyFieldName(hook.getName(), hook.getFieldDesc()),
                 "()" + returnDesc, null, null);
-        if (!hook.isStatic())
+        if (!hook.isStatic()) {
             dankMeth.instructions.add(new VarInsnNode(ALOAD, 0));
+        }
         dankMeth.instructions.add(new FieldInsnNode(hook.isStatic() ? GETSTATIC : GETFIELD, hook.getClazz(), hook.getField(), hook.getFieldDesc()));
         /**
          * TODO set default multiplier to 0
@@ -54,8 +56,9 @@ public final class ASMFactory implements Opcodes {
 
     public static int getReturnOpcode(String desc) {
         desc = desc.substring(desc.indexOf(")") + 1);
-        if (desc.length() > 1)
+        if (desc.length() > 1) {
             return ARETURN;
+        }
         char c = desc.charAt(0);
         switch (c) {
             case 'I':

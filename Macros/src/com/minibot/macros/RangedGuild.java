@@ -11,7 +11,8 @@ import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  * @author Tyler Sedlar
@@ -65,8 +66,9 @@ public class RangedGuild extends Macro implements Renderable {
                 Time.sleep(300, 400);
             }
             fire();
-            if (fireIndex() > 10)
+            if (fireIndex() > 10) {
                 score += score();
+            }
         } else {
             if (Widgets.viewingDialog()) {
                 Widgets.processDialogOption(0);

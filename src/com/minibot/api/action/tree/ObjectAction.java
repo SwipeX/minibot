@@ -35,16 +35,21 @@ public class ObjectAction extends EntityAction {
 
     public String name() {
         RSObjectDefinition def = definition();
-        if (def == null) return null;
+        if (def == null) {
+            return null;
+        }
         return def.getName();
     }
 
     public String actionName() {
         RSObjectDefinition def = definition();
-        if (def == null) return null;
-        String[] actions = def.getActions();
-        if (actions == null)
+        if (def == null) {
             return null;
+        }
+        String[] actions = def.getActions();
+        if (actions == null) {
+            return null;
+        }
         int actionIndex = actionIndex();
         return actionIndex >= 0 && actionIndex < actions.length ? actions[actionIndex] : null;
     }

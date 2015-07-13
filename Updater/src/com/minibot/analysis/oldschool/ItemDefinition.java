@@ -12,7 +12,7 @@ import org.objectweb.asm.commons.cfg.tree.node.MethodMemberNode;
 import org.objectweb.asm.commons.cfg.tree.node.NumberNode;
 import org.objectweb.asm.tree.ClassNode;
 
-@VisitorInfo(hooks = {"name", "id","actions","groundActions"})
+@VisitorInfo(hooks = {"name", "id", "actions", "groundActions"})
 public class ItemDefinition extends GraphVisitor {
 
     @Override
@@ -54,6 +54,7 @@ public class ItemDefinition extends GraphVisitor {
             });
         }
     }
+
     private class ActionHooks extends BlockVisitor {
 
         private int added;
@@ -81,8 +82,9 @@ public class ItemDefinition extends GraphVisitor {
                                 } else {
                                     return;
                                 }
-                                if (getHooks().containsKey(name))
+                                if (getHooks().containsKey(name)) {
                                     return;
+                                }
                                 addHook(new FieldHook(name, fmn.fin()));
                                 added++;
                             }

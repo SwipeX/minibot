@@ -8,7 +8,9 @@ import com.minibot.api.wrapper.locatable.Locatable;
 import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.api.wrapper.locatable.Tile;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,12 +49,14 @@ public class Projection {
     }
 
     public static double distance(Locatable l1, Locatable l2) {
-        if (l1 == null || l2 == null)
+        if (l1 == null || l2 == null) {
             return Double.NaN;
+        }
         Tile t1 = l1.location();
         Tile t2 = l2.location();
-        if (t1 == null || t2 == null)
+        if (t1 == null || t2 == null) {
             return Double.NaN;
+        }
         return distance(t1.x(), t1.y(), t2.x(), t2.y());
     }
 
@@ -72,8 +76,9 @@ public class Projection {
                 x = angle;
                 angle = z * pitchCos - y * pitchSin >> 16;
                 y = z * pitchSin + y * pitchCos >> 16;
-                if (y == 0)
+                if (y == 0) {
                     return new Point(-1, -1);
+                }
                 z = angle;
                 return new Point((x << 9) / y + 256, (z << 9) / y + 167);
             }
@@ -86,11 +91,13 @@ public class Projection {
     public static Point groundToViewport(int x, int y, int height) {
         if (x >= 128 && x <= 13056 && y >= 128 && y <= 13056) {
             int pitch = Camera.pitch();
-            if (pitch < 0)
+            if (pitch < 0) {
                 return null;
+            }
             int yaw = Camera.yaw();
-            if (yaw < 0)
+            if (yaw < 0) {
                 return null;
+            }
             int z = getGroundHeight(x, y) - height;
             x -= Camera.x();
             y -= Camera.y();
@@ -104,8 +111,9 @@ public class Projection {
             x = angle;
             angle = z * pitchCos - y * pitchSin >> 16;
             y = z * pitchSin + y * pitchCos >> 16;
-            if (y == 0)
+            if (y == 0) {
                 return null;
+            }
             z = angle;
             return new Point((x << 9) / y + 256, (z << 9) / y + 167);
         }
@@ -118,11 +126,13 @@ public class Projection {
 
     public static Point groundToMap(int x, int y, boolean ignoreDist) {
         WidgetComponent minimap = Minimap.component();
-        if (minimap == null)
+        if (minimap == null) {
             return null;
+        }
         Player local = Players.local();
-        if (local.raw() == null)
+        if (local.raw() == null) {
             return null;
+        }
         if (ignoreDist || distance(local, new Tile(x, y)) < 17) {
             x -= Game.baseX();
             y -= Game.baseY();
@@ -148,17 +158,21 @@ public class Projection {
     public static int getGroundHeight(int x, int y) {
         int x1 = x >> 7;
         int y1 = y >> 7;
-        if (x1 < 0 || x1 > 103 || y1 < 0 || y1 > 103)
+        if (x1 < 0 || x1 > 103 || y1 < 0 || y1 > 103) {
             return 0;
+        }
         byte[][][] rules = renderRules();
-        if (rules == null)
+        if (rules == null) {
             return 0;
+        }
         int[][][] heights = tileHeights();
-        if (heights == null)
+        if (heights == null) {
             return 0;
+        }
         int plane = Game.plane();
-        if (plane < 3 && (rules[1][x1][y1] & 0x2) == 2)
+        if (plane < 3 && (rules[1][x1][y1] & 0x2) == 2) {
             plane++;
+        }
         int x2 = x & 0x7F;
         int y2 = y & 0x7F;
         int h1 = heights[plane][x1][y1] * (128 - x2) + heights[plane][x1 + 1][y1] * x2 >> 7;
@@ -183,8 +197,9 @@ public class Projection {
         Rectangle bounds = shape.getBounds();
         for (int x = bounds.x; x < bounds.getMaxX(); x++) {
             for (int y = bounds.y; y < bounds.getMaxY(); y++) {
-                if (shape.contains(x, y))
+                if (shape.contains(x, y)) {
                     points.add(new Point(x, y));
+                }
             }
         }
         return points.toArray(new Point[points.size()]);

@@ -3,17 +3,12 @@ package com.minibot.api.method;
 import com.minibot.Minibot;
 import com.minibot.api.action.tree.Action;
 import com.minibot.api.util.filter.Filter;
-import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.client.natives.RSNpc;
 import com.minibot.client.natives.RSNpcDefinition;
-import com.minibot.client.natives.RSObjectDefinition;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Tyler Sedlar
@@ -27,19 +22,23 @@ public class Npcs {
 
     public static Npc[] loaded(int radius) {
         RSNpc[] raws = raw();
-        if (raws == null || raws.length == 0)
+        if (raws == null || raws.length == 0) {
             return new Npc[0];
+        }
         int[] indices = Minibot.instance().client().getNpcIndices();
-        if (indices == null || indices.length == 0)
+        if (indices == null || indices.length == 0) {
             return new Npc[0];
+        }
         List<Npc> npcs = new ArrayList<>(indices.length);
         for (int index : indices) {
             RSNpc raw = raws[index];
-            if (raw == null)
+            if (raw == null) {
                 continue;
+            }
             Npc npc = new Npc(raw, index);
-            if (radius == -1 || npc.distance() <= radius)
+            if (radius == -1 || npc.distance() <= radius) {
                 npcs.add(npc);
+            }
         }
         return npcs.toArray(new Npc[npcs.size()]);
     }
@@ -50,8 +49,9 @@ public class Npcs {
 
     public static Npc atIndex(int idx) {
         RSNpc[] raws = raw();
-        if (raws == null || raws.length == 0 || idx < 0 || idx >= raws.length)
+        if (raws == null || raws.length == 0 || idx < 0 || idx >= raws.length) {
             return null;
+        }
         RSNpc raw = raws[idx];
         return raw == null ? null : new Npc(raw, idx);
     }

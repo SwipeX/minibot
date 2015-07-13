@@ -29,12 +29,14 @@ public class Time {
      * @return - true if sleep is broken before timeout.
      */
     public static boolean sleep(Condition condition, int threshold, long timeout) {
-        if (condition == null)
+        if (condition == null) {
             return false;
+        }
         long start = Time.millis();
         while (Time.millis() - start < timeout) {
-            if (condition.validate())
+            if (condition.validate()) {
                 return true;
+            }
             Time.sleep(threshold);
         }
         return false;
@@ -67,21 +69,25 @@ public class Time {
         int hours = (int) totalHours % 24;
         int days = (int) totalDays;
         if (days > 0) {
-            if (days < 10)
+            if (days < 10) {
                 t.append(ZERO);
+            }
             t.append(days);
             t.append(COLON);
         }
-        if (hours < 10)
+        if (hours < 10) {
             t.append(ZERO);
+        }
         t.append(hours);
         t.append(COLON);
-        if (minutes < 10)
+        if (minutes < 10) {
             t.append(ZERO);
+        }
         t.append(minutes);
         t.append(COLON);
-        if (seconds < 10)
+        if (seconds < 10) {
             t.append(ZERO);
+        }
         t.append(seconds);
         return t.toString();
     }

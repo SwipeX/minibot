@@ -4,17 +4,15 @@ import com.sirc.Channel;
 import com.sirc.IrcConnection;
 
 /**
- * Created by tim on 6/3/15.
+ * @author Tim Dekker
+ * @since 6/3/15
  */
 public class Host {
 
-    private static IrcConnection instance;
-    private static Listener listener;
-
-    public static void main(String[] args) {
+    public static void main(String... args) {
         try {
-            listener = new Listener();
-            instance = new IrcConnection("irc.foonetic.net");
+            Listener listener = new Listener();
+            IrcConnection instance = new IrcConnection("irc.foonetic.net");
             instance.setNick("Master");
             instance.connect();
             instance.addMessageListener(listener);
@@ -24,6 +22,4 @@ public class Host {
             e.printStackTrace();
         }
     }
-
-
 }

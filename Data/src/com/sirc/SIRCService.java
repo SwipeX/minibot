@@ -31,35 +31,35 @@ package com.sirc;
  * A service plugin running on sIRC. A service extends sIRC by adding
  * much needed features such as auto rejoin, remembering channels and
  * common bot features.
- * 
+ *
  * @author Sorcix
  * @see IrcConnection#addService(SIRCService)
  * @see IrcConnection#removeService(SIRCService)
  * @see IrcConnection#removeAllServices()
  */
 public interface SIRCService {
-	
-	/**
-	 * Returns the name of this service. Used for listing active
-	 * services.
-	 * 
-	 * @return The name of this service.
-	 */
-	String getName();
-	
-	/**
-	 * Called upon loading this service on sIRC.
-	 * 
-	 * @param irc The {@link IrcConnection} running this service.
-	 */
-	void load(IrcConnection irc);
-	
-	/**
-	 * Called upon removing this service from sIRC. Please make sure
-	 * all listeners are removed from sIRC before returning this
-	 * method.
-	 * 
-	 * @param irc The {@link IrcConnection} running this service.
-	 */
-	void unload(IrcConnection irc);
+
+    /**
+     * Returns the name of this service. Used for listing active
+     * services.
+     *
+     * @return The name of this service.
+     */
+    String getName();
+
+    /**
+     * Called upon loading this service on sIRC.
+     *
+     * @param irc The {@link IrcConnection} running this service.
+     */
+    void load(IrcConnection irc);
+
+    /**
+     * Called upon removing this service from sIRC. Please make sure
+     * all listeners are removed from sIRC before returning this
+     * method.
+     *
+     * @param irc The {@link IrcConnection} running this service.
+     */
+    void unload(IrcConnection irc);
 }

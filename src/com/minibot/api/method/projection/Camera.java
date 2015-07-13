@@ -39,8 +39,9 @@ public class Camera {
         Tile t1 = locatable.location();
         Tile t2 = Players.local().location();
         int angle = 90 - ((int) Math.toDegrees(Math.atan2(t1.y() - t2.y(), t1.x() - t2.x())));
-        if (angle < 0)
+        if (angle < 0) {
             angle = 360 + angle;
+        }
         return angle % 360;
     }
 }

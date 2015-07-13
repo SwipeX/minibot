@@ -7,7 +7,10 @@ import java.io.File;
  */
 public enum OperatingSystem {
 
-    WINDOWS, MAC, LINUX, UNKNOWN;
+    WINDOWS,
+    MAC,
+    LINUX,
+    UNKNOWN;
 
     public static String getHomeDirectory() {
         switch (get()) {
@@ -28,7 +31,7 @@ public enum OperatingSystem {
     }
 
     public boolean is64BitJVM() {
-        String[] keys = { "sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch" };
+        String[] keys = {"sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch"};
         for (String key : keys) {
             String property = System.getProperty(key);
             if (property != null && property.contains("64")) {
@@ -55,8 +58,9 @@ public enum OperatingSystem {
     public static OperatingSystem get() {
         String os = System.getProperty("os.name");
         for (OperatingSystem o : OperatingSystem.values()) {
-            if (os.contains(o.toString()))
+            if (os.contains(o.toString())) {
                 return o;
+            }
         }
         return UNKNOWN;
     }

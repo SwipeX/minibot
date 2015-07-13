@@ -12,8 +12,9 @@ public class Populous<E> extends LinkedList<E> {
     @Override
     public boolean add(E element) {
         boolean added = super.add(element);
-        if (!counts.containsKey(element))
+        if (!counts.containsKey(element)) {
             counts.put(element, 0);
+        }
         counts.put(element, counts.get(element) + 1);
         return added;
     }
@@ -21,8 +22,9 @@ public class Populous<E> extends LinkedList<E> {
     @Override
     public boolean addAll(Collection<? extends E> elements) {
         for (E element : elements) {
-            if (!add(element))
+            if (!add(element)) {
                 return false;
+            }
         }
         return true;
     }

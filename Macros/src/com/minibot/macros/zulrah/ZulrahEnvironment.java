@@ -64,8 +64,9 @@ public class ZulrahEnvironment {
             Tile[] tiles = {left, right, bottom};
             Tile nearest = null;
             for (Tile t : tiles) {
-                if (nearest == null || t.distance(zulrahTile) < nearest.distance(zulrahTile))
+                if (nearest == null || t.distance(zulrahTile) < nearest.distance(zulrahTile)) {
                     nearest = t;
+                }
             }
             assert nearest != null;
             if (nearest.equals(left)) {

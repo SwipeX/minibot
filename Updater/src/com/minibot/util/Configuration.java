@@ -14,8 +14,9 @@ public class Configuration {
     public static final String[] DIRECTORIES = {CACHE};
 
     public static void setup() {
-        for (String dir : DIRECTORIES)
+        for (String dir : DIRECTORIES) {
             new File(dir).mkdirs();
+        }
     }
 
     public static String getSystemHome() {

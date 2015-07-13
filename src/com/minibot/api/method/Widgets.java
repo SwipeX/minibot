@@ -7,7 +7,7 @@ import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.client.natives.RSWidget;
 import com.minibot.util.Array;
 
-import java.awt.*;
+import java.awt.Rectangle;
 
 /**
  * @author Tyler Sedlar
@@ -44,18 +44,21 @@ public class Widgets {
     }
 
     public static WidgetComponent[] childrenFor(int index) {
-        if (!validate(index))
+        if (!validate(index)) {
             return new WidgetComponent[0];
+        }
         RSWidget[][] raw = Widgets.raw();
         RSWidget[] children = raw[index];
-        if (children == null)
+        if (children == null) {
             return new WidgetComponent[0];
+        }
         WidgetComponent[] array = new WidgetComponent[children.length];
         for (int i = 0; i < array.length; i++) {
             RSWidget raw_ = children[i];
-            if (raw_ == null)
+            if (raw_ == null) {
                 continue;
-            array[i] = new WidgetComponent(index,raw_);
+            }
+            array[i] = new WidgetComponent(index, raw_);
         }
         return array;
     }
@@ -64,8 +67,9 @@ public class Widgets {
         WidgetComponent[] children = childrenFor(parent);
         if (children != null) {
             for (WidgetComponent wc : children) {
-                if (wc != null && wc.index() == child)
+                if (wc != null && wc.index() == child) {
                     return wc;
+                }
             }
         }
         return null;
@@ -82,8 +86,9 @@ public class Widgets {
                 if (child != null) {
                     int index = child.boundsIndex();
                     if (index > 0 && index < positionsX.length && index < positionsY.length &&
-                            index < widths.length && index < heights.length)
+                            index < widths.length && index < heights.length) {
                         return new Rectangle(positionsX[index], positionsY[index], widths[index], heights[index]);
+                    }
                 }
             }
         }
@@ -93,12 +98,14 @@ public class Widgets {
     public static WidgetComponent get(int parent, Filter<WidgetComponent> filter) {
         for (WidgetComponent child : childrenFor(parent)) {
             try {
-                if (child != null && filter.accept(child))
+                if (child != null && filter.accept(child)) {
                     return child;
+                }
                 if (child != null) {
                     WidgetComponent result = child.child(filter);
-                    if (result != null)
+                    if (result != null) {
                         return result;
+                    }
                 }
             } catch (Exception ignored) {
             }
@@ -108,11 +115,14 @@ public class Widgets {
 
     public static WidgetComponent get(Filter<WidgetComponent> filter) {
         RSWidget[][] raw = raw();
-        if (raw == null) return null;
+        if (raw == null) {
+            return null;
+        }
         for (int i = 0; i < raw.length; i++) {
             WidgetComponent child = get(i, filter);
-            if (child != null)
+            if (child != null) {
                 return child;
+            }
         }
         return null;
     }
@@ -120,11 +130,14 @@ public class Widgets {
     public static WidgetComponent[] getAll(Filter<WidgetComponent> filter) {
         WidgetComponent[] components = new WidgetComponent[0];
         RSWidget[][] raw = raw();
-        if (raw == null) return null;
+        if (raw == null) {
+            return null;
+        }
         for (int i = 0; i < raw.length; i++) {
             WidgetComponent child = get(i, filter);
-            if (child != null)
+            if (child != null) {
                 components = Array.add(components, child);
+            }
         }
         return components.length > 0 ? components : null;
     }
@@ -145,8 +158,9 @@ public class Widgets {
                 String[] actions = wc.actions();
                 if (actions != null && actions.length > 0) {
                     for (String action : actions) {
-                        if (filter.accept(action))
+                        if (filter.accept(action)) {
                             return true;
+                        }
                     }
                 }
             }
@@ -173,8 +187,9 @@ public class Widgets {
     }
 
     public static void processContinue() {
-        if (viewingContinue())
+        if (viewingContinue()) {
             RuneScape.processAction(new DialogButtonAction(continueDialogIndex, -1));
+        }
     }
 
     public static boolean viewingDialog() {
@@ -183,7 +198,8 @@ public class Widgets {
     }
 
     public static void processDialogOption(int optionIndex) {
-        if (viewingDialog())
+        if (viewingDialog()) {
             RuneScape.processAction(new DialogButtonAction(14352384, optionIndex + 1));
+        }
     }
 }

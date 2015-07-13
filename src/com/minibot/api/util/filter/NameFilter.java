@@ -15,8 +15,9 @@ public class NameFilter<I extends Identifiable> implements Filter<I> {
     @Override
     public boolean accept(I i) {
         for (String name : names) {
-            if (contains ? i.name().contains(name) : i.name().equals(name))
+            if (contains ? i.name().contains(name) : i.name().equals(name)) {
                 return true;
+            }
         }
         return false;
     }

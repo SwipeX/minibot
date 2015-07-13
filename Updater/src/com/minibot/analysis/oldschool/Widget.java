@@ -12,7 +12,10 @@ import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.*;
 import org.objectweb.asm.tree.ClassNode;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @VisitorInfo(hooks = {"owner", "children", "x", "y", "width", "height", "itemId", "itemAmount",
         "id", "type", "itemIds", "stackSizes", "scrollX", "scrollY", "textureId", "index",
@@ -82,10 +85,16 @@ public class Widget extends GraphVisitor {
             block.tree().accept(new NodeVisitor(this) {
                 @Override
                 public void visitField(FieldMemberNode fmn) {
-                    if (!fmn.owner().equals(clazz("Widget"))) return;
+                    if (!fmn.owner().equals(clazz("Widget"))) {
+                        return;
+                    }
                     AbstractNode n = fmn.parent();
-                    if (n != null) n = n.parent();
-                    if (n == null) return;
+                    if (n != null) {
+                        n = n.parent();
+                    }
+                    if (n == null) {
+                        return;
+                    }
                     if (n.opcode() == IADD && n.hasParent() && n.parent().opcode() == IASTORE) {
                         VariableNode vn = n.firstVariable();
                         if (vn != null && vn.opcode() == ILOAD) {
@@ -95,7 +104,9 @@ public class Widget extends GraphVisitor {
                             } else if (vn.var() == 7) {
                                 name = "y";
                             }
-                            if (name == null) return;
+                            if (name == null) {
+                                return;
+                            }
                             if (!getHooks().containsKey(name)) {
                                 getHooks().put(name, new FieldHook(name, fmn.fin()));
                                 added++;
@@ -155,13 +166,16 @@ public class Widget extends GraphVisitor {
                 public void visitMethod(MethodMemberNode mmn) {
                     if (mmn.desc().startsWith("(IIIIIZ")) {
                         for (int i = 0; i < 3; i++) {
-                            if (mmn.child(i) == null || mmn.child(i).opcode() != IMUL) return;
+                            if (mmn.child(i) == null || mmn.child(i).opcode() != IMUL) {
+                                return;
+                            }
                         }
                         FieldMemberNode id = mmn.child(0).firstField();
                         FieldMemberNode amount = mmn.child(1).firstField();
                         FieldMemberNode thickness = mmn.child(2).firstField();
-                        if (id == null || amount == null || thickness == null)
+                        if (id == null || amount == null || thickness == null) {
                             return;
+                        }
                         getHooks().put("itemId", new FieldHook("itemId", id.fin()));
                         getHooks().put("itemAmount", new FieldHook("itemAmount", amount.fin()));
                         lock.set(true);
@@ -294,7 +308,9 @@ public class Widget extends GraphVisitor {
                             } else if (vn.var() == 14) {
                                 name = "scrollY";
                             }
-                            if (name == null) return;
+                            if (name == null) {
+                                return;
+                            }
                             FieldMemberNode fmn = (FieldMemberNode) an.layer(IMUL, GETFIELD);
                             if (fmn != null && fmn.owner().equals(getCn().name)) {
                                 if (!getHooks().containsKey(name)) {
@@ -337,8 +353,9 @@ public class Widget extends GraphVisitor {
                             FieldMemberNode fmn = root.firstField();
                             if (fmn != null && fmn.opcode() == PUTFIELD && fmn.layer(IMUL, GETSTATIC) != null) {
                                 int count = 1;
-                                if (counts.containsKey(fmn.key()))
+                                if (counts.containsKey(fmn.key())) {
                                     count += counts.get(fmn.key());
+                                }
                                 counts.put(fmn.key(), count);
                                 possible.add(fmn.key());
                             }

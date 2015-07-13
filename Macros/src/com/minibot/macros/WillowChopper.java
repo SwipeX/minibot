@@ -10,7 +10,8 @@ import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  * @author Tyler Sedlar
@@ -50,8 +51,9 @@ public class WillowChopper extends Macro implements Renderable {
                     willow.processAction("Chop down", derived.localX(), derived.localY());
                     if (Time.sleep(() -> Players.local().animation() != -1, 7000)) {
                         Time.sleep(() -> {
-                            if (Players.local().animation() == -1 || Inventory.full())
+                            if (Players.local().animation() == -1 || Inventory.full()) {
                                 return true;
+                            }
                             GameObject obj = Objects.topAt(tile);
                             return obj != willow;
                         }, 30000);

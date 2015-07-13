@@ -103,8 +103,9 @@ public abstract class EntityAction extends Action {
 
     @Override
     public boolean valid() {
-        if (!super.valid())
+        if (!super.valid()) {
             return false;
+        }
         int x = localX(), y = localY();
         return x >= 0 && x <= 104 && y >= 0 && y <= 104;
     }

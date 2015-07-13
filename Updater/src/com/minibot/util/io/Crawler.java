@@ -2,7 +2,7 @@ package com.minibot.util.io;
 
 import com.minibot.util.Configuration;
 
-import java.awt.*;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,7 +35,8 @@ public class Crawler {
     }
 
     public enum GameType {
-        OSRS, RS3
+        OSRS,
+        RS3
     }
 
     private final Map<String, String> parameters = new HashMap<>();
@@ -90,10 +91,12 @@ public class Crawler {
 
     public boolean outdated() {
         File gamepack = new File(pack);
-        if (!gamepack.exists())
+        if (!gamepack.exists()) {
             return true;
-        if (hash == -1)
+        }
+        if (hash == -1) {
             hash = getLocalHash();
+        }
         return hash == -1 || hash != getRemoteHash();
     }
 
@@ -101,9 +104,13 @@ public class Crawler {
         try {
             List<String> source = Internet.read(config);
             for (String line : source) {
-                if (line.startsWith("param=")) line = line.substring(6);
+                if (line.startsWith("param=")) {
+                    line = line.substring(6);
+                }
                 int idx = line.indexOf("=");
-                if (idx == -1) continue;
+                if (idx == -1) {
+                    continue;
+                }
                 parameters.put(line.substring(0, idx), line.substring(idx + 1));
             }
             return true;

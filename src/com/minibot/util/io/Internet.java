@@ -73,8 +73,9 @@ public class Internet {
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder result = new StringBuilder();
             String line;
-            while ((line = reader.readLine()) != null)
+            while ((line = reader.readLine()) != null) {
                 result.append(line);
+            }
             return result.toString();
         } catch (IOException e) {
             return null;
@@ -85,16 +86,19 @@ public class Internet {
         try {
             URL url = new URL(site);
             URLConnection connection = url.openConnection();
-            if (mask)
+            if (mask) {
                 connection = mask(connection);
-            if (timeout != -1)
+            }
+            if (timeout != -1) {
                 connection.setConnectTimeout(timeout);
+            }
             try (InputStream stream = connection.getInputStream()) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 List<String> source = new ArrayList<>();
                 String line;
-                while ((line = reader.readLine()) != null)
+                while ((line = reader.readLine()) != null) {
                     source.add(line);
+                }
                 return source;
             } catch (IOException e) {
                 //e.printStackTrace();
@@ -126,11 +130,13 @@ public class Internet {
             while ((n = in.read(buf, 0, BUFFER_SIZE)) > 0) {
                 out.write(buf, 0, n);
                 downloaded += n;
-                if (manager != null && manager.getLength() != -1)
+                if (manager != null && manager.getLength() != -1) {
                     manager.onDownload(((downloaded * 100) / manager.getLength()));
+                }
             }
-            if (manager != null)
+            if (manager != null) {
                 manager.setLength(-1);
+            }
             return out.toByteArray();
         }
     }
@@ -139,19 +145,23 @@ public class Internet {
         try {
             URL url = new URL(site);
             URLConnection connection = url.openConnection();
-            if (mask)
+            if (mask) {
                 connection = mask(connection);
-            if (timeout != -1)
+            }
+            if (timeout != -1) {
                 connection.setConnectTimeout(timeout);
-            if (manager != null)
+            }
+            if (manager != null) {
                 manager.setLength(connection.getContentLength());
+            }
             try (InputStream stream = connection.getInputStream()) {
                 File file = new File(target);
                 file.getParentFile().mkdirs();
                 try (FileOutputStream out = new FileOutputStream(file)) {
                     out.write(downloadBinary(stream, manager));
-                    if (manager != null)
+                    if (manager != null) {
                         manager.setLength(-1);
+                    }
                     return file;
                 }
             } catch (IOException e) {

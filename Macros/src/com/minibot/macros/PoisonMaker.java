@@ -2,14 +2,7 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.tree.DialogButtonAction;
-import com.minibot.api.method.Bank;
-import com.minibot.api.method.ChatboxListener;
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Mouse;
-import com.minibot.api.method.Npcs;
-import com.minibot.api.method.RuneScape;
-import com.minibot.api.method.Widgets;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;

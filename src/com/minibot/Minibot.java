@@ -12,17 +12,7 @@ import com.minibot.client.GameCanvas;
 import com.minibot.client.natives.RSClient;
 import com.minibot.mod.Injector;
 import com.minibot.mod.ModScript;
-import com.minibot.mod.transforms.CanvasHack;
-import com.minibot.mod.transforms.ChatboxCallback;
-import com.minibot.mod.transforms.DefinitionInvoker;
-import com.minibot.mod.transforms.GetterAdder;
-import com.minibot.mod.transforms.HoveredRegionTileSetter;
-import com.minibot.mod.transforms.InterfaceImpl;
-import com.minibot.mod.transforms.MiscSetters;
-import com.minibot.mod.transforms.ModelHack;
-import com.minibot.mod.transforms.ProcessActionCallback;
-import com.minibot.mod.transforms.ProcessActionInvoker;
-import com.minibot.mod.transforms.WidgetHack;
+import com.minibot.mod.transforms.*;
 import com.minibot.ui.GameMenu;
 import com.minibot.ui.MacroSelector;
 import com.minibot.util.Configuration;
@@ -53,8 +43,8 @@ public class Minibot extends JFrame implements Runnable {
     private static Minibot instance;
     private final Crawler crawler;
     private RSClient client;
-    private String username;
-    private String password;
+    //private String username;
+    //private String password;
     private boolean macroRunning;
     private boolean farming;
     private BreakHandler breakHandler;
@@ -120,16 +110,18 @@ public class Minibot extends JFrame implements Runnable {
         }
         Configuration.setup();
         crawler.crawl();
-        if (crawler.isOutdated())
+        if (crawler.isOutdated()) {
             crawler.download(() -> System.out.println("Downloaded: " + crawler.getPercent() + "%"));
+        }
         try {
             ModScript.load(Files.readAllBytes(Paths.get(crawler.getModscript())), Integer.toString(crawler.getHash()));
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse modscript");
         }
         File randomDat = new File(System.getProperty("user.home") + "/random.dat");
-        if (randomDat.exists())
+        if (randomDat.exists()) {
             randomDat.setReadOnly();
+        }
         Injector injector = new Injector(new JarArchive(new File(crawler.getPack())));
         injector.getTransforms().add(new ProcessActionCallback());
         injector.getTransforms().add(new ProcessActionInvoker());
@@ -158,8 +150,9 @@ public class Minibot extends JFrame implements Runnable {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-        while (Game.state() < Game.STATE_CREDENTIALS)
+        while (Game.state() < Game.STATE_CREDENTIALS) {
             Time.sleep(100);
+        }
         DefinitionLoader.loadDefinitions(client);
         canvas().addKeyListener(new KeyAdapter() {
             @Override
@@ -175,8 +168,10 @@ public class Minibot extends JFrame implements Runnable {
                         RuneScape.LANDSCAPE_RENDERING_ENABLED = !RuneScape.LANDSCAPE_RENDERING_ENABLED;
                         RuneScape.MODEL_RENDERING_ENABLED = !RuneScape.MODEL_RENDERING_ENABLED;
                         RuneScape.WIDGET_RENDERING_ENABLED = !RuneScape.WIDGET_RENDERING_ENABLED;
+                        GameMenu.setRender();
                     } else if (e.getKeyCode() == KeyEvent.VK_F) {
-                        instance.setFarming(!Minibot.instance().isFarming());
+                        instance.setFarming(!Minibot.instance().farming());
+                        GameMenu.setFarm();
                     }
                 }
             }
@@ -187,11 +182,11 @@ public class Minibot extends JFrame implements Runnable {
         this.farming = farming;
     }
 
-    public boolean isFarming() {
+    public boolean farming() {
         return farming;
     }
 
-    public boolean isMacroRunning() {
+    public boolean macroRunning() {
         return macroRunning;
     }
 

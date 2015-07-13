@@ -8,7 +8,6 @@ import org.objectweb.asm.commons.wrapper.ClassFactory;
 import org.objectweb.asm.commons.wrapper.ClassField;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 
 import java.math.BigInteger;
@@ -36,31 +35,39 @@ public class InverseVisitor extends MethodVisitor implements Opcodes {
     public void visitFieldInsn(FieldInsnNode fin) {
         if (fin.desc.equals("I")) {
             AbstractInsnNode first = fin.next();
-            if (first == null || first.opcode() == PUTSTATIC || first.opcode() == PUTFIELD)
+            if (first == null || first.opcode() == PUTSTATIC || first.opcode() == PUTFIELD) {
                 return;
+            }
             AbstractInsnNode second = first.next();
-            if (second == null || second.opcode() == PUTSTATIC || second.opcode() == PUTFIELD)
+            if (second == null || second.opcode() == PUTSTATIC || second.opcode() == PUTFIELD) {
                 return;
+            }
             AbstractInsnNode third = second.next();
-            if (third == null || third.opcode() == PUTSTATIC || third.opcode() == PUTFIELD)
+            if (third == null || third.opcode() == PUTSTATIC || third.opcode() == PUTFIELD) {
                 return;
-            if (second.opcode() == IMUL && third.opcode() == IMUL)
+            }
+            if (second.opcode() == IMUL && third.opcode() == IMUL) {
                 return;
+            }
             LdcInsnNode ldc = Assembly.previous(fin, LDC, 2);
-            if (ldc == null && fin.opcode() != PUTFIELD && fin.opcode() != PUTSTATIC)
+            if (ldc == null && fin.opcode() != PUTFIELD && fin.opcode() != PUTSTATIC) {
                 ldc = Assembly.next(fin, LDC, 2);
-            if (ldc == null || !(ldc.cst instanceof Integer))
+            }
+            if (ldc == null || !(ldc.cst instanceof Integer)) {
                 return;
+            }
             int multiplier = (int) ldc.cst;
-            if (multiplier % 2 == 0)
+            if (multiplier % 2 == 0) {
                 return;
+            }
             Modulus mod = new Modulus(BigInteger.valueOf(multiplier), 32);
             if (mod.validate()) {
                 String key = fin.owner + "." + fin.name;
                 boolean getting = fin.opcode() == GETFIELD || fin.opcode() == GETSTATIC;
                 Map<String, List<BigInteger>> map = getting ? decoders : encoders;
-                if (!map.containsKey(key))
+                if (!map.containsKey(key)) {
                     map.put(key, new LinkedList<>());
+                }
                 map.get(key).add(mod.quotient);
             }
         }
@@ -111,8 +118,9 @@ public class InverseVisitor extends MethodVisitor implements Opcodes {
                 }
             }
         }
-        if (!populous.isEmpty() && populous.uniqueCount() == 1)
+        if (!populous.isEmpty() && populous.uniqueCount() == 1) {
             return populous.top();
+        }
         if (decoders.containsKey(key)) {
             populous.addAll(decoders.get(key));
             return populous.top();
@@ -126,8 +134,9 @@ public class InverseVisitor extends MethodVisitor implements Opcodes {
             ClassFactory superFactory = classes.get(factory.superName());
             if (superFactory != null) {
                 ClassField superField = superFactory.findField(cf -> cf.name().equals(field));
-                if (superField != null)
+                if (superField != null) {
                     return inverseFor(superField.owner.name(), superField.name());
+                }
             }
         }
         return null;

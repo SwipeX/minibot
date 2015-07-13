@@ -18,24 +18,23 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ClueScrollObject extends ClueScroll {
 
     public final TeleportLocation teleport;
-    public final String objectName, actionName;
+    public final String objectName;
     public final Tile walkingDestination, location;
 
-    private boolean teleported = false;
-    private boolean walked = false;
+    private boolean teleported;
+    private boolean walked;
 
-    public ClueScrollObject(int id, TeleportLocation teleport, String objectName, String actionName,
-                            Tile walkDesintination, Tile location) {
+    public ClueScrollObject(int id, TeleportLocation teleport, String objectName, Tile walkingDestination,
+                            Tile location) {
         super(id);
         this.teleport = teleport;
         this.objectName = objectName;
-        this.actionName = actionName;
-        this.walkingDestination = walkDesintination;
+        this.walkingDestination = walkingDestination;
         this.location = location;
     }
 
-    public ClueScrollObject(int id, TeleportLocation teleport, String objectName, String actionName, Tile location) {
-        this(id, teleport, objectName, actionName, location, location);
+    public ClueScrollObject(int id, TeleportLocation teleport, String objectName, Tile location) {
+        this(id, teleport, objectName, location, location);
     }
 
     @Override
@@ -61,14 +60,10 @@ public class ClueScrollObject extends ClueScroll {
                     Time.sleep(600, 800);
                 } else {
                     status.set("Interacting");
-                    GameObject[] objects = Objects.allAt(location);
-                    for (GameObject object : objects) {
-                        String name = object.name();
-                        if (name != null && name.equals(objectName)) {
-                            object.processAction(actionName);
-                            Time.sleep(800, 1200);
-                            break;
-                        }
+                    GameObject object = Objects.findByName(location, objectName);
+                    if (object != null) {
+                        object.processFirstAction();
+                        Time.sleep(800, 1200);
                     }
                 }
             }

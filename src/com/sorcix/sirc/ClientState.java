@@ -33,151 +33,143 @@ import java.util.Map;
 
 /**
  * Contains information about an {@link IrcConnection}.
- * 
+ *
  * @author Sorcix
  * @since 1.1.0
  */
 public final class ClientState {
 
-	// TODO: Allow changing the username (sIRC@..)
-	/** The list of channels. */
-	private final Map<String, Channel> channels;
-	/** Contains a singleton for all known users. */
-	private final Map<String, User> users;
-	/** The local user. */
-	private User client;
+    // TODO: Allow changing the username (sIRC@..)
+    /** The list of channels. */
+    private final Map<String, Channel> channels;
+    /** Contains a singleton for all known users. */
+    private final Map<String, User> users;
+    /** The local user. */
+    private User client;
 
-	/**
-	 * Creates a new ClientState.
-	 */
-	protected ClientState() {
-		channels = new HashMap<>();
-		users = new HashMap<>();
-	}
+    /**
+     * Creates a new ClientState.
+     */
+    protected ClientState() {
+        channels = new HashMap<>();
+        users = new HashMap<>();
+    }
 
-	/**
-	 * Adds a channel to the channel map.
-	 * 
-	 * @param channel
-	 *            The channel to add.
-	 */
-	protected void addChannel(Channel channel) {
-		if (!channels.containsKey(channel.getName().toLowerCase())) {
-			channels.put(channel.getName().toLowerCase(), channel);
-		}
-	}
+    /**
+     * Adds a channel to the channel map.
+     *
+     * @param channel The channel to add.
+     */
+    protected void addChannel(Channel channel) {
+        if (!channels.containsKey(channel.getName().toLowerCase())) {
+            channels.put(channel.getName().toLowerCase(), channel);
+        }
+    }
 
-	/**
-	 * Adds a user to the user map.
-	 * 
-	 * @param user
-	 *            The user to add.
-	 */
-	protected void addUser(User user) {
-		if (!users.containsKey(user.getNickLower())) {
-			users.put(user.getNickLower(), user);
-		}
-	}
+    /**
+     * Adds a user to the user map.
+     *
+     * @param user The user to add.
+     */
+    protected void addUser(User user) {
+        if (!users.containsKey(user.getNickLower())) {
+            users.put(user.getNickLower(), user);
+        }
+    }
 
-	/**
-	 * Retrieves a shared channel object from the channel map.
-	 * 
-	 * @param channel
-	 *            A channel object representing this channel.
-	 * @return The channel, or null if this channel doesn't exist. (The local
-	 *         user is not in that channel)
-	 * @see #getChannel(String)
-	 */
-	protected Channel getChannel(Channel channel) {
-		return getChannel(channel.getName());
-	}
+    /**
+     * Retrieves a shared channel object from the channel map.
+     *
+     * @param channel A channel object representing this channel.
+     * @return The channel, or null if this channel doesn't exist. (The local
+     * user is not in that channel)
+     * @see #getChannel(String)
+     */
+    protected Channel getChannel(Channel channel) {
+        return getChannel(channel.getName());
+    }
 
-	/**
-	 * Retrieves a shared channel object from the channel map.
-	 * 
-	 * @param channel
-	 *            The channel name.
-	 * @return The channel, or null if this channel doesn't exist. (The local
-	 *         user is not in that channel)
-	 */
-	protected Channel getChannel(String channel) {
- 		if (channel != null && channels.containsKey(channel.toLowerCase())) {
-			return channels.get(channel.toLowerCase());
-		}
-		return null;
-	}
+    /**
+     * Retrieves a shared channel object from the channel map.
+     *
+     * @param channel The channel name.
+     * @return The channel, or null if this channel doesn't exist. (The local
+     * user is not in that channel)
+     */
+    protected Channel getChannel(String channel) {
+        if (channel != null && channels.containsKey(channel.toLowerCase())) {
+            return channels.get(channel.toLowerCase());
+        }
+        return null;
+    }
 
-	/**
-	 * Creates an iterator through all Channels.
-	 * 
-	 * @return an iterator through all Channels.
-	 */
-	public Iterator<Channel> getChannels() {
-		return channels.values().iterator();
-	}
+    /**
+     * Creates an iterator through all Channels.
+     *
+     * @return an iterator through all Channels.
+     */
+    public Iterator<Channel> getChannels() {
+        return channels.values().iterator();
+    }
 
-	/**
-	 * Retrieves the local {@link User}.
-	 * 
-	 * @return The local {@code User}.
-	 */
-	public User getClient() {
-		return client;
-	}
+    /**
+     * Retrieves the local {@link User}.
+     *
+     * @return The local {@code User}.
+     */
+    public User getClient() {
+        return client;
+    }
 
-	/**
-	 * Retrieves a shared user object from the users map.
-	 * 
-	 * @param nick
-	 *            The nickname of this user.
-	 * @return The shared user object, or null if there is no singleton User
-	 *         object for this user.
-	 */
-	protected User getUser(String nick) {
-		//TODO: implement singleton users in User, Channel and IrcConnection
-		if (users.containsKey(nick)) {
-			return users.get(nick);
-		}
-		return null;
-	}
+    /**
+     * Retrieves a shared user object from the users map.
+     *
+     * @param nick The nickname of this user.
+     * @return The shared user object, or null if there is no singleton User
+     * object for this user.
+     */
+    protected User getUser(String nick) {
+        //TODO: implement singleton users in User, Channel and IrcConnection
+        if (users.containsKey(nick)) {
+            return users.get(nick);
+        }
+        return null;
+    }
 
-	/**
-	 * Checks if given channel is in the channel map.
-	 * 
-	 * @param name
-	 *            The name of this channel.
-	 * @return True if the channel is in the list, false otherwise.
-	 */
-	protected boolean hasChannel(String name) {
-		return name != null && channels.containsKey(name.toLowerCase());
-	}
+    /**
+     * Checks if given channel is in the channel map.
+     *
+     * @param name The name of this channel.
+     * @return True if the channel is in the list, false otherwise.
+     */
+    protected boolean hasChannel(String name) {
+        return name != null && channels.containsKey(name.toLowerCase());
+    }
 
-	/**
-	 * Remove all channels from the channel map.
-	 */
-	protected void removeAll() {
-		channels.clear();
-	}
+    /**
+     * Remove all channels from the channel map.
+     */
+    protected void removeAll() {
+        channels.clear();
+    }
 
-	/**
-	 * Removes a channel from the channel map.
-	 * 
-	 * @param channel
-	 *            The channel name.
-	 */
-	protected void removeChannel(String channel) {
-		if (channel != null && channels.containsKey(channel.toLowerCase())) {
-			channels.remove(channel.toLowerCase());
-		}
-	}
+    /**
+     * Removes a channel from the channel map.
+     *
+     * @param channel The channel name.
+     */
+    protected void removeChannel(String channel) {
+        if (channel != null && channels.containsKey(channel.toLowerCase())) {
+            channels.remove(channel.toLowerCase());
+        }
+    }
 
-	/**
-	 * Set the local {@link User}.
-	 * 
-	 * @param user
-	 *            The local {@code User}.
-	 */
-	protected void setClient(User user) {
-		client = user;
-	}
+    /**
+     * Set the local {@link User}.
+     *
+     * @param user The local {@code User}.
+     */
+    protected void setClient(User user) {
+        client = user;
+    }
 }

@@ -11,8 +11,9 @@ public class Callback {
 
     @ClientInvoked
     public static void messageReceived(int type, String sender, String message, String clan) {
-        if (MacroSelector.current() != null && MacroSelector.current() instanceof ChatboxListener)
+        if (MacroSelector.current() != null && MacroSelector.current() instanceof ChatboxListener) {
             ((ChatboxListener) MacroSelector.current()).messageReceived(type, sender, message, clan);
+        }
     }
 
     @ClientInvoked
@@ -23,7 +24,8 @@ public class Callback {
     @ClientInvoked
     public static void onEngineTick() {
         RuneScape.processActions();
-        if (Minibot.instance().isFarming())
+        if (Minibot.instance().farming()) {
             Time.sleep(80);
+        }
     }
 }

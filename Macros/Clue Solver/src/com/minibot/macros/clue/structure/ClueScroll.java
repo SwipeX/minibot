@@ -42,7 +42,9 @@ public abstract class ClueScroll {
     }
 
     public static void populateMedium() {
-        CLUE_SCROLLS.add(new ClueScrollObject(7304, TeleportLocation.CAMELOT, "Crate", "Search",
+        CLUE_SCROLLS.add(new ClueScrollKeyObject(3607, TeleportLocation.FALADOR, new Tile(2909, 3539, 0), "Penda",
+                "Drawers", new Tile(2921, 3576, 0), new Tile(2921, 3577, 0)));
+        CLUE_SCROLLS.add(new ClueScrollObject(7304, TeleportLocation.CAMELOT, "Crate",
                 new Tile(2659, 3436, 0), new Tile(2671, 3437, 0)));
     }
 }

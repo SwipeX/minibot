@@ -12,7 +12,10 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Manifest {
 
     String name();
+
     String author();
+
     String version();
+
     String description();
 }

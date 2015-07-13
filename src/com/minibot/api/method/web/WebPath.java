@@ -6,10 +6,14 @@
  */
 package com.minibot.api.method.web;
 
-import com.minibot.api.method.*;
+import com.minibot.api.method.Objects;
+import com.minibot.api.method.Players;
+import com.minibot.api.method.Walking;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Path;
-import com.minibot.api.wrapper.locatable.*;
+import com.minibot.api.wrapper.locatable.GameObject;
+import com.minibot.api.wrapper.locatable.Locatable;
+import com.minibot.api.wrapper.locatable.Tile;
 
 import java.util.Iterator;
 
@@ -25,11 +29,13 @@ public class WebPath implements Path {
     private WebPath(WebVertex src, WebVertex dest) {
         this.src = src;
         this.dest = dest;
-        if (src == null || dest == null)
+        if (src == null || dest == null) {
             throw new RuntimeException("Failed to find vertices!");
+        }
         WebVertex[] path = Walking.web().pathfinder().generate(src, dest);
-        if (path == null)
+        if (path == null) {
             throw new RuntimeException("Failed to find path!");
+        }
         this.vertices = path;
     }
 
@@ -63,10 +69,12 @@ public class WebPath implements Path {
 
     @Override //TODO absolutely disgusting
     public boolean step(Option... options) {
-        if (dest.getTile().distance(src.getTile()) <= 3)
+        if (dest.getTile().distance(src.getTile()) <= 3) {
             return true;
-        for (Option option : options)
+        }
+        for (Option option : options) {
             option.handle();
+        }
         WebVertex next = next();
         if (next != null) {
             if (next instanceof ObjectVertex) {
@@ -106,10 +114,12 @@ public class WebPath implements Path {
     }
 
     public WebVertex next() {
-        if (vertices.length == 0)
+        if (vertices.length == 0) {
             return null;
-        if (vertices.length == 1)
+        }
+        if (vertices.length == 1) {
             return vertices[0];
+        }
         int dist = Integer.MAX_VALUE;
         int nearIndex = -1;
         for (int i = 0; i < vertices.length; i++) {

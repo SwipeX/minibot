@@ -16,12 +16,13 @@ public class ModelHack implements Transform {
     public void inject(Map<String, ClassNode> classes) {
         //landscape
         ClassNode landscape = classes.get(ModScript.getClass("Region"));
-        if (landscape == null)
+        if (landscape == null) {
             throw new RuntimeException("wat");
+        }
         for (MethodNode methodNode : landscape.methods) {
             if (methodNode.desc.startsWith("(IIIIII")
                     && methodNode.desc.endsWith("V")
-                    && Modifier.isPublic(methodNode.access)){
+                    && Modifier.isPublic(methodNode.access)) {
                 InsnList setStack = new InsnList();
                 Label label = new Label();
                 LabelNode ln = new LabelNode(label);
@@ -32,7 +33,7 @@ public class ModelHack implements Transform {
                 setStack.add(new InsnNode(RETURN));
                 setStack.add(ln);
                 methodNode.instructions.insert(setStack);
-              //  System.out.println("Injected conditional disable landscape rendering @" + methodNode.name + methodNode.desc);
+                //  System.out.println("Injected conditional disable landscape rendering @" + methodNode.name + methodNode.desc);
             }
             //Model
             ClassNode model = classes.get(ModScript.getClass("Model"));
@@ -40,14 +41,16 @@ public class ModelHack implements Transform {
             for (MethodNode mn : model.methods) {
                 for (AbstractInsnNode ain : mn.instructions.toArray()) {
                     //onCursorUids[onCursorCount++] = ...;
-                    if (ain.getOpcode() != IASTORE || !matchPrevs(ain, ILOAD, PUTSTATIC, IADD, ICONST_1, DUP, GETSTATIC, GETSTATIC))
+                    if (ain.getOpcode() != IASTORE || !matchPrevs(ain, ILOAD, PUTSTATIC, IADD, ICONST_1, DUP, GETSTATIC, GETSTATIC)) {
                         continue;
+                    }
                     badKeys.add(mn.name + mn.desc);
                 }
             }
             for (MethodNode mn : model.methods) {
-                if (badKeys.contains(mn.name + mn.desc) || mn.desc.contains("[B") || Modifier.isStatic(mn.access))
+                if (badKeys.contains(mn.name + mn.desc) || mn.desc.contains("[B") || Modifier.isStatic(mn.access)) {
                     continue;
+                }
                 for (AbstractInsnNode ain : mn.instructions.toArray()) {
                     if (ain.getOpcode() != IFNONNULL || !matchPrevs(ain, GETFIELD, ALOAD)) {
                         continue;
@@ -77,8 +80,9 @@ public class ModelHack implements Transform {
     private boolean matchPrevs(AbstractInsnNode ain, int... ops) {
         AbstractInsnNode curr = ain;
         for (int i = 0; i < ops.length && (curr = curr.getPrevious()) != null; i++) {
-            if (curr.getOpcode() != ops[i])
+            if (curr.getOpcode() != ops[i]) {
                 return false;
+            }
         }
         return true;
     }

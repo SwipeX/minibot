@@ -11,7 +11,9 @@ public class TableItemAction extends AbstractTableAction {
     }
 
     public static int actionIndexOpcode(int index) {
-        if (index < 0 || index > 4) return -1;
+        if (index < 0 || index > 4) {
+            return -1;
+        }
         return ActionOpcodes.ITEM_ACTION_0 + index;
     }
 

@@ -13,8 +13,9 @@ public class IdFilter<I extends Identifiable> implements Filter<I> {
     @Override
     public boolean accept(I i) {
         for (int id : ids) {
-            if (id == i.id())
+            if (id == i.id()) {
                 return true;
+            }
         }
         return false;
     }

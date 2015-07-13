@@ -17,8 +17,9 @@ public class ChatboxCallback implements Transform {
         for (ClassNode cn : classes.values()) {
             for (MethodNode mn : cn.methods) {
                 if (!Modifier.isStatic(mn.access) || !mn.desc.endsWith("V")
-                        || !mn.desc.startsWith("(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;"))
+                        || !mn.desc.startsWith("(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;")) {
                     continue;
+                }
                 InsnList stack = new InsnList();
                 stack.add(new VarInsnNode(ILOAD, 0));
                 stack.add(new VarInsnNode(ALOAD, 1));

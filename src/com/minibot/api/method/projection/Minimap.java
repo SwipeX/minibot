@@ -25,8 +25,9 @@ public class Minimap {
     public static WidgetComponent component() {
         WidgetComponent[] children = Widgets.childrenFor(548);
         for (WidgetComponent wc : children) {
-            if (wc == null || wc.width() != 172)
+            if (wc == null || wc.width() != 172) {
                 continue;
+            }
             return wc;
         }
         return null;

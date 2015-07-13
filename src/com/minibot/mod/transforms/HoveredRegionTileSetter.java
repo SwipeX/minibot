@@ -12,8 +12,9 @@ public class HoveredRegionTileSetter implements Transform {
     public void inject(Map<String, ClassNode> classes) {
         FieldHook xHook = ModScript.getFieldHook("Client#hoveredRegionTileX");
         FieldHook yHook = ModScript.getFieldHook("Client#hoveredRegionTileY");
-        if (xHook == null || yHook == null)
+        if (xHook == null || yHook == null) {
             throw new RuntimeException("hook broke?");
+        }
 
         MethodNode xSetter = new MethodNode(ACC_PUBLIC, "setHoveredRegionTileX", "(I)V", null, null);
         xSetter.instructions.add(new VarInsnNode(ILOAD, 1));

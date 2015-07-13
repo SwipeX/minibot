@@ -6,7 +6,8 @@ import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.util.Configuration;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,8 +31,9 @@ public class PinSolver extends RandomEvent {
     }
 
     private boolean inputNumber(int number) {
-        if (!atPin())
+        if (!atPin()) {
             return false;
+        }
         String numString = Integer.toString(number);
         for (int i = 0; i < (BANK_PIN_CHILD_END - BANK_PIN_CHILD_START); i += 2) {
             WidgetComponent container = Widgets.get(BANK_PIN_PARENT, BANK_PIN_CHILD_START + i);
@@ -50,8 +52,9 @@ public class PinSolver extends RandomEvent {
 
     private boolean inputPin(char... pin) {
         for (char c : pin) {
-            if (!inputNumber(Integer.parseInt(Character.toString(c))))
+            if (!inputNumber(Integer.parseInt(Character.toString(c)))) {
                 return false;
+            }
         }
         return true;
     }
@@ -66,8 +69,9 @@ public class PinSolver extends RandomEvent {
         try (Stream<String> lines = Files.lines(Paths.get(BANK_PIN_FILE))) {
             Optional<String> first = lines.findFirst();
             if (first != null) {
-                if (inputPin(first.get().toCharArray()))
+                if (inputPin(first.get().toCharArray())) {
                     Time.sleep(Bank::viewing, 5000);
+                }
             }
         } catch (IOException e) {
             System.err.println("Invalid bank pin file");

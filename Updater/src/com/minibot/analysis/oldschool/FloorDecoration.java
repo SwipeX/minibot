@@ -41,7 +41,9 @@ public class FloorDecoration extends GraphVisitor {
                 public void visitField(FieldMemberNode fmn) {
                     if (fmn.opcode() == PUTFIELD && fmn.owner().equals(getCn().name) && fmn.desc().equals("I")) {
                         VariableNode vn = (VariableNode) fmn.layer(IMUL, ILOAD);
-                        if (vn == null) vn = (VariableNode) fmn.layer(IADD, IMUL, ILOAD);
+                        if (vn == null) {
+                            vn = (VariableNode) fmn.layer(IADD, IMUL, ILOAD);
+                        }
                         if (vn != null) {
                             String name = null;
                             if (vn.var() == 2) {
@@ -55,8 +57,9 @@ public class FloorDecoration extends GraphVisitor {
                             } else if (vn.var() == 7) {
                                 name = "flags";
                             }
-                            if (name == null)
+                            if (name == null) {
                                 return;
+                            }
                             getHooks().put(name, new FieldHook(name, fmn.fin()));
                             added++;
                         }

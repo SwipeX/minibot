@@ -11,8 +11,9 @@ public abstract class Wrapper<T extends ClientNative> {
     protected final T raw;
 
     public Wrapper(T raw) {
-        if (raw == null)
+        if (raw == null) {
             throw new IllegalArgumentException("raw == null");
+        }
         this.raw = raw;
     }
 

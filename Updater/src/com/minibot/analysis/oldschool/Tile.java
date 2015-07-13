@@ -43,7 +43,9 @@ public class Tile extends GraphVisitor {
                 public void visitField(FieldMemberNode fmn) {
                     if (fmn.opcode() == PUTFIELD && fmn.owner().equals(getCn().name) && fmn.desc().equals("I")) {
                         VariableNode vn = (VariableNode) fmn.layer(IMUL, ILOAD);
-                        if (vn == null) vn = (VariableNode) fmn.layer(DUP_X1, IMUL, ILOAD);
+                        if (vn == null) {
+                            vn = (VariableNode) fmn.layer(DUP_X1, IMUL, ILOAD);
+                        }
                         if (vn != null) {
                             String name = null;
                             if (vn.var() == 1) {
@@ -53,7 +55,9 @@ public class Tile extends GraphVisitor {
                             } else if (vn.var() == 3) {
                                 name = "y";
                             }
-                            if (name == null) return;
+                            if (name == null) {
+                                return;
+                            }
                             getHooks().put(name, new FieldHook(name, fmn.fin()));
                             added++;
                         }

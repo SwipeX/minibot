@@ -36,24 +36,24 @@ package com.sirc;
  * Note that if sIRC supports new events in the future the lines will
  * no longer be sent to the {@code AdvancedListener}!
  * </p>
- * 
+ *
  * @author Sorcix
  */
 public interface AdvancedListener {
-	
-	/**
-	 * Received an unknown IRC event.
-	 * 
-	 * @param irc The {@link IrcConnection} receiving this event.
-	 * @param line The incoming line.
-	 */
-	void onUnknown(IrcConnection irc, IrcPacket line);
-	
-	/**
-	 * Received an unknown numeric server reply.
-	 * 
-	 * @param irc The {@link IrcConnection} receiving this event.
-	 * @param line The incoming line.
-	 */
-	void onUnknownReply(IrcConnection irc, IrcPacket line);
+
+    /**
+     * Received an unknown IRC event.
+     *
+     * @param irc The {@link IrcConnection} receiving this event.
+     * @param line The incoming line.
+     */
+    void onUnknown(IrcConnection irc, IrcPacket line);
+
+    /**
+     * Received an unknown numeric server reply.
+     *
+     * @param irc The {@link IrcConnection} receiving this event.
+     * @param line The incoming line.
+     */
+    void onUnknownReply(IrcConnection irc, IrcPacket line);
 }

@@ -21,9 +21,10 @@ public class Ground {
         Deque<GroundItem> items = new ArrayDeque<>();
         for (int i = 0; i < 104; i++) {
             for (int j = 0; j < 104; j++) {
-                Deque<GroundItem> temp = at(i,j);
-                if (temp == null)
+                Deque<GroundItem> temp = at(i, j);
+                if (temp == null) {
                     continue;
+                }
                 items.addAll(temp);
             }
         }
@@ -31,16 +32,18 @@ public class Ground {
     }
 
     public static Deque<GroundItem> loaded(int radius) {
-        if (radius == -1)
+        if (radius == -1) {
             return loaded();
+        }
         Deque<GroundItem> items = new ArrayDeque<>();
         int xx = Players.local().localX();
         int yy = Players.local().localY();
         for (int i = xx - radius; i < xx + radius; i++) {
             for (int j = yy - radius; j < yy + radius; j++) {
                 Deque<GroundItem> temp = at(i, j);
-                if (temp == null)
+                if (temp == null) {
                     continue;
+                }
                 items.addAll(temp);
             }
         }
@@ -50,22 +53,25 @@ public class Ground {
     public static Deque<GroundItem> at(int x, int y) {
         int baseX = Game.baseX(), baseY = Game.baseY();
         RSNodeDeque[][][] raw = raw();
-        if (raw == null || raw.length == 0)
+        if (raw == null || raw.length == 0) {
             return null;
+        }
         RSNodeDeque rawDeque;
         try {
             rawDeque = raw[Game.plane()][x][y];
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
-        if (rawDeque == null)
+        if (rawDeque == null) {
             return null;
+        }
         Deque<GroundItem> items = new ArrayDeque<>();
         RSNode tail = rawDeque.getTail();
         RSNode current = tail.getPrevious();
         while (current != null && current != tail) {
-            if (current instanceof RSItem)
+            if (current instanceof RSItem) {
                 items.add(new GroundItem(current, x + baseX, y + baseY));
+            }
             current = current.getPrevious();
         }
         return items;
@@ -87,8 +93,9 @@ public class Ground {
 
     public static GroundItem nearestByFilter(int dist, Filter<GroundItem> filter) {
         Deque<GroundItem> loaded = findByFilter(dist, filter);
-        if (loaded.isEmpty())
+        if (loaded.isEmpty()) {
             return null;
+        }
         int distance = Integer.MAX_VALUE;
         GroundItem nearest = null;
         for (GroundItem item : loaded) {

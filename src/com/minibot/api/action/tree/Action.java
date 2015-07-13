@@ -256,8 +256,9 @@ public abstract class Action implements ActionFilter { // An action has the abil
 
     @Override
     public boolean accept(int opcode, int arg0, int arg1, int arg2) {
-        if (this.opcode != opcode)
+        if (this.opcode != opcode) {
             return false;
+        }
         int sig = significantArgs();
         return !(((sig & ARG0) != 0) && this.arg0 != arg0) && !(((sig & ARG1) != 0) && this.arg1 != arg1) &&
                 !(((sig & ARG2) != 0) && this.arg2 != arg2);

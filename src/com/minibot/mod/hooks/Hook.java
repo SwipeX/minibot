@@ -33,8 +33,9 @@ public abstract class Hook {
 
         public static Class<? extends Hook> forID(int id) {
             for (Type t : values()) {
-                if (t.id == id)
+                if (t.id == id) {
                     return t.clazz;
+                }
             }
             return null;
         }

@@ -3,7 +3,6 @@ package com.minibot.api.wrapper.locatable;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.action.tree.Action;
 import com.minibot.api.action.tree.NpcAction;
-import com.minibot.api.method.Npcs;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Identifiable;
@@ -21,8 +20,9 @@ public class Npc extends Character<RSNpc> implements Identifiable {
         super(raw);
         this.index = index;
         RSNpcDefinition rawDef = raw.getDefinition();
-        if (rawDef == null)
+        if (rawDef == null) {
             throw new IllegalStateException("bad npc definition!");
+        }
         definition = DefinitionLoader.findNpcDefinition(rawDef.getId());
     }
 
@@ -47,21 +47,25 @@ public class Npc extends Character<RSNpc> implements Identifiable {
     @Override
     public void processAction(int opcode, String action) {
         String name = name();
-        if (name == null)
+        if (name == null) {
             return;
+        }
         RuneScape.processAction(new NpcAction(opcode, index), action, name, 0, 0);
     }
 
     @Override
     public void processAction(String action) {
-        if (definition == null)
+        if (definition == null) {
             return;
+        }
         String[] actions = definition.getActions();
-        if (actions == null)
+        if (actions == null) {
             return;
+        }
         int index = Action.indexOf(actions, action);
-        if (index >= 0)
+        if (index >= 0) {
             processAction(ActionOpcodes.NPC_ACTION_0 + index, action);
+        }
     }
 
     @Override

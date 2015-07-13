@@ -3,7 +3,7 @@ package com.minibot.client;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 
-import javax.swing.*;
+import javax.swing.KeyStroke;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -130,8 +130,9 @@ public class GameCanvas extends Canvas implements Renderable {
     private KeyEvent generateKeyEvent(char key, int type, int timeOffset) {
         KeyStroke stroke = KeyStroke.getKeyStroke(key);
         int keycode = stroke.getKeyCode();
-        if (key >= 'a' && key <= 'z')
+        if (key >= 'a' && key <= 'z') {
             keycode -= 32;
+        }
         return new KeyEvent(this, type, System.currentTimeMillis() + timeOffset, stroke.getModifiers(), keycode, key,
                 KeyEvent.KEY_LOCATION_STANDARD);
     }

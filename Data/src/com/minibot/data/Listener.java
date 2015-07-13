@@ -5,6 +5,10 @@ import com.sirc.IrcConnection;
 import com.sirc.MessageListener;
 import com.sirc.User;
 
+/**
+ * @author Tim Dekker
+ * @since 6/3/15
+ */
 public class Listener implements MessageListener {
 
     @Override

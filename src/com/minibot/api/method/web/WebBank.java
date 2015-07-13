@@ -122,7 +122,10 @@ public enum WebBank {
     }
 
     public static enum Type {
-        NPC, DEPOSIT_BOX, BANK_CHEST, BANK_BOOTH
+        NPC,
+        DEPOSIT_BOX,
+        BANK_CHEST,
+        BANK_BOOTH
     }
 }
 

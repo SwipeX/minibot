@@ -1,11 +1,7 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Npcs;
-import com.minibot.api.method.Players;
-import com.minibot.api.method.Skills;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.locatable.Npc;
@@ -42,8 +38,9 @@ public class Falconry extends Macro implements Renderable {
         Minibot.instance().client().resetMouseIdleTime();
         Player local = Players.local();
         if (local != null) {
-            if (local.animation() != -1)
+            if (local.animation() != -1) {
                 return;
+            }
             Inventory.dropAllExcept(item -> item.name().equals("Coins"));
             Npc falcon = (Npc) Game.hinted();
             if (falcon != null) {
@@ -52,8 +49,8 @@ public class Falconry extends Macro implements Renderable {
                 //    Walking.walkTo(falcon.location());
                 //    Time.sleep(1000, 2000);
                 //} else {
-                    falcon.processAction("Retrieve");
-                    Time.sleep(400, 750);
+                falcon.processAction("Retrieve");
+                Time.sleep(400, 750);
                 //}
             } else {
                 String NPC = "Spotted kebbit";
@@ -64,8 +61,8 @@ public class Falconry extends Macro implements Renderable {
                     //    Walking.walkTo(kebbit.location());
                     //    Time.sleep(1000, 2000);
                     //} else {
-                        kebbit.processAction("Catch");
-                        Time.sleep(600, 1100);
+                    kebbit.processAction("Catch");
+                    Time.sleep(600, 1100);
                     //}
                 }
             }

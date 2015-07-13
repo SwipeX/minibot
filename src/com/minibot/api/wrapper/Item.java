@@ -1,12 +1,7 @@
 package com.minibot.api.wrapper;
 
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.action.tree.Action;
-import com.minibot.api.action.tree.ItemOnEntityAction;
-import com.minibot.api.action.tree.ItemOnItemAction;
-import com.minibot.api.action.tree.TableItemAction;
-import com.minibot.api.action.tree.UseItemAction;
-import com.minibot.api.action.tree.WidgetAction;
+import com.minibot.api.action.tree.*;
 import com.minibot.api.method.RuneScape;
 import com.minibot.api.util.Identifiable;
 import com.minibot.api.wrapper.locatable.GameObject;
@@ -80,8 +75,9 @@ public class Item implements Identifiable {
     }
 
     public Rectangle bounds() {
-        if (comp != null)
+        if (comp != null) {
             return comp.bounds();
+        }
         Point screen = point();
         return new Rectangle(screen.x, screen.y, 36, 36);
     }
@@ -103,8 +99,9 @@ public class Item implements Identifiable {
 
     public void processAction(int opcode, String action) {
         String itemName = name();
-        if (itemName == null)
+        if (itemName == null) {
             return;
+        }
         if (table()) {
             RuneScape.processAction(new TableItemAction(opcode, id, index, comp.raw.getId()), action, itemName, 0, 0);
         } else {
@@ -145,13 +142,15 @@ public class Item implements Identifiable {
 
     public void processAction(String action) {
         if (table()) {
-            if (definition() == null)
+            if (definition() == null) {
                 return;
+            }
             int index = Action.indexOf(definition().getActions(), action);
-            if (action.equals("Use"))
+            if (action.equals("Use")) {
                 processAction(ActionOpcodes.USE_ITEM, action);
-            else if (index >= 0)
+            } else if (index >= 0) {
                 processAction(ActionOpcodes.ITEM_ACTION_0 + index, action);
+            }
         } else {
             int index = Action.indexOf(comp.actions(), action) + 1;
             RuneScape.processAction(new WidgetAction(index > 4, index, this.index, comp.raw.getId()), action, name(), 50, 50);
@@ -175,7 +174,9 @@ public class Item implements Identifiable {
 
     public enum Source {
 
-        INVENTORY(0), BANK(1), EQUIPMENT(2);
+        INVENTORY(0),
+        BANK(1),
+        EQUIPMENT(2);
 
         private final int type;
 

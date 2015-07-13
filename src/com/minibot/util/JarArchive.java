@@ -37,8 +37,9 @@ public class JarArchive {
     }
 
     public Map<String, ClassNode> build() {
-        if (!nodes.isEmpty())
+        if (!nodes.isEmpty()) {
             return nodes;
+        }
         try (final JarFile jf = new JarFile(file)) {
             JarInputStream in = new JarInputStream(new FileInputStream(file));
             Manifest manifest = in.getManifest();

@@ -23,7 +23,7 @@ import java.util.List;
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices", "playerIndices",
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
-        "hoveredRegionTileX", "hoveredRegionTileY", "experiences", "levels", "realLevels", "username", "password",
+        "hoveredRegionTileX", "hoveredRegionTileY","itemContainers", "experiences", "levels", "realLevels", "username", "password",
         "loginState", "hintX", "hintY", "hintPlayerIndex", "hintNpcIndex", "screenWidth", "screenHeight", "screenZoom",
         "screenState", "localPlayerIndex"})
 public class Client extends GraphVisitor {
@@ -75,19 +75,23 @@ public class Client extends GraphVisitor {
 
     private void visitMouseIdleTime() {
         for (ClassNode cn : getUpdater().getClassnodes().values()) {
-            if (!cn.interfaces.contains("java/awt/event/MouseListener"))
+            if (!cn.interfaces.contains("java/awt/event/MouseListener")) {
                 continue;
+            }
             for (MethodNode meth : cn.methods) {
-                if (!meth.name.equals("mouseExited"))
+                if (!meth.name.equals("mouseExited")) {
                     continue;
+                }
                 getUpdater().graphs().get(cn).get(meth).forEach(b -> b.tree().accept(new NodeVisitor() {
                     @Override
                     public void visitField(FieldMemberNode fmn) {
-                        if (fmn.opcode() != PUTSTATIC || fmn.children() != 1)
+                        if (fmn.opcode() != PUTSTATIC || fmn.children() != 1) {
                             return;
+                        }
                         NumberNode iconst_0 = fmn.firstNumber();
-                        if (iconst_0 == null || iconst_0.number() != 0)
+                        if (iconst_0 == null || iconst_0.number() != 0) {
                             return;
+                        }
                         addHook(new FieldHook("mouseIdleTime", fmn.fin()));
                     }
                 }));
@@ -106,8 +110,9 @@ public class Client extends GraphVisitor {
         for (ClassNode cn : getUpdater().getClassnodes().values()) {
             cn.methods.stream().filter(mn -> mn.desc.endsWith(")" + desc(visitor))).forEach(mn -> {
                 int access = mn.access & ACC_STATIC;
-                if (transform ? access == 0 : access > 0)
+                if (transform ? access == 0 : access > 0) {
                     addHook(new InvokeHook(hook, cn.name, mn.name, mn.desc));
+                }
             });
         }
     }
@@ -122,7 +127,9 @@ public class Client extends GraphVisitor {
         String dequeDesc = desc("NodeDeque");
         for (ClassNode node : getUpdater().getClassnodes().values()) {
             for (FieldNode fn : node.fields) {
-                if ((fn.access & Opcodes.ACC_STATIC) == 0) continue;
+                if ((fn.access & Opcodes.ACC_STATIC) == 0) {
+                    continue;
+                }
                 if (fn.desc.equals("Ljava/awt/Canvas;")) {
                     add("canvas", fn);
                 } else if (playerDesc != null && fn.desc.equals(playerDesc)) {
@@ -167,12 +174,14 @@ public class Client extends GraphVisitor {
                 public void visitField(FieldMemberNode fmn) {
                     if (fmn.opcode() == PUTSTATIC) {
                         List<AbstractNode> divs = fmn.layerAll(IMUL, IADD, IDIV);
-                        if (divs == null || divs.size() != 2)
+                        if (divs == null || divs.size() != 2) {
                             return;
+                        }
                         for (AbstractNode idiv : divs) {
                             FieldMemberNode val = (FieldMemberNode) idiv.layer(IMUL, GETSTATIC);
-                            if (val == null)
+                            if (val == null) {
                                 continue;
+                            }
                             if (!getHooks().containsKey("screenWidth")) {
                                 addHook(new FieldHook("screenWidth", val.fin()));
                                 added++;
@@ -203,8 +212,9 @@ public class Client extends GraphVisitor {
                         NumberNode nn = jn.firstNumber();
                         if (nn != null && nn.number() >= 3) {
                             FieldMemberNode fmn = (FieldMemberNode) jn.layer(IMUL, GETSTATIC);
-                            if (fmn == null || !fmn.owner().equals(((FieldHook) getHooks().get("username")).getClazz()) || !fmn.desc().equals("I"))
+                            if (fmn == null || !fmn.owner().equals(((FieldHook) getHooks().get("username")).getClazz()) || !fmn.desc().equals("I")) {
                                 return;
+                            }
                             addHook(new FieldHook("loginState", fmn.fin()));
                             lock.set(true);
                         }
@@ -228,8 +238,9 @@ public class Client extends GraphVisitor {
                 public void visitJump(JumpNode jn) {
                     NumberNode len = jn.firstNumber();
                     MethodMemberNode lenCall = jn.firstMethod();
-                    if (len == null || len.number() != 320 || lenCall == null || !lenCall.name().equals("length"))
+                    if (len == null || len.number() != 320 || lenCall == null || !lenCall.name().equals("length")) {
                         return;
+                    }
                     FieldMemberNode fmn = lenCall.firstField();
                     if (fmn != null) {
                         addHook(new FieldHook("username", fmn.fin()));
@@ -254,8 +265,9 @@ public class Client extends GraphVisitor {
                 public void visitJump(JumpNode jn) {
                     NumberNode len = jn.firstNumber();
                     MethodMemberNode lenCall = jn.firstMethod();
-                    if (len == null || len.number() != 20 || lenCall == null || !lenCall.name().equals("length"))
+                    if (len == null || len.number() != 20 || lenCall == null || !lenCall.name().equals("length")) {
                         return;
+                    }
                     FieldMemberNode fmn = lenCall.firstField();
                     if (fmn != null) {
                         addHook(new FieldHook("password", fmn.fin()));
@@ -278,23 +290,29 @@ public class Client extends GraphVisitor {
             if (block.count(new InsnQuery(ISTORE)) == 4 && block.count(new InsnQuery(IASTORE)) == 3) {
                 NodeTree root = block.tree();
                 AbstractNode storeE = root.find(IASTORE, 0);
-                if (storeE == null)
+                if (storeE == null) {
                     return;
+                }
                 FieldMemberNode experiences = storeE.firstField();
-                if (experiences == null || experiences.opcode() != GETSTATIC)
+                if (experiences == null || experiences.opcode() != GETSTATIC) {
                     return;
+                }
                 AbstractNode storeL = root.find(IASTORE, 1);
-                if (storeL == null)
+                if (storeL == null) {
                     return;
+                }
                 FieldMemberNode levels = storeL.firstField();
-                if (levels == null || levels.opcode() != GETSTATIC)
+                if (levels == null || levels.opcode() != GETSTATIC) {
                     return;
+                }
                 AbstractNode storeRL = root.find(IASTORE, 2);
-                if (storeRL == null)
+                if (storeRL == null) {
                     return;
+                }
                 FieldMemberNode realLevels = storeRL.firstField();
-                if (realLevels == null || realLevels.opcode() != GETSTATIC)
+                if (realLevels == null || realLevels.opcode() != GETSTATIC) {
                     return;
+                }
                 addHook(new FieldHook("experiences", experiences.fin()));
                 addHook(new FieldHook("levels", levels.fin()));
                 addHook(new FieldHook("realLevels", realLevels.fin()));
@@ -316,9 +334,13 @@ public class Client extends GraphVisitor {
                 @Override
                 public void visitJump(JumpNode jn) {
                     FieldMemberNode x = (FieldMemberNode) jn.layer(IAND, BALOAD, AALOAD, ISHR, IMUL, GETSTATIC);
-                    if (x == null) return;
+                    if (x == null) {
+                        return;
+                    }
                     FieldMemberNode y = (FieldMemberNode) jn.layer(IAND, BALOAD, ISHR, IMUL, GETSTATIC);
-                    if (y == null) return;
+                    if (y == null) {
+                        return;
+                    }
                     addHook(new FieldHook("cameraX", x.fin()));
                     addHook(new FieldHook("cameraY", y.fin()));
                     lock.set(true);
@@ -373,7 +395,9 @@ public class Client extends GraphVisitor {
                             nn = (NumberNode) fmn.layer(IMUL, IAND, SIPUSH);
                             if (nn != null && nn.number() == 0x07FF) {
                                 String name = "camera" + (mul > 0 ? "Pitch" : "Yaw");
-                                if (getHooks().containsKey(name)) return;
+                                if (getHooks().containsKey(name)) {
+                                    return;
+                                }
                                 addHook(new FieldHook(name, fmn.fin()));
                             }
                         }
@@ -577,20 +601,32 @@ public class Client extends GraphVisitor {
                 public void visitMethod(MethodMemberNode mmn) {
                     if (mmn.desc().startsWith("(IIIII")) {
                         AbstractNode x = mmn.child(0);
-                        if (x == null || x.opcode() != IALOAD) return;
+                        if (x == null || x.opcode() != IALOAD) {
+                            return;
+                        }
                         AbstractNode y = mmn.child(1);
-                        if (y == null || y.opcode() != IALOAD) return;
+                        if (y == null || y.opcode() != IALOAD) {
+                            return;
+                        }
                         AbstractNode w = mmn.child(2);
-                        if (w == null || w.opcode() != IALOAD) return;
+                        if (w == null || w.opcode() != IALOAD) {
+                            return;
+                        }
                         AbstractNode h = mmn.child(3);
-                        if (h == null || h.opcode() != IALOAD) return;
+                        if (h == null || h.opcode() != IALOAD) {
+                            return;
+                        }
                         AbstractNode[] parents = {x, y, w, h};
                         FieldMemberNode[] fields = new FieldMemberNode[4];
                         for (int i = 0; i < parents.length; i++) {
                             FieldMemberNode fmn = parents[i].firstField();
-                            if (fmn == null || !fmn.desc().equals("[I")) return;
+                            if (fmn == null || !fmn.desc().equals("[I")) {
+                                return;
+                            }
                             for (int j = i - 1; j > 0; j--) {
-                                if (fields[j].key().equals(fmn.key())) return;
+                                if (fields[j].key().equals(fmn.key())) {
+                                    return;
+                                }
                             }
                             fields[i] = fmn;
                         }
@@ -805,8 +841,9 @@ public class Client extends GraphVisitor {
                                 } else if (var == 23) {
                                     name = "screenHeight";
                                 }
-                                if (name == null || getHooks().containsKey(name))
+                                if (name == null || getHooks().containsKey(name)) {
                                     return;
+                                }
                                 added++;
                                 addHook(new FieldHook(name, fmn.fin()));
                             }
@@ -844,8 +881,9 @@ public class Client extends GraphVisitor {
                                     if (fmn != null) {
                                         String name;
                                         name = vn.var() == load.var() ? loadTypeA : loadTypeB;
-                                        if (getHooks().containsKey(name))
+                                        if (getHooks().containsKey(name)) {
                                             return;
+                                        }
                                         addHook(new FieldHook(name, fmn.fin()));
                                         added++;
                                     }
