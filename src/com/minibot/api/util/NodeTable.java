@@ -46,7 +46,6 @@ public class NodeTable implements Iterator<RSNode> {
 
     public RSNode lookup(int uid) {
         for (RSNode node = first(); node != null; node = next()) {
-            System.out.println(uid + " "+node.getUid());
             if (node.getUid() == uid)
                 return node;
         }
