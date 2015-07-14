@@ -23,24 +23,24 @@ public class ItemContainers {
     public static final int BANK = 95;
     public static final int EXCHANGE_COLLECTION = 518;
  
-    public static RSHashTable getRaw() {
+    public static RSHashTable raw() {
         return Minibot.instance().client().getItemContainers();
     }
  
-    public static NodeTable getStorage() {
-        RSHashTable raw = getRaw();
+    public static NodeTable storage() {
+        RSHashTable raw = raw();
         return raw != null ? new NodeTable(raw) : null;
     }
  
     private static RSItemContainer lookup(int tableKey) {
-        NodeTable store = getStorage();
+        NodeTable store = storage();
         if (store == null)
             return null;
         RSNode node = store.lookup(tableKey);
         return node != null && node instanceof RSItemContainer ? (RSItemContainer) node : null;
     }
  
-    public static Entry[] getEntriesIn(int tableKey) {
+    public static Entry[] entriesIn(int tableKey) {
         RSItemContainer table = lookup(tableKey);
         if (table == null)
             return new Entry[0];
@@ -57,7 +57,7 @@ public class ItemContainers {
         return entries.toArray(new Entry[entries.size()]);
     }
  
-    public static int[] getIdsIn(int tableKey) {
+    public static int[] idsIn(int tableKey) {
         RSItemContainer table = lookup(tableKey);
         if (table == null)
             return new int[0];
@@ -75,21 +75,21 @@ public class ItemContainers {
         return valuesNew;
     }
  
-    public static int getIdAt(int tableKey, int index) {
-        int[] ids = getIdsIn(tableKey);
+    public static int idAt(int tableKey, int index) {
+        int[] ids = idsIn(tableKey);
         if (ids.length > index)
             return ids[index];
         return -1;
     }
  
-    public static int getQuantityAt(int tableKey, int index) {
-        int[] qtys = getQuantitiesIn(tableKey);
+    public static int amountAt(int tableKey, int index) {
+        int[] qtys = amountsIn(tableKey);
         if (qtys.length > index)
             return qtys[index];
         return -1;
     }
  
-    public static Entry getEntryAt(int tableKey, int index) {
+    public static Entry entryAt(int tableKey, int index) {
         RSItemContainer table = lookup(tableKey);
         if (table == null)
             return null;
@@ -99,7 +99,7 @@ public class ItemContainers {
         return len > index ? new Entry(index, table.getIds()[index], table.getStackSizes()[index]) : null;
     }
  
-    public static int[] getQuantitiesIn(int tableKey) {
+    public static int[] amountsIn(int tableKey) {
         RSItemContainer table = lookup(tableKey);
         if (table == null)
             return new int[0];
@@ -117,36 +117,36 @@ public class ItemContainers {
         return valuesNew;
     }
  
-    public static Entry[] getInventory() {
-        return getEntriesIn(INVENTORY);
+    public static Entry[] inventory() {
+        return entriesIn(INVENTORY);
     }
  
-    public static Entry[] getEquipment() {
-        return getEntriesIn(EQUIPMENT);
+    public static Entry[] equipment() {
+        return entriesIn(EQUIPMENT);
     }
  
-    public static Entry[] getPriceChecker() {
-        return getEntriesIn(PRICE_CHECKER);
+    public static Entry[] priceChecker() {
+        return entriesIn(PRICE_CHECKER);
     }
  
-    public static Entry[] getBank() { //the items are cached until you enter a new region
-        return getEntriesIn(BANK);
+    public static Entry[] bank() { //the items are cached until you enter a new region
+        return entriesIn(BANK);
     }
  
-    public static Entry[] getExchangeCollection() {
-        return getEntriesIn(EXCHANGE_COLLECTION);
+    public static Entry[] exchangeCollection() {
+        return entriesIn(EXCHANGE_COLLECTION);
     }
  
-    public static Entry[] getVarrockGeneralStore() {
-        return getEntriesIn(VARROCK_GENERAL_STORE);
+    public static Entry[] varrockGeneralStore() {
+        return entriesIn(VARROCK_GENERAL_STORE);
     }
  
-    public static Entry[] getVarrockRuneStore() {
-        return getEntriesIn(VARROCK_RUNE_STORE);
+    public static Entry[] varrockRuneStore() {
+        return entriesIn(VARROCK_RUNE_STORE);
     }
  
-    public static Entry[] getVarrockStaffStore() {
-        return getEntriesIn(VARROCK_STAFF_STORE);
+    public static Entry[] varrockStaffStore() {
+        return entriesIn(VARROCK_STAFF_STORE);
     }
  
     public static class Entry implements Identifiable {
@@ -167,11 +167,11 @@ public class ItemContainers {
             return id;
         }
  
-        public int getQuantity() {
+        public int amount() {
             return quantity;
         }
  
-        public RSItemDefinition getDefinition() {
+        public RSItemDefinition definition() {
             return definition;
         }
  
@@ -179,15 +179,15 @@ public class ItemContainers {
             return definition == null ? null : definition.getName();
         }
  
-        public String[] getActions() {
+        public String[] actions() {
             return definition == null ? new String[0] : definition.getActions();
         }
  
-        public String[] getGroundActions() {
+        public String[] groundActions() {
             return definition == null ? new String[0] : definition.getGroundActions();
         }
  
-        public int getIndex() {
+        public int index() {
             return index;
         }
     }
