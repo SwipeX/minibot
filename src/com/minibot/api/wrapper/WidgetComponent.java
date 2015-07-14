@@ -8,7 +8,7 @@ import com.minibot.api.method.Widgets;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.client.natives.RSWidget;
 
-import java.awt.Rectangle;
+import java.awt.*;
 
 /**
  * @author Tyler Sedlar
@@ -172,7 +172,11 @@ public class WidgetComponent extends Wrapper<RSWidget> {
 
     @Override
     public void processAction(int opcode, String action) {
-        processAction(ActionOpcodes.WIDGET_ACTION, Action.indexOf(actions(), action) + 1, action, "");
+        processAction(opcode, Action.indexOf(actions(), action) + 1, action, "");
+    }
+
+    public void processAction(int opcode, String action, String target) {
+        processAction(opcode, Action.indexOf(actions(), action) + 1, action, target);
     }
 
     public void processAction(int opcode, int actionIndex, String action, String target) {

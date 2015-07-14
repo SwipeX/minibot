@@ -5,4 +5,6 @@ public interface RSNode extends ClientNative {
     RSNode getPrevious();
 
     RSNode getNext();
+
+    long getUid();
 }

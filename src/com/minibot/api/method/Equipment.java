@@ -1,19 +1,30 @@
 package com.minibot.api.method;
 
+import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
+import com.minibot.client.natives.RSItemDefinition;
 
 /**
  * @author Tim Dekker
  * @since 7/12/15
  */
 public class Equipment {
-    private static final int PARENT = 347;
+    private static final int PARENT = 387;
 
     public static void equip(final Item item) {
         if (item != null) {
-            item.processAction("Wear");
-            item.processAction("Wield");
+            RSItemDefinition def = item.definition();
+            if (def != null) {
+                String[] actions = def.getActions();
+                if (actions != null) {
+                    if (contains(actions, "Wear"))
+                        item.processAction("Wear");
+                    else
+                        item.processAction("Wield");
+                }
+            }
         }
     }
 
@@ -27,54 +38,40 @@ public class Equipment {
 
 
     public static void unequip(final Slot slot) {
+        GameTab current = GameTab.current();
         if (slot != null && !slot.isEmpty()) {
             WidgetComponent widget = slot.getWidget();
             if (widget != null) {
-                String[] actions = widget.actions();
-                if (actions != null && actions.length > 0) {
-                    widget.processAction(actions[0]);
+                if (GameTab.EQUIPMENT.open()) {
+                    widget.processAction(ActionOpcodes.WIDGET_ACTION, "Remove", slot.getTarget());
+                    current.open();
                 }
             }
+        }
+    }
+
+    public static void unequip(Filter<Slot> filter) {
+        for (Slot slot : Slot.values()) {
+            if (filter.accept(slot))
+                unequip(slot);
         }
     }
 
     public static void unequip(final int id) {
-        for (Slot slot : Slot.values()) {
-            if (slot.getItemId() == id) {
-                unequip(slot);
-            }
-        }
+        unequip(slot -> slot.id() == id);
     }
 
     public static void unequip(final String name) {
-        if (!isEquipped(name)) return;
-        for (Slot slot : Slot.values()) {
-            final WidgetComponent wc = slot.getWidget();
-            if (wc != null) {
-                if (contains(wc.actions(), name))
-                    unequip(slot);
-            }
-        }
+        unequip(slot -> slot.getName().equals(name));
     }
-
-    public static WidgetComponent[] getWidgets() {
-        WidgetComponent[] widgets = new WidgetComponent[Slot.values().length];
-        for (int i = 0; i < Slot.values().length; i++)
-            widgets[i] = Slot.values()[i].getWidget();
-
-        return widgets;
-    }
-
 
     public static boolean isEquipped(String... itemNames) {
-        for (WidgetComponent slot : getWidgets()) {
-            String[] actions = slot.actions();
-            if (slot == null)
-                continue;
-            for (String s : itemNames)
-                if (contains(actions, s)) {
+        for (Slot slot : Slot.values()) {
+            for (String str : itemNames) {
+                if (str.equals(slot.getName())) {
                     return true;
                 }
+            }
         }
         return false;
     }
@@ -82,59 +79,92 @@ public class Equipment {
 
     public static boolean isEquipped(int... ids) {
         for (Slot slot : Slot.values()) {
-            for (int id : ids)
-                if (id == slot.getItemId())
+            for (int id : ids) {
+                if (id == slot.getItemId()) {
                     return true;
+                }
+            }
         }
         return false;
     }
 
     private static boolean contains(String[] array, String element) {
-        for (String string : array)
-            if (string.equals(element))
+        if (element == null) return false;
+        for (String string : array) {
+            if (string == null) {
+                continue;
+            } else if (string.equals(element)) {
                 return true;
+            }
+        }
         return false;
     }
 
-    public enum Slot {
-        HEAD(6), CAPE(7), NECK(8), WEAPON(9), CHEST(10), SHIELD(11),
-        LEGS(12), HANDS(13), FEET(14), RING(15), AMMO(16);
+    private static ItemContainers.Entry atIndex(int index, ItemContainers.Entry[] entries) {
+        for (ItemContainers.Entry entry : entries) {
+            if (entry.getIndex() == index)
+                return entry;
+        }
+        return null;
+    }
+
+    public static enum Slot {
+        HEAD(6, 0), CAPE(7, 1), NECK(8, 2), WEAPON(9, 3), CHEST(10, 4), SHIELD(11, 5), LEGS(
+                12, 7), HANDS(13, 9), FEET(14, 10), RING(15, 12), AMMO(16, 13);
 
         private int id;
+        private int index;
 
-        Slot(int id) {
+        Slot(int id, int index) {
             this.id = id;
+            this.index = index;
         }
 
         public int id() {
             return id;
         }
 
+        public int index() {
+            return index;
+        }
+
         public int getItemId() {
-            WidgetComponent component = getWidget();
-            if (component != null) {
-                System.out.println(component.itemId());
-                return component.itemId();
+            ItemContainers.Entry entry = atIndex(index, ItemContainers.getEquipment());
+            if (entry != null) {
+                return entry.id();
             }
             return -1;
         }
 
         public int getAmount() {
-            WidgetComponent component = getWidget();
-            if (component != null) {
-                System.out.println(component.itemAmount());
-                return component.itemAmount();
+            ItemContainers.Entry entry = atIndex(index, ItemContainers.getEquipment());
+            if (entry != null) {
+                return entry.getQuantity();
             }
             return -1;
         }
 
+        public String getName() {
+            ItemContainers.Entry entry = atIndex(index, ItemContainers.getEquipment());
+            if (entry != null) {
+                return entry.name();
+            }
+            return null;
+        }
+
         public WidgetComponent getWidget() {
-            return Widgets.get(PARENT, id());
+            return Widgets.get(PARENT, id);
         }
 
         public boolean isEmpty() {
             return getItemId() <= 0;
         }
 
+        public String getTarget() {
+            String name = getName();
+            if (name != null)
+                return String.format("<col=ff9040>%s</col>", getName());
+            return null;
+        }
     }
 }

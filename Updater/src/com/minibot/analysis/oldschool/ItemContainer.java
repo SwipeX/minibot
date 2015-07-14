@@ -31,7 +31,7 @@ public class ItemContainer extends GraphVisitor {
  
     private class Hooks extends BlockVisitor {
  
-        private final List<FieldInsnNode> vars = new ArrayList<>();
+        private final List<FieldMemberNode> vars = new ArrayList<>();
  
         @Override
         public boolean validate() {
@@ -53,7 +53,7 @@ public class ItemContainer extends GraphVisitor {
                         lock.set(true);
                     }
                 }
- 
+
                 @Override
                 public void visitField(FieldMemberNode fmn) {
                     if (vars.size() < 2 && fmn.owner().equals(getCn().name) && fmn.desc().equals("[I") && fmn.putting()) {
@@ -61,7 +61,7 @@ public class ItemContainer extends GraphVisitor {
                         if (value == null) {
                             return;
                         }
-                        vars.add(fmn.fin());
+                        vars.add(fmn);
                     }
                 }
             });
@@ -72,8 +72,13 @@ public class ItemContainer extends GraphVisitor {
             if (vars.size() < 2) {
                 return;
             }
-            addHook(new FieldHook("ids", vars.get(0)));
-            addHook(new FieldHook("stackSizes", vars.get(1)));
+            vars.sort((a, b) -> {
+                VariableNode vA = (VariableNode) a.last(ALOAD);
+                VariableNode vB = (VariableNode) b.last(ALOAD);
+                return vA.var() - vB.var();
+            });
+            addHook(new FieldHook("ids", vars.get(0).fin()));
+            addHook(new FieldHook("stackSizes", vars.get(1).fin()));
         }
     }
 }
