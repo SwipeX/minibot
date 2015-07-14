@@ -113,5 +113,5 @@ public interface RSClient extends ClientNative {
 
     int getLocalPlayerIndex();
 
-    RSItemContainer[] getItemContainers();
+    RSHashTable getItemContainers();
 }

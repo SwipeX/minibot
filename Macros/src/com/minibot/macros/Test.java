@@ -1,6 +1,6 @@
 package com.minibot.macros;
 
-import com.minibot.api.method.Equipment;
+import com.minibot.api.method.ItemTables;
 import com.minibot.api.method.Players;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.wrapper.locatable.Npc;
@@ -10,7 +10,7 @@ import com.minibot.bot.macro.Manifest;
 import com.minibot.macros.zulrah.ZulrahEnvironment;
 import com.minibot.macros.zulrah.ZulrahMode;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 
 /**
  * @author Tyler Sedlar
@@ -41,7 +41,10 @@ public class Test extends Macro implements Renderable {
 
     @Override
     public void render(Graphics2D g) {
-        g.drawString(Equipment.Slot.HEAD.getItemId()+"",100,100);
+        int y = 0;
+        ItemTables.Entry[] entries = ItemTables.getEquipment();
+        for (ItemTables.Entry entry : entries)
+            g.drawString(""+entry.id(), 100, 100 + (y += 15));
 //        g.drawString("Test " + Game.varp(1021), 50, 50);
         g.drawString(local != null ? Players.local().location().toString() : "null", 50, 75);
     }

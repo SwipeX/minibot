@@ -1,6 +1,10 @@
 package com.minibot.api.method;
 
+import com.minibot.Minibot;
 import com.minibot.api.util.Identifiable;
+import com.minibot.api.util.NodeTable;
+import com.minibot.client.natives.RSHashTable;
+import com.minibot.client.natives.RSItemContainer;
 import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.client.natives.RSNode;
 import com.minibot.util.DefinitionLoader;
@@ -19,25 +23,25 @@ public class ItemTables {
     public static final int BANK = 95;
     public static final int EXCHANGE_COLLECTION = 518;
  
-    public static RSNodeTable getRaw() {
-        return Game.getClient().getItemTables();
+    public static RSHashTable getRaw() {
+        return Minibot.instance().client().getItemContainers();
     }
  
     public static NodeTable getStorage() {
-        RSNodeTable raw = getRaw();
+        RSHashTable raw = getRaw();
         return raw != null ? new NodeTable(raw) : null;
     }
  
-    private static RSItemTable lookup(int tableKey) {
+    private static RSItemContainer lookup(int tableKey) {
         NodeTable store = getStorage();
         if (store == null)
             return null;
         RSNode node = store.lookup(tableKey);
-        return node != null && node instanceof RSItemTable ? (RSItemTable) node : null;
+        return node != null && node instanceof RSItemContainer ? (RSItemContainer) node : null;
     }
  
     public static Entry[] getEntriesIn(int tableKey) {
-        RSItemTable table = lookup(tableKey);
+        RSItemContainer table = lookup(tableKey);
         if (table == null)
             return new Entry[0];
         int len = table.getIds().length;
@@ -54,7 +58,7 @@ public class ItemTables {
     }
  
     public static int[] getIdsIn(int tableKey) {
-        RSItemTable table = lookup(tableKey);
+        RSItemContainer table = lookup(tableKey);
         if (table == null)
             return new int[0];
         int len = table.getIds().length;
@@ -86,7 +90,7 @@ public class ItemTables {
     }
  
     public static Entry getEntryAt(int tableKey, int index) {
-        RSItemTable table = lookup(tableKey);
+        RSItemContainer table = lookup(tableKey);
         if (table == null)
             return null;
         int len = table.getIds().length;
@@ -96,7 +100,7 @@ public class ItemTables {
     }
  
     public static int[] getQuantitiesIn(int tableKey) {
-        RSItemTable table = lookup(tableKey);
+        RSItemContainer table = lookup(tableKey);
         if (table == null)
             return new int[0];
         int len = table.getStackSizes().length;
