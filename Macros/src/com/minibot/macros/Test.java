@@ -1,8 +1,9 @@
 package com.minibot.macros;
 
-import com.minibot.api.method.ItemTables;
+import com.minibot.api.method.Equipment;
 import com.minibot.api.method.Players;
 import com.minibot.api.util.Renderable;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.bot.macro.Macro;
@@ -27,7 +28,11 @@ public class Test extends Macro implements Renderable {
 
     @Override
     public void run() {
-        local = Players.local();
+        Equipment.unequip(slot -> {
+            String name = slot.getName();
+            return name!=null && name.contains("chaps");
+        });
+                local = Players.local();
         Npc zulrah = ZulrahEnvironment.findZulrah();
         if (zulrah != null) {
             for (ZulrahMode zm : ZulrahMode.values()) {
@@ -41,10 +46,7 @@ public class Test extends Macro implements Renderable {
 
     @Override
     public void render(Graphics2D g) {
-        int y = 0;
-        ItemTables.Entry[] entries = ItemTables.getEquipment();
-        for (ItemTables.Entry entry : entries)
-            g.drawString(entry.getIndex()+ " "+entry.name()+" "+entry.id(), 100, 100 + (y += 15));
+        g.drawString(Equipment.Slot.LEGS.getName() + "", 100, 100);
 //        g.drawString("Test " + Game.varp(1021), 50, 50);
         g.drawString(local != null ? Players.local().location().toString() : "null", 50, 75);
     }
