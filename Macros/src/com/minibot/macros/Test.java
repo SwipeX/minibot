@@ -44,7 +44,7 @@ public class Test extends Macro implements Renderable {
         int y = 0;
         ItemTables.Entry[] entries = ItemTables.getEquipment();
         for (ItemTables.Entry entry : entries)
-            g.drawString(""+entry.id(), 100, 100 + (y += 15));
+            g.drawString(entry.getIndex()+ " "+entry.name()+" "+entry.id(), 100, 100 + (y += 15));
 //        g.drawString("Test " + Game.varp(1021), 50, 50);
         g.drawString(local != null ? Players.local().location().toString() : "null", 50, 75);
     }

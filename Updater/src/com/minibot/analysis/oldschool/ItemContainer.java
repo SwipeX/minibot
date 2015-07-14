@@ -72,8 +72,8 @@ public class ItemContainer extends GraphVisitor {
             if (vars.size() < 2) {
                 return;
             }
-            addHook(new FieldHook("ids", vars.get(0)));
-            addHook(new FieldHook("stackSizes", vars.get(1)));
+            addHook(new FieldHook("ids", vars.get(1)));
+            addHook(new FieldHook("stackSizes", vars.get(0)));
         }
     }
 }

@@ -2,6 +2,7 @@ package com.minibot.api.method;
 
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
+import com.minibot.client.natives.RSItemDefinition;
 
 /**
  * @author Tim Dekker
@@ -12,8 +13,16 @@ public class Equipment {
 
     public static void equip(final Item item) {
         if (item != null) {
-            item.processAction("Wear");
-            item.processAction("Wield");
+            RSItemDefinition def = item.definition();
+            if (def != null) {
+                String[] actions = def.getActions();
+                if (actions != null) {
+                    if (contains(actions, "Wear"))
+                        item.processAction("Wear");
+                    else
+                        item.processAction("Wield");
+                }
+            }
         }
     }
 
@@ -51,30 +60,29 @@ public class Equipment {
         for (Slot slot : Slot.values()) {
             final WidgetComponent wc = slot.getWidget();
             if (wc != null) {
-                if (contains(wc.actions(), name))
+                if (contains(wc.actions(), name)) {
                     unequip(slot);
+                }
             }
         }
     }
 
     public static WidgetComponent[] getWidgets() {
         WidgetComponent[] widgets = new WidgetComponent[Slot.values().length];
-        for (int i = 0; i < Slot.values().length; i++)
+        for (int i = 0; i < Slot.values().length; i++) {
             widgets[i] = Slot.values()[i].getWidget();
-
+        }
         return widgets;
     }
 
 
     public static boolean isEquipped(String... itemNames) {
-        for (WidgetComponent slot : getWidgets()) {
-            String[] actions = slot.actions();
-            if (slot == null)
-                continue;
-            for (String s : itemNames)
-                if (contains(actions, s)) {
+        for (Slot slot : Slot.values()) {
+            for (String str : itemNames) {
+                if (str.equals(slot.getName())) {
                     return true;
                 }
+            }
         }
         return false;
     }
@@ -82,54 +90,71 @@ public class Equipment {
 
     public static boolean isEquipped(int... ids) {
         for (Slot slot : Slot.values()) {
-            for (int id : ids)
-                if (id == slot.getItemId())
+            for (int id : ids) {
+                if (id == slot.getItemId()) {
                     return true;
+                }
+            }
         }
         return false;
     }
 
     private static boolean contains(String[] array, String element) {
-        for (String string : array)
-            if (string.equals(element))
+        for (String string : array) {
+            if (string.equals(element)) {
                 return true;
+            }
+        }
         return false;
     }
 
-    public enum Slot {
-        HEAD(6), CAPE(7), NECK(8), WEAPON(9), CHEST(10), SHIELD(11),
-        LEGS(12), HANDS(13), FEET(14), RING(15), AMMO(16);
+
+    public static enum Slot {
+        HEAD(6, 0), CAPE(7, 1), NECK(8, 2), WEAPON(9, 3), CHEST(10, 4), SHIELD(11, 5), LEGS(
+                12, 6), HANDS(13, 7), FEET(14, 8), RING(15, 9), AMMO(16, 10);
 
         private int id;
+        private int index;
 
-        Slot(int id) {
+        Slot(int id, int index) {
             this.id = id;
+            this.index = index;
         }
 
         public int id() {
             return id;
         }
 
+        public int index() {
+            return index;
+        }
+
         public int getItemId() {
-            WidgetComponent component = getWidget();
-            if (component != null) {
-                System.out.println(component.itemId());
-                return component.itemId();
+            ItemTables.Entry entry = ItemTables.getEquipment()[index];
+            if (entry != null) {
+                return entry.id();
             }
             return -1;
         }
 
         public int getAmount() {
-            WidgetComponent component = getWidget();
-            if (component != null) {
-                System.out.println(component.itemAmount());
-                return component.itemAmount();
+            ItemTables.Entry entry = ItemTables.getEquipment()[index];
+            if (entry != null) {
+                return entry.getQuantity();
             }
             return -1;
         }
 
+        public String getName() {
+            ItemTables.Entry entry = ItemTables.getEquipment()[index];
+            if (entry != null) {
+                return entry.name();
+            }
+            return null;
+        }
+
         public WidgetComponent getWidget() {
-            return Widgets.get(PARENT, id());
+            return Widgets.get(PARENT, id);
         }
 
         public boolean isEmpty() {
