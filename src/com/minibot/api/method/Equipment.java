@@ -100,8 +100,8 @@ public class Equipment {
         return false;
     }
 
-    private static ItemTables.Entry atIndex(int index, ItemTables.Entry[] entries) {
-        for (ItemTables.Entry entry : entries) {
+    private static ItemContainers.Entry atIndex(int index, ItemContainers.Entry[] entries) {
+        for (ItemContainers.Entry entry : entries) {
             if (entry.getIndex() == index)
                 return entry;
         }
@@ -129,7 +129,7 @@ public class Equipment {
         }
 
         public int getItemId() {
-            ItemTables.Entry entry = atIndex(index, ItemTables.getEquipment());
+            ItemContainers.Entry entry = atIndex(index, ItemContainers.getEquipment());
             if (entry != null) {
                 return entry.id();
             }
@@ -137,7 +137,7 @@ public class Equipment {
         }
 
         public int getAmount() {
-            ItemTables.Entry entry = atIndex(index, ItemTables.getEquipment());
+            ItemContainers.Entry entry = atIndex(index, ItemContainers.getEquipment());
             if (entry != null) {
                 return entry.getQuantity();
             }
@@ -145,7 +145,7 @@ public class Equipment {
         }
 
         public String getName() {
-            ItemTables.Entry entry = atIndex(index, ItemTables.getEquipment());
+            ItemContainers.Entry entry = atIndex(index, ItemContainers.getEquipment());
             if (entry != null) {
                 return entry.name();
             }

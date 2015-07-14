@@ -12,7 +12,7 @@ import com.minibot.util.DefinitionLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemTables {
+public class ItemContainers {
  
     public static final int VARROCK_GENERAL_STORE = 4;
     public static final int VARROCK_RUNE_STORE = 5;
