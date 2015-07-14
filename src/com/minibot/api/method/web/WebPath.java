@@ -93,15 +93,18 @@ public class WebPath implements Path {
                 }
 
                 if (object == null) {
-                    throw new IllegalStateException("Bad ObjectVertex (" + vertex.index() + ") on web?");
+                    if (vertex.name() != null) {
+                        Walking.walkTo(vertex.getTile());
+                    } else {
+                        throw new IllegalStateException("Bad ObjectVertex (" + vertex.index() + ") on web?");
+                    }
                 }
 
-                if (vertex.action() == null) {
-                    object.processAction(vertex.action());
-                } else {
-                    String[] actions = object.definition().getActions();
-                    if (actions != null && actions.length > 0) {
-                        object.processAction(actions[0]); //guess
+                if (object != null) {
+                    if (vertex.action() == null) {
+                        object.processAction(vertex.action());
+                    } else {
+                        object.processFirstAction();
                     }
                 }
 
