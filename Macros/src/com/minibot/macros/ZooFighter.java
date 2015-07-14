@@ -1,11 +1,12 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.action.tree.DialogButtonAction;
 import com.minibot.api.method.*;
+import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
-import com.minibot.api.util.filter.Filter;
+import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
@@ -20,14 +21,25 @@ import java.util.concurrent.TimeUnit;
 public class ZooFighter extends Macro implements Renderable {
 
     boolean started;
-    private int SKILL_STR = Skills.STRENGTH;
+    private int SKILL_STR = Skills.MAGIC;
     private int start_exp = 0;
     private long start_time;
     private static final String[] names = new String[]{"Cyclops", "Jogre", "Wolf"};
 
+    private static boolean level() {
+        WidgetComponent component = Widgets.get(233, 2);
+        return component != null && component.visible();
+    }
 
     @Override
     public void run() {
+        if (level()) {
+            RuneScape.processAction(new DialogButtonAction(15269890, -1));
+            Time.sleep(() -> !level(), Random.nextInt(4500, 6500));
+        }
+        if (Random.nextInt(0, 1000) == 2) {
+            Walking.walkTo(Players.local().location());
+        }
         Minibot.instance().client().resetMouseIdleTime();
         if (!started) {
             started = true;
