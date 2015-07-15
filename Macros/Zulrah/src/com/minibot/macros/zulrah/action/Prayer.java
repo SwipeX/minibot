@@ -4,6 +4,7 @@ import com.minibot.api.action.tree.Action;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
+import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.macros.zulrah.Zulrah;
 import com.minibot.macros.zulrah.phase.Phase;
 import com.minibot.macros.zulrah.phase.SnakeType;
@@ -24,31 +25,40 @@ public class Prayer {
             PROTECT_MAGIC_INDEX, EAGLE_EYE_INDEX, MYSTIC_MIGHT_INDEX};
 
     public static boolean setPrayers() {
-        if (Zulrah.getMonster() == null) {
-            for (int index : INDICES) {
-                if (!deactivate(index)) {
-                    return false;
-                }
-            }
-            return true;
+        Npc zulrah = Zulrah.getMonster();
+        if (zulrah == null) {
+            deactivateAll();
         }
+        SnakeType type = null;
         Phase phase = Zulrah.getPhase();
         if (phase != null) {
             Stage stage = phase.getCurrent();
             if (stage != null) {
-                SnakeType snakeType = stage.getSnakeType();
-                if (snakeType != null) {
-                    int[] indexes = snakeType.getPrayerComponentIndices();
-                    for (int index : indexes) {
-                        if (!activate(index)) {
-                            return false;
-                        }
-                    }
-                    return true;
+                type = stage.getSnakeType();
+            }
+        } else {
+            type = SnakeType.get(zulrah.id());
+        }
+        int[] indexes = type.getPrayerComponentIndices();
+        if (indexes == null) {
+            deactivateAll();
+        } else {
+            for (int index : indexes) {
+                if (!activate(index)) {
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
+    }
+
+    private static boolean deactivateAll() {
+        for (int index : INDICES) {
+            if (!deactivate(index)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static boolean activate(int index) {

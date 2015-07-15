@@ -1,8 +1,8 @@
 package com.minibot.macros.zulrah.phase;
 
 import com.minibot.macros.zulrah.Zulrah;
-import com.minibot.macros.zulrah.util.Capture;
 import com.minibot.macros.zulrah.action.Prayer;
+import com.minibot.macros.zulrah.util.Capture;
 
 /**
  * @author Tim Dekker
@@ -33,9 +33,17 @@ public enum SnakeType {
                 return new int[]{Prayer.PROTECT_RANGE_INDEX, Prayer.EAGLE_EYE_INDEX};
             }
         } else if (this.id() == MELEE.id()) {
-            return new int[]{-1};
+            return null;
         }
         return this.id() == RANGE.id() ? new int[]{Prayer.PROTECT_RANGE_INDEX, Prayer.EAGLE_EYE_INDEX} :
                 new int[]{Prayer.PROTECT_MAGIC_INDEX, Prayer.MYSTIC_MIGHT_INDEX};
+    }
+
+    public static SnakeType get(int id) {
+        if (id == RANGE.id())
+            return RANGE;
+        if (id == MAGIC.id())
+            return MAGIC;
+        return MELEE;
     }
 }
