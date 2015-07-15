@@ -57,11 +57,11 @@ public class Zulrah extends Macro implements Renderable {
                     Phase potential = Phase.determine(previous, zulrah.id());
                     if (potential != null) {
                         phase = potential;
-                        phase.setIndex(previous.size());
+                        phase.setIndex(previous.size());// possibly previous.size()-1 ?
                         System.out.println(phase.name() + " is quite dank");
                     }
                 }else{
-                    phase.advance(); //apparently this is called too much
+                    phase.advance();
                 }
             }
             if (phase != null) {
@@ -75,6 +75,9 @@ public class Zulrah extends Macro implements Renderable {
                         //shit run to dat tile
                     }
                 }
+            }else{
+                //we do not know the phase, but we should probably keep guessing one until we are sure
+                //likely would be redundant code with the above 'if', so can separate just the logic.
             }
         } else {
             //it could be loot time!

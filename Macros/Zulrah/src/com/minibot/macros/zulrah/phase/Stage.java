@@ -1,6 +1,7 @@
 package com.minibot.macros.zulrah.phase;
 
 import com.minibot.api.wrapper.locatable.Tile;
+import com.minibot.macros.zulrah.Zulrah;
 
 /**
  * @author Tim Dekker
@@ -37,7 +38,10 @@ public enum Stage {
     }
 
     public Tile getTile() {
-        return new Tile(offsetX, offsetY); // derive from initial tile
+        Tile origin = Zulrah.getOrigin();
+        if (origin == null)
+            return null;
+        return origin.derive(offsetX, offsetY);
     }
 
 }
