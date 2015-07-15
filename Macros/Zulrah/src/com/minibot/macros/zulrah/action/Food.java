@@ -12,7 +12,7 @@ import com.minibot.api.wrapper.Item;
 public class Food {
 
     public static void eat() {
-        if (Players.local().health() < 41) {
+        if (Players.local().maxHealth() > 0 && Players.local().health() < 41) {
             Item food = Inventory.firstFood();
             if (food != null) {
                 food.processAction("Eat");

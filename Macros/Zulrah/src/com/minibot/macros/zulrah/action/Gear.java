@@ -5,9 +5,9 @@ import com.minibot.api.method.Inventory;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
 import com.minibot.macros.zulrah.Zulrah;
-import com.minibot.macros.zulrah.boss.Phase;
-import com.minibot.macros.zulrah.boss.SnakeType;
-import com.minibot.macros.zulrah.boss.Stage;
+import com.minibot.macros.zulrah.phase.Phase;
+import com.minibot.macros.zulrah.phase.SnakeType;
+import com.minibot.macros.zulrah.phase.Stage;
 
 import java.util.ArrayList;
 

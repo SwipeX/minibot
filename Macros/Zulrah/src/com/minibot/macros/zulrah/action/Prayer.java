@@ -5,9 +5,9 @@ import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.macros.zulrah.Zulrah;
-import com.minibot.macros.zulrah.boss.Phase;
-import com.minibot.macros.zulrah.boss.SnakeType;
-import com.minibot.macros.zulrah.boss.Stage;
+import com.minibot.macros.zulrah.phase.Phase;
+import com.minibot.macros.zulrah.phase.SnakeType;
+import com.minibot.macros.zulrah.phase.Stage;
 
 /**
  * @author Tim Dekker
@@ -18,13 +18,14 @@ public class Prayer {
     public static final int EAGLE_EYE_INDEX = 26;
     public static final int PROTECT_MAGIC_INDEX = 16;
     public static final int PROTECT_RANGE_INDEX = 17;
+
     private static final int PRAYER_BOOK = 271;
-    private static final int[] ALL_INDEXES = new int[]{PROTECT_RANGE_INDEX,
+    private static final int[] INDICES = new int[]{PROTECT_RANGE_INDEX,
             PROTECT_MAGIC_INDEX, EAGLE_EYE_INDEX, MYSTIC_MIGHT_INDEX};
 
     public static boolean setPrayers() {
         if (Zulrah.getMonster() == null) {
-            for (int index : ALL_INDEXES) {
+            for (int index : INDICES) {
                 if (!deactivate(index)) {
                     return false;
                 }
@@ -37,7 +38,7 @@ public class Prayer {
             if (stage != null) {
                 SnakeType snakeType = stage.getSnakeType();
                 if (snakeType != null) {
-                    int[] indexes = snakeType.getPrayerComponentIndexes();
+                    int[] indexes = snakeType.getPrayerComponentIndices();
                     for (int index : indexes) {
                         if (!activate(index)) {
                             return false;

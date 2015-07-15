@@ -13,8 +13,8 @@ import com.minibot.macros.zulrah.action.Food;
 import com.minibot.macros.zulrah.action.Gear;
 import com.minibot.macros.zulrah.action.Potions;
 import com.minibot.macros.zulrah.action.Prayer;
-import com.minibot.macros.zulrah.boss.Phase;
-import com.minibot.macros.zulrah.boss.Stage;
+import com.minibot.macros.zulrah.phase.Phase;
+import com.minibot.macros.zulrah.phase.Stage;
 import com.minibot.macros.zulrah.util.Capture;
 import com.minibot.macros.zulrah.util.Debug;
 
@@ -47,12 +47,19 @@ public class Zulrah extends Macro implements Renderable {
                 origin = zulrah.location();
             }
             if (capture.getPreviousId() != zulrah.id() ||
-                    capture.getPreviousLocation() != zulrah.location()) {
+                    !capture.getPreviousLocation().equals(zulrah.location())) {
                 System.out.println(String.format("Boss changed %s %s -> %s %s", capture.getPreviousId(),
                         capture.getPreviousLocation(), zulrah.id(), zulrah.location()));
-                previous.add(capture.getPreviousId());
+                if (capture.getPreviousId() != -1) {
+                    previous.add(capture.getPreviousId());
+                }
                 if (phase == null) {
-                    //check if we know phase yet (should know by stage 2)
+                    Phase potential = Phase.determine(previous, zulrah.id());
+                    if (potential != null) {
+                        phase = potential;
+                        phase.setIndex(previous.size());
+                        System.out.println(phase.name() + " is quite dank");
+                    }
                 }
             }
             if (phase != null) {
@@ -62,6 +69,7 @@ public class Zulrah extends Macro implements Renderable {
                         //cool, we can attack (if we aren't)
                     } else {
                         Walking.walkTo(current.getTile());
+                        //sleep here or it'll spam walk
                         //shit run to dat tile
                     }
                 }

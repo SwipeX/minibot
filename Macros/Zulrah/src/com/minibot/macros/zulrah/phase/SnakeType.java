@@ -1,4 +1,4 @@
-package com.minibot.macros.zulrah.boss;
+package com.minibot.macros.zulrah.phase;
 
 import com.minibot.macros.zulrah.Zulrah;
 import com.minibot.macros.zulrah.util.Capture;
@@ -23,7 +23,7 @@ public enum SnakeType {
         return id;
     }
 
-    public int[] getPrayerComponentIndexes() {
+    public int[] getPrayerComponentIndices() {
         if (this.id() == JAD.id()) {
             Capture capture = Zulrah.getCapture();
             int animation = capture.getPreviousAnimation();

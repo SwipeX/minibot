@@ -29,8 +29,11 @@ public class Potions {
     }
 
     enum Potion {
-        MAGIC(Skills.MAGIC, FIVE_MINUTES), PRAYER(Skills.PRAYER, 60000), RANGED(Skills.RANGED, FIVE_MINUTES),
-        RESTORE(Skills.PRAYER, 60000), VENOM(-1, THREE_MINUTES);
+        MAGIC(Skills.MAGIC, FIVE_MINUTES),
+        PRAYER(Skills.PRAYER, 60000),
+        RANGED(Skills.RANGED, FIVE_MINUTES),
+        RESTORE(Skills.PRAYER, 60000),
+        VENOM(-1, THREE_MINUTES);
 
         private int skill;
         private int lifetime;
@@ -59,7 +62,7 @@ public class Potions {
         }
 
         public void drink() {
-            if (Game.realLevels()[skill] - Game.levels()[skill] > 20 ||
+            if ((skill == -1 || Game.realLevels()[skill] - Game.levels()[skill] > 20) ||
                     (lastDrink == -1 || System.currentTimeMillis() - lastDrink > lifetime)) {
                 Item item = get();
                 if (item != null) {
