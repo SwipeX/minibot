@@ -42,12 +42,12 @@ public class Gear {
                 final String name = slot.getName().toLowerCase();
                 for (String string : NAMES_MAGE) {
                     if (name.contains(string)) {
-                        magic.add(slot.getItemId());
+                        magic.add(slot.id());
                     }
                 }
                 for (String string : NAMES_RANGE) {
                     if (name.contains(string)) {
-                        range.add(slot.getItemId());
+                        range.add(slot.id());
                     }
                 }
             }
@@ -73,7 +73,7 @@ public class Gear {
     public boolean equipType(int type) {
         int[] ids = (type == MAGIC ? mageIds : rangeIds);
         for (int id : ids) {
-            if (!Equipment.isEquipped(id)) {
+            if (!Equipment.equipped(id)) {
                 Equipment.equip(id);
                 Time.sleep(50);
             }
@@ -83,6 +83,6 @@ public class Gear {
 
     public boolean isTypeEquipped(int type) {
         int[] ids = (type == MAGIC ? mageIds : rangeIds);
-        return Equipment.isEquipped(ids);
+        return Equipment.equipped(ids);
     }
 }
