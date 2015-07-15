@@ -2,7 +2,7 @@ package com.minibot.macros.zulrah.boss;
 
 import com.minibot.macros.zulrah.Zulrah;
 import com.minibot.macros.zulrah.util.Capture;
-import com.minibot.macros.zulrah.util.Prayer;
+import com.minibot.macros.zulrah.action.Prayer;
 
 /**
  * @author Tim Dekker

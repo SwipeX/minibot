@@ -1,4 +1,4 @@
-package com.minibot.macros.zulrah.util;
+package com.minibot.macros.zulrah.action;
 
 import com.minibot.api.method.Inventory;
 import com.minibot.api.method.Players;

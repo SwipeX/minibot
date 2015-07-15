@@ -1,4 +1,4 @@
-package com.minibot.macros.zulrah.util;
+package com.minibot.macros.zulrah.action;
 
 import com.minibot.api.action.tree.Action;
 import com.minibot.api.method.Widgets;
