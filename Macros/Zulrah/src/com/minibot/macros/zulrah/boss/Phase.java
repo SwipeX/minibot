@@ -1,8 +1,9 @@
-package com.minibot.macros.zulrah;
+package com.minibot.macros.zulrah.boss;
 
 /**
  * @author Tim Dekker
  * @since 7/14/15
+ * TODO phase 1 & 4...wtf?
  */
 public enum Phase {
     PHASE_1(Stage.INITIAL, Stage.MELEE_WEST, Stage.MAGIC_WEST, Stage.RANGE_NORTHEAST,
@@ -22,8 +23,19 @@ public enum Phase {
             Stage.MELEE_WEST);//range first
 
     Stage[] stages;
+    int index = 0;
 
     Phase(Stage... stages) {
         this.stages = stages;
+    }
+
+    public void advance() {
+        index++;
+        if (index >= stages.length)
+            index = 0;
+    }
+
+    public Stage getCurrent() {
+        return stages[index];
     }
 }

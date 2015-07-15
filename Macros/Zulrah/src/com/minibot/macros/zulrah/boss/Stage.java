@@ -1,8 +1,6 @@
-package com.minibot.macros.zulrah;
+package com.minibot.macros.zulrah.boss;
 
 import com.minibot.api.wrapper.locatable.Tile;
-
-import java.awt.datatransfer.DataFlavor;
 
 /**
  * @author Tim Dekker
@@ -25,8 +23,8 @@ public enum Stage {
     JAD_WEST(SnakeType.JAD, 0, 0),
     JAD_EAST(SnakeType.JAD, 0, 0);
 
-    SnakeType snakeType;
-    int offsetX, offsetY;
+    private SnakeType snakeType;
+    private int offsetX, offsetY;
 
     Stage(SnakeType snakeType, int offsetX, int offsetY) {
         this.snakeType = snakeType;
@@ -34,7 +32,12 @@ public enum Stage {
         this.offsetY = offsetY;
     }
 
-    public Tile getTile() {
-        return new Tile(offsetX,offsetY); // derive from initial tile
+    public SnakeType getSnakeType() {
+        return snakeType;
     }
+
+    public Tile getTile() {
+        return new Tile(offsetX, offsetY); // derive from initial tile
+    }
+
 }

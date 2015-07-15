@@ -1,4 +1,4 @@
-package com.minibot.macros.zulrah;
+package com.minibot.macros.zulrah.util;
 
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Tile;
