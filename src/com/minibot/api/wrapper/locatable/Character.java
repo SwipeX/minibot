@@ -4,6 +4,7 @@ import com.minibot.api.method.Game;
 import com.minibot.api.method.Npcs;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.projection.Projection;
+import com.minibot.api.util.Identifiable;
 import com.minibot.api.wrapper.Wrapper;
 import com.minibot.client.natives.RSCharacter;
 import com.minibot.client.natives.RSNpc;
@@ -15,7 +16,7 @@ import java.awt.Point;
  * @author Tyler Sedlar
  * @since 4/4/15.
  */
-public abstract class Character<T extends RSCharacter> extends Wrapper<T> implements Locatable {
+public abstract class Character<T extends RSCharacter> extends Wrapper<T> implements Locatable, Identifiable {
 
     public Character(T raw) {
         super(raw);

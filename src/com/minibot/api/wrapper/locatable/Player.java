@@ -43,6 +43,11 @@ public class Player extends Character<RSPlayer> {
         return index;
     }
 
+    @Override
+    public int id() {
+        throw new UnsupportedOperationException();
+    }
+
     public String name() {
         return raw.getName();
     }
