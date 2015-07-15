@@ -18,7 +18,7 @@ public enum Stage {
 
     RANGE_WEST(SnakeType.RANGE, 0, 0),
     RANGE_NORTHWEST(SnakeType.RANGE, 0, 0),
-    RANGE_NORTHEAST(SnakeType.RANGE, 0, 0),
+    RANGE_NORTHEAST(SnakeType.RANGE, 6, 3),
 
     JAD_WEST(SnakeType.JAD, 0, 0),
     JAD_EAST(SnakeType.JAD, 6, 2);

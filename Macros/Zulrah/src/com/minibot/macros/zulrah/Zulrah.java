@@ -60,6 +60,8 @@ public class Zulrah extends Macro implements Renderable {
                         phase.setIndex(previous.size());
                         System.out.println(phase.name() + " is quite dank");
                     }
+                }else{
+                    phase.advance(); //apparently this is called too much
                 }
             }
             if (phase != null) {

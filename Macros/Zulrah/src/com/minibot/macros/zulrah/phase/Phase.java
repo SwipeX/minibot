@@ -44,18 +44,21 @@ public enum Phase {
     public static Phase determine(ArrayList<Integer> previous, int current) {
         Phase selected = null;
         for (Phase phase : values()) {
+            boolean valid = true;
             Stage[] stages = phase.stages;
             for (int i = 0; i < previous.size(); i++) {
                 if (stages[i].getSnakeType().id() != previous.get(i)) {
-                    break;
+                    valid = false;
                 }
             }
-            if (stages[previous.size()].getSnakeType().id() == current) {
-                if (selected == null) {
-                    selected = phase;
-                } else {
-                    System.out.println("Phase intersection -- aborting");
-                    return null;
+            if (valid) {
+                if (stages[previous.size()].getSnakeType().id() == current) {
+                    if (selected == null) {
+                        selected = phase;
+                    } else {
+                        System.out.println("Phase intersection -- aborting");
+                        return null;
+                    }
                 }
             }
         }
