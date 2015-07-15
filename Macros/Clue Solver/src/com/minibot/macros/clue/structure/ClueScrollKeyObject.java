@@ -82,6 +82,7 @@ public class ClueScrollKeyObject extends ClueScroll {
                     status.set("Walking to key");
                     WebPath.build(keyWalkDestination).step(Path.Option.TOGGLE_RUN);
                 } else {
+                    keyWalked = true;
                     GroundItem key = Ground.nearestByFilter(i -> {
                         String name = i.name();
                         return name != null && name.contains("Key");
