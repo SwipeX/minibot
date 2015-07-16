@@ -5,6 +5,7 @@ import com.minibot.api.method.Npcs;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.Walking;
 import com.minibot.api.util.Renderable;
+import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
@@ -14,6 +15,7 @@ import com.minibot.macros.zulrah.action.Gear;
 import com.minibot.macros.zulrah.action.Potions;
 import com.minibot.macros.zulrah.action.Prayer;
 import com.minibot.macros.zulrah.phase.Phase;
+import com.minibot.macros.zulrah.phase.SnakeType;
 import com.minibot.macros.zulrah.phase.Stage;
 import com.minibot.macros.zulrah.util.Capture;
 import com.minibot.macros.zulrah.util.Debug;
@@ -29,8 +31,10 @@ import java.util.ArrayList;
 public class Zulrah extends Macro implements Renderable {
     private static Capture capture = new Capture();
     private static ArrayList<Integer> previous = new ArrayList<>();
-    private static Phase phase;
+    private static Phase phase = Phase.PHASE_1;
     private static Tile origin = null;
+    public static int attackCounter = 0;
+    private static final int ATTACK = 5069; //no melee, but idc
 
     @Override
     public void run() {
@@ -44,38 +48,61 @@ public class Zulrah extends Macro implements Renderable {
         //main logic
         if (zulrah != null) {
             if (origin == null) {
+                SnakeType.RANGE.setId(zulrah.id());
+                SnakeType.MELEE.setId(zulrah.id() + 1);
+                SnakeType.MAGIC.setId(zulrah.id() + 2);
                 origin = zulrah.location();
+            }
+            if (capture.getPreviousAnimation() == -1 && zulrah.animation() == ATTACK) {
+                attackCounter++;
             }
             if (capture.getPreviousId() != zulrah.id() ||
                     !capture.getPreviousLocation().equals(zulrah.location())) {
                 System.out.println(String.format("Boss changed %s %s -> %s %s", capture.getPreviousId(),
                         capture.getPreviousLocation(), zulrah.id(), zulrah.location()));
+                attackCounter = 0;
                 if (capture.getPreviousId() != -1) {
                     previous.add(capture.getPreviousId());
                 }
-                if (phase == null) {
+                if (!phase.isConfirmed()) {
                     Phase potential = Phase.determine(previous, zulrah.id());
                     if (potential != null) {
                         phase = potential;
                         phase.setIndex(previous.size());// possibly previous.size()-1 ?
-                        System.out.println(phase.name() + " is quite dank");
+                        phase.confirm();
+                        System.out.println(phase.name() + " is quite dank (Confirmed)");
+                    } else {
+                        if (capture.getPreviousId() != -1)
+                            phase.advance();
                     }
-                }else{
+                } else {
                     phase.advance();
                 }
             }
             if (phase != null) {
-                Stage current = null; //obtain current stage
+                Stage current = phase.getCurrent();
                 if (current != null) {
                     if (current.getTile().equals(Players.local().location())) {
-                        //cool, we can attack (if we aren't)
+                        if (phase.getCurrent().getSnakeType() == SnakeType.MELEE) {
+                            if (zulrah.targetIsLocalPlayer()) {
+                                Walking.walkTo(current.getTile().derive(0, -2));
+                                Time.sleep(2000);
+                            }
+                        }
+                        com.minibot.api.wrapper.locatable.Character target = Players.local().target();
+                        if (target == null || !target.name().equals("Zulrah")) {
+                            zulrah.processAction("Attack");
+                            Time.sleep(400, 600);
+                        }
                     } else {
+                        // System.out.println("Walking to " + current.getTile());
                         Walking.walkTo(current.getTile());
+                        Time.sleep(1400, 1600);
                         //sleep here or it'll spam walk
                         //shit run to dat tile
                     }
                 }
-            }else{
+            } else {
                 //we do not know the phase, but we should probably keep guessing one until we are sure
                 //likely would be redundant code with the above 'if', so can separate just the logic.
             }

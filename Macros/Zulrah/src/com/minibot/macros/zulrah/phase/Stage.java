@@ -8,21 +8,21 @@ import com.minibot.macros.zulrah.Zulrah;
  * @since 7/14/15
  */
 public enum Stage {
-    INITIAL(SnakeType.RANGE, -4, -3),
+    INITIAL(SnakeType.RANGE, 4, 3),
 
-    MELEE_WEST(SnakeType.MELEE, 0, 0),
-    MELEE_EAST(SnakeType.MELEE, 5, 0),
+    MELEE_WEST(SnakeType.MELEE, 4, 3),
+    MELEE_EAST(SnakeType.MELEE, -5, 0),
 
-    MAGIC_WEST(SnakeType.MAGIC, 0, 0),
-    MAGIC_NORTHWEST(SnakeType.MAGIC, 0, 0),
-    MAGIC_EAST(SnakeType.MAGIC, 6, 2),
+    MAGIC_WEST(SnakeType.MAGIC, 4, 3),
+    MAGIC_NORTHWEST(SnakeType.MAGIC, 5, -3),
+    MAGIC_EAST(SnakeType.MAGIC, -6, -2),
 
-    RANGE_WEST(SnakeType.RANGE, 0, 0),
-    RANGE_NORTHWEST(SnakeType.RANGE, 0, 0),
-    RANGE_NORTHEAST(SnakeType.RANGE, 6, 3),
+    RANGE_WEST(SnakeType.RANGE, 4, 3),
+    RANGE_NORTHWEST(SnakeType.RANGE, 5, -3),
+    RANGE_NORTHEAST(SnakeType.RANGE, -6, -3),
 
-    JAD_WEST(SnakeType.JAD, 0, 0),
-    JAD_EAST(SnakeType.JAD, 6, 2);
+    JAD_WEST(SnakeType.JAD_MAGIC_FIRST, 4, -3),
+    JAD_EAST(SnakeType.JAD_RANGE_FIRST, -6, -2);
 
     private SnakeType snakeType;
     private int offsetX, offsetY;

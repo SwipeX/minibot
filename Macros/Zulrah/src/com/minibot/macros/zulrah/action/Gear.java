@@ -1,13 +1,12 @@
 package com.minibot.macros.zulrah.action;
 
+import com.minibot.api.method.Combat;
 import com.minibot.api.method.Equipment;
 import com.minibot.api.method.Inventory;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
 import com.minibot.macros.zulrah.Zulrah;
-import com.minibot.macros.zulrah.phase.Phase;
 import com.minibot.macros.zulrah.phase.SnakeType;
-import com.minibot.macros.zulrah.phase.Stage;
 
 import java.util.ArrayList;
 
@@ -20,9 +19,6 @@ public class Gear {
     private static int[] mageIds;
     private static final String[] NAMES_RANGE;
     private static final String[] NAMES_MAGE;
-
-    public static final int RANGED = 0;
-    public static final int MAGIC = 1;
 
     static {
         NAMES_RANGE = new String[]{"d'hide", "bow", "pipe", "cape"};
@@ -41,12 +37,12 @@ public class Gear {
                 final String name = slot.getName().toLowerCase();
                 for (String string : NAMES_MAGE) {
                     if (name.contains(string)) {
-                        magic.add(slot.id());
+                        magic.add(slot.itemId());
                     }
                 }
                 for (String string : NAMES_RANGE) {
                     if (name.contains(string)) {
-                        range.add(slot.id());
+                        range.add(slot.itemId());
                     }
                 }
             }
@@ -70,36 +66,37 @@ public class Gear {
     }
 
     public static boolean equip() {
-        Phase phase = Zulrah.getPhase();
-        if (phase != null) {
-            Stage stage = phase.getCurrent();
-            if (stage != null) {
-                SnakeType snakeType = stage.getSnakeType();
-                if (snakeType != null) {
-                    if (snakeType.equals(SnakeType.MAGIC)) {
-                        return equip(RANGED);
-                    } else { // Range/Jad/Melee
-                        return equip(MAGIC);
+        if (!Equipment.equipped("Ring of recoil")) {
+            Equipment.equip("Ring of recoil");
+        }
+        return equip(Zulrah.getPhase().getCurrent().getSnakeType());
+    }
+
+    private static boolean equip(SnakeType type) {
+        int[] ids = (type.id() == SnakeType.MAGIC.id() ? rangeIds : mageIds);
+        for (int id : ids) {
+            if (!Equipment.equipped(id)) {
+                Item item = Inventory.first(i -> -i.id() == id);
+                if (item != null) {
+                    Equipment.equip(item);
+                    String name = item.name();
+                    if (name != null) {
+                        if (name.contains("rossbow")) {
+                            Combat.setStyle(1);
+                        }
                     }
+                    Time.sleep(50);
                 }
             }
         }
-        return false;
-    }
-
-    private static boolean equip(int type) {
-        int[] ids = (type == MAGIC ? mageIds : rangeIds);
-        for (int id : ids) {
-            if (!Equipment.equipped(id)) {
-                Equipment.equip(id);
-                Time.sleep(50);
-            }
-        }
-        return isTypeEquipped(type);
-    }
-
-    public static boolean isTypeEquipped(int type) {
-        int[] ids = (type == MAGIC ? mageIds : rangeIds);
         return Equipment.equipped(ids);
+    }
+
+    public static int[] getRangeIds() {
+        return rangeIds;
+    }
+
+    public static int[] getMageIds() {
+        return mageIds;
     }
 }

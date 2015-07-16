@@ -28,6 +28,7 @@ public class Prayer {
         Npc zulrah = Zulrah.getMonster();
         if (zulrah == null) {
             deactivateAll();
+            return true;
         }
         SnakeType type = null;
         Phase phase = Zulrah.getPhase();
@@ -36,8 +37,6 @@ public class Prayer {
             if (stage != null) {
                 type = stage.getSnakeType();
             }
-        } else {
-            type = SnakeType.get(zulrah.id());
         }
         int[] indexes = type.getPrayerComponentIndices();
         if (indexes == null) {

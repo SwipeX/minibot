@@ -65,27 +65,40 @@ public class Equipment {
         unequip(slot -> slot.getName().equals(name));
     }
 
-    public static boolean equipped(String... itemNames) {
+    private static boolean equipped(String name) {
         for (Slot slot : Slot.values()) {
-            for (String str : itemNames) {
-                if (str.equals(slot.getName())) {
-                    return true;
-                }
+            if (name.equals(slot.getName())) {
+                return true;
             }
         }
         return false;
     }
 
+    public static boolean equipped(String... names) {
+        for (String name : names) {
+            if (!equipped(name)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-    public static boolean equipped(int... ids) {
+    private static boolean equipped(int id) {
         for (Slot slot : Slot.values()) {
-            for (int id : ids) {
-                if (id == slot.itemId()) {
-                    return true;
-                }
+            if (id == slot.itemId()) {
+                return true;
             }
         }
         return false;
+    }
+
+    public static boolean equipped(int... ids) {
+        for (int id : ids) {
+            if (!equipped(id)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static boolean contains(String[] array, String element) {

@@ -10,22 +10,23 @@ import java.util.ArrayList;
 public enum Phase {
     PHASE_1(Stage.INITIAL, Stage.MELEE_WEST, Stage.MAGIC_WEST, Stage.RANGE_NORTHEAST,
             Stage.MELEE_EAST, Stage.MAGIC_EAST, Stage.RANGE_NORTHWEST, Stage.MAGIC_NORTHWEST,
-            Stage.JAD_EAST, Stage.MELEE_EAST),//jad range first
+            Stage.JAD_EAST, Stage.MELEE_EAST),
 
     PHASE_2(Stage.INITIAL, Stage.RANGE_WEST, Stage.MELEE_EAST, Stage.MAGIC_EAST, Stage.RANGE_NORTHWEST,
             Stage.MAGIC_NORTHWEST, Stage.RANGE_NORTHEAST, Stage.RANGE_NORTHEAST, Stage.MAGIC_WEST,
-            Stage.JAD_WEST, Stage.MAGIC_NORTHWEST),//jad mage first
+            Stage.JAD_WEST, Stage.MAGIC_NORTHWEST),
 
     PHASE_3(Stage.INITIAL, Stage.MAGIC_WEST, Stage.RANGE_NORTHEAST, Stage.MAGIC_EAST, Stage.MELEE_WEST,
             Stage.RANGE_WEST, Stage.RANGE_NORTHWEST, Stage.MAGIC_EAST, Stage.RANGE_NORTHWEST, Stage.MAGIC_NORTHWEST,
-            Stage.JAD_WEST, Stage.MAGIC_WEST),//magic first
+            Stage.JAD_WEST, Stage.MAGIC_WEST),
 
     PHASE_4(Stage.INITIAL, Stage.MELEE_WEST, Stage.MAGIC_WEST, Stage.RANGE_NORTHEAST,
             Stage.MAGIC_EAST, Stage.MELEE_EAST, Stage.RANGE_NORTHWEST, Stage.MAGIC_EAST,
-            Stage.JAD_EAST, Stage.RANGE_WEST, Stage.MELEE_WEST);//range first
+            Stage.JAD_EAST, Stage.RANGE_WEST, Stage.MELEE_WEST);
 
     Stage[] stages;
     int index = 0;
+    boolean confirmed = false;
 
     Phase(Stage... stages) {
         this.stages = stages;
@@ -35,6 +36,19 @@ public enum Phase {
         index++;
         if (index >= stages.length)
             index = 0;
+    }
+
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    public void confirm() {
+        confirmed = true;
+    }
+
+    public static void reset() {
+        for (Phase phase : values())
+            phase.confirmed = false;
     }
 
     public Stage getCurrent() {
@@ -56,7 +70,7 @@ public enum Phase {
                     if (selected == null) {
                         selected = phase;
                     } else {
-                        System.out.println("Phase intersection -- aborting");
+                        //System.out.println("Phase intersection -- aborting");
                         return null;
                     }
                 }

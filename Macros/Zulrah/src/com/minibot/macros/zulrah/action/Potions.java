@@ -28,11 +28,11 @@ public class Potions {
         }
     }
 
-    enum Potion {
+    public enum Potion {
         MAGIC(Skills.MAGIC, FIVE_MINUTES),
-        PRAYER(Skills.PRAYER, 60000),
-        RANGED(Skills.RANGED, FIVE_MINUTES),
-        RESTORE(Skills.PRAYER, 60000),
+        PRAYER(Skills.PRAYER, -1),
+        RANGING(Skills.RANGED, FIVE_MINUTES),
+        RESTORE(Skills.PRAYER, -1),
         VENOM(-1, THREE_MINUTES);
 
         private int skill;
@@ -62,8 +62,7 @@ public class Potions {
         }
 
         public void drink() {
-            if ((skill == -1 || Game.realLevels()[skill] - Game.levels()[skill] > 20) ||
-                    (lastDrink == -1 || System.currentTimeMillis() - lastDrink > lifetime)) {
+            if (required()) {
                 Item item = get();
                 if (item != null) {
                     item.processAction("Drink");
@@ -71,6 +70,14 @@ public class Potions {
                     Time.sleep(1200); //possibly sleep dynamically here
                 }
             }
+        }
+
+        private boolean required() {
+            boolean prayer = (skill == Skills.PRAYER &&
+                    Game.realLevels()[skill] - Game.levels()[skill] > 20);
+            boolean timing = (lastDrink == -1 ||
+                    (System.currentTimeMillis() - lastDrink > lifetime));
+            return prayer || (skill != Skills.PRAYER && timing);
         }
     }
 }
