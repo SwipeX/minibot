@@ -10,7 +10,7 @@ import com.minibot.api.wrapper.Wrapper;
 import com.minibot.client.natives.*;
 import com.minibot.util.DefinitionLoader;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.Arrays;
 
 /**
@@ -138,7 +138,7 @@ public class GameObject extends Wrapper<ClientNative> implements Locatable {
 
     @Override
     public void processAction(int opcode, String action) {
-        processAction(opcode, action, -1, -1);
+        processAction(opcode, action, localX(), localY());//needs to account for main tile for more than 1x1
     }
 
     public void processAction(String action, int realLocalX, int realLocalY) {
