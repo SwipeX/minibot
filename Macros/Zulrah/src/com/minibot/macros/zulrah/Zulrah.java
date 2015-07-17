@@ -6,6 +6,7 @@ import com.minibot.api.method.Players;
 import com.minibot.api.method.Walking;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
+import com.minibot.api.wrapper.locatable.Character;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
@@ -91,11 +92,11 @@ public class Zulrah extends Macro implements Renderable {
                 if (current != null) {
                     if (current.getTile().equals(Players.local().location())) {
                         if (phase.getCurrent().getSnakeType() == SnakeType.MELEE) {
-                           if(zulrah.getOrientation() == 1281){
-                               System.out.println("FUCKING RUN MARTY");
-                           }
+                            if (zulrah.getOrientation() == 1281) {
+                                System.out.println("FUCKING RUN MARTY");
+                            }
                         }
-                        com.minibot.api.wrapper.locatable.Character target = Players.local().target();
+                        Character target = Players.local().target();
                         if (target == null || !target.name().equals("Zulrah")) {
                             zulrah.processAction("Attack");
                             Time.sleep(400, 600);

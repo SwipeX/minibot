@@ -44,7 +44,7 @@ public class Prayer {
         } else {
             for (int index : indexes) {
                 if (!activate(index)) {
-                    return false;
+                    //return false;
                 }
             }
         }
