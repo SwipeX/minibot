@@ -91,7 +91,9 @@ public class Zulrah extends Macro implements Renderable {
                 if (current != null) {
                     if (current.getTile().equals(Players.local().location())) {
                         if (phase.getCurrent().getSnakeType() == SnakeType.MELEE) {
-                            System.out.println(zulrah.getOrientation());//1281 when
+                           if(zulrah.getOrientation() == 1281){
+                               System.out.println("FUCKING RUN MARTY");
+                           }
                         }
                         com.minibot.api.wrapper.locatable.Character target = Players.local().target();
                         if (target == null || !target.name().equals("Zulrah")) {
