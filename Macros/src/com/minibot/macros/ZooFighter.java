@@ -17,14 +17,14 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by tim on 6/8/15.
  */
-@Manifest(name = "ZooFighter8", author = "Swipe", version = "1.0.0", description = "Zoo Fighter")
-public class ZooFighter8 extends Macro implements Renderable {
+@Manifest(name = "ZooFighter", author = "Swipe", version = "1.0.0", description = "Zoo Fighter")
+public class ZooFighter extends Macro implements Renderable {
 
     boolean started;
     private int SKILL_STR = Skills.MAGIC;
     private int start_exp = 0;
     private long start_time;
-    private static final String[] names = new String[]{"Cyclops", "Jogre", "Wolf"};
+    private static final String[] names = new String[]{"Scorpion","Pit Scorpion"};//"Cyclops", "Jogre", "Wolf"};
 
     private static boolean level() {
         WidgetComponent component = Widgets.get(233, 2);

@@ -96,6 +96,10 @@ public abstract class Character<T extends RSCharacter> extends Wrapper<T> implem
         return maxHealth() > 0 && health() == 0;
     }
 
+    public int getOrientation(){
+        return raw.getOrientation();
+    }
+
     public final Character target() {
         int index = targetIndex();
         if (index == -1 || index == 65535) {

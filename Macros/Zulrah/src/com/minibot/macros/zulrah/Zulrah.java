@@ -68,7 +68,7 @@ public class Zulrah extends Macro implements Renderable {
                     Phase potential = Phase.determine(previous, zulrah.id());
                     if (potential != null) {
                         phase = potential;
-                        phase.setIndex(previous.size());// possibly previous.size()-1 ?
+                        phase.setIndex(previous.size());
                         phase.confirm();
                         System.out.println(phase.name() + " is quite dank (Confirmed)");
                     } else {
@@ -77,6 +77,13 @@ public class Zulrah extends Macro implements Renderable {
                     }
                 } else {
                     phase.advance();
+                    if (phase.getCurrent() != Stage.JAD_EAST && phase.getCurrent() != Stage.JAD_WEST) {
+                        if (phase.getCurrent().getSnakeType().id() != zulrah.id()) {
+                            previous.remove(previous.size() - 1);
+                            phase.unconfirm();
+                            System.out.println("incorrect advancement of phase / broken phase");
+                        }
+                    }
                 }
             }
             if (phase != null) {
@@ -84,10 +91,7 @@ public class Zulrah extends Macro implements Renderable {
                 if (current != null) {
                     if (current.getTile().equals(Players.local().location())) {
                         if (phase.getCurrent().getSnakeType() == SnakeType.MELEE) {
-                            if (zulrah.targetIsLocalPlayer()) {
-                                Walking.walkTo(current.getTile().derive(0, -2));
-                                Time.sleep(2000);
-                            }
+                            System.out.println(zulrah.getOrientation());//1281 when
                         }
                         com.minibot.api.wrapper.locatable.Character target = Players.local().target();
                         if (target == null || !target.name().equals("Zulrah")) {
@@ -102,9 +106,6 @@ public class Zulrah extends Macro implements Renderable {
                         //shit run to dat tile
                     }
                 }
-            } else {
-                //we do not know the phase, but we should probably keep guessing one until we are sure
-                //likely would be redundant code with the above 'if', so can separate just the logic.
             }
         } else {
             //it could be loot time!
@@ -121,6 +122,7 @@ public class Zulrah extends Macro implements Renderable {
     @Override
     public void render(Graphics2D g) {
         Debug.paint(g);
+        g.drawString(Players.local().getOrientation() + "", 300, 300);
     }
 
     public static Capture getCapture() {

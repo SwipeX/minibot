@@ -3,7 +3,6 @@ package com.minibot.macros.zulrah.action;
 import com.minibot.api.method.Combat;
 import com.minibot.api.method.Equipment;
 import com.minibot.api.method.Inventory;
-import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
 import com.minibot.macros.zulrah.Zulrah;
 import com.minibot.macros.zulrah.phase.SnakeType;
@@ -21,14 +20,14 @@ public class Gear {
     private static final String[] NAMES_MAGE;
 
     static {
-        NAMES_RANGE = new String[]{"d'hide", "bow", "pipe", "cape"};
-        NAMES_MAGE = new String[]{"robe", "staff", "trident", "ava's"};
+        NAMES_RANGE = new String[]{"d'hide", "bow", "pipe", "ava's", "range"};
+        NAMES_MAGE = new String[]{"robe", "staff", "trident", "cape", "mage"};
         setup();
     }
 
     public static void setup() {
-        ArrayList<Integer> range = new ArrayList();
-        ArrayList<Integer> magic = new ArrayList();
+        ArrayList<Integer> range = new ArrayList<>();
+        ArrayList<Integer> magic = new ArrayList<>();
         for (Equipment.Slot slot : Equipment.Slot.values()) {
             if (slot != null) {
                 if (slot.getName() == null) {
@@ -72,11 +71,11 @@ public class Gear {
         return equip(Zulrah.getPhase().getCurrent().getSnakeType());
     }
 
-    private static boolean equip(SnakeType type) {
+    public static boolean equip(SnakeType type) {
         int[] ids = (type.id() == SnakeType.MAGIC.id() ? rangeIds : mageIds);
         for (int id : ids) {
             if (!Equipment.equipped(id)) {
-                Item item = Inventory.first(i -> -i.id() == id);
+                Item item = Inventory.first(i -> i.id() == id);
                 if (item != null) {
                     Equipment.equip(item);
                     String name = item.name();
@@ -85,7 +84,6 @@ public class Gear {
                             Combat.setStyle(1);
                         }
                     }
-                    Time.sleep(50);
                 }
             }
         }

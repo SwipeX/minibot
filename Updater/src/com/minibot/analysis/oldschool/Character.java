@@ -11,7 +11,7 @@ import org.objectweb.asm.tree.ClassNode;
 
 import java.util.List;
 
-@VisitorInfo(hooks = {"x", "y", "health", "maxHealth", "interactingIndex", "animation"})
+@VisitorInfo(hooks = {"x", "y", "health", "maxHealth", "interactingIndex", "animation", "orientation"})
 public class Character extends GraphVisitor {
 
     @Override
@@ -26,6 +26,7 @@ public class Character extends GraphVisitor {
         visitAll(new HealthHooks());
         visitAll(new InteractingIndex());
         visitAll(new Animation());
+        visitAll(new Orientation());
     }
 
     private class PositionHooks extends BlockVisitor {
@@ -143,6 +144,28 @@ public class Character extends GraphVisitor {
                             FieldHook fh = new FieldHook("animation", fmn.fin());
                             fh.setMultiplier(nn.number());
                             addHook(fh);
+                            lock.set(true);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private class Orientation extends BlockVisitor {
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor() {
+                public void visitField(FieldMemberNode fmn) {
+                    if (fmn.opcode() == PUTFIELD && fmn.owner().equals(getCn().name)) {
+                        if (fmn.layer(IMUL, IAND, D2I, DMUL, INVOKESTATIC, I2D) != null) {
+                            addHook(new FieldHook("orientation", fmn.fin()));
                             lock.set(true);
                         }
                     }

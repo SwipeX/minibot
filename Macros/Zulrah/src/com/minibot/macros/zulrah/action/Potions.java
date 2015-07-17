@@ -2,6 +2,7 @@ package com.minibot.macros.zulrah.action;
 
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Inventory;
+import com.minibot.api.method.Players;
 import com.minibot.api.method.Skills;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
@@ -65,9 +66,10 @@ public class Potions {
             if (required()) {
                 Item item = get();
                 if (item != null) {
+                    int id = item.id();
                     item.processAction("Drink");
                     lastDrink = System.currentTimeMillis();
-                    Time.sleep(1200); //possibly sleep dynamically here
+                    Time.sleep(() -> Inventory.first(i -> i.id() == id) == null && Players.local().animation() == -1, 2500);
                 }
             }
         }

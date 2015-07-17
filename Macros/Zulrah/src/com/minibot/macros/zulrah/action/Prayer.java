@@ -15,7 +15,7 @@ import com.minibot.macros.zulrah.phase.Stage;
  * @since 7/15/15
  */
 public class Prayer {
-    public static final int MYSTIC_MIGHT_INDEX = 27;
+    public static final int MYSTIC_MIGHT_INDEX = 25;//27 for actual -- Swipe testing
     public static final int EAGLE_EYE_INDEX = 26;
     public static final int PROTECT_MAGIC_INDEX = 16;
     public static final int PROTECT_RANGE_INDEX = 17;
@@ -54,7 +54,7 @@ public class Prayer {
     private static boolean deactivateAll() {
         for (int index : INDICES) {
             if (!deactivate(index)) {
-                return false;
+               // return false;  uhhh
             }
         }
         return true;

@@ -1,6 +1,7 @@
 package com.minibot.api.method;
 
 import com.minibot.api.action.ActionOpcodes;
+import com.minibot.api.util.Time;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
@@ -24,6 +25,9 @@ public class Equipment {
                         item.processAction("Wear");
                     else
                         item.processAction("Wield");
+                    Time.sleep(() -> {
+                        return equipped(item.id());
+                    }, 800);
                 }
             }
         }

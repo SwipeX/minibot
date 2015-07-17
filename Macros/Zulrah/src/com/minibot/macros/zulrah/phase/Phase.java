@@ -1,5 +1,6 @@
 package com.minibot.macros.zulrah.phase;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -36,6 +37,14 @@ public enum Phase {
         index++;
         if (index >= stages.length)
             index = 0;
+    }
+
+    public void backup() {
+        if (index >= 1) {
+            index--;
+        } else {
+            index = stages.length - 1;
+        }
     }
 
     public boolean isConfirmed() {
@@ -81,5 +90,23 @@ public enum Phase {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public void draw(Graphics g, int x, int y) {
+        String phase = "";
+        String phase2 = "";
+        for (int i = 0; i < stages.length; i++) {
+            Stage stage = stages[i];
+            if (i < 5)
+                phase += stage.name() + "[" + (index > i ? "X" : "") + "] ";
+            else
+                phase2 += stage.name() + "[" + (index > i ? "X" : "") + "] ";
+        }
+        g.drawString(name() + ": " + phase, x, y);
+        g.drawString(phase2, x, y += 13);
+    }
+
+    public void unconfirm() {
+        confirmed = false;
     }
 }
