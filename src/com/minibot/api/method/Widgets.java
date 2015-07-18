@@ -176,7 +176,7 @@ public class Widgets {
     private static int continueDialogIndex = -1;
 
     public static boolean viewingContinue() {
-        int[] uids = {15007745, 15138818, 14221314};
+        int[] uids = {15007745, 15138818, 14221314, 15269890};
         for (int uid : uids) {
             if (Widgets.childrenFor(uid >> 16).length > 0) {
                 continueDialogIndex = uid;

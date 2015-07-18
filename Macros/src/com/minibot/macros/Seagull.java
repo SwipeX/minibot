@@ -16,9 +16,9 @@ import com.minibot.bot.macro.Manifest;
 @Manifest(name = "Seagull", author = "Tyler", version = "1.0.0", description = "Kills seagulls")
 public class Seagull extends Macro {
 
-    private long lastAttack = -1;
+    private static long lastAttack = -1;
 
-    private boolean attack() {
+    private static boolean attack() {
         boolean force = (lastAttack != -1 && (Time.millis() - lastAttack) > 8000);
         Character target = Players.local().target();
         if (force || target == null || (target.maxHealth() > 0 && target.health() <= 0)) {

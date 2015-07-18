@@ -25,10 +25,10 @@ public class ClueSolver extends Macro implements Renderable {
 
     private static final ClueSource SOURCE = new MediumClueSource();
 
-    private final AtomicBoolean rewarded = new AtomicBoolean(false);
-    private final AtomicReference<String> status = new AtomicReference<>();
-    private int clueId = -1;
-    private ClueScroll scroll;
+    private static final AtomicBoolean rewarded = new AtomicBoolean(false);
+    private static final AtomicReference<String> status = new AtomicReference<>();
+    private static int clueId = -1;
+    private static ClueScroll scroll;
 
     @Override
     public void atStart() {
@@ -74,7 +74,7 @@ public class ClueSolver extends Macro implements Renderable {
         g.setColor(Color.CYAN);
         int yOff = 11;
         g.drawString("Clue: " + (clueId != -1 ? clueId : "N/A"), 13, yOff += 15);
-        String status = this.status.get();
+        String status = ClueSolver.status.get();
         g.drawString("Status: " + (status != null ? status : "N/A"), 13, yOff + 15);
     }
 }

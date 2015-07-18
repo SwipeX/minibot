@@ -24,30 +24,29 @@ public class RangedGuild extends Macro implements Renderable {
     private static final int COMMA_FORMAT = ValueFormat.COMMAS;
     private static final int THOUSAND_FORMAT = ValueFormat.THOUSANDS | ValueFormat.PRECISION(2);
 
-    private int score;
+    private static int score;
+    private static int startExp;
 
-    private int fireIndex() {
+    private static int fireIndex() {
         return Game.varp(156);
     }
 
-    private boolean playing() {
+    private static boolean playing() {
         int varp = fireIndex();
         return varp >= 1 && varp <= 10;
     }
 
-    private int score() {
+    private static int score() {
         return Game.varp(157);
     }
 
-    private void fire() {
+    private static void fire() {
         GameObject object = Objects.topAt(new Tile(2679, 3426, 0));
         if (object != null) {
             object.processAction("Fire-at");
             Time.sleep(200, 300);
         }
     }
-
-    private int startExp;
 
     @Override
     public void atStart() {

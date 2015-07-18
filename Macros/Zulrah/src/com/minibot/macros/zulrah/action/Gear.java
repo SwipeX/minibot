@@ -14,6 +14,7 @@ import java.util.ArrayList;
  * @since 7/14/15
  */
 public class Gear {
+
     private static int[] rangeIds;
     private static int[] mageIds;
     private static final String[] NAMES_RANGE;

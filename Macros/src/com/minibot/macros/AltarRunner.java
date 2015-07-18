@@ -16,8 +16,9 @@ import java.awt.*;
  * @author Tim Dekker
  * @since 7/16/15
  */
-@Manifest(name = "Alter Runner", author = "Swipe", version = "1.0.0", description = "No banking/entering")
-public class AlterRunnerPro extends Macro implements Renderable {
+@Manifest(name = "Altar Runner", author = "Swipe", version = "1.0.0", description = "No banking/entering")
+public class AltarRunner extends Macro implements Renderable {
+
     private static final Tile bank = new Tile(2613, 3092);
     private static final Tile portal = new Tile(2544, 3096);
 

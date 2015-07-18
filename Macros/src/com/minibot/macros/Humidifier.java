@@ -38,9 +38,9 @@ public class Humidifier extends Macro implements Renderable {
     private static final int PROFIT_PER_JUG = (WATER_JUG_PRICE - JUG_PRICE);
     private static final int EXP_PER_CAST = 65;
 
-    private int casts, profit;
+    private static int casts, profit;
 
-    private boolean openBank() {
+    private static boolean openBank() {
         Npc banker = Npcs.nearestByName("Banker");
         if (banker != null) {
             banker.processAction("Bank");

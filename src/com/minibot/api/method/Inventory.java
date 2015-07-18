@@ -79,7 +79,7 @@ public class Inventory {
     }
 
     public static List<Item> items() {
-        return items(Filter.always());
+        return items(item -> item != null && item.name() != null);
     }
 
     public static int count() {

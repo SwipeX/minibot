@@ -21,7 +21,7 @@ import com.minibot.macros.zulrah.phase.Stage;
 import com.minibot.macros.zulrah.util.Capture;
 import com.minibot.macros.zulrah.util.Debug;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 /**
@@ -30,6 +30,7 @@ import java.util.ArrayList;
  */
 @Manifest(name = "Zulrah", author = "Tyler/Tim", version = "1.0.0", description = "Kills Zulrah")
 public class Zulrah extends Macro implements Renderable {
+
     private static Capture capture = new Capture();
     private static ArrayList<Integer> previous = new ArrayList<>();
     private static Phase phase = Phase.PHASE_1;

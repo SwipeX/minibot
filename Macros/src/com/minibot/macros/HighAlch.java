@@ -38,7 +38,7 @@ public class HighAlch extends Macro implements Renderable {
 
     private static final Filter<Item> OTHER_FILTER = (i -> !NATURE_FILTER.accept(i));
 
-    private int startExp;
+    private static int startExp;
 
     @Override
     public void atStart() {

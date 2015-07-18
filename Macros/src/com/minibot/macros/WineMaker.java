@@ -48,7 +48,7 @@ public class WineMaker extends Macro implements Renderable, ChatboxListener {
         return name != null && name.equals("Unfermented wine");
     };
 
-    private boolean openBank() {
+    private static boolean openBank() {
         Npc banker = Npcs.nearestByName("Banker");
         if (banker != null) {
             banker.processAction("Bank");
@@ -57,7 +57,7 @@ public class WineMaker extends Macro implements Renderable, ChatboxListener {
         return false;
     }
 
-    private boolean prepareInventory() {
+    private static boolean prepareInventory() {
         Item wine = Inventory.first(WINE_FILTER);
         Item unf = Inventory.first(UNFERMENTED_FILTER);
         if (wine != null || unf != null) {
@@ -79,21 +79,6 @@ public class WineMaker extends Macro implements Renderable, ChatboxListener {
         return Bank.close();
     }
 
-    private static boolean level() {
-        WidgetComponent component = Widgets.get(233, 2);
-        return component != null && component.visible();
-    }
-
-    private static void solve() {
-        if (level()) {
-            Mouse.hop(Random.nextInt(93, 166), Random.nextInt(435, 452));
-            for (int i = 0; i < Random.nextInt(4, 8); i++) {
-                Time.sleep(550, 875);
-                Mouse.click(true);
-            }
-        }
-    }
-
     @Override
     public void atStart() {
         if (!Game.playing()) {
@@ -110,9 +95,7 @@ public class WineMaker extends Macro implements Renderable, ChatboxListener {
             if (Inventory.count() == 14) {
                 openBank();
             } else {
-                solve();
                 Time.sleep(() -> Inventory.count() == 28, Random.nextInt(4500, 5500));
-                solve();
                 Item jug = Inventory.first(JUG_FILTER);
                 Item grape = Inventory.first(GRAPE_FILTER);
                 if (jug != null && grape != null) {
@@ -122,9 +105,10 @@ public class WineMaker extends Macro implements Renderable, ChatboxListener {
                         return component != null && component.visible();
                     }, Random.nextInt(5000, 7500))) {
                         RuneScape.processAction(new DialogButtonAction(20250627, -1));
-                        if (Time.sleep(() -> Inventory.count() == 14 || level(), Random.nextInt(20000, 25000))) {
-                            if (level()) {
-                                solve();
+                        if (Time.sleep(() -> Inventory.count() == 14 || Widgets.viewingContinue(), Random.nextInt(20000, 25000))) {
+                            if (Widgets.viewingContinue()) {
+                                Widgets.processContinue();
+                                Time.sleep(() -> !Widgets.viewingContinue(), Random.nextInt(5000, 7500));
                             }
                         }
                     }

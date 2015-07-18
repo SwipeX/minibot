@@ -13,6 +13,7 @@ import com.minibot.macros.zulrah.Zulrah;
  * @since 7/15/15
  */
 public class Potions {
+
     private static final int FIVE_MINUTES = 1000 * 60 * 5;
     private static final int THREE_MINUTES = 1000 * 60 * 3;
 
@@ -23,7 +24,9 @@ public class Potions {
     }
 
     public static void drink() {
-        if (Zulrah.getMonster() == null) return;
+        if (Zulrah.getMonster() == null) {
+            return;
+        }
         for (Potion potion : Potion.values()) {
             potion.drink();
         }

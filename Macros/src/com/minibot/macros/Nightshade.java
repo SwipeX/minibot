@@ -42,9 +42,9 @@ public class Nightshade extends Macro implements Renderable {
         return name != null && name.equals("Cave nightshade");
     };
 
-    private int looted;
+    private static int looted;
 
-    private boolean teleport() {
+    private static boolean teleport() {
         Item ring = Inventory.first(RING_FILTER);
         if (ring != null) {
             ring.processAction("Rub");
@@ -55,14 +55,14 @@ public class Nightshade extends Macro implements Renderable {
         return false;
     }
 
-    private boolean inCave() {
+    private static boolean inCave() {
         return Npcs.nearestByFilter(n -> {
             String name = n.name();
             return name != null && name.equals("Skavid");
         }) != null;
     }
 
-    private boolean enterCave() {
+    private static boolean enterCave() {
         GameObject cave = Objects.topAt(CAVE);
         if (cave != null) {
             cave.processAction("Enter", CAVE.localX(), CAVE.localY());
@@ -75,7 +75,7 @@ public class Nightshade extends Macro implements Renderable {
         return false;
     }
 
-    private boolean loot() {
+    private static boolean loot() {
         GroundItem item = Ground.nearestByFilter(i -> {
             String name = i.name();
             return name != null && name.contains("nightshade");
@@ -89,7 +89,7 @@ public class Nightshade extends Macro implements Renderable {
         return false;
     }
 
-    private boolean openBank() {
+    private static boolean openBank() {
         GameObject chest = Objects.topAt(BANK_CHEST);
         if (chest != null) {
             chest.processAction("Use");
@@ -98,7 +98,7 @@ public class Nightshade extends Macro implements Renderable {
         return false;
     }
 
-    private boolean prepareInventory() {
+    private static boolean prepareInventory() {
         Item shade = Inventory.first(SHADE_FILTER);
         if (shade != null) {
             shade.processAction("Deposit-All");

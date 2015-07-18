@@ -48,11 +48,11 @@ public class CaveHorrors extends Macro implements Renderable {
 
     private static final Area KILL_ZONE = new Area(new Tile(3717, 9346, 0), new Tile(3769, 9390, 0));
 
-    private int profit;
-    private int foodId = -1;
+    private static int profit;
+    private static int foodId = -1;
 
-    private String status = "";
-    private boolean startedFlick;
+    private static String status = "";
+    private static boolean startedFlick;
 
     @Override
     public void atStart() {
@@ -61,19 +61,19 @@ public class CaveHorrors extends Macro implements Renderable {
         Lootables.initCaveHorrors();
     }
 
-    private boolean underground() {
+    private static boolean underground() {
         Player player = Players.local();
         return player != null && player.y() > 9000;
     }
 
-    private Npc findBat() {
+    private static Npc findBat() {
         return Npcs.nearestByFilter(n -> {
             String name = n.name();
             return name != null && name.equals("Albino bat") && n.targetIsLocalPlayer();
         });
     }
 
-    private Npc find() {
+    private static Npc find() {
         Npc current = Npcs.nearestByFilter(n -> {
             if (n.dead() || !KILL_ZONE.contains(n.location())) {
                 return false;
@@ -95,7 +95,7 @@ public class CaveHorrors extends Macro implements Renderable {
         });
     }
 
-    private boolean attack() {
+    private static boolean attack() {
         Npc npc = find();
         return npc != null && npc.attack();
     }
@@ -182,7 +182,7 @@ public class CaveHorrors extends Macro implements Renderable {
                                     Widgets.processContinue();
                                     if (Time.sleep(Widgets::viewingDialog, 2500)) {
                                         Widgets.processDialogOption(0);
-                                        Time.sleep(this::underground, 5000);
+                                        Time.sleep(CaveHorrors::underground, 5000);
                                     }
                                 }
                             }

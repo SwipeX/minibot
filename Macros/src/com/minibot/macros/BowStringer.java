@@ -38,11 +38,11 @@ public class BowStringer extends Macro implements ChatboxListener, Renderable {
 
     private static final int MAKE_UID = 20250627;
 
-    private int fletched = 0;
-    private int cut = 0;
-    private int startExp;
+    private static int fletched;
+    private static int cut;
+    private static int startExp;
 
-    private boolean openBank() {
+    private static boolean openBank() {
         Npc banker = Npcs.nearestByName("Banker");
         if (banker != null) {
             banker.processAction("Bank");
@@ -51,7 +51,7 @@ public class BowStringer extends Macro implements ChatboxListener, Renderable {
         return false;
     }
 
-    private boolean validateMake() {
+    private static boolean validateMake() {
         WidgetComponent[] components = Widgets.childrenFor(MAKE_UID >> 16);
         if (components.length > 0) {
             WidgetComponent component = components[0];
@@ -78,7 +78,7 @@ public class BowStringer extends Macro implements ChatboxListener, Renderable {
                 if (string != null) {
                     int count = Inventory.items(BOW_FILTER).size();
                     string.use(logs);
-                    if (Time.sleep(this::validateMake, 5000)) {
+                    if (Time.sleep(BowStringer::validateMake, 5000)) {
                         Time.sleep(200, 300);
                         RuneScape.processAction(new DialogButtonAction(MAKE_UID, -1));
                         if (Time.sleep(() -> Inventory.items(BOW_FILTER).size() != count, 5000)) {

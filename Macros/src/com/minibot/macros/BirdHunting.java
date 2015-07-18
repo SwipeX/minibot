@@ -31,9 +31,9 @@ import java.util.List;
 public class BirdHunting extends Macro implements Renderable {
 
     private static final int POS_Y = 12;
-    private int startExperience;
+    private static int startExperience;
 
-    private Tile tile;
+    private static Tile tile;
 
     public static final Filter<GameObject> SNARE_FILTER = o -> {
         String name = o.name();
@@ -103,7 +103,7 @@ public class BirdHunting extends Macro implements Renderable {
         }
     }
 
-    private boolean triggered(GameObject obj) {
+    private static boolean triggered(GameObject obj) {
         if (obj == null) {
             return false;
         }
@@ -122,11 +122,11 @@ public class BirdHunting extends Macro implements Renderable {
     /**
      * @return the maximum number of traps that can be used at current level.
      */
-    private int trapSize() {
+    private static int trapSize() {
         return Game.realLevels()[Skills.HUNTER] / 20 + 1;
     }
 
-    private Tile[] traps() {
+    private static Tile[] traps() {
         switch (trapSize()) {
             case 1: {
                 return new Tile[]{tile};
@@ -149,7 +149,7 @@ public class BirdHunting extends Macro implements Renderable {
         return new Tile[]{};
     }
 
-    private GameObject objectAt(Tile t, Filter<GameObject> filter) {
+    private static GameObject objectAt(Tile t, Filter<GameObject> filter) {
         GameObject[] objects = Objects.allAt(t);
         if (objects == null) {
             return null;
@@ -162,7 +162,7 @@ public class BirdHunting extends Macro implements Renderable {
         return null;
     }
 
-    public Tile getNext() {
+    public static Tile getNext() {
         // No trap
         Tile[] traps = traps();
         for (Tile tile : traps) {

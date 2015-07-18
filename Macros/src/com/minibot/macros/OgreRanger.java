@@ -1,13 +1,11 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.action.tree.DialogButtonAction;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
-import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.Character;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.bot.macro.Macro;
@@ -36,12 +34,7 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
         startExp = Game.experiences()[Skills.RANGED];
     }
 
-    private static boolean level() {
-        WidgetComponent component = Widgets.get(233, 2);
-        return component != null && component.visible();
-    }
-
-    private boolean attack() {
+    private static boolean attack() {
         Character target = Players.local().target();
         if (target == null || (target.maxHealth() > 0 && target.health() <= 0)) {
             Npc npc = Npcs.nearestByFilter(n -> {
@@ -59,11 +52,11 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
                 npc.processAction("Attack");
                 if (Time.sleep(() -> {
                     Character playerTarget = Players.local().target();
-                    return (playerTarget != null && playerTarget.maxHealth() > 0) || level();
+                    return (playerTarget != null && playerTarget.maxHealth() > 0) || Widgets.viewingContinue();
                 }, Random.nextInt(25000, 32500))) {
-                    if (level()) {
-                        RuneScape.processAction(new DialogButtonAction(15269890, -1));
-                        Time.sleep(() -> !level(), Random.nextInt(4500, 6500));
+                    if (Widgets.viewingContinue()) {
+                        Widgets.processContinue();
+                        Time.sleep(() -> !Widgets.viewingContinue(), Random.nextInt(4500, 6500));
                     } else {
                         Time.sleep(600, 800);
                         return true;
@@ -78,9 +71,9 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
     public void run() {
         Minibot.instance().client().resetMouseIdleTime();
         attack();
-        if (level()) {
-            RuneScape.processAction(new DialogButtonAction(15269890, -1));
-            Time.sleep(() -> !level(), Random.nextInt(4500, 6500));
+        if (Widgets.viewingContinue()) {
+            Widgets.processContinue();
+            Time.sleep(() -> !Widgets.viewingContinue(), Random.nextInt(4500, 6500));
         }
     }
 
@@ -90,7 +83,7 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
         g.drawString(String.format("Time: %s", Time.format(runtime())), 10, 10);
         g.drawString(String.format("Ranged Exp: %s (%s/H)", ValueFormat.format(Game.experiences()[Skills.RANGED] - startExp, TEXT_FORMAT),
                 ValueFormat.format(hourly(Game.experiences()[Skills.RANGED] - startExp), TEXT_FORMAT)), 10, 22);
-        g.drawString(String.format("Level: %d", Game.levels()[Skills.RANGED]), 10, 34);
+        g.drawString(String.format("Level: %d", Game.experiences()[Skills.RANGED]), 10, 34);
     }
 
     @Override

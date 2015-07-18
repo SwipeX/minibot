@@ -61,16 +61,16 @@ public class ChinchompaHunter extends Macro implements Renderable {
     private static final int Y_POS = 12;
     private static final long FIFTEEN_MINUTES = 15 * 60 * 1000;
 
-    public static final Filter<GameObject> TRAP_FILTER = o -> {
+    private static final Filter<GameObject> TRAP_FILTER = o -> {
         String name = o.name();
         return name != null && (name.equals("Box trap") || name.equals("Shaking box"));
     };
 
     private static Tile tile;
 
-    private int startExp;
-    private long lastReport = System.currentTimeMillis();
-    private int lastChins;
+    private static int startExp;
+    private static long lastReport = System.currentTimeMillis();
+    private static int lastChins;
 
     @Override
     public void atStart() {
@@ -140,7 +140,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
         }
     }
 
-    private boolean triggered(GameObject obj) {
+    private static boolean triggered(GameObject obj) {
         if (obj == null) {
             return false;
         }
@@ -156,7 +156,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
         return act.contains("Check") || !act.contains("Investigate");
     }
 
-    private boolean flowering(Tile t) {
+    private static boolean flowering(Tile t) {
         GameObject[] objects = Objects.allAt(t);
         if (objects != null) {
             for (GameObject object : objects) {
@@ -174,7 +174,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
         return false;
     }
 
-    private int trapCount() {
+    private static int trapCount() {
         int count = Inventory.items(item -> item.name().equals("Box trap")).size();
         Tile[] tiles = new Tile[]{tile.derive(-1, 1), tile.derive(-1, -1), tile, tile.derive(1, -1), tile.derive(1, 1)};
         for (Tile t : tiles) {
@@ -195,11 +195,11 @@ public class ChinchompaHunter extends Macro implements Renderable {
     /**
      * @return the maximum number of traps that can be used at current level.
      */
-    private int trapSize() {
+    private static int trapSize() {
         return Math.min(trapCount(), Game.realLevels()[Skills.HUNTER] / 20 + 1);
     }
 
-    private Tile[] traps() {
+    private static Tile[] traps() {
         switch (trapSize()) {
             case 1:
                 return new Tile[]{tile};
@@ -215,7 +215,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
         return new Tile[]{};
     }
 
-    private GameObject objectAt(Tile t, Filter<GameObject> filter) {
+    private static GameObject objectAt(Tile t, Filter<GameObject> filter) {
         GameObject[] objects = Objects.allAt(t);
         if (objects == null) {
             return null;
@@ -228,7 +228,7 @@ public class ChinchompaHunter extends Macro implements Renderable {
         return null;
     }
 
-    public Tile getNext() {
+    public static Tile getNext() {
         for (Tile tile : traps()) {
             if (flowering(tile)) {
                 continue;
