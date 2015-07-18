@@ -10,6 +10,7 @@ import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.Npc;
+import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
@@ -38,9 +39,9 @@ public class BowStringer extends Macro implements ChatboxListener, Renderable {
 
     private static final int MAKE_UID = 20250627;
 
-    private static int fletched;
-    private static int cut;
-    private static int startExp;
+    private int fletched;
+    private int cut;
+    private int startExp;
 
     private static boolean openBank() {
         Npc banker = Npcs.nearestByName("Banker");
@@ -115,6 +116,18 @@ public class BowStringer extends Macro implements ChatboxListener, Renderable {
                     Time.sleep(200, 300);
                     Bank.close();
                     Time.sleep(800, 1000);
+                } else {
+                    long lastCollectionTime = GrandExchange.lastCollectTime();
+                    if (lastCollectionTime != -1 && Time.millis() - lastCollectionTime < 30000) {
+                        Player player = Players.local();
+                        String name = (player != null ? player.name() : "Fletcher");
+                        sms("\\ " + name, "\nOut of supplies");
+                        interrupt();
+                    } else {
+                        Bank.close();
+                        Time.sleep(800, 1000);
+                        GrandExchange.collectToBank();
+                    }
                 }
             }
         }
