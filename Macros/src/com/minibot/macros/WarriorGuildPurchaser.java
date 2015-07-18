@@ -24,7 +24,7 @@ import java.awt.Graphics2D;
 @Manifest(name = "WGP", author = "Tyler", version = "1.0.0", description = "Purchases from warrior's guild")
 public class WarriorGuildPurchaser extends Macro implements Renderable {
 
-    private static boolean POTATOES = false;
+    private static final boolean POTATOES = false;
 
     private static final int[] MEMBERS_WORLDS = {
             302, 304, 305, 306, 309, 310, 311, 312, 313, 314, 317, 318, 319, 320, 321, 322, 325, 327,
@@ -37,11 +37,11 @@ public class WarriorGuildPurchaser extends Macro implements Renderable {
     private static final int STORE_INDEX = (POTATOES ? 3 : 4);
     private static final int ITEM_ID = (POTATOES ? 6705 : 2003);
 
-    private int bought = 0;
-    private int worldIndex = 0;
-    private long lastHop = -1;
+    private static int bought;
+    private static int worldIndex;
+    private static long lastHop = -1;
 
-    private boolean buyable() {
+    private static boolean buyable() {
         WidgetComponent comp = Widgets.get(STORE_WIDGET, STORE_ITEMS_COMPONENT);
         if (comp != null) {
             int[] itemStacks = comp.itemStackSizes();
@@ -52,17 +52,17 @@ public class WarriorGuildPurchaser extends Macro implements Renderable {
         return false;
     }
 
-    private boolean viewingStore() {
+    private static boolean viewingStore() {
         WidgetComponent[] children = Widgets.childrenFor(19660875 >> 16);
         return children != null && children.length > 0 && children[0] != null && children[0].visible();
     }
 
-    private void close() {
+    private static void close() {
         RuneScape.processAction(new CloseButtonAction(19660891));
         Time.sleep(600, 800);
     }
 
-    private int buy() {
+    private static int buy() {
         int count = Inventory.count();
         RuneScape.processAction(new TableAction(ActionOpcodes.TABLE_ACTION_3, ITEM_ID, STORE_INDEX, 19660875));
         Time.sleep(200, 400);
@@ -89,7 +89,7 @@ public class WarriorGuildPurchaser extends Macro implements Renderable {
                 Npc npc = Npcs.nearestByName("Lidio");
                 if (npc != null) {
                     npc.processAction("Trade");
-                    Time.sleep(this::viewingStore, 5000);
+                    Time.sleep(WarriorGuildPurchaser::viewingStore, 5000);
                     Time.sleep(400, 600);
                 }
             } else {

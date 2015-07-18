@@ -23,12 +23,12 @@ import java.awt.Graphics2D;
 @Manifest(name = "Prayer", author = "Swipe", version = "1.0.0", description = "Drinks prayer potions")
 public class Prayer extends Macro implements Renderable {
 
-    private Tile alt;
+    private static Tile alt;
 
-    private int lastExp;
-    private int holder;
-    private int startExp;
-    private long lastMove;
+    private static int lastExp;
+    private static int holder;
+    private static int startExp;
+    private static long lastMove;
 
     @Override
     public void atStart() {

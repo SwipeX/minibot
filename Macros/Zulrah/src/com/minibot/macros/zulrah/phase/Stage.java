@@ -39,8 +39,9 @@ public enum Stage {
 
     public Tile getTile() {
         Tile origin = Zulrah.getOrigin();
-        if (origin == null)
+        if (origin == null) {
             return null;
+        }
         return origin.derive(offsetX, offsetY);
     }
 

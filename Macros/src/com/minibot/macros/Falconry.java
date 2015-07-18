@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Manifest(name = "Falconry", author = "Swipe", version = "1.0.0", description = "Hunts Kebbits")
 public class Falconry extends Macro implements Renderable {
 
-    private int startExp;
+    private static int startExp;
 
     @Override
     public void atStart() {
@@ -69,7 +69,7 @@ public class Falconry extends Macro implements Renderable {
         }
     }
 
-    public static String format(long millis) {
+    private static String format(long millis) {
         return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
                 TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
                 TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));

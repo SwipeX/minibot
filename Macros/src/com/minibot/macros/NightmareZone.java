@@ -22,11 +22,11 @@ import java.awt.Graphics2D;
 @Manifest(name = "NightmareZone", author = "Swipe", version = "1.0.0", description = "Absorption NMZ Player")
 public class NightmareZone extends Macro implements Renderable {
 
-    private boolean absorb;
-    private long lastFlick = -1;
-    private int startExp;
+    private static boolean absorb;
+    private static long lastFlick = -1;
+    private static int startExp;
 
-    private Thread prayerThread;
+    private static Thread prayerThread;
 
     @Override
     public void atStart() {

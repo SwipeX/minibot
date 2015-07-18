@@ -17,7 +17,7 @@ import java.awt.Graphics2D;
  * @author Jacob Doiron
  * @since 6/25/2015
  */
-@Manifest(name = "Agility", author = "Jacob", version = "1.1.5", description = "Completes agility courses")
+@Manifest(name = "Agility", author = "Jacob", version = "1.1.6", description = "Completes agility courses")
 public class Agility extends Macro implements Renderable {
 
     private static final Course GNOME = new Course(false,
@@ -87,7 +87,7 @@ public class Agility extends Macro implements Renderable {
             new Obstacle(11406, "Jump", new Area(new Tile(2671, 3299, 3), new Tile(2671, 3309, 3)), new Area(new Tile(2661, 3308, 0), new Tile(2666, 3320, 0)), new Tile(2670, 3310, 3)),
             new Obstacle(11631, "Walk-on", new Area(new Tile(2662, 3318, 3), new Tile(2666, 3318, 3)), null, new Tile(2661, 3318, 3)),
             new Obstacle(11429, "Jump", new Area(new Tile(2654, 3318, 3), new Tile(2657, 3318, 3)), new Area(new Tile(2650, 3315, 0), new Tile(2657, 3318, 0)), new Tile(2653, 3317, 3)),
-            new Obstacle(11430, "Jump", new Area(new Tile(2653, 3311, 3), new Tile(2653, 3314, 3)), null, new Tile(2653, 3308, 3)),
+            new Obstacle(11430, "Jump", new Area(new Tile(2653, 3310, 3), new Tile(2653, 3314, 3)), null, new Tile(2653, 3308, 3)),
             new Obstacle(11633, "Balance-across", new Area(new Tile(2651, 3300, 3), new Tile(2653, 3309, 3)), null, new Tile(2654, 3300, 3)),
             new Obstacle(11630, "Jump", new Area(new Tile(2654, 3297, 3), new Tile(2657, 3299, 3)), null, new Tile(2656, 3296, 3))
     );
@@ -162,7 +162,7 @@ public class Agility extends Macro implements Renderable {
                 }
             }
             GameObject nearest = Objects.topAt(current.at());
-            if (nearest != null) {
+            if (nearest != null && local.location().plane() == nearest.location().plane()) {
                 status = current.id() + " -> " + current.action();
                 Area fail = current.fail();
                 Area finish = next.area();

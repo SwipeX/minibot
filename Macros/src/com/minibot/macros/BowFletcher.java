@@ -36,11 +36,11 @@ public class BowFletcher extends Macro implements ChatboxListener, Renderable {
     private static final boolean SHORTBOW = false;
     private static final int MAKE_UID = (SHORTBOW ? 19922950 : 19922954);
 
-    private int fletched = 0;
-    private int cut = 0;
-    private int startExp;
+    private static int fletched;
+    private static int cut;
+    private static int startExp;
 
-    private boolean openBank() {
+    private static boolean openBank() {
         Npc banker = Npcs.nearestByName("Banker");
         if (banker != null) {
             banker.processAction("Bank");
@@ -49,7 +49,7 @@ public class BowFletcher extends Macro implements ChatboxListener, Renderable {
         return false;
     }
 
-    private boolean validateMake() {
+    private static boolean validateMake() {
         WidgetComponent[] components = Widgets.childrenFor(MAKE_UID >> 16);
         if (components.length > 0) {
             WidgetComponent component = components[0];
@@ -79,7 +79,7 @@ public class BowFletcher extends Macro implements ChatboxListener, Renderable {
                 if (knife != null) {
                     int count = Inventory.items(LOG_FILTER).size();
                     knife.use(logs);
-                    if (Time.sleep(this::validateMake, 5000)) {
+                    if (Time.sleep(BowFletcher::validateMake, 5000)) {
                         Time.sleep(200, 300);
                         RuneScape.processAction(new DialogButtonAction(MAKE_UID, -1));
                         if (Time.sleep(() -> Inventory.items(LOG_FILTER).size() != count, 5000)) {

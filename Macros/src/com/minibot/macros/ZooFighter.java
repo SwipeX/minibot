@@ -15,16 +15,17 @@ import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by tim on 6/8/15.
+ * @author Tim Dekker
+ * @since 6/8/15
  */
 @Manifest(name = "ZooFighter", author = "Swipe", version = "1.0.0", description = "Zoo Fighter")
 public class ZooFighter extends Macro implements Renderable {
 
-    boolean started;
-    private int SKILL_STR = Skills.MAGIC;
-    private int start_exp = 0;
-    private long start_time;
-    private static final String[] names = new String[]{"Scorpion","Pit Scorpion"};//"Cyclops", "Jogre", "Wolf"};
+    private static boolean started;
+    private static final int SKILL_STR = Skills.MAGIC;
+    private static int start_exp;
+    private static long start_time;
+    private static final String[] names = new String[]{"Scorpion","Pit Scorpion"}; //"Cyclops", "Jogre", "Wolf"};
 
     private static boolean level() {
         WidgetComponent component = Widgets.get(233, 2);
@@ -61,11 +62,11 @@ public class ZooFighter extends Macro implements Renderable {
         }
     }
 
-    public int hourly(int val, long difference) {
+    private static int hourly(int val, long difference) {
         return (int) Math.ceil(val * 3600000D / difference);
     }
 
-    public static String format(long millis) {
+    private static String format(long millis) {
         return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
                 TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
                 TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));

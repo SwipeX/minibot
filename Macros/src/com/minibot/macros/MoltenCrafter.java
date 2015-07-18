@@ -37,15 +37,15 @@ public class MoltenCrafter extends Macro implements Renderable, ChatboxListener 
 
     private static final Filter<Item> OTHER_FILTER = (i -> !MOLTEN_FILTER.accept(i) && !PIPE_FILTER.accept(i));
 
-    private int startExp;
-    private int crafted = 0;
+    private static int startExp;
+    private static int crafted;
 
     @Override
     public void atStart() {
         startExp = Game.experiences()[Skills.CRAFTING];
     }
 
-    private boolean openBank() {
+    private static boolean openBank() {
         Npc banker = Npcs.nearestByName("Banker");
         if (banker != null) {
             banker.processAction("Bank");

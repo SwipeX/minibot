@@ -28,13 +28,13 @@ public class PowerMiner extends Macro implements Renderable, ChatboxListener {
     private static final int COMMA_FORMAT = ValueFormat.COMMAS;
     private static final int THOUSAND_FORMAT = ValueFormat.THOUSANDS | ValueFormat.PRECISION(2);
 
-    private final Set<Integer> identifiedRockIds = new HashSet<>(5);
-    private final Set<Integer> validRockIds = new HashSet<>(5);
+    private static final Set<Integer> identifiedRockIds = new HashSet<>(5);
+    private static final Set<Integer> validRockIds = new HashSet<>(5);
 
-    private int messageCount;
-    private boolean valid;
-    private int startExp;
-    private int mined;
+    private static int messageCount;
+    private static boolean valid;
+    private static int startExp;
+    private static int mined;
 
     @Override
     public void atStart() {
@@ -48,27 +48,25 @@ public class PowerMiner extends Macro implements Renderable, ChatboxListener {
         if (objects == null) {
             return;
         }
-        for (GameObject object : objects) {
-            if (object != null) {
-                String name = object.name();
-                if (name != null && name.equals("Rocks")) {
-                    int id = object.id();
-                    if (!identifiedRockIds.contains(id)) {
-                        int cachedMessageCount = messageCount;
-                        RuneScape.processAction(new ExamineEntityAction(ActionOpcodes.EXAMINE_OBJECT, object.uid(),
-                                object.localX(), object.localY()));
-                        while (messageCount == cachedMessageCount) {
-                            Time.sleep(50, 100);
-                        }
-                        System.out.println(id + " " + (valid ? "valid" : "invalid"));
-                        if (valid) {
-                            validRockIds.add(id);
-                        }
-                        identifiedRockIds.add(id);
+        objects.stream().filter(object -> object != null).forEach(object -> {
+            String name = object.name();
+            if (name != null && name.equals("Rocks")) {
+                int id = object.id();
+                if (!identifiedRockIds.contains(id)) {
+                    int cachedMessageCount = messageCount;
+                    RuneScape.processAction(new ExamineEntityAction(ActionOpcodes.EXAMINE_OBJECT, object.uid(),
+                            object.localX(), object.localY()));
+                    while (messageCount == cachedMessageCount) {
+                        Time.sleep(50, 100);
                     }
+                    System.out.println(id + " " + (valid ? "valid" : "invalid"));
+                    if (valid) {
+                        validRockIds.add(id);
+                    }
+                    identifiedRockIds.add(id);
                 }
             }
-        }
+        });
         GameObject rock = Objects.nearestByFilter(o -> validRockIds.contains(o.id()), 2);
         if (rock != null) {
             Inventory.dropAll(i -> {

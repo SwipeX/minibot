@@ -93,7 +93,7 @@ public class PoisonMaker extends Macro implements Renderable, ChatboxListener {
         return false;
     }
 
-    private boolean prepareInventory() {
+    private static boolean prepareInventory() {
         if (selected == 0) {
             zero = HALF_FILTER;
             one = HAMMER_FILTER;
@@ -140,21 +140,6 @@ public class PoisonMaker extends Macro implements Renderable, ChatboxListener {
         return Bank.close();
     }
 
-    private static boolean level() {
-        WidgetComponent component = Widgets.get(233, 2);
-        return component != null && component.visible();
-    }
-
-    private static void solve() {
-        if (level()) {
-            Mouse.hop(Random.nextInt(93, 166), Random.nextInt(435, 452));
-            for (int i = 0; i < Random.nextInt(4, 8); i++) {
-                Time.sleep(550, 875);
-                Mouse.click(true);
-            }
-        }
-    }
-
     @Override
     public void atStart() {
         if (!Game.playing()) {
@@ -188,9 +173,10 @@ public class PoisonMaker extends Macro implements Renderable, ChatboxListener {
                         return component != null && component.visible();
                     }, Random.nextInt(5000, 6500))) {
                         RuneScape.processAction(new DialogButtonAction(20250627, -1));
-                        if (Time.sleep(() -> Inventory.count() == 14 || level(), Random.nextInt(20000, 25000))) {
-                            if (level()) {
-                                solve();
+                        if (Time.sleep(() -> Inventory.count() == 14 || Widgets.viewingContinue(), Random.nextInt(20000, 25000))) {
+                            if (Widgets.viewingContinue()) {
+                                Widgets.processContinue();
+                                Time.sleep(() -> !Widgets.viewingContinue(), Random.nextInt(4000, 7500));
                             }
                         }
                     }

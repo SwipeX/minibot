@@ -8,6 +8,7 @@ import com.minibot.api.wrapper.locatable.Tile;
  * @since 7/14/15
  */
 public class Capture {
+
     private int previousAnimation = -1;
     private int previousId = -1;
     private int previousHealth = -1;

@@ -53,23 +53,23 @@ public class NatureCrafter extends Macro implements Renderable {
 
     private static final int EXP_EACH = 9, PROFIT_EACH = 250;
 
-    private int crafted = 0;
+    private static int crafted;
 
-    private Npc storeOwner() {
+    private static Npc storeOwner() {
         return Npcs.nearestByName("Jiminua");
     }
 
-    private boolean validateStore() {
+    private static boolean validateStore() {
         WidgetComponent comp = Widgets.get(STORE_WIDGET, STORE_ITEMS_COMPONENT);
         return comp != null && comp.visible() && storeCount() > 0;
     }
 
-    private int[] storeIds() {
+    private static int[] storeIds() {
         WidgetComponent comp = Widgets.get(STORE_WIDGET, STORE_ITEMS_COMPONENT);
         return comp != null ? comp.itemIds() : null;
     }
 
-    private int storeCount() {
+    private static int storeCount() {
         int count = 0;
         int[] itemIds = storeIds();
         if (itemIds != null) {
@@ -82,7 +82,7 @@ public class NatureCrafter extends Macro implements Renderable {
         return count;
     }
 
-    private boolean sell(int opcode, int itemId) {
+    private static boolean sell(int opcode, int itemId) {
         Item item = Inventory.first(NOTED_ESSENCE_FILTER);
         if (item != null) {
             RuneScape.processAction(new TableAction(opcode, itemId, item.index(), 19726336));
@@ -91,7 +91,7 @@ public class NatureCrafter extends Macro implements Renderable {
         return false;
     }
 
-    private boolean purchase(int opcode, int itemId) {
+    private static boolean purchase(int opcode, int itemId) {
         int[] itemIds = storeIds();
         if (itemIds == null) {
             return false;
@@ -150,7 +150,7 @@ public class NatureCrafter extends Macro implements Renderable {
                         Npc owner = storeOwner();
                         if (owner != null) {
                             owner.processAction("Trade");
-                            Time.sleep(this::validateStore, 5000);
+                            Time.sleep(NatureCrafter::validateStore, 5000);
                         }
                     }
                 }

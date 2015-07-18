@@ -20,13 +20,13 @@ public class PestControl extends Macro {
             || npc.name().equals("Shifter")  || npc.name().equals("Spinner")
             || npc.name().equals("Splatter") || npc.name().equals("Torcher"));
 
-    private final Boat boat = Boat.INTERMEDIATE;
+    private static final Boat boat = Boat.INTERMEDIATE;
 
     private static Tile safeTileFor(Tile src, Tile bad) {
         return src.x() < bad.x() ? src.derive(-2, 0) : src.derive(2, 0);
     }
 
-    private State state() {
+    private static State state() {
         if (Players.local().x() == boat.startX) {
             return State.JOINING;
         } else if (boat.area.contains(Players.local())) {
@@ -82,7 +82,7 @@ public class PestControl extends Macro {
         private final Area area;
         private final int startX;
 
-        private Boat(Area area, int startX) {
+        Boat(Area area, int startX) {
             this.area = area;
             this.startX = startX;
         }

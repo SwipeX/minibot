@@ -25,7 +25,7 @@ public class WillowChopper extends Macro implements Renderable {
 
     private static final double EXP_EACH = 67.5D;
 
-    private int startExp;
+    private static int startExp;
 
     @Override
     public void atStart() {

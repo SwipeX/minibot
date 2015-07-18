@@ -2,7 +2,6 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.action.tree.Action;
 import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -14,8 +13,8 @@ import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
-import java.util.Deque;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,10 +23,10 @@ import java.util.concurrent.TimeUnit;
 @Manifest(name = "Monkey Fighter", author = "Swipe", version = "1.0.0", description = "Monkey Fighter")
 public class ApeAtollFighter extends Macro implements Renderable {
 
-    boolean started;
-    private int SKILL_STR = Skills.STRENGTH;
-    private int start_exp = 0;
-    private long start_time;
+    private static boolean started;
+    private static final int SKILL_STR = Skills.STRENGTH;
+    private static int start_exp;
+    private static long start_time;
     private static final String[] names = new String[]{"Monkey Guard"};
 
 
@@ -86,11 +85,11 @@ public class ApeAtollFighter extends Macro implements Renderable {
         }
     }
 
-    public int hourly(int val, long difference) {
+    private static int hourly(int val, long difference) {
         return (int) Math.ceil(val * 3600000D / difference);
     }
 
-    public static String format(long millis) {
+    private static String format(long millis) {
         return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
                 TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
                 TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
