@@ -1,9 +1,15 @@
 package com.minibot.bot.macro;
 
 import com.minibot.Minibot;
+import com.minibot.api.util.EMail;
+import com.minibot.api.util.FileParser;
+import com.minibot.api.util.SMS;
 import com.minibot.api.util.Time;
 import com.minibot.bot.random.RandomEvent;
 import com.minibot.ui.MacroSelector;
+import com.minibot.util.Configuration;
+
+import java.util.List;
 
 public abstract class Macro {
 
@@ -70,5 +76,36 @@ public abstract class Macro {
 
     public static String password() {
         return password;
+    }
+
+    public final void email(String subject, String text) {
+        List<String> lines = FileParser.lines(Configuration.CACHE + "email.ini");
+        if (lines != null) {
+            String email = lines.get(0);
+            EMail.sendBotInfo(subject, text, email);
+        }
+    }
+
+    public final void sms(String subject, String text) {
+        List<String> lines = FileParser.lines(Configuration.CACHE + "sms.ini");
+        if (lines != null) {
+            String number = lines.get(0);
+            String carrierName = SMS.CARRIERS.get(lines.get(1));
+            SMS.sendBotInfo(subject, text, number, carrierName);
+        }
+    }
+
+    public final void addRuntimeCallback(long everyMillis, Runnable callback) {
+        new Thread(() -> {
+            while (thread != null && !thread.isInterrupted()) {
+                Time.sleep((int) everyMillis);
+                try {
+                    if (thread != null && !thread.isInterrupted())
+                        callback.run();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }
