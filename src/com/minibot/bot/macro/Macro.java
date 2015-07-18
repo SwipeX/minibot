@@ -61,6 +61,7 @@ public abstract class Macro {
         if (thread != null) {
             thread.interrupt();
             thread = null;
+            MacroSelector.halt();
         }
     }
 
