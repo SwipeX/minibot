@@ -127,6 +127,7 @@ public class BowStringer extends Macro implements ChatboxListener, Renderable {
                         Bank.close();
                         Time.sleep(800, 1000);
                         GrandExchange.collectToBank();
+                        Time.sleep(3500, 5000);
                     }
                 }
             }
