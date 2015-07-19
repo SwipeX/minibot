@@ -99,12 +99,20 @@ public class BowStringer extends Macro implements ChatboxListener, Renderable {
             if (!Bank.viewing()) {
                 openBank();
             } else {
-                Item bows = Inventory.first(i -> {
+                Item invBows = Inventory.first(i -> {
                     String name = i.name();
                     return name != null && name.toLowerCase().contains("bow") && !name.contains("(u)");
                 });
-                if (bows != null) {
-                    bows.processAction("Deposit-All");
+                Item invStrings = Inventory.first(i -> {
+                    String name = i.name();
+                    return name != null && name.equals("Bow string");
+                });
+                if (invBows != null) {
+                    invBows.processAction("Deposit-All");
+                    Time.sleep(200, 300);
+                }
+                if (invStrings != null) {
+                    invStrings.processAction("Deposit-All");
                     Time.sleep(200, 300);
                 }
                 Item bankBows = Bank.first(BOW_FILTER);
