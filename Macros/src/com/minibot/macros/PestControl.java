@@ -2,17 +2,30 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.method.*;
+import com.minibot.api.util.Random;
+import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
+import com.minibot.api.util.ValueFormat;
 import com.minibot.api.util.filter.Filter;
+import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.*;
 import com.minibot.api.wrapper.locatable.Character;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+
 @Manifest(name = "PestControl", author = "un faggoto", version = "0.1", description = "Fights npcs in pest control")
-public class PestControl extends Macro {
+public class PestControl extends Macro implements Renderable {
 
     //TODO make it open doors if needed instead of running all the way around to attack
+
+    private static int startExp;
+    private static int startPoints;
+    private static int currentPoints;
+
+    private static final int TEXT_FORMAT = ValueFormat.THOUSANDS | ValueFormat.COMMAS | ValueFormat.PRECISION(1);
 
     private static final Filter<Npc> ATTACKABLE = npc -> npc.name() != null && !npc.dead()
             && (npc.name().equals("Portal")  || npc.name().equals("Brawler")
@@ -38,6 +51,14 @@ public class PestControl extends Macro {
     }
 
     @Override
+    public void atStart() {
+        if (!Game.playing()) {
+            interrupt();
+        }
+        startExp = Game.experiences()[Skills.RANGED];
+    }
+
+    @Override
     public void run() {
         Minibot.instance().client().resetMouseIdleTime();
         if (Players.local().targetIndex() != -1) {
@@ -53,7 +74,16 @@ public class PestControl extends Macro {
                     cross.processAction("Cross");
                 break;
             case WAITING:
-                Time.sleep(1000);
+                WidgetComponent component = Widgets.get(407, 15);
+                if (component != null && component.visible()) {
+                    if (startPoints == 0) {
+                        startPoints = Integer.parseInt(component.text().split("Pest Points: ")[1]);
+                        currentPoints = startPoints;
+                    } else {
+                        currentPoints = Integer.parseInt(component.text().split("Pest Points: ")[1]);
+                    }
+                }
+                Time.sleep(500, 1000);
                 break;
             case ATTACKING_NPC:
                 if (Players.local().targetIndex() == -1) {
@@ -72,7 +102,18 @@ public class PestControl extends Macro {
                 }
                 break;
         }
-        Time.sleep(900);
+        Time.sleep(Random.nextInt(400, 1500));
+    }
+
+    @Override
+    public void render(Graphics2D g) {
+        g.setColor(Color.CYAN);
+        g.drawString(String.format("Time: %s", Time.format(runtime())), 10, 10);
+        int exp = Game.experiences()[Skills.RANGED] - startExp;
+        int points = currentPoints - startPoints;
+        g.drawString(String.format("Points: %d/+%d (%s/H)", currentPoints, points, ValueFormat.format(hourly(points), TEXT_FORMAT)), 10, 22);
+        g.drawString(String.format("Exp: %s (%s/H)", ValueFormat.format(exp, TEXT_FORMAT),
+                ValueFormat.format(hourly(exp), TEXT_FORMAT)), 10, 34);
     }
 
     private enum Boat {

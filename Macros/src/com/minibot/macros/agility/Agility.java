@@ -30,11 +30,11 @@ public class Agility extends Macro implements Renderable {
             new Obstacle(23138, "Squeeze-through", new Area(new Tile(2482, 3427, 0), new Tile(2490, 3432, 0)), null, new Tile(2484, 3431, 0))
     );
 
-    private static final Course DRAYNOR = new Course(true, // fix draynor fails
+    private static final Course DRAYNOR = new Course(true,
             new Obstacle(10073, "Climb", new Area(new Tile(3102, 3260, 0), new Tile(3105, 3279, 0)), null, new Tile(3103, 3279, 0)),
-            new Obstacle(10074, "Cross", new Area(new Tile(3097, 3277, 3), new Tile(3102, 3281, 3)), null, new Tile(3098, 3277, 3)),
+            new Obstacle(10074, "Cross", new Area(new Tile(3097, 3277, 3), new Tile(3102, 3281, 3)), new Area(new Tile(3090, 3276, 0), new Tile(3096, 3282, 0)), new Tile(3098, 3277, 3)),
             new Obstacle(10075, "Cross", new Area(new Tile(3088, 3273, 3), new Tile(3092, 3276, 3)), null, new Tile(3092, 3276, 3)),
-            new Obstacle(10077, "Balance", new Area(new Tile(3089, 3265, 3), new Tile(3095, 3267, 3)), null, new Tile(3089, 3264, 3)),
+            new Obstacle(10077, "Balance", new Area(new Tile(3089, 3265, 3), new Tile(3095, 3267, 3)), new Area(new Tile(3089, 3256, 0), new Tile(3095, 3264, 0)), new Tile(3089, 3264, 3)),
             new Obstacle(10084, "Jump-up", new Area(new Tile(3087, 3257, 3), new Tile(3088, 3261, 3)), null, new Tile(3088, 3256, 3)),
             new Obstacle(10085, "Jump", new Area(new Tile(3087, 3255, 3), new Tile(3094, 3255, 3)), null, new Tile(3095, 3255, 3)),
             new Obstacle(10086, "Climb-down", new Area(new Tile(3096, 3256, 3), new Tile(3101, 3261, 3)), null, new Tile(3102, 3261, 3))
@@ -116,7 +116,7 @@ public class Agility extends Macro implements Renderable {
             search:
             for (Course c : COURSES) {
                 for (Obstacle o : c.obstacles()) {
-                    if (o.area().contains(local)) {
+                    if (o.area().contains(local) || (o.fail() != null && o.fail().contains(local))) {
                         course = c;
                         break search;
                     }
@@ -137,7 +137,7 @@ public class Agility extends Macro implements Renderable {
         if (local != null) {
             Obstacle current = course.obstacles()[0];
             Obstacle next = course.obstacles()[1];
-            if (course.marks() || local.location().plane() != 0) {
+            if ((!course.marks() && local.location().plane() == 0) || course.marks() || local.location().plane() != 0) {
                 for (int i = 0; i < course.obstacles().length; i++) {
                     Obstacle o = course.obstacles()[i];
                     if (o.area() != null && o.area().contains(local)) {
