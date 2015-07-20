@@ -22,10 +22,10 @@ import java.util.concurrent.TimeUnit;
 public class ZooFighter extends Macro implements Renderable {
 
     private static boolean started;
-    private static final int SKILL_STR = Skills.MAGIC;
+    private static final int SKILL_STR = Skills.RANGED;
     private static int start_exp;
     private static long start_time;
-    private static final String[] names = new String[]{"Scorpion","Pit Scorpion"}; //"Cyclops", "Jogre", "Wolf"};
+    private static final String[] names = new String[]{"Cyclops", "Jogre", "Wolf"};
 
     private static boolean level() {
         WidgetComponent component = Widgets.get(233, 2);
