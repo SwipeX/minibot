@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
  * @author Tim Dekker
  * @since 6/8/15
  */
-@Manifest(name = "ZooFighter", author = "Swipe", version = "1.0.0", description = "Zoo Fighter")
-public class ZooFighter extends Macro implements Renderable {
+@Manifest(name = "ZooFighter2", author = "Swipe", version = "1.0.0", description = "Zoo Fighter")
+public class ZooFighter2 extends Macro implements Renderable {
 
     private static boolean started;
     private static final int SKILL_STR = Skills.RANGED;

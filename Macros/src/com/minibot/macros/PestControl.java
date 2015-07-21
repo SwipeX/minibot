@@ -13,8 +13,7 @@ import com.minibot.api.wrapper.locatable.Character;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 
 @Manifest(name = "PestControl", author = "un faggoto", version = "0.1", description = "Fights npcs in pest control")
 public class PestControl extends Macro implements Renderable {
@@ -28,9 +27,9 @@ public class PestControl extends Macro implements Renderable {
     private static final int TEXT_FORMAT = ValueFormat.THOUSANDS | ValueFormat.COMMAS | ValueFormat.PRECISION(1);
 
     private static final Filter<Npc> ATTACKABLE = npc -> npc.name() != null && !npc.dead()
-            && (npc.name().equals("Portal")  || npc.name().equals("Brawler")
-            || npc.name().equals("Defiler")  || npc.name().equals("Ravager")
-            || npc.name().equals("Shifter")  || npc.name().equals("Spinner")
+            && (npc.name().equals("Portal") || npc.name().equals("Brawler")
+            || npc.name().equals("Defiler") || npc.name().equals("Ravager")
+            || npc.name().equals("Shifter") || npc.name().equals("Spinner")
             || npc.name().equals("Splatter") || npc.name().equals("Torcher"));
 
     private static final Boat boat = Boat.INTERMEDIATE;
@@ -78,10 +77,8 @@ public class PestControl extends Macro implements Renderable {
                 if (component != null && component.visible()) {
                     if (startPoints == 0) {
                         startPoints = Integer.parseInt(component.text().split("Pest Points: ")[1]);
-                        currentPoints = startPoints;
-                    } else {
-                        currentPoints = Integer.parseInt(component.text().split("Pest Points: ")[1]);
                     }
+                    currentPoints = Integer.parseInt(component.text().split("Pest Points: ")[1]);
                 }
                 Time.sleep(500, 1000);
                 break;
