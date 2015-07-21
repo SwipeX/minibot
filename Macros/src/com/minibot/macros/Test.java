@@ -3,6 +3,7 @@ package com.minibot.macros;
 import com.minibot.api.method.Npcs;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
+import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.LoopTask;
@@ -39,6 +40,8 @@ public class Test extends Macro implements Renderable {
         private Tile previousTile = null;
         private int previousId = -1;
 
+        private long lastChange = -1;
+
         public void setNpc(Npc npc) {
             this.npc = npc;
         }
@@ -54,7 +57,10 @@ public class Test extends Macro implements Renderable {
                 int id = npc.id();
                 if ((previousId != -1 && id != previousId) || (previousTile != null && (tile.x() != previousTile.x() ||
                         tile.y() != previousTile.y()))) {
-                    onChange(new ZulrahEvent(npc, previousTile, tile, previousId, id));
+                    if (lastChange == -1 || Time.millis() - lastChange  > 500) {
+                        lastChange = Time.millis();
+                        onChange(new ZulrahEvent(npc, previousTile, tile, previousId, id));
+                    }
                 }
                 previousTile = tile;
                 previousId = id;
@@ -84,9 +90,9 @@ public class Test extends Macro implements Renderable {
     @Override
     public void run() {
         Npc zulrah = Npcs.nearestByName("Zulrah");
-        if (!listener.validate()) {
+//        if (!listener.validate()) {
             listener.setNpc(zulrah);
-        }
+//        }
     }
 
 
