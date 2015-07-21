@@ -67,25 +67,27 @@ public enum Phase {
     public static Phase determine(ArrayList<Integer> previous, int current) {
         Phase selected = null;
         for (Phase phase : values()) {
-            boolean valid = true;
-            Stage[] stages = phase.stages;
-            for (int i = 0; i < previous.size(); i++) {
-                if (stages[i].getSnakeType().id() != previous.get(i)) {
-                    valid = false;
-                }
-            }
-            if (valid) {
-                if (stages[previous.size()].getSnakeType().id() == current) {
-                    if (selected == null) {
-                        selected = phase;
-                    } else {
-                        //System.out.println("Phase intersection -- aborting");
-                        return null;
-                    }
+            if (phase.matches(previous, current)) {
+                if (selected == null) {
+                    selected = phase;
+                } else {
+                    return null;
+                    //we already have a phase determined....conflict...abort
                 }
             }
         }
         return selected;
+    }
+
+    public boolean matches(ArrayList<Integer> previous, int current) {
+        for (int i = 0; i < previous.size(); i++) {
+            Stage stage = stages[i];
+            int stageId = stage.getSnakeType().id();
+            int prevId = previous.get(i);
+            if (stageId != prevId)
+                return false;
+        }
+        return stages[previous.size()].getSnakeType().id() == current; // why not return true; ?
     }
 
     public void setIndex(int index) {

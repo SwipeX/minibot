@@ -96,11 +96,6 @@ public class Tile implements Locatable {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(x, y, plane);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (obj instanceof Tile) {
             Tile t = (Tile) obj;

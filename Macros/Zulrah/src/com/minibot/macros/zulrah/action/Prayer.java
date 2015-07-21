@@ -30,21 +30,14 @@ public class Prayer {
             deactivateAll();
             return true;
         }
-        SnakeType type = null;
-        Phase phase = Zulrah.getPhase();
-        if (phase != null) {
-            Stage stage = phase.getCurrent();
-            if (stage != null) {
-                type = stage.getSnakeType();
-            }
-        }
+        SnakeType type = Zulrah.getPhase().getCurrent().getSnakeType();
         int[] indexes = type.getPrayerComponentIndices();
         if (indexes == null) {
             deactivateAll();
         } else {
             for (int index : indexes) {
                 if (!activate(index)) {
-                    //return false;
+                    //return false; uhhh
                 }
             }
         }
