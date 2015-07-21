@@ -29,7 +29,7 @@ public abstract class ZulrahListener extends LoopTask {
                 int id = npc.id();
                 if ((previousId != -1 && id != previousId) || (previousTile != null && (tile.x() != previousTile.x() ||
                         tile.y() != previousTile.y()))) {
-                    if (lastChange == -1 || Time.millis() - lastChange  > 3500) {
+                    if (lastChange == -1 || Time.millis() - lastChange  > 500) {
                         lastChange = Time.millis();
                         onChange(new ZulrahEvent(npc, previousTile, tile, previousId, id));
                     }

@@ -47,6 +47,7 @@ public class Zulrah extends Macro implements Renderable {
             lastEvent = event;
             phase.advance();
             System.out.println("Advancing on: " + event.previousId + " -> " + event.id);
+            System.out.println(" ^ " + event.previousTile + " -> " + event.tile);
         }
     };
 
