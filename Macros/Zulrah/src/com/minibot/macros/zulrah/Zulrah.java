@@ -43,11 +43,13 @@ public class Zulrah extends Macro implements Renderable {
 
     private final ZulrahListener listener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
-            changed = true;
-            lastEvent = event;
-            phase.advance();
-            System.out.println("Advancing on: " + event.previousId + " -> " + event.id);
-            System.out.println(" ^ " + event.previousTile + " -> " + event.tile);
+            if(
+                changed = true;
+                lastEvent = event;
+                phase.advance();
+                System.out.println("Advancing on: " + event.previousId + " -> " + event.id);
+                System.out.println(" ^ " + event.previousTile + " -> " + event.tile);
+            }
         }
     };
 
