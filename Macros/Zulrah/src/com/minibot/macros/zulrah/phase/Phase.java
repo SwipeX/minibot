@@ -9,21 +9,20 @@ import java.util.ArrayList;
  * TODO phase 1 & 4...wtf?
  */
 public enum Phase {
-    PHASE_1(Stage.INITIAL, Stage.MELEE_WEST, Stage.MAGIC_WEST, Stage.RANGE_NORTHEAST,
-            Stage.MELEE_EAST, Stage.MAGIC_EAST, Stage.RANGE_NORTHWEST, Stage.MAGIC_NORTHWEST,
-            Stage.JAD_EAST, Stage.MELEE_EAST),
+    PHASE_1(Stage.INITIAL, Stage.MELEE_EAST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MELEE_WEST,
+            Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_EAST, Stage.MAGIC_SOUTH_WEST, Stage.JAD_WEST,
+            Stage.MELEE_WEST, Stage.RANGE_WEST),
 
-    PHASE_2(Stage.INITIAL, Stage.RANGE_WEST, Stage.MELEE_EAST, Stage.MAGIC_EAST, Stage.RANGE_NORTHWEST,
-            Stage.MAGIC_NORTHWEST, Stage.RANGE_NORTHEAST, Stage.RANGE_NORTHEAST, Stage.MAGIC_WEST,
-            Stage.JAD_WEST, Stage.MAGIC_NORTHWEST),
+    PHASE_2(Stage.INITIAL, Stage.MELEE_EAST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_SOUTH_EAST,
+            Stage.MELEE_EAST, Stage.RANGE_SOUTH_EAST, Stage.MAGIC_SOUTH_WEST, Stage.JAD_WEST, Stage.MELEE_WEST,
+            Stage.RANGE_WEST),
 
-    PHASE_3(Stage.INITIAL, Stage.MAGIC_WEST, Stage.RANGE_NORTHEAST, Stage.MAGIC_EAST, Stage.MELEE_WEST,
-            Stage.RANGE_WEST, Stage.RANGE_NORTHWEST, Stage.MAGIC_EAST, Stage.RANGE_NORTHWEST, Stage.MAGIC_NORTHWEST,
-            Stage.JAD_WEST, Stage.MAGIC_WEST),
+    PHASE_3(Stage.INITIAL, Stage.RANGE_EAST, Stage.MELEE_WEST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_EAST,
+            Stage.MAGIC_SOUTH_EAST, Stage.RANGE_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_EAST, Stage.JAD_EAST),
 
-    PHASE_4(Stage.INITIAL, Stage.MELEE_WEST, Stage.MAGIC_WEST, Stage.RANGE_NORTHEAST,
-            Stage.MAGIC_EAST, Stage.MELEE_EAST, Stage.RANGE_NORTHWEST, Stage.MAGIC_EAST,
-            Stage.JAD_EAST, Stage.RANGE_WEST, Stage.MELEE_WEST);
+    PHASE_4(Stage.INITIAL, Stage.MAGIC_EAST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_SOUTH_WEST, Stage.MELEE_EAST,
+            Stage.RANGE_SOUTH_EAST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_EAST, Stage.MAGIC_EAST,
+            Stage.JAD_EAST, Stage.MAGIC_EAST);
 
     Stage[] stages;
     int index = 0;

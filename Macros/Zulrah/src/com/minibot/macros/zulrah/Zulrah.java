@@ -43,7 +43,7 @@ public class Zulrah extends Macro implements Renderable {
 
     private final ZulrahListener listener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
-            if(
+            if(!changed){
                 changed = true;
                 lastEvent = event;
                 phase.advance();
@@ -86,7 +86,7 @@ public class Zulrah extends Macro implements Renderable {
                     Phase potential = Phase.determine(previous, zulrah.id());
                     if (potential != null) {
                         phase = potential;
-                        phase.setIndex(previous.size() - 1);
+                        phase.setIndex(previous.size());
                         phase.confirm();
                         System.out.println(phase.name() + " is quite dank (Confirmed)");
                     }
