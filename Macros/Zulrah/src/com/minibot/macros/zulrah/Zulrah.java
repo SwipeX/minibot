@@ -28,6 +28,12 @@ import java.util.ArrayList;
 /**
  * @author Tim Dekker
  * @since 7/14/15
+ * <p>
+ * TODO:
+ * - Magic prayer is being cunt.
+ * - Prayer is not being toggled while running.
+ * - Melee dodging is not added.
+ * - Jad stage is being cuntwheel because magic prayer is being cunt.
  */
 @Manifest(name = "Zulrah", author = "Tyler/Tim", version = "1.0.0", description = "Kills Zulrah")
 public class Zulrah extends Macro implements Renderable {
@@ -36,20 +42,17 @@ public class Zulrah extends Macro implements Renderable {
     private static Phase phase = Phase.PHASE_1;
     private static Tile origin = null;
     public static int attackCounter = 0;
-    private static final int ATTACK = 5069; //no melee, but idc
     private boolean changed = false;
     private ZulrahEvent lastEvent;
     private int lastAnim = -1;
 
     private final ZulrahListener listener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
-            if(!changed){
-                changed = true;
-                lastEvent = event;
-                phase.advance();
-                System.out.println("Advancing on: " + event.previousId + " -> " + event.id);
-                System.out.println(" ^ " + event.previousTile + " -> " + event.tile);
-            }
+            changed = true;
+            lastEvent = event;
+            phase.advance();
+            System.out.println("Advancing on: " + event.previousId + " -> " + event.id);
+            System.out.println(" ^ " + event.previousTile + " -> " + event.tile);
         }
     };
 
@@ -61,13 +64,10 @@ public class Zulrah extends Macro implements Renderable {
     @Override
     public void run() {
         Npc zulrah = getMonster();
-        //maybe these could be grouped into Task(ish) framework
-        Prayer.setPrayers();
+        Prayer.setZulrahPrayers();
         Potions.drink();
         Gear.equip();
         Food.eat();
-
-        //main logic
         if (zulrah != null) {
             listener.setNpc(zulrah);
             if (origin == null) {
@@ -96,23 +96,31 @@ public class Zulrah extends Macro implements Renderable {
             if (phase != null) {
                 Stage current = phase.getCurrent();
                 if (current != null) {
-                    if (current.getTile().equals(Players.local().location())) {
-                        if (phase.getCurrent().getSnakeType() == SnakeType.MELEE) {
-                            if (zulrah.getOrientation() + Players.local().getOrientation() == 1024) {
+                    Tile currentTile = current.getTile();
+                    if (currentTile != null && currentTile.equals(Players.local().location())) {
+                        if (current.getSnakeType() == SnakeType.MELEE) {
+                            int sum = zulrah.getOrientation() + Players.local().getOrientation();
+                            if (Math.abs(2048 - sum) <= 80) {
                                 System.out.println("FUCKING RUN MARTY");
+                                Tile dest;
+                                if (current == Stage.MELEE_EAST) {
+                                    dest = current.getTile().derive(-2, 1);
+                                } else {
+                                    dest = current.getTile().derive(0, 2);
+                                }
+                                Walking.walkTo(dest);
+                                Time.sleep(3500, 4000);
                             }
                         }
                         Character target = Players.local().target();
                         if (target == null || !target.name().equals("Zulrah")) {
                             zulrah.processAction("Attack");
-                            Time.sleep(400, 600);
+                            Time.sleep(100, 200);
                         }
                     } else {
-                        // System.out.println("Walking to " + current.getTile());
                         Walking.walkTo(current.getTile());
-                        Time.sleep(800, 900);
-                        //sleep here or it'll spam walk
-                        //shit run to dat tile
+                        Time.sleep(100, 200);
+                        Prayer.setZulrahPrayers();
                     }
                 }
             }
@@ -124,7 +132,6 @@ public class Zulrah extends Macro implements Renderable {
             //are we dead?
             //i am batman
         }
-        //setup next loop
         Minibot.instance().client().resetMouseIdleTime();
     }
 

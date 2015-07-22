@@ -20,8 +20,8 @@ import java.awt.Graphics2D;
  * @author Tim Dekker
  * @since 6/1/15.
  */
-@Manifest(name = "Prayer", author = "Swipe", version = "1.0.0", description = "Drinks prayer potions")
-public class Prayer extends Macro implements Renderable {
+@Manifest(name = "PrayerSipper", author = "Swipe", version = "1.0.0", description = "Drinks prayer potions")
+public class PrayerSipper extends Macro implements Renderable {
 
     private static Tile alt;
 

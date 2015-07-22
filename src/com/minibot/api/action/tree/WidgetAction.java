@@ -36,7 +36,6 @@ public class WidgetAction extends Action {
         return arg2;
     }
 
-
     public int parent() {
         return widgetUid() >> 16;
     }

@@ -22,7 +22,7 @@ public enum GameTab {
     QUESTS("Quest List"),
     INVENTORY("Inventory"),
     EQUIPMENT("Worn Equipment"),
-    PRAYER("Prayer"),
+    PRAYER("PrayerSipper"),
     MAGIC("Magic");
 
     private static final int PARENT = 548;

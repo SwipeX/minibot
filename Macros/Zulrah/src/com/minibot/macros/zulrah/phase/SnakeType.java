@@ -20,29 +20,29 @@ public enum SnakeType {
         return id;
     }
 
-    public int[] getPrayerComponentIndices() {
+    public Prayer[] getPrayers() {
         if (this.id() == JAD_MAGIC_FIRST.id()) {
             if (Zulrah.attackCounter % 2 == 0) {//first, third...
                 System.out.println("MAGIC_JAD 0");
-                return new int[]{Prayer.PROTECT_MAGIC_INDEX, Prayer.MYSTIC_MIGHT_INDEX};
+                return new Prayer[]{Prayer.PROTECT_FROM_MAGIC, Prayer.MYSTIC_MIGHT};
             } else {
                 System.out.println("MAGIC_JAD 1");
-                return new int[]{Prayer.PROTECT_RANGE_INDEX, Prayer.MYSTIC_MIGHT_INDEX};
+                return new Prayer[]{Prayer.PROTECT_FROM_MISSILES, Prayer.MYSTIC_MIGHT};
             }
         } else if (this.id() == JAD_RANGE_FIRST.id()) {
             if (Zulrah.attackCounter % 2 == 1) {//first, third...
                 System.out.println("RANGE_JAD 0");
-                return new int[]{Prayer.PROTECT_MAGIC_INDEX, Prayer.MYSTIC_MIGHT_INDEX};
+                return new Prayer[]{Prayer.PROTECT_FROM_MAGIC, Prayer.MYSTIC_MIGHT};
             } else {
                 System.out.println("RANGE_JAD 1");
-                return new int[]{Prayer.PROTECT_RANGE_INDEX, Prayer.MYSTIC_MIGHT_INDEX};
+                return new Prayer[]{Prayer.PROTECT_FROM_MISSILES, Prayer.MYSTIC_MIGHT};
             }
         } else if (this.id() == MELEE.id()) {
             return null;
         } else if (this.id() == MAGIC.id()) {
-            return new int[]{Prayer.PROTECT_MAGIC_INDEX, Prayer.EAGLE_EYE_INDEX};
+            return new Prayer[]{Prayer.PROTECT_FROM_MAGIC, Prayer.EAGLE_EYE};
         }
-        return new int[]{Prayer.PROTECT_RANGE_INDEX, Prayer.MYSTIC_MIGHT_INDEX};
+        return new Prayer[]{Prayer.PROTECT_FROM_MISSILES, Prayer.MYSTIC_MIGHT};
     }
 
     public void setId(int id) {
