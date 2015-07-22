@@ -32,7 +32,7 @@ import java.util.ArrayList;
  * TODO:
  * - Jad phase is fairly good, but is what's messing us up most.
  * - Melee phase could use a BIT of work dodging.
- * - Phase detection for phase 1 confirmed is DEFINIETLY wrong.
+ * - Phase detection for phase 1 confirmed is DEFINITELY wrong.
  *     - http://i.imgur.com/1jNazRS.png
  *     - http://i.imgur.com/g0E7lMf.png
  *     - https://gist.github.com/c9aba9a83c2c5bfe4cf5
