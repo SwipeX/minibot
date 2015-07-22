@@ -30,10 +30,12 @@ import java.util.ArrayList;
  * @since 7/14/15
  * <p>
  * TODO:
- * - Magic prayer is being cunt.
- * - Prayer is not being toggled while running.
- * - Melee dodging is not added.
- * - Jad stage is being cuntwheel because magic prayer is being cunt.
+ * - Jad phase is fairly good, but is what's messing us up most.
+ * - Melee phase could use a BIT of work dodging.
+ * - Phase detection for phase 1 confirmed is DEFINIETLY wrong.
+ *     - http://i.imgur.com/1jNazRS.png
+ *     - http://i.imgur.com/g0E7lMf.png
+ *     - https://gist.github.com/c9aba9a83c2c5bfe4cf5
  */
 @Manifest(name = "Zulrah", author = "Tyler/Tim", version = "1.0.0", description = "Kills Zulrah")
 public class Zulrah extends Macro implements Renderable {
@@ -61,13 +63,17 @@ public class Zulrah extends Macro implements Renderable {
         listener.start();
     }
 
-    @Override
-    public void run() {
-        Npc zulrah = getMonster();
+    private void handleStats() {
         Prayer.setZulrahPrayers();
         Potions.drink();
         Gear.equip();
         Food.eat();
+    }
+
+    @Override
+    public void run() {
+        Npc zulrah = getMonster();
+        handleStats();
         if (zulrah != null) {
             listener.setNpc(zulrah);
             if (origin == null) {
@@ -100,16 +106,16 @@ public class Zulrah extends Macro implements Renderable {
                     if (currentTile != null && currentTile.equals(Players.local().location())) {
                         if (current.getSnakeType() == SnakeType.MELEE) {
                             int sum = zulrah.getOrientation() + Players.local().getOrientation();
-                            if (Math.abs(2048 - sum) <= 80) {
+                            if (sum == 1583 || sum == 2048) {
                                 System.out.println("FUCKING RUN MARTY");
                                 Tile dest;
                                 if (current == Stage.MELEE_EAST) {
-                                    dest = current.getTile().derive(-2, 1);
+                                    dest = current.getTile().derive(2, -1);
                                 } else {
                                     dest = current.getTile().derive(0, 2);
                                 }
                                 Walking.walkTo(dest);
-                                Time.sleep(3500, 4000);
+                                Time.sleep(5250, 5500);
                             }
                         }
                         Character target = Players.local().target();
@@ -120,7 +126,7 @@ public class Zulrah extends Macro implements Renderable {
                     } else {
                         Walking.walkTo(current.getTile());
                         Time.sleep(100, 200);
-                        Prayer.setZulrahPrayers();
+                        handleStats();
                     }
                 }
             }

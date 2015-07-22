@@ -35,7 +35,7 @@ public enum Phase {
     public void advance() {
         index++;
         if (index >= stages.length)
-            index = 0;
+            index = 1; // prevent initial from occuring more than once.
     }
 
     public void backup() {
