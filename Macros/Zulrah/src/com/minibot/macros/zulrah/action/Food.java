@@ -1,7 +1,7 @@
 package com.minibot.macros.zulrah.action;
 
-import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Players;
+import com.minibot.Minibot;
+import com.minibot.api.method.*;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.Player;
 
@@ -13,7 +13,7 @@ public class Food {
 
     public static void eat() {
         Player local = Players.local();
-        if (local.maxHealth() > 0 && local.health() <= 41) {
+        if (Minibot.instance().client().getLevels()[Skills.HITPOINTS] <= 41) {
             Item food = Inventory.firstFood();
             if (food != null) {
                 food.processAction("Eat");
