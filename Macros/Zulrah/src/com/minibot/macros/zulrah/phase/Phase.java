@@ -1,28 +1,28 @@
 package com.minibot.macros.zulrah.phase;
 
+import com.minibot.macros.zulrah.Zulrah;
+
 import java.awt.*;
 import java.util.ArrayList;
 
 /**
  * @author Tim Dekker
  * @since 7/14/15
- * TODO phase 1 & 4...wtf?
  */
 public enum Phase {
     PHASE_1(Stage.INITIAL, Stage.MELEE_EAST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MELEE_WEST,
-            Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_EAST, Stage.MAGIC_SOUTH_WEST, Stage.JAD_WEST,
-            Stage.MELEE_WEST, Stage.RANGE_WEST),
+            Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_EAST, Stage.MAGIC_SOUTH_WEST, Stage.JAD_WEST),
 
     PHASE_2(Stage.INITIAL, Stage.MELEE_EAST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_SOUTH_EAST,
-            Stage.MELEE_EAST, Stage.RANGE_SOUTH_EAST, Stage.MAGIC_SOUTH_WEST, Stage.JAD_WEST, Stage.MELEE_WEST,
-            Stage.RANGE_WEST),
+            Stage.MELEE_EAST, Stage.RANGE_SOUTH_EAST, Stage.MAGIC_SOUTH_WEST, Stage.JAD_WEST),
 
     PHASE_3(Stage.INITIAL, Stage.RANGE_EAST, Stage.MELEE_WEST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_EAST,
             Stage.MAGIC_SOUTH_EAST, Stage.RANGE_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_EAST, Stage.JAD_EAST),
+    // ^ pro af
 
     PHASE_4(Stage.INITIAL, Stage.MAGIC_EAST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_SOUTH_WEST, Stage.MELEE_EAST,
             Stage.RANGE_SOUTH_EAST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_EAST, Stage.MAGIC_EAST,
-            Stage.JAD_EAST, Stage.MAGIC_EAST);
+            Stage.JAD_EAST);
 
     Stage[] stages;
     int index = 0;
@@ -32,10 +32,14 @@ public enum Phase {
         this.stages = stages;
     }
 
-    public void advance() {
+    public int advance() {
         index++;
-        if (index >= stages.length)
-            index = 1; // prevent initial from occuring more than once.
+        if (index >= stages.length) {
+            index = 0; // prevent initial from occuring more than once if '1'.
+            reset();
+            System.out.println("RESETTING PHASES");
+        }
+        return index;
     }
 
     public void backup() {
@@ -55,8 +59,11 @@ public enum Phase {
     }
 
     public static void reset() {
-        for (Phase phase : values())
+        Zulrah.getPrevious().clear();
+        for (Phase phase : values()) {
             phase.confirmed = false;
+            phase.index = 0;
+        }
     }
 
     public Stage getCurrent() {

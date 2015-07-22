@@ -6,6 +6,7 @@
  */
 package com.minibot.api.method.web;
 
+import com.minibot.Minibot;
 import com.minibot.api.method.Players;
 import com.minibot.api.util.Digraph;
 import com.minibot.api.util.filter.Filter;
@@ -110,7 +111,9 @@ public class Web extends Digraph<WebVertex, WebVertex> {
             case 492:
                 return new String[]{"Guild door", "Open"};
             default: {
-                System.out.println("UNKNOWN OBJECT FOR VERTEX " + vertex);
+                if (Minibot.instance().verbose()) {
+                    System.out.println("UNKNOWN OBJECT FOR VERTEX " + vertex);
+                }
                 return new String[2];
             }
         }

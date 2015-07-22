@@ -50,11 +50,19 @@ public class Zulrah extends Macro implements Renderable {
 
     private final ZulrahListener listener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
-            changed = true;
+            int stage = phase.advance();
+            changed = (stage != 0);
             lastEvent = event;
-            phase.advance();
-            System.out.println("Advancing on: " + event.previousId + " -> " + event.id);
+            if (!changed) {
+                previous.clear();
+            }
+            System.out.println("Advancing on: " + event.previousId + " -> " + (event.id + "/" + event.npc.id()));
             System.out.println(" ^ " + event.previousTile + " -> " + event.tile);
+            if (stage == 0) {
+                System.out.println(" ^ reset");
+            } else {
+                System.out.println(" ^ " + (stage - 1) + " -> " + stage);
+            }
         }
     };
 
@@ -72,17 +80,18 @@ public class Zulrah extends Macro implements Renderable {
 
     @Override
     public void run() {
+        Minibot.instance().setVerbose(false);
         Npc zulrah = getMonster();
+        listener.setNpc(zulrah);
         handleStats();
         if (zulrah != null) {
-            listener.setNpc(zulrah);
             if (origin == null) {
                 SnakeType.RANGE.setId(zulrah.id());
                 SnakeType.MELEE.setId(zulrah.id() + 1);
                 SnakeType.MAGIC.setId(zulrah.id() + 2);
                 origin = zulrah.location();
             }
-            if (lastAnim == -1 && zulrah.animation() != -1) {
+            if (lastAnim != -1 && zulrah.animation() == -1) {//grab him when he is idling instead of attacking
                 attackCounter++;
             }
             if (changed) {
@@ -92,7 +101,7 @@ public class Zulrah extends Macro implements Renderable {
                     Phase potential = Phase.determine(previous, zulrah.id());
                     if (potential != null) {
                         phase = potential;
-                        phase.setIndex(previous.size());
+                        phase.setIndex(previous.size()); // do we actually need this?
                         phase.confirm();
                         System.out.println(phase.name() + " is quite dank (Confirmed)");
                     }
@@ -132,11 +141,15 @@ public class Zulrah extends Macro implements Renderable {
             }
             lastAnim = zulrah.animation();
         } else {
-            //it could be loot time!
-            //or we might need to get to zulrah first
-            //do we need to bank? before we do, call Potions.reset!
-            //are we dead?
-            //i am batman
+            if (origin != null && origin.distance() < 10) {
+                System.out.println("LOOT THAT SHIT MARTY");
+            } else {
+                origin = null;
+                Potions.reset();
+                Phase.reset();
+                // check if lumbridge/falador death spot, check message listener for dead or not, etc.
+                // you need to go to a bank regardless
+            }
         }
         Minibot.instance().client().resetMouseIdleTime();
     }

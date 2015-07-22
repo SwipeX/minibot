@@ -17,6 +17,10 @@ public abstract class ZulrahListener extends LoopTask {
         this.npc = npc;
     }
 
+    public Npc npc() {
+        return npc;
+    }
+
     public boolean validate() {
         return npc != null;
     }
@@ -34,8 +38,10 @@ public abstract class ZulrahListener extends LoopTask {
                     wait = true;
                 }
             } else {
-                if (wait && height > 100) {
-                    onChange(new ZulrahEvent(npc, previousTile, tile, previousId, id));
+                if (wait && height > 150) {
+                    if (!(previousTile.distance(tile) == 0 && previousId == id)) {
+                        onChange(new ZulrahEvent(npc, previousTile, tile, previousId, id));
+                    }
                     previousTile = tile;
                     previousId = id;
                     wait = false;

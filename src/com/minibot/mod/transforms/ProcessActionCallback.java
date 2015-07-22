@@ -33,8 +33,8 @@ public class ProcessActionCallback implements Transform {
                 stack.add(new VarInsnNode(Opcodes.ALOAD, 5));
                 stack.add(new VarInsnNode(Opcodes.ILOAD, 6));
                 stack.add(new VarInsnNode(Opcodes.ILOAD, 7));
-                stack.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Callback.class.getName().replace('.', '/'), "processAction",
-                        "(IIIILjava/lang/String;Ljava/lang/String;II)V"));
+                stack.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Callback.class.getName().replace('.', '/'),
+                        "processAction", "(IIIILjava/lang/String;Ljava/lang/String;II)V"));
                 mn.instructions.insertBefore(mn.instructions.getFirst(), stack);
                 System.out.println("...Injected processAction callback!");
             }

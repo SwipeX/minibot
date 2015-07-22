@@ -23,9 +23,9 @@ import java.util.List;
         "mapAngle", "baseX", "baseY", "settings", "gameSettings", "widgetPositionsX", "widgetPositionsY",
         "widgetWidths", "widgetHeights", "renderRules", "tileHeights", "widgetNodes", "npcIndices", "playerIndices",
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
-        "hoveredRegionTileX", "hoveredRegionTileY","itemContainers", "experiences", "levels", "realLevels", "username", "password",
-        "loginState", "hintX", "hintY", "hintPlayerIndex", "hintNpcIndex", "screenWidth", "screenHeight", "screenZoom",
-        "screenState", "localPlayerIndex"})
+        "hoveredRegionTileX", "hoveredRegionTileY","itemContainers", "experiences", "levels", "realLevels", "username",
+        "password", "loginState", "hintX", "hintY", "hintPlayerIndex", "hintNpcIndex", "screenWidth", "screenHeight",
+        "screenZoom", "screenState", "localPlayerIndex", "projectiles"})
 public class Client extends GraphVisitor {
 
     @Override
@@ -71,6 +71,7 @@ public class Client extends GraphVisitor {
         visitIfM(new ScreenState(), t -> t.desc.startsWith("([L") && t.desc.contains(";IIIIII"));
         visitAll(new HoveredRegionTiles());
         visitAll(new LocalPlayerIndex());
+        visitAll(new Projectiles());
     }
 
     private void visitMouseIdleTime() {
@@ -912,6 +913,35 @@ public class Client extends GraphVisitor {
                         if (fmn2 != null && fmn2.key().equals(fmn.key())) {
                             addHook(new FieldHook("localPlayerIndex", fmn.fin()));
                             lock.set(true);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private class Projectiles extends BlockVisitor {
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor() {
+                public void visitVariable(VariableNode vn) {
+                    if (vn.opcode() == ASTORE) {
+                        TypeNode check = vn.firstType();
+                        if (check != null && check.type().equals(clazz("Projectile"))) {
+                            MethodMemberNode mmn = vn.firstMethod();
+                            if (mmn != null && mmn.opcode() == INVOKEVIRTUAL && mmn.desc().endsWith(desc("Node"))) {
+                                FieldMemberNode fmn = mmn.firstField();
+                                if (fmn != null && fmn.opcode() == GETSTATIC && fmn.desc().equals(desc("NodeDeque"))) {
+                                    addHook(new FieldHook("projectiles", fmn.fin()));
+                                    lock.set(true);
+                                }
+                            }
                         }
                     }
                 }

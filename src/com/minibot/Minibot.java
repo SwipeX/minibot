@@ -49,6 +49,7 @@ public class Minibot extends JFrame implements Runnable {
     private boolean farming;
     private BreakHandler breakHandler;
     private static Connection connection;
+    private boolean verbose = true;
 
     public Minibot() {
         super("Minibot");
@@ -184,6 +185,14 @@ public class Minibot extends JFrame implements Runnable {
 
     public boolean farming() {
         return farming;
+    }
+
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    public boolean verbose() {
+        return verbose;
     }
 
     public boolean macroRunning() {

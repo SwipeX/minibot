@@ -20,7 +20,7 @@ public enum SnakeType {
     }
 
     public Prayer[] getPrayers() {
-        if (this.id() == JAD_MAGIC_FIRST.id()) { // TODO: tested and did need swap, should work
+        if (this.id() == JAD_MAGIC_FIRST.id()) { // TODO: works pro, gets hit on first hit tho
             if (Zulrah.attackCounter % 2 == 0) {//first, third...
                 System.out.println("MAGIC_JAD 0");
                 return new Prayer[]{Prayer.PROTECT_FROM_MISSILES, Prayer.MYSTIC_MIGHT};
@@ -29,7 +29,7 @@ public enum SnakeType {
                 return new Prayer[]{Prayer.PROTECT_FROM_MAGIC, Prayer.MYSTIC_MIGHT};
             }
         } else if (this.id() == JAD_RANGE_FIRST.id()) { // TODO: untested.
-            if (Zulrah.attackCounter % 2 == 1) {//first, third...
+            if (Zulrah.attackCounter % 2 == 0) {//first, third...
                 System.out.println("RANGE_JAD 0");
                 return new Prayer[]{Prayer.PROTECT_FROM_MAGIC, Prayer.MYSTIC_MIGHT};
             } else {
