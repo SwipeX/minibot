@@ -38,9 +38,7 @@ public class BitchBird extends Macro implements Renderable {
             int cycle = projectile.getCycle();
             projectileCycles.put(id, cycle);
         }
-        Collections.sort(projectileIds, (a, b) -> {
-            return projectileCycles.get(b) - projectileCycles.get(a);
-        });
+        Collections.sort(projectileIds, (a, b) -> projectileCycles.get(b) - projectileCycles.get(a));
     }
 
     @Override
