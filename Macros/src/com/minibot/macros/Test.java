@@ -3,7 +3,6 @@ package com.minibot.macros;
 import com.minibot.api.method.Npcs;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
-import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.LoopTask;
@@ -32,6 +31,11 @@ public class Test extends Macro implements Renderable {
             this.previousId = previousId;
             this.id = id;
         }
+
+        @Override
+        public String toString() {
+            return String.format("tile=[%s -> %s], ids=[%s -> %s]", previousTile, tile, previousId, id);
+        }
     }
 
     private abstract class ZulrahListener extends LoopTask {
@@ -39,8 +43,7 @@ public class Test extends Macro implements Renderable {
         private Npc npc;
         private Tile previousTile = null;
         private int previousId = -1;
-
-        private long lastChange = -1;
+        private boolean wait = false;
 
         public void setNpc(Npc npc) {
             this.npc = npc;
@@ -55,15 +58,21 @@ public class Test extends Macro implements Renderable {
             if (npc != null) {
                 Tile tile = npc.location();
                 int id = npc.id();
-                if ((previousId != -1 && id != previousId) || (previousTile != null && (tile.x() != previousTile.x() ||
-                        tile.y() != previousTile.y()))) {
-                    if (lastChange == -1 || Time.millis() - lastChange  > 500) {
-                        lastChange = Time.millis();
+                int height = npc.raw().getHeight();
+                if (height == 0) {
+                    if (!wait) {
+                        previousTile = tile;
+                        previousId = id;
+                        wait = true;
+                    }
+                } else {
+                    if (wait && height > 100) {
                         onChange(new ZulrahEvent(npc, previousTile, tile, previousId, id));
+                        previousTile = tile;
+                        previousId = id;
+                        wait = false;
                     }
                 }
-                previousTile = tile;
-                previousId = id;
             } else {
                 previousTile = null;
                 previousId = -1;
@@ -76,9 +85,7 @@ public class Test extends Macro implements Renderable {
 
     private final ZulrahListener listener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
-            System.out.println("id: " + event.previousId + " -> " + event.id);
-            System.out.println("tile: " + event.previousTile + " -> " + event.tile);
-            System.out.println("--------------------------");
+            System.out.println(event);
         }
     };
 
@@ -87,16 +94,17 @@ public class Test extends Macro implements Renderable {
         listener.start();
     }
 
+    private Npc zulrah;
+
     @Override
     public void run() {
-        Npc zulrah = Npcs.nearestByName("Zulrah");
-//        if (!listener.validate()) {
-            listener.setNpc(zulrah);
-//        }
+        zulrah = Npcs.nearestByName("Zulrah");
+        listener.setNpc(zulrah);
     }
 
 
     @Override
     public void render(Graphics2D g) {
+        g.drawString(zulrah != null ? (zulrah.raw().getHeight() + "") : "N/A", 100, 100);
     }
 }
