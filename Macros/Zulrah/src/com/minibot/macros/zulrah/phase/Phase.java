@@ -9,6 +9,12 @@ import java.util.ArrayList;
 /**
  * @author Tim Dekker
  * @since 7/14/15
+ *
+ * WORKING:
+ *  - PHASE_1
+ *
+ * NOT WORKING:
+ *  - PHASE_4 @ MAGIC_SOUTH_WEST (took awhile to move, then kept trying to walk to the same tile on RANGE_SOUTH_EAST)
  */
 public enum Phase {
     PHASE_1(Stage.INITIAL, Stage.MELEE_EAST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MELEE_WEST,
