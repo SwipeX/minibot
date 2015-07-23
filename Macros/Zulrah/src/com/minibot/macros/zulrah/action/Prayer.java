@@ -3,6 +3,7 @@ package com.minibot.macros.zulrah.action;
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Game;
 import com.minibot.api.method.Widgets;
+import com.minibot.api.util.Random;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.Npc;
@@ -88,6 +89,7 @@ public enum Prayer {
                 if (!prayer.toggled()) {
                     System.out.println("TOGGLED " + prayer);
                     prayer.setActive(true);
+                    Time.sleep(prayer::toggled, Random.nextInt(500, 750));
                 }
             }
         }

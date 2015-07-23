@@ -13,7 +13,6 @@ import com.minibot.bot.macro.Manifest;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Toolkit;
 
 /**
  * @author Jacob Doiron
@@ -25,6 +24,8 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
     private static final int TEXT_FORMAT = ValueFormat.THOUSANDS | ValueFormat.COMMAS | ValueFormat.PRECISION(1);
 
     private static int startExp;
+    private static boolean force;
+    private static boolean quit;
 
     @Override
     public void atStart() {
@@ -50,15 +51,17 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
             });
             if (npc != null) {
                 npc.processAction("Attack");
+                Time.sleep(2250, 3000);
                 if (Time.sleep(() -> {
                     Character playerTarget = Players.local().target();
-                    return (playerTarget != null && playerTarget.maxHealth() > 0) || Widgets.viewingContinue();
+                    return !Game.playing() || force || (playerTarget != null && playerTarget.maxHealth() > 0) || Widgets.viewingContinue();
                 }, Random.nextInt(25000, 32500))) {
+                    force = false;
                     if (Widgets.viewingContinue()) {
                         Widgets.processContinue();
                         Time.sleep(() -> !Widgets.viewingContinue(), Random.nextInt(4500, 6500));
                     } else {
-                        Time.sleep(600, 800);
+                        Time.sleep(150, 450);
                         return true;
                     }
                 }
@@ -70,10 +73,15 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
     @Override
     public void run() {
         Minibot.instance().client().resetMouseIdleTime();
-        attack();
-        if (Widgets.viewingContinue()) {
-            Widgets.processContinue();
-            Time.sleep(() -> !Widgets.viewingContinue(), Random.nextInt(4500, 6500));
+        if (quit) {
+            Game.logout();
+            interrupt();
+        } else {
+            attack();
+            if (Widgets.viewingContinue()) {
+                Widgets.processContinue();
+                Time.sleep(() -> !Widgets.viewingContinue(), Random.nextInt(4500, 6500));
+            }
         }
     }
 
@@ -83,13 +91,15 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
         g.drawString(String.format("Time: %s", Time.format(runtime())), 10, 10);
         g.drawString(String.format("Ranged Exp: %s (%s/H)", ValueFormat.format(Game.experiences()[Skills.RANGED] - startExp, TEXT_FORMAT),
                 ValueFormat.format(hourly(Game.experiences()[Skills.RANGED] - startExp), TEXT_FORMAT)), 10, 22);
-        g.drawString(String.format("Level: %d", Game.experiences()[Skills.RANGED]), 10, 34);
+        g.drawString(String.format("Level: %d", Game.levels()[Skills.RANGED]), 10, 34);
     }
 
     @Override
     public void messageReceived(int type, String sender, String message, String clan) {
-        if (type == 2) {
-            Toolkit.getDefaultToolkit().beep();
+        if (message.contains("Your blowpipe needs to")) {
+            quit = true;
+        } else if (message.contains("Someone else is fighting")) {
+            force = true;
         }
     }
 }
