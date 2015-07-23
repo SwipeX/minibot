@@ -12,9 +12,10 @@ import java.util.ArrayList;
  *
  * WORKING:
  *  - PHASE_1
+ *  - PHASE_2
  *
  * NOT WORKING:
- *  - PHASE_4 @ MAGIC_SOUTH_WEST (took awhile to move, then kept trying to walk to the same tile on RANGE_SOUTH_EAST)
+ *  - PHASE_4 (Seems to work now with fixed ZulrahListener)
  */
 public enum Phase {
     PHASE_1(Stage.INITIAL, Stage.MELEE_EAST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MELEE_WEST,
