@@ -11,7 +11,7 @@ public abstract class ZulrahListener extends LoopTask {
     private Npc npc;
     private Tile previousTile = null;
     private int previousId = -1;
-    private boolean wait = false;
+//    private boolean wait = false;
 
     public void setNpc(Npc npc) {
         this.npc = npc;
