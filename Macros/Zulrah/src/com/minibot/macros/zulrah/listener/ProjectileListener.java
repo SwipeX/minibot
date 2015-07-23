@@ -5,6 +5,7 @@ import com.minibot.api.method.Projectiles;
 import com.minibot.api.util.Random;
 import com.minibot.bot.macro.LoopTask;
 import com.minibot.client.natives.RSProjectile;
+import com.minibot.macros.zulrah.Zulrah;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,9 +25,17 @@ public abstract class ProjectileListener extends LoopTask {
         for (RSProjectile projectile : Projectiles.loaded()) {
             int id = projectile.getId();
             int cycle = projectile.getCycle();
-            boolean cached = cycles.containsKey(id) && (Game.cycle() - cycles.get(id) < 5);
-            if ((Game.cycle() - cycle) < 5 && !cached) {
+            boolean cached = cycles.containsKey(id) && (Game.cycle() - cycles.get(id) < 50);
+            if (!cached && (Game.cycle() - cycle) < 50) {
                 cycles.put(id, cycle);
+                if (id == Zulrah.PROJECTILE_MAGE) {
+                    System.out.println("MAGE PROJECTILE");
+                } else if (id == Zulrah.PROJECTILE_RANGE) {
+                    System.out.println("RANGE PROJECTILE");
+                } else if (id != Zulrah.PROJECTILE_CLOUD && id != Zulrah.PROJECTILE_SNAKELING && id !=
+                        Zulrah.PROJECTILE_SPERM) {
+                    System.out.println("UNKNOWN PROJECTILE " + id);
+                }
                 onProjectileLoaded(new ProjectileEvent(projectile, id, cycle));
             }
         }

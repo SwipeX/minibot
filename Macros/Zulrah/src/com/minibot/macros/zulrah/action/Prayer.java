@@ -86,6 +86,7 @@ public enum Prayer {
         } else {
             for (Prayer prayer : prayers) {
                 if (!prayer.toggled()) {
+                    System.out.println("TOGGLED " + prayer);
                     prayer.setActive(true);
                 }
             }
@@ -96,6 +97,7 @@ public enum Prayer {
     public static void deactivateAll() {
         for (Prayer prayer : values()) {
             if (prayer.toggled()) {
+                System.out.println("UNTOGGLED " + prayer);
                 prayer.setActive(false);
             }
         }
