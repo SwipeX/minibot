@@ -25,8 +25,8 @@ public abstract class ProjectileListener extends LoopTask {
         for (RSProjectile projectile : Projectiles.loaded()) {
             int id = projectile.getId();
             int cycle = projectile.getCycle();
-            boolean cached = cycles.containsKey(id) && (Game.cycle() - cycles.get(id) < 50);
-            if (!cached && (Game.cycle() - cycle) < 50) {
+            boolean cached = cycles.containsKey(id) && (cycle - cycles.get(id) < 50);
+            if (!cached) {
                 cycles.put(id, cycle);
                 if (id == Zulrah.PROJECTILE_MAGE) {
                     System.out.println("MAGE PROJECTILE");
