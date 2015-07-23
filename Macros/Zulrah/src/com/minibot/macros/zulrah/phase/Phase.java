@@ -66,9 +66,10 @@ public enum Phase {
     public static void reset() {
         Zulrah.getPrevious().clear();
         for (Phase phase : values()) {
-            phase.confirmed = false;
+            phase.unconfirm();
             phase.index = 0;
         }
+        Zulrah.resetPhase();
     }
 
     public Stage getCurrent() {

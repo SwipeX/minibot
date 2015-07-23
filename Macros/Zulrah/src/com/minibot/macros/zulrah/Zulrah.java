@@ -31,10 +31,6 @@ import java.util.ArrayList;
 /**
  * @author Tim Dekker
  * @since 7/14/15
- * <p>
- * TODO:
- * - Phase identification is good, need to check tile difference in ZulrahListener
- * - After a phase is complete there's a 'spraying' stage, and then it returns to initial.
  */
 @Manifest(name = "Zulrah", author = "Tyler/Tim", version = "1.0.0", description = "Kills Zulrah")
 public class Zulrah extends Macro implements Renderable {
@@ -189,5 +185,9 @@ public class Zulrah extends Macro implements Renderable {
 
     public static Npc getMonster() {
         return Npcs.nearestByName("Zulrah");
+    }
+
+    public static void resetPhase() {
+        phase = Phase.PHASE_1;
     }
 }

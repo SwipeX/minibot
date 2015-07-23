@@ -11,7 +11,6 @@ public abstract class ZulrahListener extends LoopTask {
     private Npc npc;
     private Tile previousTile = null;
     private int previousId = -1;
-//    private boolean wait = false;
 
     public void setNpc(Npc npc) {
         this.npc = npc;
@@ -46,33 +45,6 @@ public abstract class ZulrahListener extends LoopTask {
             previousId = -1;
             previousTile = null;
         }
-//        if (npc != null) {
-//            Tile tile = npc.location();
-//            int id = npc.id();
-//            int height = npc.raw().getHeight();
-//            if (height == 0) {
-//                if (!wait) {
-//                    previousId = id;
-//                    wait = true;
-//                }
-//            } else {
-//                boolean heightChange = (wait && height > 200);
-//                boolean tileChange = (previousTile != null && previousTile.distance(tile) > 0);
-//                boolean idChange = (previousId != -1 && previousId != id);
-//                if (heightChange || tileChange || idChange) {
-//                    if (previousTile != null && !(previousTile.distance(tile) == 0 && previousId == id)) {
-//                        onChange(new ZulrahEvent(npc, previousTile, tile, previousId, id));
-//                    }
-//                    wait = false;
-//                }
-//            }
-//            previousTile = tile;
-//            previousId = id;
-//        } else {
-//            previousTile = null;
-//            previousId = -1;
-//            wait = false;
-//        }
         return Random.nextInt(25, 50);
     }
 
