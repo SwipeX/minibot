@@ -21,8 +21,8 @@ public class Gear {
     private static final String[] NAMES_MAGE;
 
     static {
-        NAMES_RANGE = new String[]{"d'hide", "bow", "pipe", "ava's", "range"};
-        NAMES_MAGE = new String[]{"robe", "staff", "trident", "cape", "mage"};
+        NAMES_RANGE = new String[]{"d'hide", "bow", "pipe", "ava's", "range", "blowpipe"};
+        NAMES_MAGE = new String[]{"robe", "staff", "trident", "cape", "mage", "book of darkness"};
         setup();
     }
 

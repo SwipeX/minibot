@@ -25,7 +25,7 @@ import java.util.List;
         "loadObjectDefinition", "loadNpcDefinition", "loadItemDefinition", "plane", "gameState", "mouseIdleTime",
         "hoveredRegionTileX", "hoveredRegionTileY","itemContainers", "experiences", "levels", "realLevels", "username",
         "password", "loginState", "hintX", "hintY", "hintPlayerIndex", "hintNpcIndex", "screenWidth", "screenHeight",
-        "screenZoom", "screenState", "localPlayerIndex", "projectiles"})
+        "screenZoom", "screenState", "localPlayerIndex", "projectiles", "cycle"})
 public class Client extends GraphVisitor {
 
     @Override
@@ -72,6 +72,7 @@ public class Client extends GraphVisitor {
         visitAll(new HoveredRegionTiles());
         visitAll(new LocalPlayerIndex());
         visitAll(new Projectiles());
+        visitAll(new Cycle());
     }
 
     private void visitMouseIdleTime() {
@@ -942,6 +943,29 @@ public class Client extends GraphVisitor {
                                     lock.set(true);
                                 }
                             }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private class Cycle extends BlockVisitor {
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            block.tree().accept(new NodeVisitor(this) {
+                public void visitMethod(MethodMemberNode mmn) {
+                    if (mmn.opcode() == INVOKEVIRTUAL && mmn.desc().matches(reg("\\(III[PRED]\\)V"))) {
+                        FieldMemberNode fmn = (FieldMemberNode) mmn.layer(IMUL, GETSTATIC);
+                        if (fmn != null && fmn.owner().equals("client") && fmn.desc().equals("I")) {
+                            addHook(new FieldHook("cycle", fmn.fin()));
+                            lock.set(true);
                         }
                     }
                 }

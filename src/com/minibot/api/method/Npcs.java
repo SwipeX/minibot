@@ -35,9 +35,16 @@ public class Npcs {
             if (raw == null) {
                 continue;
             }
-            Npc npc = new Npc(raw, index);
-            if (radius == -1 || npc.distance() <= radius) {
-                npcs.add(npc);
+            Npc npc;
+            try {
+                npc = new Npc(raw, index);
+            } catch (IllegalStateException e) {
+                npc = null;
+            }
+            if (npc != null) {
+                if (radius == -1 || npc.distance() <= radius) {
+                    npcs.add(npc);
+                }
             }
         }
         return npcs.toArray(new Npc[npcs.size()]);

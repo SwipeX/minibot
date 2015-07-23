@@ -1,6 +1,7 @@
 package com.minibot.macros.zulrah.phase;
 
 import com.minibot.macros.zulrah.Zulrah;
+import com.minibot.macros.zulrah.action.Prayer;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -11,18 +12,18 @@ import java.util.ArrayList;
  */
 public enum Phase {
     PHASE_1(Stage.INITIAL, Stage.MELEE_EAST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MELEE_WEST,
-            Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_EAST, Stage.MAGIC_SOUTH_WEST, Stage.JAD_WEST),
+            Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_EAST, Stage.MAGIC_SOUTH_WEST, Stage.JAD_WEST, Stage.MELEE_EAST),
 
     PHASE_2(Stage.INITIAL, Stage.MELEE_EAST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_SOUTH_EAST,
-            Stage.MELEE_EAST, Stage.RANGE_SOUTH_EAST, Stage.MAGIC_SOUTH_WEST, Stage.JAD_WEST),
+            Stage.MELEE_EAST, Stage.RANGE_SOUTH_EAST, Stage.MAGIC_SOUTH_WEST, Stage.JAD_WEST, Stage.MELEE_EAST),
 
     PHASE_3(Stage.INITIAL, Stage.RANGE_EAST, Stage.MELEE_WEST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_EAST,
-            Stage.MAGIC_SOUTH_EAST, Stage.RANGE_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_EAST, Stage.JAD_EAST),
-    // ^ pro af
+            Stage.MAGIC_SOUTH_EAST, Stage.RANGE_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_EAST, Stage.JAD_EAST,
+            Stage.MAGIC_EAST),
 
     PHASE_4(Stage.INITIAL, Stage.MAGIC_EAST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_SOUTH_WEST, Stage.MELEE_EAST,
             Stage.RANGE_SOUTH_EAST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_EAST, Stage.MAGIC_EAST,
-            Stage.JAD_EAST);
+            Stage.JAD_EAST, Stage.MAGIC_EAST);
 
     Stage[] stages;
     int index = 0;
@@ -35,19 +36,17 @@ public enum Phase {
     public int advance() {
         index++;
         if (index >= stages.length) {
-            index = 0; // prevent initial from occuring more than once if '1'.
             reset();
+            Zulrah.getPrevious().clear();
+            Prayer.deactivateAll();
+            Prayer.PROTECT_FROM_MISSILES.setActive(true);
             System.out.println("RESETTING PHASES");
         }
         return index;
     }
 
-    public void backup() {
-        if (index >= 1) {
-            index--;
-        } else {
-            index = stages.length - 1;
-        }
+    public int index() {
+        return index;
     }
 
     public boolean isConfirmed() {

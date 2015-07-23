@@ -203,4 +203,8 @@ public abstract class GraphVisitor implements Opcodes {
     public void setGraph(FlowGraph graph) {
         this.graph = graph;
     }
+
+    public String reg(String regex) {
+        return regex.replaceAll("\\[PRED\\]", "(?:(I|B|S))?");
+    }
 }

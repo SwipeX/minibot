@@ -6,16 +6,23 @@ import com.minibot.mod.hooks.FieldHook;
 import com.minibot.mod.hooks.InvokeHook;
 import org.objectweb.asm.commons.cfg.Block;
 import org.objectweb.asm.commons.cfg.BlockVisitor;
+import org.objectweb.asm.commons.cfg.query.MemberQuery;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.AbstractNode;
 import org.objectweb.asm.commons.cfg.tree.node.FieldMemberNode;
+import org.objectweb.asm.commons.cfg.tree.node.NumberNode;
 import org.objectweb.asm.commons.cfg.tree.node.VariableNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.lang.reflect.Modifier;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
-@VisitorInfo(hooks = {"name", "actions", "id", "transformIds", "transformIndex", "transform"})
+@VisitorInfo(hooks = {"name", "actions", "id", "transformIds", "transformIndex", "transform", "baseColors", "colors",
+        "sizeY", "sizeX"})
 public class ObjectDefinition extends GraphVisitor {
 
     @Override
@@ -30,11 +37,10 @@ public class ObjectDefinition extends GraphVisitor {
         visit(new Id());
         visit(new TransformIds());
         visit(new TransformIndex());
-        for (MethodNode mn : getCn().methods) {
-            if (!Modifier.isStatic(mn.access) && mn.desc.endsWith("L" + getCn().name + ";")) {
-                addHook(new InvokeHook("transform", mn));
-            }
-        }
+        visitAll(new Colors());
+        visitAll(new SizeHooks());
+        getCn().methods.stream().filter(mn -> !Modifier.isStatic(mn.access) &&
+                mn.desc.endsWith("L" + getCn().name + ";")).forEach(mn -> addHook(new InvokeHook("transform", mn)));
     }
 
     private class Id extends BlockVisitor {
@@ -105,6 +111,61 @@ public class ObjectDefinition extends GraphVisitor {
                     }
                 }
             });
+        }
+    }
+
+    private class Colors extends BlockVisitor {
+
+        private final Set<Block> blocks = new TreeSet<>((a, b) -> a.index() - b.index());
+        private final MemberQuery fieldQuery = new MemberQuery(GETFIELD, getCn().name, "\\[S");
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            if (block.count(SALOAD) == 2 && block.count(INVOKEVIRTUAL) == 1 && block.count(fieldQuery) == 2) {
+                blocks.add(block);
+            }
+        }
+
+        @Override
+        public void visitEnd() {
+            if (blocks.isEmpty()) {
+                return;
+            }
+            Block valid = blocks.toArray(new Block[blocks.size()])[0];
+            FieldInsnNode baseColors = (FieldInsnNode) valid.get(fieldQuery, 0);
+            FieldInsnNode colors = (FieldInsnNode) valid.get(fieldQuery, 1);
+            if (baseColors != null && colors != null) {
+                addHook(new FieldHook("baseColors", baseColors));
+                addHook(new FieldHook("colors", colors));
+                lock.set(true);
+            }
+        }
+    }
+
+    private class SizeHooks extends BlockVisitor {
+
+        private final MemberQuery fieldQuery = new MemberQuery(GETFIELD, getCn().name, "I");
+
+        @Override
+        public boolean validate() {
+            return !lock.get();
+        }
+
+        @Override
+        public void visit(Block block) {
+            if (block.count(IADD) == 1 && block.count(IAND) == 2 && block.count(fieldQuery) == 2) {
+                FieldInsnNode sizeY = (FieldInsnNode) block.get(fieldQuery, 0);
+                FieldInsnNode sizeX = (FieldInsnNode) block.get(fieldQuery, 1);
+                if (sizeY != null && sizeX != null) {
+                    addHook(new FieldHook("sizeY", sizeY));
+                    addHook(new FieldHook("sizeX", sizeX));
+                }
+            }
         }
     }
 }

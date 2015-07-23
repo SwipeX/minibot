@@ -95,6 +95,11 @@ public class Objects {
         return objects;
     }
 
+    public static List<GameObject> loaded(Filter<GameObject> filter, int radius) {
+        Deque<GameObject> loaded = loaded(radius);
+        return loaded.stream().filter(filter::accept).collect(Collectors.toList());
+    }
+
     public static GameObject nearestByFilter(Filter<GameObject> filter, int radius) {
         Deque<GameObject> loaded = loaded(radius);
         List<GameObject> filtered = loaded.stream().filter(filter::accept).collect(Collectors.toList());

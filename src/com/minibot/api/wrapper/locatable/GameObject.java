@@ -191,4 +191,26 @@ public class GameObject extends Wrapper<ClientNative> implements Locatable {
         }
         return false;
     }
+
+    public boolean hasBaseColors(int... colors) {
+        RSObjectDefinition def = definition();
+        if (def == null) {
+            return false;
+        }
+        short[] baseColors = def.getBaseColors();
+        if (baseColors == null) {
+            return false;
+        }
+        int[] baseColorInts = new int[baseColors.length];
+        for (int i = 0; i < baseColors.length; i++) {
+            baseColorInts[i] = (int) baseColors[i];
+        }
+        Arrays.sort(baseColorInts);
+        for (int color : colors) {
+            if (Arrays.binarySearch(baseColorInts, color) < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

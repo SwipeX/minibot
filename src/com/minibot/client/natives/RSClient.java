@@ -116,4 +116,6 @@ public interface RSClient extends ClientNative {
     RSHashTable getItemContainers();
 
     RSNodeDeque getProjectiles();
+
+    int getCycle();
 }

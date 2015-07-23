@@ -13,4 +13,11 @@ public interface RSObjectDefinition extends RSCacheableNode {
     String[] getActions();
 
     RSObjectDefinition transform();
+
+    short[] getBaseColors();
+
+    short[] getColors();
+
+    int getSizeX();
+    int getSizeY();
 }

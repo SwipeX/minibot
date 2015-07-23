@@ -93,7 +93,7 @@ public enum Prayer {
         return true;
     }
 
-    private static void deactivateAll() {
+    public static void deactivateAll() {
         for (Prayer prayer : values()) {
             if (prayer.toggled()) {
                 prayer.setActive(false);

@@ -60,6 +60,10 @@ public class Block implements Comparable<Block> {
         this.index = index;
     }
 
+    public int index() {
+        return index;
+    }
+
     /**
      * Checks if the block is empty.
      *

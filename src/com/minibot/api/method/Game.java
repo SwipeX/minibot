@@ -146,4 +146,8 @@ public class Game {
         }
         return false;
     }
+
+    public static int cycle() {
+        return Minibot.instance().client().getCycle();
+    }
 }
