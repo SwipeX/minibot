@@ -101,6 +101,7 @@ public enum Prayer {
             if (prayer.toggled()) {
                 System.out.println("UNTOGGLED " + prayer);
                 prayer.setActive(false);
+                Time.sleep(() -> !prayer.toggled(), Random.nextInt(500, 750));
             }
         }
     }

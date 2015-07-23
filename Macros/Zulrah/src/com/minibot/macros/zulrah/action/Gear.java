@@ -22,7 +22,7 @@ public class Gear {
 
     static {
         NAMES_RANGE = new String[]{"d'hide", "bow", "pipe", "ava's", "range", "blowpipe"};
-        NAMES_MAGE = new String[]{"robe", "staff", "trident", "cape", "mage", "book of darkness"};
+        NAMES_MAGE = new String[]{"robe", "staff", "trident", "cape", "mage", "book of darkness", "infinity"};
         setup();
     }
 
