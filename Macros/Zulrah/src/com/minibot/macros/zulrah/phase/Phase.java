@@ -11,11 +11,10 @@ import java.util.ArrayList;
  * @since 7/14/15
  *
  * WORKING:
- *  - PHASE_1
+ *  - PHASE_1 (Messes up if thinks is unconfirmed PHASE_4)
  *  - PHASE_2
- *
- * NOT WORKING:
- *  - PHASE_4 (Seems to work now with fixed ZulrahListener)
+ *  - PHASE_3
+ *  - PHASE_4
  */
 public enum Phase {
     PHASE_1(Stage.INITIAL, Stage.MELEE_EAST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MELEE_WEST,
