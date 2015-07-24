@@ -39,7 +39,7 @@ public enum Prayer {
     HAWK_EYE(-1),
     MYSTIC_LORE(25),
     EAGLE_EYE(26),
-    MYSTIC_MIGHT(25),
+    MYSTIC_MIGHT(27),
     CHIVALRY(-1),
     PIETY(-1);
 
