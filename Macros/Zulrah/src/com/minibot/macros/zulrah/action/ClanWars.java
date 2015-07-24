@@ -1,10 +1,8 @@
 package com.minibot.macros.zulrah.action;
 
-import com.minibot.api.method.Game;
-import com.minibot.api.method.Objects;
-import com.minibot.api.method.Players;
-import com.minibot.api.method.Skills;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Time;
+import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Tile;
 
@@ -19,7 +17,31 @@ public class ClanWars {
                 Game.levels()[Skills.HITPOINTS] < Game.realLevels()[Skills.HITPOINTS]) {
             handlePortal();
         } else {
-            //bank
+            if (!Bank.viewing()) {
+                if (Gear.hasInventory() && Gear.hasEquip()) {
+                    Item teleport = Inventory.first(i -> i.name().equals("Zul-anrda teleport"));
+                    if (teleport != null) {
+                        Tile location = Players.local().location();
+                        teleport.processAction("Teleport");
+                        Time.sleep(() -> Players.local().location().x() != location.x(), 5000);
+                    }
+                } else {
+                    openChest();
+                }
+            } else {
+                //deposit new items
+                //withdraw needed items
+            }
+        }
+    }
+
+    private static void openChest() {
+        GameObject chest = Objects.nearestByName("Bank chest");
+        if (chest != null) {
+            chest.processAction("Use");
+            Time.sleep(() -> {
+                return Bank.viewing();
+            }, 3000);
         }
     }
 
