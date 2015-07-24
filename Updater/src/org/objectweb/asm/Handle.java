@@ -67,23 +67,19 @@ public final class Handle {
     /**
      * Constructs a new field or method handle.
      *
-     * @param tag
-     *            the kind of field or method designated by this Handle. Must be
-     *            {@link org.objectweb.asm.Opcodes#H_GETFIELD}, {@link org.objectweb.asm.Opcodes#H_GETSTATIC},
-     *            {@link org.objectweb.asm.Opcodes#H_PUTFIELD}, {@link org.objectweb.asm.Opcodes#H_PUTSTATIC},
-     *            {@link org.objectweb.asm.Opcodes#H_INVOKEVIRTUAL},
-     *            {@link org.objectweb.asm.Opcodes#H_INVOKESTATIC},
-     *            {@link org.objectweb.asm.Opcodes#H_INVOKESPECIAL},
-     *            {@link org.objectweb.asm.Opcodes#H_NEWINVOKESPECIAL} or
-     *            {@link org.objectweb.asm.Opcodes#H_INVOKEINTERFACE}.
-     * @param owner
-     *            the internal name of the class that owns the field or method
-     *            designated by this handle.
-     * @param name
-     *            the name of the field or method designated by this handle.
-     * @param desc
-     *            the descriptor of the field or method designated by this
-     *            handle.
+     * @param tag the kind of field or method designated by this Handle. Must be
+     * {@link org.objectweb.asm.Opcodes#H_GETFIELD}, {@link org.objectweb.asm.Opcodes#H_GETSTATIC},
+     * {@link org.objectweb.asm.Opcodes#H_PUTFIELD}, {@link org.objectweb.asm.Opcodes#H_PUTSTATIC},
+     * {@link org.objectweb.asm.Opcodes#H_INVOKEVIRTUAL},
+     * {@link org.objectweb.asm.Opcodes#H_INVOKESTATIC},
+     * {@link org.objectweb.asm.Opcodes#H_INVOKESPECIAL},
+     * {@link org.objectweb.asm.Opcodes#H_NEWINVOKESPECIAL} or
+     * {@link org.objectweb.asm.Opcodes#H_INVOKEINTERFACE}.
+     * @param owner the internal name of the class that owns the field or method
+     * designated by this handle.
+     * @param name the name of the field or method designated by this handle.
+     * @param desc the descriptor of the field or method designated by this
+     * handle.
      */
     public Handle(int tag, String owner, String name, String desc) {
         this.tag = tag;
@@ -96,11 +92,11 @@ public final class Handle {
      * Returns the kind of field or method designated by this handle.
      *
      * @return {@link org.objectweb.asm.Opcodes#H_GETFIELD}, {@link org.objectweb.asm.Opcodes#H_GETSTATIC},
-     *         {@link org.objectweb.asm.Opcodes#H_PUTFIELD}, {@link org.objectweb.asm.Opcodes#H_PUTSTATIC},
-     *         {@link org.objectweb.asm.Opcodes#H_INVOKEVIRTUAL}, {@link org.objectweb.asm.Opcodes#H_INVOKESTATIC},
-     *         {@link org.objectweb.asm.Opcodes#H_INVOKESPECIAL},
-     *         {@link org.objectweb.asm.Opcodes#H_NEWINVOKESPECIAL} or
-     *         {@link org.objectweb.asm.Opcodes#H_INVOKEINTERFACE}.
+     * {@link org.objectweb.asm.Opcodes#H_PUTFIELD}, {@link org.objectweb.asm.Opcodes#H_PUTSTATIC},
+     * {@link org.objectweb.asm.Opcodes#H_INVOKEVIRTUAL}, {@link org.objectweb.asm.Opcodes#H_INVOKESTATIC},
+     * {@link org.objectweb.asm.Opcodes#H_INVOKESPECIAL},
+     * {@link org.objectweb.asm.Opcodes#H_NEWINVOKESPECIAL} or
+     * {@link org.objectweb.asm.Opcodes#H_INVOKEINTERFACE}.
      */
     public int getTag() {
         return tag;
@@ -111,7 +107,7 @@ public final class Handle {
      * designated by this handle.
      *
      * @return the internal name of the class that owns the field or method
-     *         designated by this handle.
+     * designated by this handle.
      */
     public String getOwner() {
         return owner;
@@ -156,11 +152,11 @@ public final class Handle {
     /**
      * Returns the textual representation of this handle. The textual
      * representation is:
-     *
+     * <p>
      * <pre>
      * owner '.' name desc ' ' '(' tag ')'
      * </pre>
-     *
+     * <p>
      * . As this format is unambiguous, it can be parsed if necessary.
      */
     @Override

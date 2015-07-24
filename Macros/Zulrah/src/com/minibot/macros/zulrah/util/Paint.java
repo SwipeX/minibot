@@ -9,7 +9,9 @@ import com.minibot.macros.zulrah.action.Potions;
 import com.minibot.macros.zulrah.phase.Phase;
 import com.minibot.macros.zulrah.phase.Stage;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.Arrays;
 
 /**
@@ -30,11 +32,12 @@ public class Paint {
         g.setColor(Color.GREEN);
         g.drawString("Zulrah Debugging By: Tim/Tyler", 20, y += 13);
         g.drawString("Current: " + (zulrah == null ? "N/A" : zulrah.id()) + " Previous ids: " +
-                        Arrays.toString(Zulrah.getPrevious().toArray()), 20, y += 13);
-        if (origin != null)
+                Arrays.toString(Zulrah.getPrevious().toArray()), 20, y += 13);
+        if (origin != null) {
             g.drawString(String.format("Origin: %s, Offset: %s,%s", origin.toString(),
                     local.x() - origin.x(), local.y() - origin.y()), 20, y += 13);
-        if (stage!= null) {
+        }
+        if (stage != null) {
             g.drawString("Current: Phase - " + (phase.isConfirmed() ? " Confirmed " : " UNCOMFIRMED ") + phase +
                     " Stage - " + phase.getCurrent() + " Type - " + phase.getCurrent().getSnakeType(), 20, y += 13);
         }

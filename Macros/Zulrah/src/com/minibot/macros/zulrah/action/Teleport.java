@@ -16,18 +16,20 @@ import java.util.Deque;
  * @since 7/24/15
  */
 public class Teleport {
+
     private static final int PARENT = 219;
     private static final int CHILD = 0;
     private static final int SUB_CHILD = 3;
 
     public static void handle() {
-        if (Zulrah.getMonster() == null)
+        if (Zulrah.getMonster() == null) {
             if (Zulrah.getOrigin() != null && Zulrah.getOrigin().distance() < 10) {
                 Deque<GroundItem> items = Ground.loaded(20);
-                if (items.size() == 0) {
+                if (items.isEmpty()) {
                     act();
                 }
             }
+        }
     }
 
     private static void act() {

@@ -28,18 +28,24 @@ public class Digraph<V, E> implements Iterable<V> {
     }
 
     public boolean addVertex(V vertex) {
-        if (graph.containsKey(vertex)) return false;
+        if (graph.containsKey(vertex)) {
+            return false;
+        }
         graph.put(vertex, new HashSet<E>());
         return true;
     }
 
     public void addEdge(V start, E dest) {
-        if (!graph.containsKey(start)) return;
+        if (!graph.containsKey(start)) {
+            return;
+        }
         graph.get(start).add(dest);
     }
 
     public void removeEdge(V start, E dest) {
-        if (!graph.containsKey(start)) return;
+        if (!graph.containsKey(start)) {
+            return;
+        }
         graph.get(start).remove(dest);
     }
 
@@ -72,20 +78,22 @@ public class Digraph<V, E> implements Iterable<V> {
     /**
      * Gets the complexity for this graph.
      *
-     * @param cached
-     *            <t>true</t> to get the cached complexity.
+     * @param cached <t>true</t> to get the cached complexity.
      * @return the complexity for this graph.
      */
     public CyclomaticComplexity cyclomatic(boolean cached) {
-        if (cached && cyclomatic != null)
+        if (cached && cyclomatic != null) {
             return cyclomatic;
+        }
         int edges = 0;
-        for (Set<E> set : graph.values())
+        for (Set<E> set : graph.values()) {
             edges += set.size();
+        }
         int connections = 0;
         for (Set<E> set : graph.values()) {
-            if (!set.isEmpty())
+            if (!set.isEmpty()) {
                 connections++;
+            }
         }
         return (cyclomatic = new CyclomaticComplexity(edges, size(), connections));
     }

@@ -8,6 +8,7 @@ import com.minibot.macros.zulrah.Zulrah;
  * @since 7/14/15
  */
 public enum Stage {
+
     INITIAL(SnakeType.RANGE, 4, 3),
 
     MELEE_EAST(SnakeType.MELEE, 4, 3),
@@ -25,8 +26,9 @@ public enum Stage {
     JAD_EAST(SnakeType.JAD_MAGIC_FIRST, 4, -3),
     JAD_WEST(SnakeType.JAD_RANGE_FIRST, -6, -2);
 
-    private SnakeType snakeType;
-    private int offsetX, offsetY;
+    private final SnakeType snakeType;
+    private final int offsetX;
+    private final int offsetY;
 
     Stage(SnakeType snakeType, int offsetX, int offsetY) {
         this.snakeType = snakeType;
@@ -45,5 +47,4 @@ public enum Stage {
         }
         return origin.derive(offsetX, offsetY);
     }
-
 }

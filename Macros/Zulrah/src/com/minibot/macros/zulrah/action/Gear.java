@@ -1,11 +1,7 @@
 package com.minibot.macros.zulrah.action;
 
-import com.minibot.Minibot;
-import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.method.Combat;
-import com.minibot.api.method.Equipment;
-import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Widgets;
+import com.minibot.api.method.*;
+import com.minibot.api.util.Random;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
@@ -19,6 +15,7 @@ import java.util.ArrayList;
  * @since 7/14/15
  */
 public class Gear {
+
     private static int[] other;
     private static int[] inventory;
     private static int[] rangeIds;
@@ -43,17 +40,15 @@ public class Gear {
                 if (slot.getName() == null) {
                     continue;
                 }
-                final String name = slot.getName().toLowerCase();
+                String name = slot.getName().toLowerCase();
                 for (String string : NAMES_MAGE) {
                     if (name.contains(string)) {
                         magic.add(slot.itemId());
-                        continue;
                     }
                 }
                 for (String string : NAMES_RANGE) {
                     if (name.contains(string)) {
                         range.add(slot.itemId());
-                        continue;
                     }
                 }
                 equip.add(slot.itemId());
@@ -61,21 +56,20 @@ public class Gear {
         }
 
         for (Item item : Inventory.items()) {
-            final String name = item.name().toLowerCase();
+            String name = item.name().toLowerCase();
             for (String string : NAMES_MAGE) {
                 if (name.contains(string)) {
                     magic.add(item.id());
-                    continue;
                 }
             }
             for (String string : NAMES_RANGE) {
                 if (name.contains(string)) {
                     range.add(item.id());
-                    continue;
                 }
             }
-            if (item.name().contains("dueling"))
+            if (item.name().contains("dueling")) {
                 continue;
+            }
             pack.add(item.id());
         }
         other = equip.stream().mapToInt(i -> i).toArray();
@@ -85,13 +79,11 @@ public class Gear {
     }
 
     public static boolean hasInventory() {
-        return Inventory.containsAll(inventory) &&
-                (Inventory.containsAll(rangeIds) || Inventory.containsAll(mageIds));
+        return Inventory.containsAll(inventory) && (Inventory.containsAll(rangeIds) || Inventory.containsAll(mageIds));
     }
 
-    public static boolean hasEquip(){
-        return Equipment.equipped(other) &&
-                (Equipment.equipped(rangeIds) || Equipment.equipped(mageIds));
+    public static boolean hasEquip() {
+        return Equipment.equipped(other) && (Equipment.equipped(rangeIds) || Equipment.equipped(mageIds));
     }
 
     public static boolean equip() {
@@ -99,28 +91,37 @@ public class Gear {
             Equipment.equip("Ring of recoil");
         }
         specialAttack();
-        return equip(Zulrah.getPhase().getCurrent().getSnakeType());
+        //return equip(Zulrah.getPhase().getCurrent().getSnakeType());
+        SnakeType type = Zulrah.getPhase().getCurrent().getSnakeType();
+        equip(type);
+        return Equipment.equipped(type.id() == SnakeType.MAGIC.id() ? rangeIds : mageIds);
     }
 
     private static void specialAttack() {
-        if ((lastSpec == -1 || Time.millis() - lastSpec > 1200) && Equipment.equipped("Armadyl crossbow")) {//spec
-            if (Minibot.instance().client().getGameSettings()[300] / 10 >= 40) {
+        if ((lastSpec == -1 || Time.millis() - lastSpec > 20000) && Equipment.equipped("Armadyl crossbow")) { //spec
+            if (Game.varp(300) / 10 >= 40) {
                 WidgetComponent comp = Widgets.get(593, 30);
                 if (comp != null) {
-                    comp.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Use <col=00ff00>Special Attack</col>", "");
+                    comp.processAction("Use <col=00ff00>Special Attack</col>");
                 }
                 lastSpec = Time.millis();
             }
         }
     }
 
-    public static boolean equip(SnakeType type) {
+    public static void equip(SnakeType type) {
         int[] ids = (type.id() == SnakeType.MAGIC.id() ? rangeIds : mageIds);
-        for (int id : ids) {
+        for (int i = 0; i < ids.length; i++) {
+            int id = ids[i];
             if (!Equipment.equipped(id)) {
-                Item item = Inventory.first(i -> i.id() == id);
+                Item item = Inventory.first(j -> j.id() == id);
                 if (item != null) {
                     Equipment.equip(item);
+                    if (i == ids.length - 1) {
+                        Time.sleep(150, 300);
+                    } else {
+                        Time.sleep(() -> Equipment.equipped(item.id()), Random.nextInt(500, 750));
+                    }
                     String name = item.name();
                     if (name != null) {
                         if (name.contains("rossbow")) {
@@ -130,7 +131,7 @@ public class Gear {
                 }
             }
         }
-        return Equipment.equipped(ids);
+        //return Equipment.equipped(ids);
     }
 
     public static int[] getRangeIds() {

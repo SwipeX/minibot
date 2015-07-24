@@ -128,8 +128,9 @@ public class TreeBuilder {
                 break;
             }
             int op = n.opcode();
-            if (op == MONITOREXIT && node.opcode() == ATHROW)
+            if (op == MONITOREXIT && node.opcode() == ATHROW) {
                 n.producing = 1;
+            }
             node.addFirst(n);
             int cr = c - n.producing;
             if (cr < 0) {
@@ -150,15 +151,17 @@ public class TreeBuilder {
         NodeTree tree = new NodeTree(mn);
         List<AbstractNode> nodes = new ArrayList<>();
         long start = System.nanoTime();
-        for (AbstractInsnNode ain : mn.instructions.toArray())
+        for (AbstractInsnNode ain : mn.instructions.toArray()) {
             nodes.add(createNode(ain, tree, getTreeSize(ain)));
+        }
         long end = System.nanoTime();
         create += (end - start);
         treeIndex = nodes.size() - 1;
         AbstractNode node;
         start = System.nanoTime();
-        while ((node = iterate(nodes)) != null)
+        while ((node = iterate(nodes)) != null) {
             tree.addFirst(node);
+        }
         end = System.nanoTime();
         iterate += (end - start);
         return tree;
@@ -168,15 +171,17 @@ public class TreeBuilder {
         NodeTree tree = new NodeTree(block);
         List<AbstractNode> nodes = new ArrayList<>();
         long start = System.nanoTime();
-        for (AbstractInsnNode ain : block.instructions)
+        for (AbstractInsnNode ain : block.instructions) {
             nodes.add(createNode(ain, tree, getTreeSize(ain)));
+        }
         long end = System.nanoTime();
         create += (end - start);
         treeIndex = nodes.size() - 1;
         AbstractNode node;
         start = System.nanoTime();
-        while ((node = iterate(nodes)) != null)
+        while ((node = iterate(nodes)) != null) {
             tree.addFirst(node);
+        }
         end = System.nanoTime();
         iterate += (end - start);
         return tree;

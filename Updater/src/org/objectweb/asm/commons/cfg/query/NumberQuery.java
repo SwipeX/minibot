@@ -23,8 +23,9 @@ public class NumberQuery extends InsnQuery {
 
     @Override
     public boolean matches(AbstractInsnNode ain) {
-        if (!(ain instanceof IntInsnNode) && !(ain instanceof LdcInsnNode) && !(ain instanceof VarInsnNode))
+        if (!(ain instanceof IntInsnNode) && !(ain instanceof LdcInsnNode) && !(ain instanceof VarInsnNode)) {
             return false;
+        }
         if (ain instanceof IntInsnNode) {
             return number == -1 || ((IntInsnNode) ain).operand == number;
         } else if (ain instanceof LdcInsnNode) {

@@ -9,7 +9,7 @@ import com.minibot.bot.macro.LoopTask;
 public abstract class ZulrahListener extends LoopTask {
 
     private Npc npc;
-    private Tile previousTile = null;
+    private Tile previousTile;
     private int previousId = -1;
 
     public void setNpc(Npc npc) {
@@ -33,7 +33,7 @@ public abstract class ZulrahListener extends LoopTask {
                 if (previousId != id) {
                     onChange(new ZulrahEvent(npc, previousTile, tile, previousId, id));
                 } else if (previousTile.distance(tile) > 0) {
-                    final int cachedId = id;
+                    int cachedId = id;
                     Time.sleep(() -> npc.id() != cachedId, 3000);
                     id = npc.id();
                     onChange(new ZulrahEvent(npc, previousTile, tile, previousId, id));

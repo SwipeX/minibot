@@ -93,8 +93,9 @@ public class ClueScrollKeyObject extends ClueScroll {
                     } else {
                         status.set("Killing key-holder");
                         Npc npc = Npcs.nearestByName(keyNpcName);
-                        if (npc != null)
+                        if (npc != null) {
                             npc.attack();
+                        }
                     }
                 }
             }

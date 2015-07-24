@@ -2,19 +2,19 @@
  * ASM: a very small and fast Java bytecode manipulation framework
  * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ * notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the copyright holders nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -64,8 +64,9 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
     public void visitInsn(InsnNode in) {
         minSize += 1;
         maxSize += 1;
-        if (mv != null)
+        if (mv != null) {
             mv.visitInsn(in);
+        }
     }
 
     @Override
@@ -77,8 +78,9 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
             minSize += 2;
             maxSize += 2;
         }
-        if (mv != null)
+        if (mv != null) {
             mv.visitIntInsn(iin);
+        }
     }
 
     @Override
@@ -93,16 +95,18 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
             minSize += 2;
             maxSize += 2;
         }
-        if (mv != null)
+        if (mv != null) {
             mv.visitVarInsn(vin);
+        }
     }
 
     @Override
     public void visitTypeInsn(TypeInsnNode tin) {
         minSize += 3;
         maxSize += 3;
-        if (mv != null)
+        if (mv != null) {
             mv.visitTypeInsn(tin);
+        }
     }
 
     @Override
@@ -123,16 +127,18 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
             minSize += 3;
             maxSize += 3;
         }
-        if (mv != null)
+        if (mv != null) {
             mv.visitMethodInsn(min);
+        }
     }
 
     @Override
     public void visitInvokeDynamicInsn(InvokeDynamicInsnNode idin) {
         minSize += 5;
         maxSize += 5;
-        if (mv != null)
+        if (mv != null) {
             mv.visitInvokeDynamicInsn(idin);
+        }
     }
 
     @Override
@@ -143,8 +149,9 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         } else {
             maxSize += 8;
         }
-        if (mv != null)
+        if (mv != null) {
             mv.visitJumpInsn(jin);
+        }
     }
 
     @Override
@@ -156,8 +163,9 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
             minSize += 2;
             maxSize += 3;
         }
-        if (mv != null)
+        if (mv != null) {
             mv.visitLdcInsn(ldc);
+        }
     }
 
     @Override
@@ -169,31 +177,35 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
             minSize += 3;
             maxSize += 3;
         }
-        if (mv != null)
+        if (mv != null) {
             mv.visitIincInsn(iin);
+        }
     }
 
     @Override
     public void visitTableSwitchInsn(TableSwitchInsnNode tsin) {
         minSize += 13 + tsin.labels.size() * 4;
         maxSize += 16 + tsin.labels.size() * 4;
-        if (mv != null)
+        if (mv != null) {
             mv.visitTableSwitchInsn(tsin);
+        }
     }
 
     @Override
     public void visitLookupSwitchInsn(LookupSwitchInsnNode lsin) {
         minSize += 9 + lsin.keys.size() * 8;
         maxSize += 12 + lsin.keys.size() * 8;
-        if (mv != null)
+        if (mv != null) {
             mv.visitLookupSwitchInsn(lsin);
+        }
     }
 
     @Override
     public void visitMultiANewArrayInsn(MultiANewArrayInsnNode manain) {
         minSize += 4;
         maxSize += 4;
-        if (mv != null)
+        if (mv != null) {
             mv.visitMultiANewArrayInsn(manain);
+        }
     }
 }

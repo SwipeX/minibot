@@ -25,8 +25,9 @@ public class MacroDefinition {
     }
 
     public boolean equals(Object o) {
-        if (o instanceof MacroDefinition)
+        if (o instanceof MacroDefinition) {
             return (((MacroDefinition) o).time == time) && mainClass().hashCode() == ((MacroDefinition) o).mainClass().hashCode();
+        }
         return false;
     }
 }

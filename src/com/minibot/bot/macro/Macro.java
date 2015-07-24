@@ -100,8 +100,9 @@ public abstract class Macro {
             while (thread != null && !thread.isInterrupted()) {
                 Time.sleep((int) everyMillis);
                 try {
-                    if (thread != null && !thread.isInterrupted())
+                    if (thread != null && !thread.isInterrupted()) {
                         callback.run();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

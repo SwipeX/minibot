@@ -188,7 +188,9 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
     public AbstractNode child(int idx) {
         int i = 0;
         for (AbstractNode n : this) {
-            if (i == idx) return n;
+            if (i == idx) {
+                return n;
+            }
             i++;
         }
         return null;
@@ -257,7 +259,9 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
 
     public AbstractNode first(int opcode) {
         for (AbstractNode n : this) {
-            if (n.opcode() == opcode) return n;
+            if (n.opcode() == opcode) {
+                return n;
+            }
         }
         return null;
     }
@@ -266,7 +270,9 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
         int i = 0;
         for (AbstractNode n : this) {
             if (n.opcode() == opcode) {
-                if (i++ == index) return n;
+                if (i++ == index) {
+                    return n;
+                }
             }
         }
         return null;
@@ -275,7 +281,9 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
     @SuppressWarnings("unchecked")
     public <T extends AbstractNode> T first(Class<? extends AbstractNode> clazz) {
         for (AbstractNode n : this) {
-            if (n.getClass().equals(clazz)) return (T) n;
+            if (n.getClass().equals(clazz)) {
+                return (T) n;
+            }
         }
         return null;
     }
@@ -295,7 +303,9 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
     public FieldMemberNode firstField() {
         for (AbstractNode n : this) {
             if (n instanceof ReferenceNode) {
-                if (n.insn() instanceof FieldInsnNode) return (FieldMemberNode) n;
+                if (n.insn() instanceof FieldInsnNode) {
+                    return (FieldMemberNode) n;
+                }
             }
         }
         return null;
@@ -304,7 +314,9 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
     public MethodMemberNode firstMethod() {
         for (AbstractNode n : this) {
             if (n instanceof ReferenceNode) {
-                if (n.insn() instanceof MethodInsnNode) return (MethodMemberNode) n;
+                if (n.insn() instanceof MethodInsnNode) {
+                    return (MethodMemberNode) n;
+                }
             }
         }
         return null;
@@ -331,7 +343,9 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
         int i = 0;
         AbstractNode next = this;
         while ((next = next.next()) != null && i++ < max) {
-            if (next.getClass().equals(clazz)) return (T) next;
+            if (next.getClass().equals(clazz)) {
+                return (T) next;
+            }
         }
         return null;
     }
@@ -397,7 +411,9 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
         int i = 0;
         AbstractNode next = this;
         while ((next = next.next()) != null && i++ < max) {
-            if (next.opcode() == opcode) return next;
+            if (next.opcode() == opcode) {
+                return next;
+            }
         }
         return null;
     }
@@ -410,7 +426,9 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
         int i = 0;
         AbstractNode prev = this;
         while ((prev = prev.previous()) != null && i++ < max) {
-            if (prev.opcode() == opcode) return prev;
+            if (prev.opcode() == opcode) {
+                return prev;
+            }
         }
         return null;
     }
@@ -422,20 +440,28 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
     public List<AbstractNode> findChildren(int opcode) {
         List<AbstractNode> children = new ArrayList<>();
         for (AbstractNode n : this) {
-            if (n.opcode() == opcode) children.add(n);
+            if (n.opcode() == opcode) {
+                children.add(n);
+            }
         }
         return !children.isEmpty() ? children : null;
     }
 
     public List<AbstractNode> layerAll(int... opcodes) {
         List<AbstractNode> children = findChildren(opcodes[0]);
-        if (children == null) return null;
-        if (opcodes.length == 1) return children;
+        if (children == null) {
+            return null;
+        }
+        if (opcodes.length == 1) {
+            return children;
+        }
         for (int i = 1; i < opcodes.length; i++) {
             List<AbstractNode> next = new ArrayList<>();
             for (AbstractNode n : children) {
                 List<AbstractNode> match = n.findChildren(opcodes[i]);
-                if (match == null) continue;
+                if (match == null) {
+                    continue;
+                }
                 next.addAll(match);
             }
             if (next.isEmpty()) {
@@ -457,7 +483,9 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
         AbstractNode node = this;
         for (int opcode : opcodes) {
             node = node.parent();
-            if (node == null || node.opcode() != opcode) return null;
+            if (node == null || node.opcode() != opcode) {
+                return null;
+            }
         }
         return node;
     }

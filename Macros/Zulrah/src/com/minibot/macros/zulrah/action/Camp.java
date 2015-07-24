@@ -19,7 +19,7 @@ public class Camp {
     public static final Tile CAMP = new Tile(2199, 3056, 0);
     public static final String PRIESTEST = "Priestest Zul-Gwenwynig";
     public static final String BOAT = "Sacrificial boat";
-    private static boolean dead = false;
+    private static boolean dead;
 
     public static void act() {
         if (atCamp()) {

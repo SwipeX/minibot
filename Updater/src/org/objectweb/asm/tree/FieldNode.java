@@ -119,22 +119,17 @@ public class FieldNode extends FieldVisitor {
      * Constructs a new {@link FieldNode}. <i>Subclasses must not use this
      * constructor</i>.
      *
-     * @param access
-     *            the field's access flags (see
-     *            {@link org.objectweb.asm.Opcodes}). This parameter also
-     *            indicates if the field is synthetic and/or deprecated.
-     * @param name
-     *            the field's name.
-     * @param desc
-     *            the field's descriptor (see {@link org.objectweb.asm.Type
-     *            Type}).
-     * @param signature
-     *            the field's signature.
-     * @param value
-     *            the field's initial value. This parameter, which may be
-     *            <tt>null</tt> if the field does not have an initial value,
-     *            must be an {@link Integer}, a {@link Float}, a {@link Long}, a
-     *            {@link Double} or a {@link String}.
+     * @param access the field's access flags (see
+     * {@link org.objectweb.asm.Opcodes}). This parameter also
+     * indicates if the field is synthetic and/or deprecated.
+     * @param name the field's name.
+     * @param desc the field's descriptor (see {@link org.objectweb.asm.Type
+     * Type}).
+     * @param signature the field's signature.
+     * @param value the field's initial value. This parameter, which may be
+     * <tt>null</tt> if the field does not have an initial value,
+     * must be an {@link Integer}, a {@link Float}, a {@link Long}, a
+     * {@link Double} or a {@link String}.
      */
     public FieldNode(ClassNode owner, final int access, final String name, final String desc, final String signature,
                      final Object value) {
@@ -205,8 +200,7 @@ public class FieldNode extends FieldVisitor {
     /**
      * Makes the given class visitor visit this field.
      *
-     * @param cv
-     *            a class visitor.
+     * @param cv a class visitor.
      */
     public void accept(final ClassVisitor cv) {
         FieldVisitor fv = cv.visitField(access, name, desc, signature, value);

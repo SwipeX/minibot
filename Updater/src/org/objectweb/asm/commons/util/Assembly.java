@@ -19,8 +19,9 @@ public class Assembly {
     public static <E extends AbstractInsnNode> E previous(AbstractInsnNode ain, int opcode, int jumpDist) {
         int jump = 0;
         while ((ain = ain.previous()) != null && (jumpDist == -1 || jump++ <= jumpDist)) {
-            if (ain.opcode() == opcode)
+            if (ain.opcode() == opcode) {
                 return (E) ain;
+            }
         }
         return null;
     }
@@ -32,9 +33,10 @@ public class Assembly {
     @SuppressWarnings("unchecked")
     public static <E extends AbstractInsnNode> E next(AbstractInsnNode ain, int opcode, int jumpDist) {
         int jump = 0;
-        while ((ain = ain.next()) != null&& (jumpDist == -1 || jump++ <= jumpDist)) {
-            if (ain.opcode() == opcode)
+        while ((ain = ain.next()) != null && (jumpDist == -1 || jump++ <= jumpDist)) {
+            if (ain.opcode() == opcode) {
                 return (E) ain;
+            }
         }
         return null;
     }
@@ -46,8 +48,9 @@ public class Assembly {
     @SuppressWarnings("unchecked")
     public static <E extends AbstractInsnNode> E first(InsnList insns, Filter<AbstractInsnNode> filter) {
         for (AbstractInsnNode ain : insns.toArray()) {
-            if (filter.accept(ain))
+            if (filter.accept(ain)) {
                 return (E) ain;
+            }
         }
         return null;
     }
@@ -233,8 +236,9 @@ public class Assembly {
                 for (AbstractInsnNode ain : mn.instructions.toArray()) {
                     if (ain instanceof FieldInsnNode) {
                         FieldInsnNode fin = (FieldInsnNode) ain;
-                        if (fin.owner.equals(fn.owner.name) && fin.name.equals(fn.name))
+                        if (fin.owner.equals(fn.owner.name) && fin.name.equals(fn.name)) {
                             fin.name = newName;
+                        }
                     }
                 }
             }
@@ -244,28 +248,33 @@ public class Assembly {
 
     public static void rename(Collection<ClassNode> classes, ClassNode cn, String newName) {
         for (ClassNode node : classes) {
-            if (node.superName.equals(cn.name))
+            if (node.superName.equals(cn.name)) {
                 node.superName = newName;
+            }
             if (node.interfaces.contains(cn.name)) {
                 node.interfaces.remove(cn.name);
                 node.interfaces.add(newName);
             }
             for (FieldNode fn : node.fields) {
-                if (fn.desc.endsWith("L" + cn.name + ";"))
+                if (fn.desc.endsWith("L" + cn.name + ";")) {
                     fn.desc = fn.desc.replace("L" + cn.name + ";", "L" + newName + ";");
+                }
             }
             for (MethodNode mn : node.methods) {
-                if (mn.desc.contains("L" + cn.name + ";"))
+                if (mn.desc.contains("L" + cn.name + ";")) {
                     mn.desc = mn.desc.replaceAll("L" + cn.name + ";", "L" + newName + ";");
+                }
                 for (AbstractInsnNode ain : mn.instructions.toArray()) {
                     if (ain instanceof FieldInsnNode) {
                         FieldInsnNode fin = (FieldInsnNode) ain;
-                        if (fin.owner.equals(cn.name))
+                        if (fin.owner.equals(cn.name)) {
                             fin.owner = newName;
+                        }
                     } else if (ain instanceof MethodInsnNode) {
                         MethodInsnNode min = (MethodInsnNode) ain;
-                        if (min.owner.equals(cn.name))
+                        if (min.owner.equals(cn.name)) {
                             min.owner = newName;
+                        }
                     }
                 }
             }

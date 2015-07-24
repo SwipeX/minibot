@@ -72,9 +72,8 @@ public abstract class MethodVisitor {
     /**
      * Constructs a new {@link MethodVisitor}.
      *
-     * @param mv
-     *            the method visitor to which this visitor must delegate method
-     *            calls. May be null.
+     * @param mv the method visitor to which this visitor must delegate method
+     * calls. May be null.
      */
     public MethodVisitor(final MethodVisitor mv) {
         this.mv = mv;
@@ -97,11 +96,11 @@ public abstract class MethodVisitor {
      * Visits the default value of this annotation interface method.
      *
      * @return a visitor to the visit the actual default value of this
-     *         annotation interface method, or <tt>null</tt> if this visitor is
-     *         not interested in visiting this default value. The 'name'
-     *         parameters passed to the methods of this annotation visitor are
-     *         ignored. Moreover, exacly one visit method must be called on this
-     *         annotation visitor, followed by visitEnd.
+     * annotation interface method, or <tt>null</tt> if this visitor is
+     * not interested in visiting this default value. The 'name'
+     * parameters passed to the methods of this annotation visitor are
+     * ignored. Moreover, exacly one visit method must be called on this
+     * annotation visitor, followed by visitEnd.
      */
     public AnnotationVisitor visitAnnotationDefault() {
         if (mv != null) {
@@ -113,10 +112,9 @@ public abstract class MethodVisitor {
     /**
      * Visits an annotation of this method.
      *
-     * @param visible
-     *            <tt>true</tt> if the annotation is visible at runtime.
+     * @param visible <tt>true</tt> if the annotation is visible at runtime.
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
-     *         this visitor is not interested in visiting this annotation.
+     * this visitor is not interested in visiting this annotation.
      */
     public AnnotationVisitor visitAnnotation(AnnotationNode an, boolean visible) {
         if (mv != null) {
@@ -128,10 +126,9 @@ public abstract class MethodVisitor {
     /**
      * Visits an annotation on a type in the method signature.
      *
-     * @param visible
-     *            <tt>true</tt> if the annotation is visible at runtime.
+     * @param visible <tt>true</tt> if the annotation is visible at runtime.
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
-     *         this visitor is not interested in visiting this annotation.
+     * this visitor is not interested in visiting this annotation.
      */
     public AnnotationVisitor visitTypeAnnotation(TypeAnnotationNode tan, boolean visible) {
         if (mv != null) {
@@ -143,10 +140,9 @@ public abstract class MethodVisitor {
     /**
      * Visits an annotation of a parameter this method.
      *
-     * @param visible
-     *            <tt>true</tt> if the annotation is visible at runtime.
+     * @param visible <tt>true</tt> if the annotation is visible at runtime.
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
-     *         this visitor is not interested in visiting this annotation.
+     * this visitor is not interested in visiting this annotation.
      */
     public AnnotationVisitor visitParameterAnnotation(ParameterAnnotationNode pan, boolean visible) {
         if (mv != null) {
@@ -158,8 +154,7 @@ public abstract class MethodVisitor {
     /**
      * Visits a non standard attribute of this method.
      *
-     * @param attr
-     *            an attribute.
+     * @param attr an attribute.
      */
     public void visitAttribute(Attribute attr) {
         if (mv != null) {
@@ -219,10 +214,9 @@ public abstract class MethodVisitor {
      * illegal to visit two or more frames for the same code location (i.e., at
      * least one instruction must be visited between two calls to visitFrame).
      *
-     * @throws IllegalStateException
-     *             if a frame is visited just after another one, without any
-     *             instruction between the two (unless this frame is a
-     *             Opcodes#F_SAME frame, in which case it is silently ignored).
+     * @throws IllegalStateException if a frame is visited just after another one, without any
+     * instruction between the two (unless this frame is a
+     * Opcodes#F_SAME frame, in which case it is silently ignored).
      */
     public void visitFrame(FrameNode frame) {
         if (mv != null) {
@@ -315,8 +309,7 @@ public abstract class MethodVisitor {
      * Visits a label. A label designates the instruction that will be visited
      * just after it.
      *
-     * @param label
-     *            a {@link Label Label} object.
+     * @param label a {@link Label Label} object.
      */
     public void visitLabel(Label label) {
         if (mv != null) {
@@ -378,10 +371,9 @@ public abstract class MethodVisitor {
      * <i>after</i> the annotated instruction. It can be called several times
      * for the same instruction.
      *
-     * @param visible
-     *            <tt>true</tt> if the annotation is visible at runtime.
+     * @param visible <tt>true</tt> if the annotation is visible at runtime.
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
-     *         this visitor is not interested in visiting this annotation.
+     * this visitor is not interested in visiting this annotation.
      */
     public AnnotationVisitor visitInsnAnnotation(TypeAnnotationNode tan, boolean visible) {
         if (mv != null) {
@@ -397,9 +389,8 @@ public abstract class MethodVisitor {
     /**
      * Visits a try catch block.
      *
-     * @throws IllegalArgumentException
-     *             if one of the labels has already been visited by this visitor
-     *             (by the {@link #visitLabel visitLabel} method).
+     * @throws IllegalArgumentException if one of the labels has already been visited by this visitor
+     * (by the {@link #visitLabel visitLabel} method).
      */
     public void visitTryCatchBlock(TryCatchBlockNode tcbn) {
         if (mv != null) {
@@ -413,10 +404,9 @@ public abstract class MethodVisitor {
      * exception handler. It can be called several times for the same exception
      * handler.
      *
-     * @param visible
-     *            <tt>true</tt> if the annotation is visible at runtime.
+     * @param visible <tt>true</tt> if the annotation is visible at runtime.
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
-     *         this visitor is not interested in visiting this annotation.
+     * this visitor is not interested in visiting this annotation.
      */
     public AnnotationVisitor visitTryCatchAnnotation(TypeAnnotationNode tan, boolean visible) {
         if (mv != null) {
@@ -428,9 +418,8 @@ public abstract class MethodVisitor {
     /**
      * Visits a local variable declaration.
      *
-     * @throws IllegalArgumentException
-     *             if one of the labels has not already been visited by this
-     *             visitor (by the {@link #visitLabel visitLabel} method).
+     * @throws IllegalArgumentException if one of the labels has not already been visited by this
+     * visitor (by the {@link #visitLabel visitLabel} method).
      */
     public void visitLocalVariable(LocalVariableNode lvn) {
         if (mv != null) {
@@ -441,10 +430,9 @@ public abstract class MethodVisitor {
     /**
      * Visits an annotation on a local variable type.
      *
-     * @param visible
-     *            <tt>true</tt> if the annotation is visible at runtime.
+     * @param visible <tt>true</tt> if the annotation is visible at runtime.
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
-     *         this visitor is not interested in visiting this annotation.
+     * this visitor is not interested in visiting this annotation.
      */
     public AnnotationVisitor visitLocalVariableAnnotation(LocalVariableAnnotationNode lvan, boolean visible) {
         if (mv != null) {
@@ -456,9 +444,8 @@ public abstract class MethodVisitor {
     /**
      * Visits a line number declaration.
      *
-     * @throws IllegalArgumentException
-     *             if <tt>start</tt> has not already been visited by this
-     *             visitor (by the {@link #visitLabel visitLabel} method).
+     * @throws IllegalArgumentException if <tt>start</tt> has not already been visited by this
+     * visitor (by the {@link #visitLabel visitLabel} method).
      */
     public void visitLineNumber(LineNumberNode lnn) {
         if (mv != null) {
@@ -470,10 +457,8 @@ public abstract class MethodVisitor {
      * Visits the maximum stack size and the maximum number of local variables
      * of the method.
      *
-     * @param maxStack
-     *            maximum stack size of the method.
-     * @param maxLocals
-     *            maximum number of local variables for the method.
+     * @param maxStack maximum stack size of the method.
+     * @param maxLocals maximum number of local variables for the method.
      */
     public void visitMaxs(int maxStack, int maxLocals) {
         if (mv != null) {

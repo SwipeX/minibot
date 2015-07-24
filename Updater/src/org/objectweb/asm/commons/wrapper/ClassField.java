@@ -7,7 +7,7 @@ import org.objectweb.asm.tree.FieldNode;
  * @author Tyler Sedlar
  * @since 3/8/15.
  */
-public class ClassField implements Opcodes{
+public class ClassField implements Opcodes {
 
     public final ClassFactory owner;
     public final FieldNode field;

@@ -30,18 +30,24 @@ public class NodeTree extends AbstractNode {
     }
 
     public void accept(NodeVisitor nv) {
-        if (!nv.validate()) return;
+        if (!nv.validate()) {
+            return;
+        }
         nv.visitCode();
-        for (AbstractNode node : this)
+        for (AbstractNode node : this) {
             accept(nv, node);
+        }
         nv.visitEnd();
     }
 
     private void accept(NodeVisitor nv, AbstractNode n) {
-        if (!nv.validate()) return;
+        if (!nv.validate()) {
+            return;
+        }
         n.accept(nv);
-        for (AbstractNode node : n)
+        for (AbstractNode node : n) {
             accept(nv, node);
+        }
     }
 
     public AbstractInsnNode[] collapse() {

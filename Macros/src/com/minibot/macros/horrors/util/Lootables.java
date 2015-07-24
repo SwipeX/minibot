@@ -71,8 +71,9 @@ public class Lootables {
 
     private static int stackCount() {
         int count = 0;
-        for (Item item : Inventory.items())
+        for (Item item : Inventory.items()) {
             count += item.amount();
+        }
         return count;
     }
 
@@ -92,8 +93,9 @@ public class Lootables {
             int count = stackCount();
             String name = item.name();
             item.processAction("Take");
-            if (Time.sleep(() -> stackCount() != count, 10000))
+            if (Time.sleep(() -> stackCount() != count, 10000)) {
                 return (PRICES.get(name) * (stackCount() - count));
+            }
         }
         return -1;
     }

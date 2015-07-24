@@ -10,7 +10,7 @@ import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 
 /**
  * @author Tim Dekker
@@ -24,7 +24,9 @@ public class AltarRunner extends Macro implements Renderable {
 
     @Override
     public void run() {
-        if (Bank.viewing()) return;
+        if (Bank.viewing()) {
+            return;
+        }
         Item bone = Inventory.first(i -> i.name().contains("one"));
         GameObject alter = Objects.nearestByName("Altar");
         if (alter != null) {

@@ -8,7 +8,7 @@ import com.minibot.api.method.Widgets;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.client.natives.RSWidget;
 
-import java.awt.*;
+import java.awt.Rectangle;
 
 /**
  * @author Tyler Sedlar

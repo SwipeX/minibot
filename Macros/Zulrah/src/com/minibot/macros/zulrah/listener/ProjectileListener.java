@@ -1,6 +1,5 @@
 package com.minibot.macros.zulrah.listener;
 
-import com.minibot.api.method.Game;
 import com.minibot.api.method.Projectiles;
 import com.minibot.api.util.Random;
 import com.minibot.bot.macro.LoopTask;
@@ -16,7 +15,7 @@ import java.util.Map;
  */
 public abstract class ProjectileListener extends LoopTask {
 
-    private Map<Integer, Integer> cycles = new HashMap<>();
+    private final Map<Integer, Integer> cycles = new HashMap<>();
 
     public abstract void onProjectileLoaded(ProjectileEvent evt);
 

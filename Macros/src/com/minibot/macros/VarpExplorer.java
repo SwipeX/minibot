@@ -5,7 +5,7 @@ import com.minibot.api.util.Renderable;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 
 /**
  * @author Tyler Sedlar

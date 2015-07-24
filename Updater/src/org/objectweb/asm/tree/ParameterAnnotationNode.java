@@ -18,10 +18,8 @@ public class ParameterAnnotationNode {
     /**
      * Constructs a new {@link org.objectweb.asm.tree.AnnotationNode}.
      *
-     * @param parameter
-     *            the parameter of the annotation class
-     * @param desc
-     *            the class descriptor of the annotation class.
+     * @param parameter the parameter of the annotation class
+     * @param desc the class descriptor of the annotation class.
      */
     public ParameterAnnotationNode(final int parameter, final String desc) {
         this.parameter = parameter;

@@ -31,12 +31,14 @@ public abstract class ClueScroll {
     }
 
     public abstract void reset();
+
     public abstract void solve(AtomicReference<String> status);
 
     public static ClueScroll find(int id) {
         for (ClueScroll scroll : CLUE_SCROLLS) {
-            if (scroll.id == id)
+            if (scroll.id == id) {
                 return scroll;
+            }
         }
         return null;
     }

@@ -11,5 +11,6 @@ public interface RSProjectile extends RSRenderableNode {
     boolean isMoving();
 
     int getId();
+
     int getCycle();
 }

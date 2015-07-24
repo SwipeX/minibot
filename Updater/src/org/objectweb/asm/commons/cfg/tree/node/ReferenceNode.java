@@ -62,10 +62,14 @@ public class ReferenceNode extends AbstractNode {
         for (AbstractInsnNode ain : mn.instructions.toArray()) {
             if (ain instanceof FieldInsnNode) {
                 FieldInsnNode fin = (FieldInsnNode) ain;
-                if (key().equals(fin.owner + "." + fin.name)) return true;
+                if (key().equals(fin.owner + "." + fin.name)) {
+                    return true;
+                }
             } else if (ain instanceof MethodInsnNode) {
                 MethodInsnNode min = (MethodInsnNode) ain;
-                if (key().equals(min.owner + "." + min.name + min.desc)) return true;
+                if (key().equals(min.owner + "." + min.name + min.desc)) {
+                    return true;
+                }
             }
         }
         return false;

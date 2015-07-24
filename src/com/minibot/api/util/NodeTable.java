@@ -34,8 +34,9 @@ public class NodeTable implements Iterator<RSNode> {
         }
         while (index < buckets.length) {
             RSNode node = buckets[index++].getPrevious();
-            if (index - 1 >= buckets.length || node == null)
+            if (index - 1 >= buckets.length || node == null) {
                 return null;
+            }
             if (buckets[index - 1] != node) {
                 current = node.getPrevious();
                 return node;
@@ -46,8 +47,9 @@ public class NodeTable implements Iterator<RSNode> {
 
     public RSNode lookup(int uid) {
         for (RSNode node = first(); node != null; node = next()) {
-            if (node.getUid() == uid)
+            if (node.getUid() == uid) {
                 return node;
+            }
         }
         return null;
     }

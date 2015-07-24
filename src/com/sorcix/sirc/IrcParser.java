@@ -329,7 +329,7 @@ final class IrcParser {
                     for (String user : users) {
                         buffer = new User(user, irc);
                         /*
-						 * if (channel.hasUser(buffer)) {
+                         * if (channel.hasUser(buffer)) {
 						 * channel.addUser(buffer); }
 						 * channel.addUser(buffer);
 						 */

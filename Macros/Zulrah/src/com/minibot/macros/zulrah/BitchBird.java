@@ -7,8 +7,10 @@ import com.minibot.api.method.Walking;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
-import com.minibot.api.wrapper.locatable.*;
 import com.minibot.api.wrapper.locatable.Character;
+import com.minibot.api.wrapper.locatable.GameObject;
+import com.minibot.api.wrapper.locatable.Npc;
+import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 import com.minibot.client.natives.RSObjectDefinition;
@@ -19,7 +21,9 @@ import com.minibot.macros.zulrah.action.Prayer;
 import com.minibot.macros.zulrah.listener.ProjectileEvent;
 import com.minibot.macros.zulrah.listener.ProjectileListener;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,7 +71,7 @@ public class BitchBird extends Macro implements Renderable {
     private Npc npc;
     private int previousId;
     private Tile previousTile;
-    private List<Integer> previousIds = new ArrayList<>();
+    private final List<Integer> previousIds = new ArrayList<>();
 
     private long lastRan = -1;
 

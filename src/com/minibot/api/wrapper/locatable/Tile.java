@@ -7,7 +7,6 @@ import com.minibot.api.method.projection.Projection;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.util.Objects;
 
 /**
  * @author Tyler Sedlar

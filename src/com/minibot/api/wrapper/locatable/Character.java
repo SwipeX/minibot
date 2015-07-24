@@ -96,7 +96,7 @@ public abstract class Character<T extends RSCharacter> extends Wrapper<T> implem
         return maxHealth() > 0 && health() == 0;
     }
 
-    public int getOrientation(){
+    public int getOrientation() {
         return raw.getOrientation();
     }
 

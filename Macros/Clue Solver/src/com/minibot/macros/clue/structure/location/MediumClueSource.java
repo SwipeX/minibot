@@ -16,8 +16,9 @@ public class MediumClueSource extends ClueSource {
 
     public MediumClueSource() {
         super(FALADOR, FALADOR_BANK, FALADOR_GUARDS, TeleportLocation.FALADOR, n -> {
-            if (n.dead())
+            if (n.dead()) {
                 return false;
+            }
             String name = n.name();
             return name != null && name.equals("Guard") && n.level() < 22 && n.distance(FALADOR_GUARDS) < 8;
         });

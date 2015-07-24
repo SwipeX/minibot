@@ -27,8 +27,9 @@ public abstract class UnusedMethodTransform extends Transform {
     }
 
     private void follow(Map<String, ClassFactory> classes, List<ClassMethod> followed, ClassMethod method) {
-        if (validMethodKeys.contains(method.key()))
+        if (validMethodKeys.contains(method.key())) {
             return;
+        }
         validMethodKeys.add(method.key());
         followed.add(method);
         method.method.accept(new MethodVisitor() {
@@ -37,14 +38,16 @@ public abstract class UnusedMethodTransform extends Transform {
                     ClassFactory factory = classes.get(min.owner);
                     ClassMethod innerMethod = factory.findMethod(cm -> cm.method.name.equals(min.name) &&
                             cm.method.desc.equals(min.desc));
-                    if (innerMethod != null)
+                    if (innerMethod != null) {
                         follow(classes, followed, innerMethod);
+                    }
                     if (classes.containsKey(factory.node.superName)) {
                         ClassFactory superFactory = classes.get(factory.node.superName);
                         ClassMethod superMethod = superFactory.findMethod(cm -> cm.method.name.equals(min.name) &&
                                 cm.method.desc.equals(min.desc));
-                        if (superMethod != null)
+                        if (superMethod != null) {
                             follow(classes, followed, superMethod);
+                        }
                     }
                 }
             }
@@ -54,13 +57,16 @@ public abstract class UnusedMethodTransform extends Transform {
     @Override
     public void transform(Map<String, ClassNode> classes) {
         Map<String, ClassFactory> factories = new HashMap<>();
-        for (ClassNode cn : classes.values())
+        for (ClassNode cn : classes.values()) {
             factories.put(cn.name, new ClassFactory(cn));
+        }
         populateEntryPoints(entryPoints);
-        for (ClassNode cn : classes.values())
+        for (ClassNode cn : classes.values()) {
             totalMethods += cn.methods.size();
-        for (ClassMethod method : entryPoints)
+        }
+        for (ClassMethod method : entryPoints) {
             follow(factories, validMethods, method);
+        }
         for (ClassFactory cf : factories.values()) {
             cf.findMethods(mf -> !validMethodKeys.contains(mf.key())).forEach(ClassMethod::remove);
         }

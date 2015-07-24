@@ -33,14 +33,15 @@ public class Potions {
     }
 
     public enum Potion {
+
         MAGIC(Skills.MAGIC, FIVE_MINUTES),
         PRAYER(Skills.PRAYER, -1),
         RANGING(Skills.RANGED, FIVE_MINUTES),
         RESTORE(Skills.PRAYER, -1),
         VENOM(-1, THREE_MINUTES);
 
-        private int skill;
-        private int lifetime;
+        private final int skill;
+        private final int lifetime;
         private long lastDrink = -1;
 
 

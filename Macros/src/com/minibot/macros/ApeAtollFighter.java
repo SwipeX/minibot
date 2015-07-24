@@ -56,12 +56,14 @@ public class ApeAtollFighter extends Macro implements Renderable {
                 Time.sleep(500, 900);
             }
         }
-        if (Players.local().animation() != -1)
+        if (Players.local().animation() != -1) {
             return;
+        }
         Npc npc = Npcs.nearestByFilter(npc1 -> {
             for (String name : names) {
-                if (npc1 != null && npc1.name() != null && npc1.name().equals(name))
+                if (npc1 != null && npc1.name() != null && npc1.name().equals(name)) {
                     return true;
+                }
             }
             return false;
         });
@@ -76,7 +78,7 @@ public class ApeAtollFighter extends Macro implements Renderable {
             }
             Time.sleep(3500);
         }
-        if(Minibot.instance().client().getLevels()[Skills.STRENGTH] == Minibot.instance().client().getRealLevels()[Skills.STRENGTH]){
+        if (Minibot.instance().client().getLevels()[Skills.STRENGTH] == Minibot.instance().client().getRealLevels()[Skills.STRENGTH]) {
             Item abs = Inventory.first(item -> item != null && item.name() != null && item.name().contains("Combat"));
             if (abs != null) {
                 abs.processAction(ActionOpcodes.ITEM_ACTION_0, "Drink");

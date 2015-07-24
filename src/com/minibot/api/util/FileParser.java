@@ -14,17 +14,18 @@ import java.util.stream.Stream;
  */
 public class FileParser {
 
-	public static List<String> lines(String file) {
-		List<String> list = new LinkedList<>();
-		Path path = Paths.get(file);
-		if (!path.toFile().exists())
-			return null;
-		try (Stream<String> stream = Files.lines(path)) {
-			stream.forEachOrdered(list::add);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return list;
-	}
+    public static List<String> lines(String file) {
+        List<String> list = new LinkedList<>();
+        Path path = Paths.get(file);
+        if (!path.toFile().exists()) {
+            return null;
+        }
+        try (Stream<String> stream = Files.lines(path)) {
+            stream.forEachOrdered(list::add);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return list;
+    }
 }

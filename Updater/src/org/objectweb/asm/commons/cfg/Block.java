@@ -47,7 +47,9 @@ public class Block implements Comparable<Block> {
      * Constructs a NodeTree for the current block.
      */
     public NodeTree tree() {
-        if (tree != null) return tree;
+        if (tree != null) {
+            return tree;
+        }
         return (tree = TreeBuilder.build(this));
     }
 
@@ -81,8 +83,9 @@ public class Block implements Comparable<Block> {
     @Override
     public String toString() {
         String s = "Block #" + index + "\r\n";
-        for (AbstractInsnNode ain : instructions)
+        for (AbstractInsnNode ain : instructions) {
             s += " " + Assembly.toString(ain) + "\r\n";
+        }
         return s;
     }
 
@@ -95,8 +98,9 @@ public class Block implements Comparable<Block> {
     public int count(int opcode) {
         int count = 0;
         for (AbstractInsnNode ain : instructions) {
-            if (ain.opcode() == opcode)
+            if (ain.opcode() == opcode) {
                 count++;
+            }
         }
         return count;
     }
@@ -110,8 +114,9 @@ public class Block implements Comparable<Block> {
     public int count(InsnQuery query) {
         int count = 0;
         for (AbstractInsnNode ain : instructions) {
-            if (query.matches(ain))
+            if (query.matches(ain)) {
                 count++;
+            }
         }
         return count;
     }
@@ -127,8 +132,9 @@ public class Block implements Comparable<Block> {
         int i = 0;
         for (AbstractInsnNode ain : instructions) {
             if (ain.opcode() == opcode) {
-                if (i == index)
+                if (i == index) {
                     return ain;
+                }
                 i++;
             }
         }
@@ -156,8 +162,9 @@ public class Block implements Comparable<Block> {
         int i = 0;
         for (AbstractInsnNode ain : instructions) {
             if (query.matches(ain)) {
-                if (i == index)
+                if (i == index) {
                     return ain;
+                }
                 i++;
             }
         }

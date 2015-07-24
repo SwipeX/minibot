@@ -1,7 +1,6 @@
 package com.minibot.api.method;
 
 import com.minibot.api.action.ActionOpcodes;
-import com.minibot.api.util.Time;
 import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
@@ -21,13 +20,14 @@ public class Equipment {
             if (def != null) {
                 String[] actions = def.getActions();
                 if (actions != null) {
-                    if (contains(actions, "Wear"))
+                    if (contains(actions, "Wear")) {
                         item.processAction("Wear");
-                    else
+                    } else {
                         item.processAction("Wield");
-                    Time.sleep(() -> {
+                    }
+                    /*Time.sleep(() -> {
                         return equipped(item.id());
-                    }, 800);
+                    }, Random.nextInt(160, 300));*/
                 }
             }
         }
@@ -56,8 +56,9 @@ public class Equipment {
 
     public static void unequip(Filter<Slot> filter) {
         for (Slot slot : Slot.values()) {
-            if (filter.accept(slot))
+            if (filter.accept(slot)) {
                 unequip(slot);
+            }
         }
     }
 
@@ -106,7 +107,9 @@ public class Equipment {
     }
 
     private static boolean contains(String[] array, String element) {
-        if (element == null) return false;
+        if (element == null) {
+            return false;
+        }
         for (String string : array) {
             if (string != null && string.equals(element)) {
                 return true;
@@ -117,16 +120,26 @@ public class Equipment {
 
     private static ItemContainers.Entry atIndex(int index, ItemContainers.Entry[] entries) {
         for (ItemContainers.Entry entry : entries) {
-            if (entry.index() == index)
+            if (entry.index() == index) {
                 return entry;
+            }
         }
         return null;
     }
 
     public static enum Slot {
 
-        HEAD(6, 0), CAPE(7, 1), NECK(8, 2), WEAPON(9, 3), CHEST(10, 4), SHIELD(11, 5), LEGS(12, 7),
-        HANDS(13, 9), FEET(14, 10), RING(15, 12), AMMO(16, 13);
+        HEAD(6, 0),
+        CAPE(7, 1),
+        NECK(8, 2),
+        WEAPON(9, 3),
+        CHEST(10, 4),
+        SHIELD(11, 5),
+        LEGS(12, 7),
+        HANDS(13, 9),
+        FEET(14, 10),
+        RING(15, 12),
+        AMMO(16, 13);
 
         private final int id;
         private final int index;
@@ -178,8 +191,9 @@ public class Equipment {
 
         public String targetText() {
             String name = getName();
-            if (name != null)
+            if (name != null) {
                 return String.format("<col=ff9040>%s</col>", getName());
+            }
             return null;
         }
     }

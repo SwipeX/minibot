@@ -21,8 +21,9 @@ public class GrandExchange {
     }
 
     public static boolean openCollect() {
-        if (viewingCollect())
+        if (viewingCollect()) {
             return true;
+        }
         Npc npc = Npcs.nearestByName("Banker");
         if (npc != null) {
             npc.processAction("Collect");
@@ -45,8 +46,9 @@ public class GrandExchange {
 
     public static boolean collectToBank(boolean close) {
         lastCollectTime = Time.millis();
-        if (!viewingCollect())
+        if (!viewingCollect()) {
             openCollect();
+        }
         if (viewingCollect()) {
             WidgetComponent component = Widgets.get(COLLECT_PARENT, COLLECT_BANK_CHILD);
             if (component != null) {

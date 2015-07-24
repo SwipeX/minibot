@@ -43,8 +43,9 @@ public class JarArchive {
                         buffer.compact();
                     }
                     buffer.flip();
-                    while (buffer.hasRemaining())
+                    while (buffer.hasRemaining()) {
                         outChannel.write(buffer);
+                    }
                     return baos.toByteArray();
                 }
             }
@@ -54,8 +55,9 @@ public class JarArchive {
     }
 
     public Map<String, ClassNode> build() {
-        if (!nodes.isEmpty())
+        if (!nodes.isEmpty()) {
             return nodes;
+        }
         try {
             JarFile jar = new JarFile(file);
             manifest = jar.getManifest();
@@ -69,8 +71,9 @@ public class JarArchive {
                     reader.accept(cn, ClassReader.EXPAND_FRAMES);
                     nodes.put(name.replace(".class", ""), cn);
                 } else {
-                    if (!name.equals("META-INF/MANIFEST.MF"))
+                    if (!name.equals("META-INF/MANIFEST.MF")) {
                         resources.put(name, inputToBytes(jar.getInputStream(entry)));
+                    }
                 }
             }
         } catch (IOException e) {

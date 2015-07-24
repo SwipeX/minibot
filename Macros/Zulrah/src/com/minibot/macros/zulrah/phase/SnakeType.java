@@ -8,7 +8,13 @@ import com.minibot.macros.zulrah.action.Prayer;
  * @since 7/14/15
  */
 public enum SnakeType {
-    RANGE(2042), MELEE(2043), MAGIC(2044), JAD_MAGIC_FIRST(-1), JAD_RANGE_FIRST(-2);
+
+    RANGE(2042),
+    MELEE(2043),
+    MAGIC(2044),
+    JAD_MAGIC_FIRST(-1),
+    JAD_RANGE_FIRST(-2);
+
     private int id;
 
     SnakeType(int id) {
@@ -43,5 +49,4 @@ public enum SnakeType {
     public void setId(int id) {
         this.id = id;
     }
-
 }

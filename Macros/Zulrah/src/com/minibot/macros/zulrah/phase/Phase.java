@@ -3,20 +3,21 @@ package com.minibot.macros.zulrah.phase;
 import com.minibot.macros.zulrah.Zulrah;
 import com.minibot.macros.zulrah.action.Prayer;
 
-import java.awt.*;
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 /**
  * @author Tim Dekker
  * @since 7/14/15
- *
+ * <p>
  * WORKING:
- *  - PHASE_1 (Messes up if thinks is unconfirmed PHASE_4)
- *  - PHASE_2
- *  - PHASE_3
- *  - PHASE_4
+ * - PHASE_1 (Messes up if thinks is unconfirmed PHASE_4)
+ * - PHASE_2
+ * - PHASE_3
+ * - PHASE_4
  */
 public enum Phase {
+
     PHASE_1(Stage.INITIAL, Stage.MELEE_EAST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_WEST, Stage.MELEE_WEST,
             Stage.MAGIC_SOUTH_WEST, Stage.RANGE_SOUTH_EAST, Stage.MAGIC_SOUTH_WEST, Stage.JAD_WEST, Stage.MELEE_EAST),
 
@@ -31,9 +32,9 @@ public enum Phase {
             Stage.RANGE_SOUTH_EAST, Stage.RANGE_SOUTH_WEST, Stage.MAGIC_SOUTH_WEST, Stage.RANGE_EAST, Stage.MAGIC_EAST,
             Stage.JAD_EAST, Stage.MAGIC_EAST);
 
-    Stage[] stages;
-    int index = 0;
-    boolean confirmed = false;
+    final Stage[] stages;
+    int index;
+    boolean confirmed;
 
     Phase(Stage... stages) {
         this.stages = stages;
@@ -96,8 +97,9 @@ public enum Phase {
             Stage stage = stages[i];
             int stageId = stage.getSnakeType().id();
             int prevId = previous.get(i);
-            if (stageId != prevId)
+            if (stageId != prevId) {
                 return false;
+            }
         }
         return stages[previous.size()].getSnakeType().id() == current; // why not return true; ?
     }
@@ -111,10 +113,11 @@ public enum Phase {
         String phase2 = "";
         for (int i = 0; i < stages.length; i++) {
             Stage stage = stages[i];
-            if (i < 5)
+            if (i < 5) {
                 phase += stage.name() + "[" + (index > i ? "X" : "") + "] ";
-            else
+            } else {
                 phase2 += stage.name() + "[" + (index > i ? "X" : "") + "] ";
+            }
         }
         g.drawString(name() + ": " + phase, x, y);
         g.drawString(phase2, x, y += 13);

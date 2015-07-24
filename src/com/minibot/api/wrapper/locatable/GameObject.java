@@ -10,7 +10,7 @@ import com.minibot.api.wrapper.Wrapper;
 import com.minibot.client.natives.*;
 import com.minibot.util.DefinitionLoader;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.Arrays;
 
 /**

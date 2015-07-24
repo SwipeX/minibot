@@ -11,7 +11,8 @@ import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -47,12 +48,14 @@ public class ZooFighter2 extends Macro implements Renderable {
             start_exp = Game.experiences()[SKILL_STR];
             start_time = System.currentTimeMillis();
         }
-        if (Players.local().animation() != -1)
+        if (Players.local().animation() != -1) {
             return;
+        }
         Npc npc = Npcs.nearestByFilter(npc1 -> {
             for (String name : names) {
-                if (npc1 != null && npc1.name() != null && npc1.name().equals(name))
+                if (npc1 != null && npc1.name() != null && npc1.name().equals(name)) {
                     return true;
+                }
             }
             return false;
         });

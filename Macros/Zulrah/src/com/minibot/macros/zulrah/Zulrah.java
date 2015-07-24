@@ -22,7 +22,7 @@ import com.minibot.macros.zulrah.phase.Stage;
 import com.minibot.macros.zulrah.util.Paint;
 import com.minibot.macros.zulrah.util.Price;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Deque;
 
@@ -41,9 +41,9 @@ public class Zulrah extends Macro implements Renderable {
 
     private static final ArrayList<Integer> previous = new ArrayList<>();
     private static Phase phase = Phase.PHASE_1;
-    private static Tile origin = null;
+    private static Tile origin;
     public static int projectileType = -1;
-    private boolean changed = false;
+    private boolean changed;
     private ZulrahEvent lastEvent;
     private long lastRan = -1;
 
@@ -155,14 +155,14 @@ public class Zulrah extends Macro implements Renderable {
             if (origin != null && origin.distance() < 10) {
                 int total = 0;
                 Deque<GroundItem> items = Ground.loaded(20);
-                if (items.size() > 0) {
+                if (!items.isEmpty()) {
                     for (GroundItem item : items) {
                         int price = Price.getPrice(item.id());
                         System.out.println(item.name() + " (" + item.stackSize() + ") x " + price + " = " + (price * item.stackSize()));
                         total += item.stackSize() * price;
                     }
                     System.out.println("Total kill estimated @ " + total + " gp");
-                    items.forEach(com.minibot.api.wrapper.locatable.GroundItem::take);
+                    items.forEach(GroundItem::take);
                 }
             } else {
                 origin = null;

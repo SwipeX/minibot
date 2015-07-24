@@ -1,14 +1,7 @@
 package com.minibot.macros;
 
 import com.minibot.Minibot;
-import com.minibot.api.method.Bank;
-import com.minibot.api.method.ChatboxListener;
-import com.minibot.api.method.Game;
-import com.minibot.api.method.GameTab;
-import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Npcs;
-import com.minibot.api.method.Widgets;
-import com.minibot.api.util.Random;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.util.ValueFormat;
@@ -45,32 +38,13 @@ public class Superglass extends Macro implements Renderable, ChatboxListener {
 
     private static final int TEXT_FORMAT = ValueFormat.THOUSANDS | ValueFormat.COMMAS | ValueFormat.PRECISION(1);
 
-    private static final Filter<Item> SAND_FILTER = i -> {
-        String name = i.name();
-        return name != null && name.equals("Bucket of sand");
-    };
+    private static final Filter<Item> SAND_FILTER = i -> i.name().equals("Bucket of sand");
+    private static final Filter<Item> SEAWEED_FILTER = i -> i.name().equals("Seaweed");
+    private static final Filter<Item> MOLTEN_FILTER = i -> i.name().equals("Molten glass");
+    private static final Filter<Item> FIRE_FILTER = i -> i.name().equals("Fire rune");
+    private static final Filter<Item> ASTRAL_FILTER = i -> i.name().equals("Astral rune");
 
-    private static final Filter<Item> SEAWEED_FILTER = i -> {
-        String name = i.name();
-        return name != null && name.equals("Seaweed");
-    };
-
-    private static final Filter<Item> MOLTEN_FILTER = i -> {
-        String name = i.name();
-        return name != null && name.equals("Molten glass");
-    };
-
-    private static final Filter<Item> FIRE_FILTER = i -> {
-        String name = i.name();
-        return name != null && name.equals("Fire rune");
-    };
-
-    private static final Filter<Item> ASTRAL_FILTER = i -> {
-        String name = i.name();
-        return name != null && name.equals("Astral rune");
-    };
-
-    private boolean openBank() {
+    private static boolean openBank() {
         Npc banker = Npcs.nearestByName("Banker");
         if (banker != null) {
             banker.processAction("Bank");
@@ -120,24 +94,12 @@ public class Superglass extends Macro implements Renderable, ChatboxListener {
     @Override
     public void run() {
         Minibot.instance().client().resetMouseIdleTime();
-        if (sandFails >= Random.nextInt(3, 6) || seaweedFails >= Random.nextInt(3, 6)) {
-            Game.logout();
-            interrupt();
-        } else if (sandFails > 0 || seaweedFails > 0) {
-            Time.sleep(1000, 3000);
-        }
         if (Bank.viewing()) {
             prepareInventory();
         } else {
             if (cast) {
                 openBank();
             } else {
-                if (Inventory.first(SAND_FILTER) != null) {
-                    sandFails = 0;
-                }
-                if (Inventory.first(SEAWEED_FILTER) != null) {
-                    seaweedFails = 0;
-                }
                 if (GameTab.MAGIC.open()) {
                     WidgetComponent spell = Widgets.get(218, 110);
                     if (spell != null) {
@@ -162,11 +124,9 @@ public class Superglass extends Macro implements Renderable, ChatboxListener {
 
     @Override
     public void messageReceived(int type, String sender, String message, String clan) {
-        if (message.contains("You don't have any") && type == 0) {
-            if (message.contains("sand")) {
-                sandFails++;
-            } else if (message.contains("seaweed")) {
-                seaweedFails++;
+        if (message != null && message.contains("You don't have any")) {
+            if (message.contains("sand") || message.contains("seaweed")) {
+                casts--;
             }
         }
     }

@@ -11,33 +11,32 @@ import org.objectweb.asm.commons.cfg.tree.node.FieldMemberNode;
 import org.objectweb.asm.commons.cfg.tree.node.MethodMemberNode;
 import org.objectweb.asm.commons.cfg.tree.node.VariableNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @VisitorInfo(hooks = {"ids", "stackSizes"})
 public class ItemContainer extends GraphVisitor {
- 
+
     @Override
     public boolean validate(ClassNode cn) {
         return cn.getFieldTypeCount() == 1 && cn.fieldCount("[I") == 2 && cn.superName.equals(clazz("Node"));
     }
- 
+
     @Override
     public void visit() {
         visitAll(new Hooks());
     }
- 
+
     private class Hooks extends BlockVisitor {
- 
+
         private final List<FieldMemberNode> vars = new ArrayList<>();
- 
+
         @Override
         public boolean validate() {
             return vars.size() < 2 || !lock.get();
         }
- 
+
         @Override
         public void visit(Block block) {
             if ((block.owner.access & ACC_STATIC) == 0) {
@@ -66,7 +65,7 @@ public class ItemContainer extends GraphVisitor {
                 }
             });
         }
- 
+
         @Override
         public void visitEnd() {
             if (vars.size() < 2) {

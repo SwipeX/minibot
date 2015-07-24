@@ -35,8 +35,9 @@ public class FlowVisitor extends MethodVisitor {
      */
     private Block[] constructAll(List<LabelNode> labels) {
         Block[] blocks = new Block[labels.size()];
-        for (int i = 0; i < blocks.length; i++)
+        for (int i = 0; i < blocks.length; i++) {
             blocks[i] = construct(labels.get(i));
+        }
         return blocks;
     }
 
@@ -122,8 +123,9 @@ public class FlowVisitor extends MethodVisitor {
         int opcode = jin.opcode();
         current.target = construct(jin.label);
         current.target.preds.add(current.target);
-        if (opcode != GOTO)
+        if (opcode != GOTO) {
             current.instructions.add(jin);
+        }
         Stack<AbstractInsnNode> stack = current.stack;
         current = construct(new LabelNode(new Label()), opcode != GOTO);
         current.stack = stack;
@@ -131,7 +133,9 @@ public class FlowVisitor extends MethodVisitor {
 
     @Override
     public void visitLabel(Label label) {
-        if (label == null || label.info == null) return;
+        if (label == null || label.info == null) {
+            return;
+        }
         Stack<AbstractInsnNode> stack = current == null ? new Stack<AbstractInsnNode>() : current.stack;
         current = construct(new LabelNode(label));
         current.stack = stack;
@@ -171,8 +175,9 @@ public class FlowVisitor extends MethodVisitor {
         List<Block> empty = new ArrayList<>();
         for (Block block : blocks) {
             block.owner = mn;
-            if (block.isEmpty())
+            if (block.isEmpty()) {
                 empty.add(block);
+            }
         }
         blocks.removeAll(empty);
         Collections.sort(blocks, new Comparator<Block>() {
@@ -182,16 +187,19 @@ public class FlowVisitor extends MethodVisitor {
         });
         for (Block block : blocks) {
             block.setIndex(blocks.indexOf(block));
-            if (!graph.containsVertex(block))
+            if (!graph.containsVertex(block)) {
                 graph.addVertex(block);
+            }
             if (block.target != null && block.target != block) {
-                if (!graph.containsVertex(block.target))
+                if (!graph.containsVertex(block.target)) {
                     graph.addVertex(block.target);
+                }
                 graph.addEdge(block, block.target);
             }
             if (block.next != null) {
-                if (!graph.containsVertex(block.next))
+                if (!graph.containsVertex(block.next)) {
                     graph.addVertex(block.next);
+                }
                 graph.addEdge(block, block.next);
             }
         }
