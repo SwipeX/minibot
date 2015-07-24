@@ -162,10 +162,12 @@ public class Zulrah extends Macro implements Renderable {
                     int price = Price.getPrice(item.id());
                     System.out.println(item.name() + " (" + item.stackSize() + ") x " + price + " = " + (price * item.stackSize()));
                     total += item.stackSize() * price;
-                    item.processAction("Take");
-                    Time.sleep(() -> item == null, 5000);
                 }
                 System.out.println("Total kill estimated @ " + total + " gp");
+                for (GroundItem item : items) {
+                    item.processAction("Take");
+                    Time.sleep(() -> item.raw() == null, 5000);
+                }
             } else {
                 origin = null;
                 Potions.reset();
