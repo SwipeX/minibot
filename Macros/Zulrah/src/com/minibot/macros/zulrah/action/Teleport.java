@@ -1,9 +1,7 @@
 package com.minibot.macros.zulrah.action;
 
-import com.minibot.api.method.Ground;
-import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Players;
-import com.minibot.api.method.Widgets;
+import com.minibot.api.action.tree.DialogButtonAction;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.WidgetComponent;
@@ -40,7 +38,7 @@ public class Teleport {
             WidgetComponent clan = clanComponent();
             if (clan != null) {
                 Tile location = Players.local().location();
-                clan.processAction("Continue");
+                RuneScape.processAction(new DialogButtonAction(14352384, 3), "", "");
                 Time.sleep(() -> Players.local().location().x() != location.x(), 5000);
             }
         } else {
