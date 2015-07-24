@@ -112,6 +112,14 @@ public class Inventory {
         return true;
     }
 
+    public static boolean containsAll(int... ids) {
+        for (int id : ids) {
+            if (first(i -> i.id() == id) == null)
+                return false;
+        }
+        return true;
+    }
+
     public static void dropAll(Filter<Item> filter) {
         apply(filter, Item::drop);
     }

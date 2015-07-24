@@ -47,23 +47,13 @@ public class Price {
     public static int getPrice(int itemID) {
         String[] data = getData(itemID);
         if (data != null && data.length == 5) {
-            return Integer.parseInt(data[0].replaceAll("\\D", ""));
-        }
-        return 0;
-    }
-
-    public static int getAverageBuyOffer(int itemID) {
-        String[] data = getData(itemID);
-        if (data != null && data.length == 5) {
-            return Integer.parseInt(data[1].replaceAll("\\D", ""));
-        }
-        return 0;
-    }
-
-    public static int getAverageSellOffer(int itemID) {
-        String[] data = getData(itemID);
-        if (data != null && data.length == 5) {
-            return Integer.parseInt(data[3].replaceAll("\\D", ""));
+            int amount = Integer.parseInt(data[0].replaceAll("\\D", ""));
+            if (amount <= 0) {
+                data = getData(itemID);
+                return Integer.parseInt(data[0].replaceAll("\\D", ""));
+            } else {
+                return amount;
+            }
         }
         return 0;
     }

@@ -85,6 +85,7 @@ public class Zulrah extends Macro implements Renderable {
         Npc zulrah = getMonster();
         zulrahListener.setNpc(zulrah);
         Camp.act();
+        Teleport.handle();
         handleStats();
         handleDialogs();
         if (zulrah != null) {
@@ -185,7 +186,6 @@ public class Zulrah extends Macro implements Renderable {
     @Override
     public void render(Graphics2D g) {
         Paint.paint(g);
-        g.drawString(Players.local().getOrientation() + "", 300, 300);
     }
 
     public static ArrayList<Integer> getPrevious() {

@@ -19,7 +19,8 @@ import java.util.ArrayList;
  * @since 7/14/15
  */
 public class Gear {
-
+    private static int[] other;
+    private static int[] inventory;
     private static int[] rangeIds;
     private static int[] mageIds;
     private static final String[] NAMES_RANGE;
@@ -35,6 +36,8 @@ public class Gear {
     public static void setup() {
         ArrayList<Integer> range = new ArrayList<>();
         ArrayList<Integer> magic = new ArrayList<>();
+        ArrayList<Integer> equip = new ArrayList<>();
+        ArrayList<Integer> pack = new ArrayList<>();
         for (Equipment.Slot slot : Equipment.Slot.values()) {
             if (slot != null) {
                 if (slot.getName() == null) {
@@ -44,13 +47,16 @@ public class Gear {
                 for (String string : NAMES_MAGE) {
                     if (name.contains(string)) {
                         magic.add(slot.itemId());
+                        continue;
                     }
                 }
                 for (String string : NAMES_RANGE) {
                     if (name.contains(string)) {
                         range.add(slot.itemId());
+                        continue;
                     }
                 }
+                equip.add(slot.itemId());
             }
         }
 
@@ -59,16 +65,33 @@ public class Gear {
             for (String string : NAMES_MAGE) {
                 if (name.contains(string)) {
                     magic.add(item.id());
+                    continue;
                 }
             }
             for (String string : NAMES_RANGE) {
                 if (name.contains(string)) {
                     range.add(item.id());
+                    continue;
                 }
             }
+            if (item.name().contains("dueling"))
+                continue;
+            pack.add(item.id());
         }
+        other = equip.stream().mapToInt(i -> i).toArray();
+        inventory = pack.stream().mapToInt(i -> i).toArray();
         rangeIds = range.stream().mapToInt(i -> i).toArray();
         mageIds = magic.stream().mapToInt(i -> i).toArray();
+    }
+
+    public static boolean hasInventory() {
+        return Inventory.containsAll(inventory) &&
+                (Inventory.containsAll(rangeIds) || Inventory.containsAll(mageIds));
+    }
+
+    public static boolean hasEquip(){
+        return Equipment.equipped(other) &&
+                (Equipment.equipped(rangeIds) || Equipment.equipped(mageIds));
     }
 
     public static boolean equip() {
