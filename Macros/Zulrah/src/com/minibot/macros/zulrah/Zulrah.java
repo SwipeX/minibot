@@ -1,10 +1,7 @@
 package com.minibot.macros.zulrah;
 
 import com.minibot.Minibot;
-import com.minibot.api.method.Ground;
-import com.minibot.api.method.Npcs;
-import com.minibot.api.method.Players;
-import com.minibot.api.method.Walking;
+import com.minibot.api.method.*;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
@@ -14,10 +11,7 @@ import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
-import com.minibot.macros.zulrah.action.Food;
-import com.minibot.macros.zulrah.action.Gear;
-import com.minibot.macros.zulrah.action.Potions;
-import com.minibot.macros.zulrah.action.Prayer;
+import com.minibot.macros.zulrah.action.*;
 import com.minibot.macros.zulrah.listener.ProjectileEvent;
 import com.minibot.macros.zulrah.listener.ProjectileListener;
 import com.minibot.macros.zulrah.listener.ZulrahEvent;
@@ -90,7 +84,9 @@ public class Zulrah extends Macro implements Renderable {
         Minibot.instance().setVerbose(false);
         Npc zulrah = getMonster();
         zulrahListener.setNpc(zulrah);
+        Camp.act();
         handleStats();
+        handleDialogs();
         if (zulrah != null) {
             if (origin == null) {
                 SnakeType.RANGE.setId(zulrah.id());
@@ -177,6 +173,13 @@ public class Zulrah extends Macro implements Renderable {
             }
         }
         Minibot.instance().client().resetMouseIdleTime();
+    }
+
+    private void handleDialogs() {
+        if (Widgets.viewingContinue()) {
+            Widgets.processContinue();
+            Time.sleep(400, 600);
+        }
     }
 
     @Override
