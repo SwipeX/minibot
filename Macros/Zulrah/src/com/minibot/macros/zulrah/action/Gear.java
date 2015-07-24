@@ -80,7 +80,7 @@ public class Gear {
     }
 
     private static void specialAttack() {
-        if ((lastSpec == -1 || Time.millis() - lastSpec > 1200) && !Equipment.equipped("Armadyl crossbow")) {//spec
+        if ((lastSpec == -1 || Time.millis() - lastSpec > 1200) && Equipment.equipped("Armadyl crossbow")) {//spec
             if (Minibot.instance().client().getGameSettings()[300] / 10 >= 40) {
                 WidgetComponent comp = Widgets.get(593, 30);
                 if (comp != null) {

@@ -1,6 +1,7 @@
 package com.minibot.macros.zulrah;
 
 import com.minibot.Minibot;
+import com.minibot.api.method.Ground;
 import com.minibot.api.method.Npcs;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.Walking;
@@ -8,6 +9,7 @@ import com.minibot.api.util.Random;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.locatable.Character;
+import com.minibot.api.wrapper.locatable.GroundItem;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
@@ -24,9 +26,11 @@ import com.minibot.macros.zulrah.phase.Phase;
 import com.minibot.macros.zulrah.phase.SnakeType;
 import com.minibot.macros.zulrah.phase.Stage;
 import com.minibot.macros.zulrah.util.Paint;
+import com.minibot.macros.zulrah.util.Price;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Deque;
 
 /**
  * @author Tim Dekker
@@ -152,7 +156,14 @@ public class Zulrah extends Macro implements Renderable {
             }
         } else {
             if (origin != null && origin.distance() < 10) {
-                System.out.println("LOOT THAT SHIT MARTY");
+                int total = 0;
+                Deque<GroundItem> items = Ground.loaded(20);
+                for (GroundItem item : items) {
+                    int price = Price.getPrice(item.id());
+                    System.out.println(item.name() + " (" + item.stackSize() + ") x " + price + " = " + (price * item.stackSize()));
+                    total += price;
+                }
+                System.out.println("Total kill estimated @ " + total+" gp");
             } else {
                 origin = null;
                 Potions.reset();
