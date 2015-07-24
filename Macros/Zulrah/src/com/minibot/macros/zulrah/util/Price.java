@@ -49,7 +49,7 @@ public class Price {
         if (data != null && data.length == 5) {
             int amount = Integer.parseInt(data[0].replaceAll("\\D", ""));
             if (amount <= 0) {
-                data = getData(itemID);
+                data = getData(itemID-1);
                 return Integer.parseInt(data[0].replaceAll("\\D", ""));
             } else {
                 return amount;
