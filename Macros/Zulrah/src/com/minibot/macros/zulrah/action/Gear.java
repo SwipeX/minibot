@@ -1,9 +1,14 @@
 package com.minibot.macros.zulrah.action;
 
+import com.minibot.Minibot;
+import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Combat;
 import com.minibot.api.method.Equipment;
 import com.minibot.api.method.Inventory;
+import com.minibot.api.method.Widgets;
+import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.Item;
+import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.macros.zulrah.Zulrah;
 import com.minibot.macros.zulrah.phase.SnakeType;
 
@@ -19,6 +24,7 @@ public class Gear {
     private static int[] mageIds;
     private static final String[] NAMES_RANGE;
     private static final String[] NAMES_MAGE;
+    private static long lastSpec = -1;
 
     static {
         NAMES_RANGE = new String[]{"d'hide", "bow", "pipe", "ava's", "range", "blowpipe"};
@@ -69,7 +75,20 @@ public class Gear {
         if (!Equipment.equipped("Ring of recoil")) {
             Equipment.equip("Ring of recoil");
         }
+        specialAttack();
         return equip(Zulrah.getPhase().getCurrent().getSnakeType());
+    }
+
+    private static void specialAttack() {
+        if ((lastSpec == -1 || Time.millis() - lastSpec > 1200) && !Equipment.equipped("Armadyl crossbow")) {//spec
+            if (Minibot.instance().client().getGameSettings()[300] / 10 >= 40) {
+                WidgetComponent comp = Widgets.get(593, 30);
+                if (comp != null) {
+                    comp.processAction(ActionOpcodes.WIDGET_ACTION, 1, "Use <col=00ff00>Special Attack</col>", "");
+                }
+                lastSpec = Time.millis();
+            }
+        }
     }
 
     public static boolean equip(SnakeType type) {

@@ -14,9 +14,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
@@ -175,6 +173,14 @@ public class MacroSelector extends JDialog {
             for (String string : strings) {
                 add(string);
             }
+        }
+
+        public boolean equals(Object o) {
+            if (o instanceof MacroDefinition) {
+                MacroDefinition def = (MacroDefinition) o;
+                return def.equals(this);
+            }
+            return false;
         }
 
         public MacroDefinition def() {
