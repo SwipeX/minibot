@@ -158,15 +158,14 @@ public class Zulrah extends Macro implements Renderable {
             if (origin != null && origin.distance() < 10) {
                 int total = 0;
                 Deque<GroundItem> items = Ground.loaded(20);
-                for (GroundItem item : items) {
-                    int price = Price.getPrice(item.id());
-                    System.out.println(item.name() + " (" + item.stackSize() + ") x " + price + " = " + (price * item.stackSize()));
-                    total += item.stackSize() * price;
-                }
-                System.out.println("Total kill estimated @ " + total + " gp");
-                for (GroundItem item : items) {
-                    item.processAction("Take");
-                    Time.sleep(() -> item.raw() == null, 5000);
+                if (items.size() > 0) {
+                    for (GroundItem item : items) {
+                        int price = Price.getPrice(item.id());
+                        System.out.println(item.name() + " (" + item.stackSize() + ") x " + price + " = " + (price * item.stackSize()));
+                        total += item.stackSize() * price;
+                    }
+                    System.out.println("Total kill estimated @ " + total + " gp");
+                    items.forEach(com.minibot.api.wrapper.locatable.GroundItem::take);
                 }
             } else {
                 origin = null;
