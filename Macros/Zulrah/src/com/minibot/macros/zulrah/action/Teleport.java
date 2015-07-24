@@ -23,12 +23,13 @@ public class Teleport {
     private static final int SUB_CHILD = 3;
 
     public static void handle() {
-        if (Zulrah.getOrigin() != null && Zulrah.getOrigin().distance() < 10) {
-            Deque<GroundItem> items = Ground.loaded(20);
-            if (items.size() == 0) {
-                act();
+        if (Zulrah.getMonster() == null)
+            if (Zulrah.getOrigin() != null && Zulrah.getOrigin().distance() < 10) {
+                Deque<GroundItem> items = Ground.loaded(20);
+                if (items.size() == 0) {
+                    act();
+                }
             }
-        }
     }
 
     private static void act() {
