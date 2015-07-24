@@ -79,13 +79,18 @@ public class Zulrah extends Macro implements Renderable {
         Food.eat();
     }
 
+    private void handleSetup() {
+        Camp.act();
+        Teleport.handle();
+        ClanWars.handle();
+    }
+
     @Override
     public void run() {
         Minibot.instance().setVerbose(false);
         Npc zulrah = getMonster();
         zulrahListener.setNpc(zulrah);
-        Camp.act();
-        Teleport.handle();
+        handleSetup();
         handleStats();
         handleDialogs();
         if (zulrah != null) {
