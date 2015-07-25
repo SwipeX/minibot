@@ -25,12 +25,13 @@ import com.minibot.macros.zulrah.util.Price;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 /**
  * @author Tim Dekker
  * @since 7/14/15
  */
-@Manifest(name = "Zulrah", author = "Tyler/Tim", version = "1.0.0", description = "Kills Zulrah")
+@Manifest(name = "Zulrah", author = "Tyler/Tim/Jacob", version = "1.0.0", description = "Kills Zulrah")
 public class Zulrah extends Macro implements Renderable {
 
     public static final int PROJECTILE_CLOUD = 1045;
@@ -39,13 +40,14 @@ public class Zulrah extends Macro implements Renderable {
     public static final int PROJECTILE_RANGE = 1044;
     public static final int PROJECTILE_MAGE = 1046;
 
-    private static final ArrayList<Integer> previous = new ArrayList<>();
+    public static final List<Integer> lootIds = new ArrayList<>(45);
+    private static final List<Integer> previous = new ArrayList<>();
     private static Phase phase = Phase.PHASE_1;
     private static Tile origin;
     public static int projectileType = -1;
-    private boolean changed;
-    private ZulrahEvent lastEvent;
-    private long lastRan = -1;
+    private static boolean changed;
+    private static ZulrahEvent lastEvent;
+    private static long lastRan = -1;
 
     private final ZulrahListener zulrahListener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
@@ -87,7 +89,7 @@ public class Zulrah extends Macro implements Renderable {
 
     @Override
     public void run() {
-        Minibot.instance().setVerbose(false);
+        //Minibot.instance().setVerbose(false);
         Npc zulrah = getMonster();
         zulrahListener.setNpc(zulrah);
         handleSetup();
@@ -162,6 +164,9 @@ public class Zulrah extends Macro implements Renderable {
                 Deque<GroundItem> items = Ground.loaded(20);
                 if (!items.isEmpty()) {
                     for (GroundItem item : items) {
+                        if (!lootIds.contains(item.id())) {
+                            lootIds.add(item.id());
+                        }
                         int price = Price.getPrice(item.id());
                         System.out.println(item.name() + " (" + item.stackSize() + ") x " + price + " = " + (price * item.stackSize()));
                         total += item.stackSize() * price;
@@ -193,7 +198,7 @@ public class Zulrah extends Macro implements Renderable {
         Paint.paint(g);
     }
 
-    public static ArrayList<Integer> getPrevious() {
+    public static List<Integer> getPrevious() {
         return previous;
     }
 

@@ -4,7 +4,7 @@ import com.minibot.macros.zulrah.Zulrah;
 import com.minibot.macros.zulrah.action.Prayer;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Tim Dekker
@@ -77,7 +77,7 @@ public enum Phase {
         return stages[index];
     }
 
-    public static Phase determine(ArrayList<Integer> previous, int current) {
+    public static Phase determine(List<Integer> previous, int current) {
         Phase selected = null;
         for (Phase phase : values()) {
             if (phase.matches(previous, current)) {
@@ -92,7 +92,7 @@ public enum Phase {
         return selected;
     }
 
-    public boolean matches(ArrayList<Integer> previous, int current) {
+    public boolean matches(List<Integer> previous, int current) {
         for (int i = 0; i < previous.size(); i++) {
             Stage stage = stages[i];
             int stageId = stage.getSnakeType().id();

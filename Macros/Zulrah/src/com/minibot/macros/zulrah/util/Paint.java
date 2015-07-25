@@ -53,7 +53,7 @@ public class Paint {
             }
         }
         g.drawString("Gear: ", 20, y += 13);
-        g.drawString("Range Ids: " + Arrays.toString(Gear.getRangeIds()), 20, y += 13);
+        g.drawString("Range Ids: " + Arrays.toString(Gear.getRangedIds()), 20, y += 13);
         g.drawString("Magic Ids: " + Arrays.toString(Gear.getMageIds()), 20, y += 13);
         Zulrah.getPhase().draw(g, 20, y + 13);
     }

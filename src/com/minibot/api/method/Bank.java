@@ -6,7 +6,9 @@ import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.Item.Source;
 import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.GameObject;
-import com.minibot.util.Array;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Tyler Sedlar
@@ -103,7 +105,8 @@ public class Bank {
         return false;
     }
 
-    public static Item[] items() {
+    public static List<Item> items(Filter<Item> filter) {
+        List<Item> items = new LinkedList<>();
         WidgetComponent[] children = Widgets.childrenFor(BANK_PARENT);
         WidgetComponent container = null;
         for (WidgetComponent component : children) {
@@ -115,21 +118,30 @@ public class Bank {
         if (container != null) {
             Item[] array = new Item[0];
             WidgetComponent[] slots = container.children();
+            int index = 0;
             for (WidgetComponent slot : slots) {
                 int id = slot.itemId();
                 int stack = slot.itemAmount();
                 if (id > 0 && stack > 0) {
-                    array = Array.add(array, (new Item(slot, Source.BANK, slot.rawIndex())));
+                    Item item = new Item(slot, Source.BANK, index);
+                    if (!filter.accept(item)) {
+                        continue;
+                    }
+                    items.add(item);
                 }
+                index++;
             }
-            return array;
         }
-        return new Item[0];
+        return items;
+    }
+
+    public static List<Item> items() {
+        return items(i -> i != null && i.name() != null);
     }
 
     public static Item first(Filter<Item> filter) {
         for (Item item : items()) {
-            if (item != null && filter.accept(item)) {
+            if (item != null && item.name() != null && filter.accept(item)) {
                 return item;
             }
         }

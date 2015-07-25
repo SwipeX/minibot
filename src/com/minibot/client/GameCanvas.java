@@ -163,15 +163,23 @@ public class GameCanvas extends Canvas implements Renderable {
 
     @Override
     public void render(Graphics2D g) {
-        renderables.parallelStream().forEach(r -> r.render(g));
+        renderables.parallelStream().forEach(r -> {
+            if (r != null && g != null) {
+                r.render(g);
+            }
+        });
     }
 
     public static void addRenderable(Renderable renderable) {
-        renderables.add(renderable);
+        if (renderable != null) {
+            renderables.add(renderable);
+        }
     }
 
     public static void removeRenderable(Renderable renderable) {
-        renderables.remove(renderable);
+        if (renderable != null) {
+            renderables.remove(renderable);
+        }
     }
 
     public int getInput() {

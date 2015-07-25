@@ -13,7 +13,8 @@ import com.minibot.api.wrapper.locatable.Character;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 @Manifest(name = "PestControl", author = "un faggoto", version = "0.1", description = "Fights npcs in pest control")
 public class PestControl extends Macro implements Renderable {
@@ -39,6 +40,9 @@ public class PestControl extends Macro implements Renderable {
     }
 
     private static State state() {
+        if (Widgets.viewingContinue()) {
+            Widgets.processContinue();
+        }
         if (Players.local().x() == boat.startX) {
             return State.JOINING;
         } else if (boat.area.contains(Players.local())) {
@@ -69,8 +73,9 @@ public class PestControl extends Macro implements Renderable {
         switch (state()) {
             case JOINING:
                 GameObject cross = Objects.nearestByName("Gangplank");
-                if (cross != null)
+                if (cross != null) {
                     cross.processAction("Cross");
+                }
                 break;
             case WAITING:
                 WidgetComponent component = Widgets.get(407, 15);

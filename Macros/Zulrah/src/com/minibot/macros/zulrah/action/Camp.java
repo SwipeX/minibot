@@ -1,12 +1,11 @@
 package com.minibot.macros.zulrah.action;
 
-import com.minibot.api.method.Inventory;
-import com.minibot.api.method.Npcs;
-import com.minibot.api.method.Objects;
-import com.minibot.api.method.Widgets;
+import com.minibot.api.method.*;
+import com.minibot.api.util.Random;
 import com.minibot.api.util.Time;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Npc;
+import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.macros.zulrah.Zulrah;
 
@@ -16,9 +15,13 @@ import com.minibot.macros.zulrah.Zulrah;
  */
 public class Camp {
 
+    // need to confirm multiple times that last interface click here to continue before zulrah is clicked
+    // without reentering the method (efficiency)
+
     public static final Tile CAMP = new Tile(2199, 3056, 0);
     public static final String PRIESTEST = "Priestest Zul-Gwenwynig";
     public static final String BOAT = "Sacrificial boat";
+
     private static boolean dead;
 
     public static void act() {
@@ -55,12 +58,20 @@ public class Camp {
             Tile tile = boat.location();
             tile = tile.derive(-1, -1);
             boat.processAction("Board", tile.localX(), tile.localY());
-            if (Time.sleep(Widgets::viewingDialog, 15000)) {
+            if (Time.sleep(Widgets::viewingDialog, Random.nextInt(14000, 17000))) {
                 Widgets.processDialogOption(0);
-                if (Time.sleep(Widgets::viewingContinue, 5000)) {
+            }
+            if (Time.sleep(Widgets::viewingContinue, Random.nextInt(2500, 5000))) {
+                Widgets.processContinue();
+            }
+            Player local = Players.local();
+            if (local != null) {
+                if (Time.sleep(() -> local.location().x() != 2213 && Widgets.viewingContinue(), Random.nextInt(8000, 10000))) {
+                    System.out.println("we did it!");
+                    Time.sleep(1500, 2500);
                     Widgets.processContinue();
-                    return Time.sleep(() -> Zulrah.getMonster() != null, 5000);
                 }
+                return Time.sleep(() -> Zulrah.getMonster() != null, 5000);
             }
         }
         return false;

@@ -46,7 +46,7 @@ public class Inventory {
                     int stack = slot.itemAmount();
                     if (id > 0 && stack > 0) {
                         Item item = new Item(slot, Source.INVENTORY, index);
-                        if (!filter.accept(item)) {
+                        if (item.name() == null || !filter.accept(item)) {
                             continue;
                         }
                         items.add(item);
@@ -96,7 +96,7 @@ public class Inventory {
 
     public static Item first(Filter<Item> filter) {
         for (Item item : items()) {
-            if (item != null && filter.accept(item)) {
+            if (item != null && item.name() != null && filter.accept(item)) {
                 return item;
             }
         }
@@ -114,8 +114,9 @@ public class Inventory {
 
     public static boolean containsAll(int... ids) {
         for (int id : ids) {
-            if (first(i -> i.id() == id) == null)
+            if (first(i -> i.id() == id) == null) {
                 return false;
+            }
         }
         return true;
     }

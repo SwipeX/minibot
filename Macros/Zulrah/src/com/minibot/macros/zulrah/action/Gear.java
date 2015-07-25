@@ -9,6 +9,7 @@ import com.minibot.macros.zulrah.Zulrah;
 import com.minibot.macros.zulrah.phase.SnakeType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Tim Dekker
@@ -16,25 +17,27 @@ import java.util.ArrayList;
  */
 public class Gear {
 
+    // inventory, rangedIds, and mageIds need to be populated for banking to be autonomous
+
     private static int[] other;
     private static int[] inventory;
-    private static int[] rangeIds;
+    private static int[] rangedIds;
     private static int[] mageIds;
-    private static final String[] NAMES_RANGE;
+    private static final String[] NAMES_RANGED;
     private static final String[] NAMES_MAGE;
     private static long lastSpec = -1;
 
     static {
-        NAMES_RANGE = new String[]{"d'hide", "bow", "pipe", "ava's", "range", "blowpipe"};
+        NAMES_RANGED = new String[]{"d'hide", "bow", "pipe", "ava's", "range", "blowpipe"};
         NAMES_MAGE = new String[]{"robe", "staff", "trident", "cape", "mage", "book of darkness", "infinity"};
         setup();
     }
 
     public static void setup() {
-        ArrayList<Integer> range = new ArrayList<>();
-        ArrayList<Integer> magic = new ArrayList<>();
-        ArrayList<Integer> equip = new ArrayList<>();
-        ArrayList<Integer> pack = new ArrayList<>();
+        List<Integer> ranged = new ArrayList<>(11);
+        List<Integer> magic = new ArrayList<>(11);
+        List<Integer> equip = new ArrayList<>(11);
+        List<Integer> pack = new ArrayList<>(28);
         for (Equipment.Slot slot : Equipment.Slot.values()) {
             if (slot != null) {
                 if (slot.getName() == null) {
@@ -46,9 +49,9 @@ public class Gear {
                         magic.add(slot.itemId());
                     }
                 }
-                for (String string : NAMES_RANGE) {
+                for (String string : NAMES_RANGED) {
                     if (name.contains(string)) {
-                        range.add(slot.itemId());
+                        ranged.add(slot.itemId());
                     }
                 }
                 equip.add(slot.itemId());
@@ -62,9 +65,9 @@ public class Gear {
                     magic.add(item.id());
                 }
             }
-            for (String string : NAMES_RANGE) {
+            for (String string : NAMES_RANGED) {
                 if (name.contains(string)) {
-                    range.add(item.id());
+                    ranged.add(item.id());
                 }
             }
             if (item.name().contains("dueling")) {
@@ -74,27 +77,30 @@ public class Gear {
         }
         other = equip.stream().mapToInt(i -> i).toArray();
         inventory = pack.stream().mapToInt(i -> i).toArray();
-        rangeIds = range.stream().mapToInt(i -> i).toArray();
+        rangedIds = ranged.stream().mapToInt(i -> i).toArray();
         mageIds = magic.stream().mapToInt(i -> i).toArray();
     }
 
     public static boolean hasInventory() {
-        return Inventory.containsAll(inventory) && (Inventory.containsAll(rangeIds) || Inventory.containsAll(mageIds));
+        return Inventory.containsAll(inventory) && (Inventory.containsAll(rangedIds) || Inventory.containsAll(mageIds));
     }
 
     public static boolean hasEquip() {
-        return Equipment.equipped(other) && (Equipment.equipped(rangeIds) || Equipment.equipped(mageIds));
+        return Equipment.equipped(other) && (Equipment.equipped(rangedIds) || Equipment.equipped(mageIds));
     }
 
     public static boolean equip() {
-        if (!Equipment.equipped("Ring of recoil")) {
-            Equipment.equip("Ring of recoil");
+        if (!Bank.viewing()) {
+            if (!Equipment.equipped("Ring of recoil")) {
+                Equipment.equip("Ring of recoil");
+            }
+            specialAttack();
+            //return equip(Zulrah.getPhase().getCurrent().getSnakeType());
+            SnakeType type = Zulrah.getPhase().getCurrent().getSnakeType();
+            equip(type);
+            return Equipment.equipped(type.id() == SnakeType.MAGIC.id() ? rangedIds : mageIds);
         }
-        specialAttack();
-        //return equip(Zulrah.getPhase().getCurrent().getSnakeType());
-        SnakeType type = Zulrah.getPhase().getCurrent().getSnakeType();
-        equip(type);
-        return Equipment.equipped(type.id() == SnakeType.MAGIC.id() ? rangeIds : mageIds);
+        return false;
     }
 
     private static void specialAttack() {
@@ -110,17 +116,17 @@ public class Gear {
     }
 
     public static void equip(SnakeType type) {
-        int[] ids = (type.id() == SnakeType.MAGIC.id() ? rangeIds : mageIds);
+        int[] ids = (type.id() == SnakeType.MAGIC.id() ? rangedIds : mageIds);
         for (int i = 0; i < ids.length; i++) {
             int id = ids[i];
             if (!Equipment.equipped(id)) {
                 Item item = Inventory.first(j -> j.id() == id);
                 if (item != null) {
                     Equipment.equip(item);
-                    if (i == ids.length - 1) {
+                    if (i != ids.length - 1) {
                         Time.sleep(150, 300);
                     } else {
-                        Time.sleep(() -> Equipment.equipped(item.id()), Random.nextInt(500, 750));
+                        Time.sleep(() -> Equipment.equipped(item.id()), Random.nextInt(1500, 1800));
                     }
                     String name = item.name();
                     if (name != null) {
@@ -134,8 +140,8 @@ public class Gear {
         //return Equipment.equipped(ids);
     }
 
-    public static int[] getRangeIds() {
-        return rangeIds;
+    public static int[] getRangedIds() {
+        return rangedIds;
     }
 
     public static int[] getMageIds() {
