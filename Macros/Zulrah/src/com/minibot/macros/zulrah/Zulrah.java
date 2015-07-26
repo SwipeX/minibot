@@ -45,9 +45,9 @@ public class Zulrah extends Macro implements Renderable {
     private static Phase phase = Phase.PHASE_1;
     private static Tile origin;
     public static int projectileType = -1;
-    private static boolean changed;
+    private static boolean changed, walkedOrigin;
     private static ZulrahEvent lastEvent;
-    private static long lastRan = -1;
+    private static long lastRan = -1, lastAttack = -1;
 
     private final ZulrahListener zulrahListener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
@@ -92,8 +92,21 @@ public class Zulrah extends Macro implements Renderable {
         //Minibot.instance().setVerbose(false);
         Npc zulrah = getMonster();
         zulrahListener.setNpc(zulrah);
+        if (origin != null) {
+            if (!walkedOrigin) {
+                Tile initial = Stage.INITIAL.getTile();
+                assert initial != null;
+                Walking.walkTo(initial);
+                walkedOrigin = initial.distance() < 3;
+                Time.sleep(100, 200);
+                if (!walkedOrigin) {
+                    return;
+                }
+            } else {
+                handleStats();
+            }
+        }
         handleSetup();
-        handleStats();
         handleDialogs();
         if (zulrah != null) {
             if (origin == null) {
@@ -145,8 +158,11 @@ public class Zulrah extends Macro implements Renderable {
                         Character target = Players.local().target();
                         if (target == null || !target.name().equals("Zulrah")) {
                             if (lastRan == -1 || Time.millis() - lastRan > Random.nextInt(4200, 4600)) {
-                                zulrah.processAction("Attack");
-                                Time.sleep(100, 200);
+                                if (lastAttack == -1 || Time.millis() - lastAttack > Random.nextInt(300, 350)) {
+                                    zulrah.processAction("Attack");
+                                    lastAttack = Time.millis();
+                                    Time.sleep(100, 200);
+                                }
                             }
                         }
                     } else {
@@ -176,6 +192,7 @@ public class Zulrah extends Macro implements Renderable {
                 }
             } else {
                 origin = null;
+                walkedOrigin = false;
                 Potions.reset();
                 Phase.reset();
                 previous.clear();

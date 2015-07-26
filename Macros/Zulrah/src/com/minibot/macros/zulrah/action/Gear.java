@@ -115,19 +115,14 @@ public class Gear {
         }
     }
 
-    public static void equip(SnakeType type) {
+    public static boolean equip(SnakeType type) {
         int[] ids = (type.id() == SnakeType.MAGIC.id() ? rangedIds : mageIds);
-        for (int i = 0; i < ids.length; i++) {
-            int id = ids[i];
+        for (int id : ids) {
             if (!Equipment.equipped(id)) {
-                Item item = Inventory.first(j -> j.id() == id);
+                Item item = Inventory.first(i -> i.id() == id);
                 if (item != null) {
                     Equipment.equip(item);
-                    if (i != ids.length - 1) {
-                        Time.sleep(150, 300);
-                    } else {
-                        Time.sleep(() -> Equipment.equipped(item.id()), Random.nextInt(1500, 1800));
-                    }
+                    Time.sleep(100, 200);
                     String name = item.name();
                     if (name != null) {
                         if (name.contains("rossbow")) {
@@ -137,7 +132,7 @@ public class Gear {
                 }
             }
         }
-        //return Equipment.equipped(ids);
+        return Time.sleep(() -> Equipment.equipped(ids), Random.nextInt(1500, 1800));
     }
 
     public static int[] getRangedIds() {

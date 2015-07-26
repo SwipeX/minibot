@@ -10,6 +10,9 @@ import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.macros.zulrah.Zulrah;
 import com.minibot.macros.zulrah.phase.SnakeType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Tim Dekker
  * @since 7/15/15
@@ -89,20 +92,36 @@ public enum Prayer {
                 if (!prayer.toggled()) {
                     System.out.println("TOGGLED " + prayer);
                     prayer.setActive(true);
-                    Time.sleep(prayer::toggled, Random.nextInt(500, 750));
                 }
             }
+            return Time.sleep(() -> {
+                for (Prayer prayer : prayers) {
+                    if (!prayer.toggled()) {
+                        return false;
+                    }
+                }
+                return true;
+            }, Random.nextInt(1500));
         }
         return true;
     }
 
-    public static void deactivateAll() {
+    public static boolean deactivateAll() {
+        List<Prayer> untoggled = new ArrayList<>();
         for (Prayer prayer : values()) {
             if (prayer.toggled()) {
                 System.out.println("UNTOGGLED " + prayer);
                 prayer.setActive(false);
-                Time.sleep(() -> !prayer.toggled(), Random.nextInt(500, 750));
+                untoggled.add(prayer);
             }
         }
+        return Time.sleep(() -> {
+            for (Prayer prayer : untoggled) {
+                if (prayer.toggled()) {
+                    return false;
+                }
+            }
+            return true;
+        }, Random.nextInt(1500));
     }
 }
