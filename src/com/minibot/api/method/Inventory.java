@@ -46,10 +46,9 @@ public class Inventory {
                     int stack = slot.itemAmount();
                     if (id > 0 && stack > 0) {
                         Item item = new Item(slot, Source.INVENTORY, index);
-                        if (item.name() == null || !filter.accept(item)) {
-                            continue;
+                        if (item.name() != null && filter.accept(item)) {
+                            items.add(item);
                         }
-                        items.add(item);
                     }
                     index++;
                 }
