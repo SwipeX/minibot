@@ -22,7 +22,7 @@ import com.minibot.macros.zulrah.phase.Stage;
 import com.minibot.macros.zulrah.util.Paint;
 import com.minibot.macros.zulrah.util.Price;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
@@ -136,6 +136,7 @@ public class Zulrah extends Macro implements Renderable {
                 if (current != null) {
                     if (current.getSnakeType() != SnakeType.MELEE) {
                         lastRan = -1;
+                        dodge = null;
                     }
                     Tile currentTile = current.getTile();
                     if (currentTile != null && currentTile.equals(Players.local().location())) {
@@ -157,12 +158,15 @@ public class Zulrah extends Macro implements Renderable {
                         }
                         Character target = Players.local().target();
                         if (target == null || !target.name().equals("Zulrah")) {
-                            if (lastRan == -1 || dodge.distance() == 0) {
-                                if (lastAttack == -1 || Time.millis() - lastAttack > Random.nextInt(300, 350)) {
-                                    zulrah.processAction("Attack");
-                                    lastAttack = Time.millis();
-                                    Time.sleep(100, 200);
-                                }
+                            if (dodge != null && dodge.exactDistance() < 0.5D) {
+                                System.out.println("SHE AIN'T GOT NO NIPPLES");
+                                zulrah.processAction("Attack");
+                                lastAttack = Time.millis();
+                                Time.sleep(100, 200);
+                            } else if (lastRan == -1 || Time.millis() - lastAttack > Random.nextInt(300, 350)) {
+                                zulrah.processAction("Attack");
+                                lastAttack = Time.millis();
+                                Time.sleep(100, 200);
                             }
                         }
                     } else {
