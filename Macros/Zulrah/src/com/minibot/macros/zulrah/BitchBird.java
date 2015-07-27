@@ -215,7 +215,7 @@ public class BitchBird extends Macro implements Renderable {
     public void run() {
         List<GameObject> clouds = clouds();
         this.clouds = clouds.toArray(new GameObject[clouds.size()]);
-        npc = Zulrah.getMonster();
+        npc = Zulrah.monster();
         if (npc != null) {
             int id = npc.id();
             Tile tile = npc.location();

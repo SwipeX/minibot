@@ -24,7 +24,7 @@ public class Potions {
     }
 
     public static void drink() {
-        if (Zulrah.getMonster() == null) {
+        if (Zulrah.monster() == null) {
             return;
         }
         for (Potion potion : Potion.values()) {

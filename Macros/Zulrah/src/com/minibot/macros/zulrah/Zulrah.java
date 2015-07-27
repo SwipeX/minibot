@@ -44,7 +44,7 @@ public class Zulrah extends Macro implements Renderable {
     public static final List<Integer> lootIds = new ArrayList<>(45);
     private static final List<Integer> previous = new ArrayList<>();
     private static Phase phase = Phase.PHASE_1;
-    private static Tile origin;
+    private static Tile origin, dodge;
     public static int projectileType = -1;
     private static boolean changed, walkedOrigin;
     private static ZulrahEvent lastEvent;
@@ -91,7 +91,7 @@ public class Zulrah extends Macro implements Renderable {
     @Override
     public void run() {
         //Minibot.instance().setVerbose(false);
-        Npc zulrah = getMonster();
+        Npc zulrah = monster();
         zulrahListener.setNpc(zulrah);
         if (origin != null) {
             if (!walkedOrigin) {
@@ -132,7 +132,7 @@ public class Zulrah extends Macro implements Renderable {
                 changed = false;
             }
             if (phase != null) {
-                Stage current = phase.getCurrent();
+                Stage current = phase.current();
                 if (current != null) {
                     if (current.getSnakeType() != SnakeType.MELEE) {
                         lastRan = -1;
@@ -143,14 +143,13 @@ public class Zulrah extends Macro implements Renderable {
                             int sum = zulrah.getOrientation() + Players.local().getOrientation();
                             if (sum == 1583 || sum == 2048) {
                                 System.out.println("FUCKING RUN MARTY");
-                                Tile dest;
                                 if (current == Stage.MELEE_EAST) {
-                                    dest = current.getTile().derive(2, -1);
+                                    dodge = current.getTile().derive(2, -1);
                                 } else {
-                                    dest = current.getTile().derive(0, 2);
+                                    dodge = current.getTile().derive(0, 2);
                                 }
                                 for (int i = 0; i < 2; i++) {
-                                    Walking.walkTo(dest);
+                                    Walking.walkTo(dodge);
                                     Time.sleep(100, 200);
                                 }
                                 lastRan = Time.millis();
@@ -158,7 +157,7 @@ public class Zulrah extends Macro implements Renderable {
                         }
                         Character target = Players.local().target();
                         if (target == null || !target.name().equals("Zulrah")) {
-                            if (lastRan == -1 || Time.millis() - lastRan > Random.nextInt(4200, 4600)) {
+                            if (lastRan == -1 || dodge.distance() == 0) {
                                 if (lastAttack == -1 || Time.millis() - lastAttack > Random.nextInt(300, 350)) {
                                     zulrah.processAction("Attack");
                                     lastAttack = Time.millis();
@@ -216,19 +215,19 @@ public class Zulrah extends Macro implements Renderable {
         Paint.paint(g);
     }
 
-    public static List<Integer> getPrevious() {
+    public static List<Integer> previous() {
         return previous;
     }
 
-    public static Phase getPhase() {
+    public static Phase phase() {
         return phase;
     }
 
-    public static Tile getOrigin() {
+    public static Tile origin() {
         return origin;
     }
 
-    public static Npc getMonster() {
+    public static Npc monster() {
         return Npcs.nearestByName("Zulrah");
     }
 

@@ -41,7 +41,7 @@ public enum Stage {
     }
 
     public Tile getTile() {
-        Tile origin = Zulrah.getOrigin();
+        Tile origin = Zulrah.origin();
         if (origin == null) {
             return null;
         }

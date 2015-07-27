@@ -44,7 +44,7 @@ public enum Phase {
         index++;
         if (index >= stages.length) {
             reset();
-            Zulrah.getPrevious().clear();
+            Zulrah.previous().clear();
             Prayer.deactivateAll();
             Prayer.PROTECT_FROM_MISSILES.setActive(true);
             System.out.println("RESETTING PHASES");
@@ -65,7 +65,7 @@ public enum Phase {
     }
 
     public static void reset() {
-        Zulrah.getPrevious().clear();
+        Zulrah.previous().clear();
         for (Phase phase : values()) {
             phase.unconfirm();
             phase.index = 0;
@@ -73,7 +73,7 @@ public enum Phase {
         Zulrah.resetPhase();
     }
 
-    public Stage getCurrent() {
+    public Stage current() {
         return stages[index];
     }
 

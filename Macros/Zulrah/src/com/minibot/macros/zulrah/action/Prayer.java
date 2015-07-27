@@ -78,12 +78,12 @@ public enum Prayer {
     }
 
     public static boolean setZulrahPrayers() {
-        Npc zulrah = Zulrah.getMonster();
+        Npc zulrah = Zulrah.monster();
         if (zulrah == null) {
             deactivateAll();
             return true;
         }
-        SnakeType type = Zulrah.getPhase().getCurrent().getSnakeType();
+        SnakeType type = Zulrah.phase().current().getSnakeType();
         Prayer[] prayers = type.getPrayers();
         if (prayers == null) {
             deactivateAll();

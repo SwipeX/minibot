@@ -22,8 +22,8 @@ public class Teleport {
     private static final int SUB_CHILD = 3;
 
     public static void handle() {
-        if (Zulrah.getMonster() == null) {
-            if (Zulrah.getOrigin() != null && Zulrah.getOrigin().distance() < 10) {
+        if (Zulrah.monster() == null) {
+            if (Zulrah.origin() != null && Zulrah.origin().distance() < 10) {
                 Deque<GroundItem> items = Ground.loaded(20);
                 if (items.isEmpty()) {
                     act();

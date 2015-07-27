@@ -67,7 +67,7 @@ public class Camp {
                     Time.sleep(1500, 2500);
                     Widgets.processContinue();
                 }
-                return Time.sleep(() -> Zulrah.getMonster() != null, 5000);
+                return Time.sleep(() -> Zulrah.monster() != null, 5000);
             }
         }
         return false;

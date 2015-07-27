@@ -95,8 +95,8 @@ public class Gear {
                 Equipment.equip("Ring of recoil");
             }
             specialAttack();
-            //return equip(Zulrah.getPhase().getCurrent().getSnakeType());
-            SnakeType type = Zulrah.getPhase().getCurrent().getSnakeType();
+            //return equip(Zulrah.phase().current().getSnakeType());
+            SnakeType type = Zulrah.phase().current().getSnakeType();
             equip(type);
             return Equipment.equipped(type.id() == SnakeType.MAGIC.id() ? rangedIds : mageIds);
         }
