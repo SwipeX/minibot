@@ -88,6 +88,19 @@ public class Zulrah extends Macro implements Renderable {
         ClanWars.handle();
     }
 
+    private boolean attack(Npc zulrah) {
+        Character target = Players.local().target();
+        if (target == null || !target.name().equals("Zulrah")) {
+            if ((lastRan == -1 || Time.millis() - lastRan > Random.nextInt(800, 1200)) &&
+                    Time.millis() - lastAttack > Random.nextInt(300, 350)) {
+                zulrah.processAction("Attack");
+                Time.sleep(100, 200);
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void run() {
         //Minibot.instance().setVerbose(false);
@@ -156,24 +169,17 @@ public class Zulrah extends Macro implements Renderable {
                                 lastRan = Time.millis();
                             }
                         }
-                        Character target = Players.local().target();
-                        if (target == null || !target.name().equals("Zulrah")) {
-                            if (dodge != null && dodge.exactDistance() < 0.5D) {
-                                System.out.println("SHE AIN'T GOT NO NIPPLES");
-                                zulrah.processAction("Attack");
-                                lastAttack = Time.millis();
-                                Time.sleep(100, 200);
-                            } else if (lastRan == -1 || Time.millis() - lastAttack > Random.nextInt(300, 350)) {
-                                zulrah.processAction("Attack");
-                                lastAttack = Time.millis();
-                                Time.sleep(100, 200);
-                            }
+                        if (attack(zulrah)) {
+                            lastAttack = Time.millis();
                         }
                     } else {
                         if (lastRan == -1 || Time.millis() - lastRan > Random.nextInt(4200, 4600)) {
                             Walking.walkTo(current.getTile());
                             Time.sleep(100, 200);
                             handleStats();
+                        } else if (current.getSnakeType() == SnakeType.MELEE && dodge != null &&
+                                dodge.exactDistance() < 1D) {
+                            attack(zulrah);
                         }
                     }
                 }
@@ -197,6 +203,7 @@ public class Zulrah extends Macro implements Renderable {
             } else {
                 origin = null;
                 walkedOrigin = false;
+                dodge = null;
                 Potions.reset();
                 Phase.reset();
                 previous.clear();

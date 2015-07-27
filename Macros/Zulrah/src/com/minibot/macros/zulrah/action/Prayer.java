@@ -2,6 +2,7 @@ package com.minibot.macros.zulrah.action;
 
 import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.method.Game;
+import com.minibot.api.method.Skills;
 import com.minibot.api.method.Widgets;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Time;
@@ -61,6 +62,9 @@ public enum Prayer {
     }
 
     public boolean setActive(boolean active) {
+        if (points() == 0) {
+            return false;
+        }
         boolean toggled = toggled();
         if ((active && toggled) || (!active && !toggled)) {
             return true;
@@ -123,5 +127,9 @@ public enum Prayer {
             }
             return true;
         }, Random.nextInt(1500));
+    }
+
+    public static int points() {
+        return Game.levels()[Skills.PRAYER];
     }
 }
