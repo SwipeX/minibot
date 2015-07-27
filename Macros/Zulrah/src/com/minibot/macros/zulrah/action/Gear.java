@@ -84,6 +84,7 @@ public class Gear {
         }
         other = equip.stream().mapToInt(i -> i).toArray();
         inventory = pack.stream().mapToInt(i -> i).toArray();
+        stacks = stack.stream().mapToInt(i -> i).toArray();
         rangedIds = ranged.stream().mapToInt(i -> i).toArray();
         mageIds = magic.stream().mapToInt(i -> i).toArray();
     }
