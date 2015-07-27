@@ -46,10 +46,10 @@ public class ClanWars {
                     Bank.close();
                     return;
                 }
-                String[] withdraw = {"Prayer potion(4)", "Anti-venom", "Ranging", "dueling"};
+                String[] withdraw = {"prayer potion(4)", "venom", "ranging", "dueling"};
                 for (String str : withdraw) {
-                    if (Inventory.first(i -> i.name().contains(str)) == null) {
-                        Bank.withdraw(Bank.first(i -> i.name().contains(str)), 1);
+                    if (Inventory.first(i -> i.name().toLowerCase().contains(str)) == null) {
+                        Bank.withdraw(Bank.first(i -> i.name().toLowerCase().contains(str)), 1);
                         Time.sleep(150, 400);
                     }
                 }
