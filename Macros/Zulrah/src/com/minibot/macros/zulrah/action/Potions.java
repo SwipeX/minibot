@@ -19,6 +19,7 @@ public class Potions {
     // venom + ranging potions are being drunk twice before starting zulrah, wtf?
 
     private static final int FIVE_MINUTES = 295000;
+    private static final int THREE_MINUTES = 175000;
 
     public static void reset() {
         for (Potion potion : Potion.values()) {
@@ -41,7 +42,7 @@ public class Potions {
         PRAYER(Skills.PRAYER, -1),
         RANGING(Skills.RANGED, FIVE_MINUTES),
         RESTORE(Skills.PRAYER, -1),
-        VENOM(-1, FIVE_MINUTES);
+        VENOM(-1, THREE_MINUTES);
 
         private final int skill;
         private final int lifetime;
@@ -53,11 +54,11 @@ public class Potions {
             this.lifetime = lifetime;
         }
 
-        public int getLifetime() {
+        public int lifetime() {
             return lifetime;
         }
 
-        public long getLastDrink() {
+        public long lastDrink() {
             return lastDrink;
         }
 

@@ -47,9 +47,9 @@ public class Paint {
         }
         g.drawString("Potions:", 20, y += 13);
         for (Potions.Potion potion : Potions.Potion.values()) {
-            if (potion.getLastDrink() != -1) {
+            if (potion.lastDrink() != -1) {
                 g.drawString(potion.name() + " Remaining: " +
-                        ((potion.getLifetime() + potion.getLastDrink()) - System.currentTimeMillis()), 20, y += 13);
+                        ((potion.lifetime() + potion.lastDrink()) - System.currentTimeMillis()), 20, y += 13);
             }
         }
         g.drawString("Gear: ", 20, y += 13);
