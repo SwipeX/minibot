@@ -20,7 +20,7 @@ public class ClanWars {
 
     public static void handle() {
         if (Bank.viewing()) {
-            if (Gear.hasEquip() && Gear.hasInventory()) {
+            if (Inventory.count() == 28) {
                 handlePortal();
             } else {
                 if (!Zulrah.lootIds.isEmpty()) {
@@ -62,6 +62,7 @@ public class ClanWars {
             Item ring = Inventory.first(i -> i.name().contains("recoil"));
             if (ring != null && !Equipment.equipped("Ring of recoil")) {
                 ring.processAction("Equip");
+                Time.sleep(1000);
             }
             Tile cw = new Tile(3388, 3161, 0);
             GameObject chest = Objects.nearestByName("Bank chest");
