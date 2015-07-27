@@ -1,6 +1,8 @@
 package com.minibot.macros.zulrah.util;
 
 import com.minibot.api.method.Players;
+import com.minibot.api.util.Time;
+import com.minibot.api.util.ValueFormat;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.macros.zulrah.Zulrah;
@@ -9,9 +11,7 @@ import com.minibot.macros.zulrah.action.Potions;
 import com.minibot.macros.zulrah.phase.Phase;
 import com.minibot.macros.zulrah.phase.Stage;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.Arrays;
 
 /**
@@ -20,9 +20,14 @@ import java.util.Arrays;
  */
 public class Paint {
 
+    private static final Font FONT = new Font("Arial", Font.BOLD, 9);
+    private static final Rectangle PAINT_BOUNDS = new Rectangle(7, 345, 490, 18);
+    private static final int SETTINGS = ValueFormat.COMMAS | ValueFormat.PRECISION(1) | ValueFormat.THOUSANDS;
+    private static final int COMMA = ValueFormat.COMMAS;
+
     private static final Color DARK = new Color(20, 20, 20, 180);
 
-    public static void paint(Graphics g) {
+    public static void debug(Graphics g) {
         Tile local = Players.local().location();
         Tile origin = Zulrah.origin();
         Phase phase = Zulrah.phase();
@@ -57,5 +62,19 @@ public class Paint {
         g.drawString("Magic Ids: " + Arrays.toString(Gear.getMageIds()), 20, y += 13);
         g.drawString("HP: " + (zulrah != null ? zulrah.health() : "-1"), 20, y += 13);
         Zulrah.phase().draw(g, 20, y + 13);
+    }
+
+    public static void paint(Zulrah zulrah, Graphics2D g) {
+        g.setColor(Color.BLACK);
+        g.fill(PAINT_BOUNDS);
+        g.setColor(Color.WHITE);
+        g.setFont(FONT);
+        Npc npc = Zulrah.monster();
+        String label = String.format("RUNTIME: %s     PROFIT: %s (%s/HR)     HEALTH: %s",
+                Time.format(zulrah.runtime()),
+                ValueFormat.format(zulrah.total(), SETTINGS),
+                ValueFormat.format(Time.hourly(zulrah.runtime(), zulrah.total()), SETTINGS),
+                npc != null ? (npc.health() > 0 ? (npc.healthPercent() + "%") : "N/A") : "N/A");
+        g.drawString(label, 242 - (g.getFontMetrics().stringWidth(label) / 2), PAINT_BOUNDS.y + 13);
     }
 }

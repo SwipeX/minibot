@@ -49,6 +49,7 @@ public class Zulrah extends Macro implements Renderable {
     private static boolean changed, walkedOrigin;
     private static ZulrahEvent lastEvent;
     private static long lastRan = -1, lastAttack = -1;
+    private static int total = 0;
 
     private final ZulrahListener zulrahListener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
@@ -186,7 +187,6 @@ public class Zulrah extends Macro implements Renderable {
             }
         } else {
             if (origin != null && origin.distance() < 10) {
-                int total = 0;
                 Deque<GroundItem> items = Ground.loaded(20);
                 if (!items.isEmpty()) {
                     for (GroundItem item : items) {
@@ -195,7 +195,7 @@ public class Zulrah extends Macro implements Renderable {
                         }
                         int price = Price.getPrice(item.id());
                         System.out.println(item.name() + " (" + item.stackSize() + ") x " + price + " = " + (price * item.stackSize()));
-                        total += item.stackSize() * price;
+                        total += (item.stackSize() * price);
                     }
                     System.out.println("Total kill estimated @ " + total + " gp");
                     items.forEach(GroundItem::take);
@@ -223,7 +223,8 @@ public class Zulrah extends Macro implements Renderable {
 
     @Override
     public void render(Graphics2D g) {
-        Paint.paint(g);
+//        Paint.debug(g);
+        Paint.paint(this, g);
     }
 
     public static List<Integer> previous() {
@@ -244,5 +245,9 @@ public class Zulrah extends Macro implements Renderable {
 
     public static void resetPhase() {
         phase = Phase.PHASE_1;
+    }
+
+    public int total() {
+        return total;
     }
 }
