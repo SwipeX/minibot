@@ -8,7 +8,6 @@ import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.macros.zulrah.Zulrah;
-import com.minibot.util.DefinitionLoader;
 
 /**
  * @author Tim Dekker, Jacob Doiron
@@ -42,32 +41,19 @@ public class ClanWars {
                     }
                 }
                 if (!Equipment.equipped("Ring of recoil")) {
-                    Bank.withdraw("Ring of recioil", 1);
+                    Bank.withdraw("Ring of recoil", 1);
                     Time.sleep(150, 400);
                     Bank.close();
                     return;
                 }
-                for (int idx = 0; idx < Gear.getInvetoryIds().length; idx++) {
-                    int id = Gear.getInvetoryIds()[idx];
-                    String name = DefinitionLoader.findItemDefinition(id).getName();
-                    if (name.contains("("))
-                        name = name.split("\\(")[0].trim();
-                    final String trimmed = name;
-                    Item item = Inventory.first(i -> i.id() == id || i.name().startsWith(trimmed));
-                    if (item == null) {
-                        Item current;
-                        if ((current = Bank.first(i -> i.id() == id)) != null) {
-                            Bank.withdraw(current, Gear.getAmounts()[idx]);
-                            Time.sleep(150, 400);
-                        } else {
-                            System.out.println("Bank does not contain: " + id + " : " + name);
-                        }
+                String[] withdraw = {"Prayer potion(4)", "Anti-venom", "Ranging", "dueling"};
+                for (String str : withdraw) {
+                    if (Inventory.first(i -> i.name().contains(str)) == null) {
+                        Bank.withdraw(Bank.first(i -> i.name().contains(str)), 1);
+                        Time.sleep(150, 400);
                     }
                 }
-                if (Inventory.first(i -> i.name().contains("dueling")) == null) {
-                    Bank.withdraw("Ring of dueling(8)", 1);
-                    Time.sleep(150, 400);
-                }
+                Bank.withdraw("Shark", 1000);
             }
         } else {
             Item ring = Inventory.first(i -> i.name().contains("recoil"));
