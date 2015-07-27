@@ -223,7 +223,7 @@ public class Zulrah extends Macro implements Renderable {
 
     @Override
     public void render(Graphics2D g) {
-//        Paint.debug(g);
+        Paint.debug(g);
         Paint.paint(this, g);
     }
 

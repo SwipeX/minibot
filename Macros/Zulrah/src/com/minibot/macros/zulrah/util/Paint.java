@@ -57,7 +57,7 @@ public class Paint {
                         ((potion.lifetime() + potion.lastDrink()) - System.currentTimeMillis()), 20, y += 13);
             }
         }
-        g.drawString("Gear: ", 20, y += 13);
+        g.drawString("Gear: "+Gear.hasEquip()+" "+Gear.hasInventory(), 20, y += 13);
         g.drawString("Range Ids: " + Arrays.toString(Gear.getRangedIds()), 20, y += 13);
         g.drawString("Magic Ids: " + Arrays.toString(Gear.getMageIds()), 20, y += 13);
         g.drawString("HP: " + (zulrah != null ? zulrah.health() : "-1"), 20, y += 13);

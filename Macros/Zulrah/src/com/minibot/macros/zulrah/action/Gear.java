@@ -38,7 +38,7 @@ public class Gear {
         List<Integer> magic = new ArrayList<>(11);
         List<Integer> equip = new ArrayList<>(11);
         List<Integer> pack = new ArrayList<>(28);
-        for (Equipment.Slot slot : Equipment.Slot.values()) {
+       slots: for (Equipment.Slot slot : Equipment.Slot.values()) {
             if (slot != null) {
                 if (slot.getName() == null) {
                     continue;
@@ -47,27 +47,31 @@ public class Gear {
                 for (String string : NAMES_MAGE) {
                     if (name.contains(string)) {
                         magic.add(slot.itemId());
+                        continue slots;
                     }
                 }
                 for (String string : NAMES_RANGED) {
                     if (name.contains(string)) {
                         ranged.add(slot.itemId());
+                        continue slots;
                     }
                 }
                 equip.add(slot.itemId());
             }
         }
 
-        for (Item item : Inventory.items()) {
+        inventory :for (Item item : Inventory.items()) {
             String name = item.name().toLowerCase();
             for (String string : NAMES_MAGE) {
                 if (name.contains(string)) {
                     magic.add(item.id());
+                    continue inventory;
                 }
             }
             for (String string : NAMES_RANGED) {
                 if (name.contains(string)) {
                     ranged.add(item.id());
+                    continue inventory;
                 }
             }
             if (item.name().contains("dueling")) {
