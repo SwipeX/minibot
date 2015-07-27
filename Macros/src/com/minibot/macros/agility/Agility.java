@@ -100,6 +100,7 @@ public class Agility extends Macro implements Renderable {
 
     private static String status = "Nothing";
 
+    private static boolean hopping;
     private static int startExp;
     private static int obstacle;
     private static int marks;
@@ -128,11 +129,22 @@ public class Agility extends Macro implements Renderable {
             interrupt();
         }
         percent = Random.nextInt(35, 65);
+        addRuntimeCallback(Random.nextInt(21600000, 36000000), () -> {
+            hopping = true;
+            Time.sleep(0, 2700000);
+            if (Game.hopWorld(Game.membsWorld())) {
+                hopping = false;
+            }
+        });
     }
 
     @Override
     public void run() {
         Minibot.instance().client().resetMouseIdleTime();
+        if (hopping) {
+            Time.sleep(300, 600);
+            return;
+        }
         Player local = Players.local();
         if (local != null) {
             Obstacle current = course.obstacles()[0];

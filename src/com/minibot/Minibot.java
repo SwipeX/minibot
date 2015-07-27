@@ -173,6 +173,9 @@ public class Minibot extends JFrame implements Runnable {
                     } else if (e.getKeyCode() == KeyEvent.VK_F) {
                         instance.setFarming(!Minibot.instance().farming());
                         GameMenu.setFarm();
+                    } else if (e.getKeyCode() == KeyEvent.VK_V) {
+                        instance.setVerbose(!Minibot.instance().verbose());
+                        GameMenu.setVerbose();
                     }
                 }
             }

@@ -18,6 +18,14 @@ public class Game {
     public static final int STATE_PLAYING = 25;
     public static final int STATE_IN_GAME = 30;
 
+    public static final int[] MEMBER_WORLD = {302, 303, 304, 305, 306, 309, 310, 311, 312, 313, 314, 317, 319, 320,
+            321, 322, 327, 328, 329, 330, 333, 334, 336, 338, 341, 342, 343, 344, 345, 346, 349, 350, 351, 353, 354,
+            357, 358, 359, 360, 361, 362, 366, 367, 368, 370, 373, 374, 375, 376, 377, 378};
+
+    public static int membsWorld() {
+        return MEMBER_WORLD[Random.nextInt(0, MEMBER_WORLD.length)];
+    }
+
     public static int energy() {
         WidgetComponent comp = Widgets.get(160, 22);
         if (comp != null) {
