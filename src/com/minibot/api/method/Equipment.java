@@ -41,9 +41,9 @@ public class Equipment {
         equip(Inventory.first(i -> i.name().equals(name)));
     }
 
-    public static void unequip(final Slot slot) {
+    public static void unequip(Slot slot) {
         GameTab current = GameTab.current();
-        if (slot != null && !slot.empty()) {
+        if (current != null && slot != null && !slot.empty()) {
             WidgetComponent widget = slot.widget();
             if (widget != null) {
                 if (GameTab.EQUIPMENT.open()) {
@@ -67,7 +67,9 @@ public class Equipment {
     }
 
     public static void unequip(String name) {
-        unequip(slot -> slot.getName().equals(name));
+        if (name != null) {
+            unequip(slot -> slot.getName() != null && slot.getName().equals(name));
+        }
     }
 
     private static boolean equipped(String name) {
@@ -118,7 +120,7 @@ public class Equipment {
         return false;
     }
 
-    private static ItemContainers.Entry atIndex(int index, ItemContainers.Entry[] entries) {
+    private static ItemContainers.Entry atIndex(int index, ItemContainers.Entry... entries) {
         for (ItemContainers.Entry entry : entries) {
             if (entry.index() == index) {
                 return entry;
@@ -127,7 +129,7 @@ public class Equipment {
         return null;
     }
 
-    public static enum Slot {
+    public enum Slot {
 
         HEAD(6, 0),
         CAPE(7, 1),

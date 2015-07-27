@@ -67,7 +67,7 @@ public class Npcs {
         int dist = Integer.MAX_VALUE;
         Npc temp = null;
         for (Npc npc : loaded(radius)) {
-            if (filter.accept(npc)) {
+            if (npc.name() != null && filter.accept(npc)) {
                 int d = npc.distance();
                 if (d < dist) {
                     dist = d;

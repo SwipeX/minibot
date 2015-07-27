@@ -2,10 +2,8 @@ package com.minibot.macros;
 
 import com.minibot.Minibot;
 import com.minibot.api.method.*;
-import com.minibot.api.util.Random;
-import com.minibot.api.util.Renderable;
-import com.minibot.api.util.Time;
-import com.minibot.api.util.ValueFormat;
+import com.minibot.api.util.*;
+import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.Character;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.bot.macro.Macro;
@@ -25,7 +23,7 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
 
     private static int startExp;
     private static boolean force;
-    private static boolean quit;
+    private static boolean recharge;
 
     @Override
     public void atStart() {
@@ -43,11 +41,7 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
                 if (npcTarget != null) {
                     return npcTarget.equals(Players.local());
                 }
-                if (n.health() <= 0 && n.maxHealth() > 0) {
-                    return false;
-                }
-                String name = n.name();
-                return name != null && name.equals("Ogre");
+                return !(n.health() <= 0 && n.maxHealth() > 0) && n.name().equals("Ogre");
             });
             if (npc != null) {
                 npc.processAction("Attack");
@@ -73,9 +67,32 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
     @Override
     public void run() {
         Minibot.instance().client().resetMouseIdleTime();
-        if (quit) {
-            Game.logout();
-            interrupt();
+        if (recharge) {
+            Item scales = Inventory.first(i -> i.name().equals("Zulrah's scales"));
+            Item darts = Inventory.first(i -> i.name().contains("dart"));
+            if (scales != null && darts != null) {
+                if (Equipment.equipped("Toxic blowpipe (empty)")) {
+                    Equipment.unequip("Toxic blowpipe (empty)");
+                    Time.sleep(1500, 2000);
+                } else {
+                    Item blowpipe = Inventory.first(i -> i.name().equals("Toxic blowpipe (empty)"));
+                    if (blowpipe != null) {
+                        darts.use(blowpipe);
+                        Time.sleep(900, 1800);
+                        scales.use(blowpipe);
+                        Time.sleep(() -> Inventory.first(i -> i.name().equals("Toxic blowpipe")) != null, Random.nextInt(2500, 5000));
+                    } else {
+                        Item chargedBp = Inventory.first(i -> i.name().equals("Toxic blowpipe"));
+                        if (chargedBp != null) {
+                            Equipment.equip(chargedBp.id());
+                            recharge = !Time.sleep(() -> Equipment.equipped(chargedBp.id()), Random.nextInt(5000, 7500));
+                        }
+                    }
+                }
+            } else {
+                Game.logout();
+                interrupt();
+            }
         } else {
             attack();
             if (Widgets.viewingContinue()) {
@@ -97,7 +114,7 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
     @Override
     public void messageReceived(int type, String sender, String message, String clan) {
         if (message.contains("Your blowpipe needs to")) {
-            quit = true;
+            recharge = true;
         } else if (message.contains("Someone else is fighting")) {
             force = true;
         }

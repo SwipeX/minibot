@@ -131,7 +131,7 @@ public class Agility extends Macro implements Renderable {
         percent = Random.nextInt(35, 65);
         addRuntimeCallback(Random.nextInt(21600000, 36000000), () -> {
             hopping = true;
-            Time.sleep(0, 2700000);
+            Time.sleep(0, 300000);
             if (Game.hopWorld(Game.membsWorld())) {
                 hopping = false;
             }
