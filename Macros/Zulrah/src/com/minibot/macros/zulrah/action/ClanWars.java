@@ -25,20 +25,20 @@ public class ClanWars {
                 handlePortal();
             } else {
                 if (!Zulrah.lootIds.isEmpty()) {
-                    String[] force = {"Prayer potion(1)", "Prayer potion(2)", "Prayer potion(3)", "Vial"};
-                    for (String name : force) {
-                        Item i = Inventory.first(item -> item.name().equals(name));
-                        if (i != null) {
-                            i.processAction("Deposit-All");
-                            Time.sleep(150, 400);
-                        }
-                    }
                     for (int id : Zulrah.lootIds) {
                         Item i = Inventory.first(item -> item.id() == id);
                         if (i != null) {
                             i.processAction("Deposit-All");
                             Time.sleep(150, 400);
                         }
+                    }
+                }
+                String[] force = {"Prayer potion(1)", "Prayer potion(2)", "Prayer potion(3)", "Vial"};
+                for (String name : force) {
+                    Item i = Inventory.first(item -> item.name().equals(name));
+                    if (i != null) {
+                        i.processAction("Deposit-All");
+                        Time.sleep(150, 400);
                     }
                 }
                 if (!Equipment.equipped("Ring of recoil")) {
