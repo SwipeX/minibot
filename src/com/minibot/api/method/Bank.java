@@ -68,15 +68,21 @@ public class Bank {
     /**
      * This function will be able to withdraw- any amount that is on the menu, but will default to Withdraw-All
      *
-     * @param item - the item wishing to be withdrawn
+     * @param item   - the item wishing to be withdrawn
      * @param amount - the amount wishing to be taken
-     * TODO - withdraw-x without presetting it before starting script
+     *               TODO - withdraw-x without presetting it before starting script
      */
     public static void withdraw(Item item, int amount) {
         if (item != null && amount > 0) {
             String[] actions = item.owner().actions();
+            if (actions == null) {
+                return;
+            }
             String targetAction = "Withdraw-" + amount;
             for (String string : actions) {
+                if (string == null) {
+                    continue;
+                }
                 if (string.contains(targetAction)) {
                     item.processAction(targetAction);
                     return;

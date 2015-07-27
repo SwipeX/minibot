@@ -46,7 +46,10 @@ public class ClanWars {
                     Bank.close();
                     return;
                 }
-                String[] withdraw = {"prayer potion(4)", "venom", "ranging", "dueling"};
+                if (Inventory.first(i -> i.name().equals("Ring of recoil")) == null) {
+                    Bank.withdraw("Ring of recoil", 1);
+                }
+                String[] withdraw = {"prayer potion(4)", "venom", "ranging", "dueling", "zul-andra"};
                 for (String str : withdraw) {
                     if (Inventory.first(i -> i.name().toLowerCase().contains(str)) == null) {
                         Bank.withdraw(Bank.first(i -> i.name().toLowerCase().contains(str)), 1);
