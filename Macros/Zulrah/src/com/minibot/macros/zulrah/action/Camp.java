@@ -15,9 +15,6 @@ import com.minibot.macros.zulrah.Zulrah;
  */
 public class Camp {
 
-    // need to confirm multiple times that last interface click here to continue before zulrah is clicked
-    // without reentering the method (efficiency)
-
     public static final Tile CAMP = new Tile(2199, 3056, 0);
     public static final String PRIESTEST = "Priestest Zul-Gwenwynig";
     public static final String BOAT = "Sacrificial boat";
@@ -67,7 +64,6 @@ public class Camp {
             Player local = Players.local();
             if (local != null) {
                 if (Time.sleep(() -> local.location().x() != 2213 && Widgets.viewingContinue(), Random.nextInt(8000, 10000))) {
-                    System.out.println("we did it!");
                     Time.sleep(1500, 2500);
                     Widgets.processContinue();
                 }

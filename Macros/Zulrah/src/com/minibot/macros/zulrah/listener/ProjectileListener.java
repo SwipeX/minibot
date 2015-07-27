@@ -29,8 +29,8 @@ public abstract class ProjectileListener extends LoopTask {
                 cycles.put(id, cycle);
                 if (id == Zulrah.PROJECTILE_MAGE) {
                     System.out.println("MAGE PROJECTILE");
-                } else if (id == Zulrah.PROJECTILE_RANGE) {
-                    System.out.println("RANGE PROJECTILE");
+                } else if (id == Zulrah.PROJECTILE_RANGED) {
+                    System.out.println("RANGED PROJECTILE");
                 } else if (id != Zulrah.PROJECTILE_CLOUD && id != Zulrah.PROJECTILE_SNAKELING && id !=
                         Zulrah.PROJECTILE_SPERM) {
                     System.out.println("UNKNOWN PROJECTILE " + id);

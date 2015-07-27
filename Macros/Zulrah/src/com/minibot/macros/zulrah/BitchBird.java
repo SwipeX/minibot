@@ -267,10 +267,10 @@ public class BitchBird extends Macro implements Renderable {
         g.drawString("Status: " + status, 15, 40);
         if (origin != null && npc != null) {
             String ids = Arrays.toString(previousIds.toArray());
-            ids = ids.replaceAll(Integer.toString(rangeId), "RANGE");
+            ids = ids.replaceAll(Integer.toString(rangeId), "RANGED");
             ids = ids.replaceAll(Integer.toString(mageId), "MAGE");
             ids = ids.replaceAll(Integer.toString(meleeId), "MELEE");
-            g.drawString("Previouds IDS: " + ids, 15, 55);
+            g.drawString("Previous IDS: " + ids, 15, 55);
             g.drawString("Orientation: " + npc.getOrientation(), 15, 70);
             int xOff = origin.x() - Players.local().x();
             int yOff = -(origin.y() - Players.local().y());

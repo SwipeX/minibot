@@ -37,7 +37,7 @@ public class Zulrah extends Macro implements Renderable {
     public static final int PROJECTILE_CLOUD = 1045;
     public static final int PROJECTILE_SPERM = 1047;
     public static final int PROJECTILE_SNAKELING = 1230;
-    public static final int PROJECTILE_RANGE = 1044;
+    public static final int PROJECTILE_RANGED = 1044;
     public static final int PROJECTILE_MAGE = 1046;
 
     public static final List<Integer> lootIds = new ArrayList<>(45);
@@ -62,7 +62,7 @@ public class Zulrah extends Macro implements Renderable {
 
     private final ProjectileListener projectileListener = new ProjectileListener() {
         public void onProjectileLoaded(ProjectileEvent evt) {
-            if (evt.id == PROJECTILE_RANGE || evt.id == PROJECTILE_MAGE) {
+            if (evt.id == PROJECTILE_RANGED || evt.id == PROJECTILE_MAGE) {
                 projectileType = evt.id;
             }
         }

@@ -26,13 +26,11 @@ public class ClanWars {
                 handlePortal();
             } else {
                 if (!Zulrah.lootIds.isEmpty()) {
-                    System.out.println("deposit shit");
                     for (int id : Zulrah.lootIds) {
                         Item i = Inventory.first(item -> item.id() == id);
                         if (i != null) {
-                            System.out.println(i.name() + " in inv");
                             i.processAction("Deposit-All");
-                            Time.sleep(250, 750);
+                            Time.sleep(150, 400);
                         }
                     }
                     // ^ deposits new items
@@ -94,7 +92,7 @@ public class ClanWars {
             if (teleport != null) {
                 int priorX = local.location().x();
                 teleport.processAction("Teleport");
-                Time.sleep(() -> local.location().x() != priorX, Random.nextInt(5000, 7500));
+                Time.sleep(Camp::atCamp, Random.nextInt(5000, 7500));
             }
         }
     }
