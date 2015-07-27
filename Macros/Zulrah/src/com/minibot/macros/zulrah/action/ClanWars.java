@@ -8,6 +8,7 @@ import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Player;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.macros.zulrah.Zulrah;
+import com.minibot.util.DefinitionLoader;
 
 /**
  * @author Tim Dekker, Jacob Doiron
@@ -20,10 +21,18 @@ public class ClanWars {
 
     public static void handle() {
         if (Bank.viewing()) {
-            if (/*Gear.hasEquip() && Gear.hasInventory()*/ Inventory.count() == 28) {
+            if (Gear.hasEquip() && Gear.hasInventory()) {
                 handlePortal();
             } else {
                 if (!Zulrah.lootIds.isEmpty()) {
+                    String[] force = {"Prayer potion(1)", "Prayer potion(2)", "Prayer potion(3)", "Vial"};
+                    for (String name : force) {
+                        Item i = Inventory.first(item -> item.name().equals(name));
+                        if (i != null) {
+                            i.processAction("Deposit-All");
+                            Time.sleep(150, 400);
+                        }
+                    }
                     for (int id : Zulrah.lootIds) {
                         Item i = Inventory.first(item -> item.id() == id);
                         if (i != null) {
@@ -32,12 +41,42 @@ public class ClanWars {
                         }
                     }
                 }
-                // withdraw needed items
+                if (!Equipment.equipped("Ring of recoil")) {
+                    Bank.withdraw("Ring of recioil", 1);
+                    Time.sleep(150, 400);
+                    Bank.close();
+                    return;
+                }
+                for (int idx = 0; idx < Gear.getInvetoryIds().length; idx++) {
+                    int id = Gear.getInvetoryIds()[idx];
+                    String name = DefinitionLoader.findItemDefinition(id).getName();
+                    if (name.contains("("))
+                        name = name.split("\\(")[0].trim();
+                    final String trimmed = name;
+                    Item item = Inventory.first(i -> i.id() == id || i.name().startsWith(trimmed));
+                    if (item == null) {
+                        Item current;
+                        if ((current = Bank.first(i -> i.id() == id)) != null) {
+                            Bank.withdraw(current, Gear.getAmounts()[idx]);
+                            Time.sleep(150, 400);
+                        } else {
+                            System.out.println("Bank does not contain: " + id + " : " + name);
+                        }
+                    }
+                }
+                if (Inventory.first(i -> i.name().contains("dueling")) == null) {
+                    Bank.withdraw("Ring of dueling(8)", 1);
+                    Time.sleep(150, 400);
+                }
             }
         } else {
+            Item ring = Inventory.first(i -> i.name().contains("recoil"));
+            if (ring != null && !Equipment.equipped("Ring of recoil")) {
+                ring.processAction("Equip");
+            }
             Tile cw = new Tile(3388, 3161, 0);
             GameObject chest = Objects.nearestByName("Bank chest");
-            if(chest == null && cw.distance() <= 15) {
+            if (chest == null && cw.distance() <= 15) {
                 Walking.walkTo(new Tile(3377 + Random.nextInt(-2, 2), 3168 + Random.nextInt(-2, 2), 0));
                 Time.sleep(4500, 6000);
                 chest = Objects.nearestByName("Bank chest");

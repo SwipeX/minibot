@@ -18,7 +18,7 @@ import java.util.List;
 public class Gear {
 
     // inventory, rangedIds, and mageIds need to be populated for banking to be autonomous
-
+    private static int[] stacks;
     private static int[] other;
     private static int[] inventory;
     private static int[] rangedIds;
@@ -38,7 +38,9 @@ public class Gear {
         List<Integer> magic = new ArrayList<>(11);
         List<Integer> equip = new ArrayList<>(11);
         List<Integer> pack = new ArrayList<>(28);
-       slots: for (Equipment.Slot slot : Equipment.Slot.values()) {
+        List<Integer> stack = new ArrayList<>(28);
+        slots:
+        for (Equipment.Slot slot : Equipment.Slot.values()) {
             if (slot != null) {
                 if (slot.getName() == null) {
                     continue;
@@ -60,7 +62,8 @@ public class Gear {
             }
         }
 
-        inventory :for (Item item : Inventory.items()) {
+        inventory:
+        for (Item item : Inventory.items()) {
             String name = item.name().toLowerCase();
             for (String string : NAMES_MAGE) {
                 if (name.contains(string)) {
@@ -74,10 +77,10 @@ public class Gear {
                     continue inventory;
                 }
             }
-            if (item.name().contains("dueling")) {
-                continue;
+            if (!name.contains("(")) {
+                pack.add(item.id());
+                stack.add(item.amount());
             }
-            pack.add(item.id());
         }
         other = equip.stream().mapToInt(i -> i).toArray();
         inventory = pack.stream().mapToInt(i -> i).toArray();
@@ -86,7 +89,11 @@ public class Gear {
     }
 
     public static boolean hasInventory() {
-        return Inventory.containsAll(inventory) && (Inventory.containsAll(rangedIds) || Inventory.containsAll(mageIds));
+        boolean hasVenom = Inventory.first(i -> i.name().toLowerCase().contains("venom")) != null;
+        boolean hasRanged = Inventory.first(i -> i.name().toLowerCase().contains("ranging")) != null;
+        boolean hasPrayer = Inventory.first(i -> i.name().toLowerCase().contains("Prayer potion(4)")) != null;
+        return (hasRanged && hasVenom && hasPrayer && Inventory.containsAll(inventory))
+                && (Inventory.containsAll(rangedIds) || Inventory.containsAll(mageIds));
     }
 
     public static boolean hasEquip() {
@@ -145,5 +152,13 @@ public class Gear {
 
     public static int[] getMageIds() {
         return mageIds;
+    }
+
+    public static int[] getInvetoryIds() {
+        return inventory;
+    }
+
+    public static int[] getAmounts() {
+        return stacks;
     }
 }
