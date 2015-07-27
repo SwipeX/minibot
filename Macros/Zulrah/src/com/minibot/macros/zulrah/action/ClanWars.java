@@ -16,8 +16,6 @@ import com.minibot.macros.zulrah.Zulrah;
 public class ClanWars {
 
     // needs to support Gear.hasEquip and hasInventory
-    // sometimes deposits some loot items (but not all), sometimes none, wtf?
-    // seems to deposit anti-venom that isn't (4)? have no fking clue why
     // needs support for recharging tridents
 
     public static void handle() {
@@ -33,7 +31,6 @@ public class ClanWars {
                             Time.sleep(150, 400);
                         }
                     }
-                    // ^ deposits new items
                 }
                 // withdraw needed items
             }

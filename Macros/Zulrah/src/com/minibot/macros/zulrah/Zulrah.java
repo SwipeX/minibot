@@ -39,6 +39,7 @@ public class Zulrah extends Macro implements Renderable {
     public static final int PROJECTILE_SNAKELING = 1230;
     public static final int PROJECTILE_RANGED = 1044;
     public static final int PROJECTILE_MAGE = 1046;
+    public static final int ZUL_TELEPORT = 12938;
 
     public static final List<Integer> lootIds = new ArrayList<>(45);
     private static final List<Integer> previous = new ArrayList<>();
@@ -120,10 +121,10 @@ public class Zulrah extends Macro implements Renderable {
                     previous.add(lastEvent.previousId);
                 }
                 if (!phase.isConfirmed()) {
-                    Phase potential = Phase.determine(previous, lastEvent.id);//zulrah.id());
+                    Phase potential = Phase.determine(previous, lastEvent.id); //zulrah.id());
                     if (potential != null) {
                         phase = potential;
-                        phase.setIndex(previous.size()); // do we actually need this?
+                        phase.setIndex(previous.size());
                         phase.confirm();
                         System.out.println(phase.name() + " is quite dank (Confirmed)");
                     }
@@ -180,7 +181,7 @@ public class Zulrah extends Macro implements Renderable {
                 Deque<GroundItem> items = Ground.loaded(20);
                 if (!items.isEmpty()) {
                     for (GroundItem item : items) {
-                        if (!lootIds.contains(item.id())) {
+                        if (item.id() != ZUL_TELEPORT && !lootIds.contains(item.id())) {
                             lootIds.add(item.id());
                         }
                         int price = Price.getPrice(item.id());

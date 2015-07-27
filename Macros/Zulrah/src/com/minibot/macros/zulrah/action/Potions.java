@@ -14,10 +14,6 @@ import com.minibot.macros.zulrah.Zulrah;
  */
 public class Potions {
 
-    // venom potions 5 mins or 3 mins? wiki says 5, set to 5. need to verify if 5 or not
-    // ranging potions not waiting 5 mins before redosing, wtf?
-    // venom + ranging potions are being drunk twice before starting zulrah, wtf?
-
     private static final int FIVE_MINUTES = 295000;
     private static final int THREE_MINUTES = 175000;
 
@@ -82,7 +78,7 @@ public class Potions {
             }
         }
 
-        private boolean required() { // ranging pots not working, drinks at like 2.5 mins left?
+        private boolean required() {
             boolean timing = lastDrink == -1 || (System.currentTimeMillis() - lastDrink > lifetime);
             return Game.levels()[Skills.PRAYER] <= 10 || (skill != Skills.PRAYER && timing);
         }
