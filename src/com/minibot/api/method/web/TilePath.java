@@ -29,7 +29,7 @@ public class TilePath {
         if (farthestTile == null) {
             return;
         }
-        final Tile tile = farthestTile;
+        Tile tile = farthestTile;
         Walking.walkTo(tile);
         Time.sleep(800, 1000);
         Time.sleep(() -> {

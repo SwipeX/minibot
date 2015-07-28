@@ -108,7 +108,7 @@ public class Bank {
                 return Time.sleep(() -> !Bank.viewing(), 3000);
             }
         }
-        return false;
+        return true;
     }
 
     public static List<Item> items(Filter<Item> filter) {

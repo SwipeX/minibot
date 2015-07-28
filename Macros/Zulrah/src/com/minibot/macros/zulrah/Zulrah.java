@@ -22,7 +22,7 @@ import com.minibot.macros.zulrah.phase.Stage;
 import com.minibot.macros.zulrah.util.Paint;
 import com.minibot.macros.zulrah.util.Price;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
@@ -32,7 +32,7 @@ import java.util.List;
  * @since 7/14/15
  */
 @Manifest(name = "Zulrah", author = "Tyler/Tim/Jacob", version = "1.0.0", description = "Kills Zulrah")
-public class Zulrah extends Macro implements Renderable {
+public class Zulrah extends Macro implements Renderable, ChatboxListener {
 
     public static final int PROJECTILE_CLOUD = 1045;
     public static final int PROJECTILE_SPERM = 1047;
@@ -40,16 +40,17 @@ public class Zulrah extends Macro implements Renderable {
     public static final int PROJECTILE_RANGED = 1044;
     public static final int PROJECTILE_MAGE = 1046;
     public static final int ZUL_TELEPORT = 12938;
+    public static final int AVAS_ACCUMULATOR = 10499;
 
     public static final List<Integer> lootIds = new ArrayList<>(45);
     private static final List<Integer> previous = new ArrayList<>();
     private static Phase phase = Phase.PHASE_1;
     private static Tile origin, dodge;
     public static int projectileType = -1;
-    private static boolean changed, walkedOrigin;
+    private static boolean changed, walkedOrigin, dead = true;
     private static ZulrahEvent lastEvent;
     private static long lastRan = -1, lastAttack = -1;
-    private static int total = 0;
+    private static int total;
 
     private final ZulrahListener zulrahListener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
@@ -106,6 +107,10 @@ public class Zulrah extends Macro implements Renderable {
     @Override
     public void run() {
         //Minibot.instance().setVerbose(false);
+        if (dead) {
+            DeathWalk.handle();
+            return;
+        }
         Npc zulrah = monster();
         zulrahListener.setNpc(zulrah);
         if (origin != null) {
@@ -250,5 +255,16 @@ public class Zulrah extends Macro implements Renderable {
 
     public int total() {
         return total;
+    }
+
+    public static void setDead(boolean dead) {
+        Zulrah.dead = dead;
+    }
+
+    @Override
+    public void messageReceived(int type, String sender, String message, String clan) {
+        if (message != null && message.equals("Oh dear, you have died!")) {
+            dead = true;
+        }
     }
 }
