@@ -50,7 +50,13 @@ public class ClanWars {
                 if (Inventory.first(i -> i.name().equals("Ring of recoil")) == null) {
                     Bank.withdraw("Ring of recoil", 1);
                 }
-                if (!Equipment.equipped(slot -> slot != null && slot.getName() != null && slot.getName().toLowerCase().contains("ava's"))) {
+                if (!Equipment.equipped(slot -> {
+                    String name = null;
+                    if (slot != null) {
+                        name = slot.getName();
+                    }
+                    return name != null && name.toLowerCase().contains("ava's");
+                })) {
                     Item ava = Bank.first(i -> i.name().toLowerCase().contains("ava's"));
                     if (ava != null) {
                         Bank.withdraw(ava, 1);
