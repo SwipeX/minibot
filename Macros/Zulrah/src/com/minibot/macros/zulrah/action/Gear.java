@@ -18,11 +18,11 @@ import java.util.List;
 public class Gear {
 
     // inventory, rangedIds, and mageIds need to be populated for banking to be autonomous
-    private static int[] stacks;
-    private static int[] other;
-    private static int[] inventory;
-    private static int[] rangedIds;
-    private static int[] mageIds;
+    private static int[] stacks = {0};
+    private static int[] other = {0};
+    private static int[] inventory = {0};
+    private static int[] rangedIds = {0};
+    private static int[] mageIds = {0};
     private static final String[] NAMES_RANGED;
     private static final String[] NAMES_MAGE;
     private static long lastSpec = -1;

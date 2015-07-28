@@ -273,7 +273,7 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
 
     @Override
     public void messageReceived(int type, String sender, String message, String clan) {
-        if (message != null && message.equals("Oh dear, you have died!")) {
+        if (message != null && message.equals("Oh dear, you are dead!")) {
             dead = true;
         }
     }

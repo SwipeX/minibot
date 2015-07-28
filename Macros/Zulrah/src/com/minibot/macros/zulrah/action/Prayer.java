@@ -93,6 +93,8 @@ public enum Prayer {
             deactivateAll();
         } else {
             for (Prayer prayer : prayers) {
+                if (prayer == Prayer.MYSTIC_MIGHT && Game.realLevels()[Skills.PRAYER] < 45)
+                    prayer = MYSTIC_WILL;
                 if (!prayer.toggled()) {
                     System.out.println("TOGGLED " + prayer);
                     prayer.setActive(true);
