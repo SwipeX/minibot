@@ -31,7 +31,6 @@ public class Gear {
     static {
         NAMES_RANGED = new String[]{"d'hide", "bow", "pipe", "ava's", "range", "blowpipe"};
         NAMES_MAGE = new String[]{"robe", "staff", "trident", "cape", "mage", "book of darkness", "infinity"};
-        setup();
     }
 
     public static void setup() {
@@ -89,6 +88,7 @@ public class Gear {
         rangedIds = ranged.stream().mapToInt(i -> i).toArray();
         mageIds = magic.stream().mapToInt(i -> i).toArray();
         potion = (Potions.Potion.PRAYER.get() != null ? Potions.Potion.PRAYER : Potions.Potion.RESTORE);
+        System.out.println("POTION: " + potion);
     }
 
     public static boolean hasInventory() {

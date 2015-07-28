@@ -74,6 +74,7 @@ public class Zulrah extends Macro implements Renderable {
     public void atStart() {
         zulrahListener.start();
         projectileListener.start();
+        Gear.setup();
     }
 
     private void handleStats() {
