@@ -54,7 +54,11 @@ public class ClanWars {
                     return slot.getName().toLowerCase().contains("ava's");
                 })) {
                     Item ava = Bank.first(i -> i.name().toLowerCase().contains("ava's"));
-                    Bank.withdraw(ava, 1);
+                    if (ava != null) {
+                        Bank.withdraw(ava, 1);
+                        Time.sleep(150, 400);
+                        Bank.close();
+                    }
                 }
                 String[] withdraw = {"super restore(4)", "prayer potion(4)", "venom", "ranging", "dueling", "zul-andra"};
                 for (String str : withdraw) {
