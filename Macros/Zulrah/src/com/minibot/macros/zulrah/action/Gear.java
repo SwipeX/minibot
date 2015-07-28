@@ -92,7 +92,7 @@ public class Gear {
     }
 
     public static boolean hasInventory() {
-        boolean hasVenom = Inventory.first(i -> i.name().toLowerCase().contains("venom")) != null;
+        boolean hasVenom = Inventory.first(i -> i.name().toLowerCase().contains("venom+")) != null;
         boolean hasRanged = Inventory.first(i -> i.name().toLowerCase().contains("ranging")) != null;
         boolean hasPotion = Inventory.first(i -> {
             String itemName = i.name().toLowerCase();

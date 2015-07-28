@@ -50,7 +50,7 @@ public class ClanWars {
                 if (Inventory.first(i -> i.name().equals("Ring of recoil")) == null) {
                     Bank.withdraw("Ring of recoil", 1);
                 }
-                String[] withdraw = {"super restore(4)", "prayer potion(4)", "venom", "ranging", "dueling", "zul-andra"};
+                String[] withdraw = {"super restore(4)", "prayer potion(4)", "venom+", "ranging", "dueling", "zul-andra"};
                 for (String str : withdraw) {
                     if (Gear.potion() == Potions.Potion.PRAYER && str.equals("super restore(4)")) {
                         continue;
@@ -125,7 +125,6 @@ public class ClanWars {
         if (local != null) {
             Item teleport = Inventory.first(i -> i.name().equals("Zul-andra teleport"));
             if (teleport != null) {
-                int priorX = local.location().x();
                 teleport.processAction("Teleport");
                 Time.sleep(Camp::atCamp, Random.nextInt(5000, 7500));
             }
