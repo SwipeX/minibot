@@ -122,7 +122,6 @@ public class Bank {
             }
         }
         if (container != null) {
-            Item[] array = new Item[0];
             WidgetComponent[] slots = container.children();
             int index = 0;
             for (WidgetComponent slot : slots) {
@@ -130,10 +129,9 @@ public class Bank {
                 int stack = slot.itemAmount();
                 if (id > 0 && stack > 0) {
                     Item item = new Item(slot, Source.BANK, index);
-                    if (!filter.accept(item)) {
-                        continue;
+                    if (filter.accept(item)) {
+                        items.add(item);
                     }
-                    items.add(item);
                 }
                 index++;
             }

@@ -60,7 +60,7 @@ public class ClanWars {
                     if (Inventory.first(i -> i.name().toLowerCase().contains(str)) == null) {
                         Bank.withdraw(Bank.first(i -> {
                             String itemName = i.name();
-                            return !(str.equals("venom") && itemName.contains("1")) && itemName.toLowerCase().contains(str);
+                            return !itemName.contains("(1)") && itemName.toLowerCase().contains(str);
                         }), 1);
                         Time.sleep(150, 400);
                     }
