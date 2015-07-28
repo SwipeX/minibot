@@ -52,7 +52,7 @@ public class ClanWars {
                 }
                 if (Inventory.first(i -> i.name().toLowerCase().contains("ava's")) == null) {
                     String name = Equipment.Slot.CAPE.getName();
-                    if (name == null && !name.toLowerCase().contains("ava's")) {
+                    if (name == null || !name.toLowerCase().contains("ava's")) {
                         Item ava = Bank.first(i -> i.name().toLowerCase().contains("ava's"));
                         if (ava != null) {
                             Bank.withdraw(ava, 1);
