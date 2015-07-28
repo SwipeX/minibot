@@ -50,7 +50,7 @@ public class ClanWars {
                 if (Inventory.first(i -> i.name().equals("Ring of recoil")) == null) {
                     Bank.withdraw("Ring of recoil", 1);
                 }
-                String[] withdraw = {"super restore(4)", "prayer potion(4)", "venom+", "ranging", "dueling", "zul-andra"};
+                String[] withdraw = {"super restore(4)", "prayer potion(4)", "venom", "ranging", "dueling", "zul-andra"};
                 for (String str : withdraw) {
                     if (Gear.potion() == Potions.Potion.PRAYER && str.equals("super restore(4)")) {
                         continue;
@@ -60,7 +60,8 @@ public class ClanWars {
                     if (Inventory.first(i -> i.name().toLowerCase().contains(str)) == null) {
                         Bank.withdraw(Bank.first(i -> {
                             String itemName = i.name();
-                            return !itemName.contains("(1)") && itemName.toLowerCase().contains(str);
+                            return !itemName.contains("1") && !(str.equals("venom") && itemName.length() != 14) &&
+                                    itemName.toLowerCase().contains(str);
                         }), 1);
                         Time.sleep(150, 400);
                     }
