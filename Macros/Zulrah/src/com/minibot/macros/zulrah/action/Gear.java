@@ -26,6 +26,7 @@ public class Gear {
     private static final String[] NAMES_RANGED;
     private static final String[] NAMES_MAGE;
     private static long lastSpec = -1;
+    private static Potions.Potion potion;
 
     static {
         NAMES_RANGED = new String[]{"d'hide", "bow", "pipe", "ava's", "range", "blowpipe"};
@@ -87,13 +88,17 @@ public class Gear {
         stacks = stack.stream().mapToInt(i -> i).toArray();
         rangedIds = ranged.stream().mapToInt(i -> i).toArray();
         mageIds = magic.stream().mapToInt(i -> i).toArray();
+        potion = (Potions.Potion.PRAYER.get() != null ? Potions.Potion.PRAYER : Potions.Potion.RESTORE);
     }
 
     public static boolean hasInventory() {
         boolean hasVenom = Inventory.first(i -> i.name().toLowerCase().contains("venom")) != null;
         boolean hasRanged = Inventory.first(i -> i.name().toLowerCase().contains("ranging")) != null;
-        boolean hasPrayer = Inventory.first(i -> i.name().toLowerCase().contains("Prayer potion(4)")) != null;
-        return (hasRanged && hasVenom && hasPrayer && Inventory.containsAll(inventory))
+        boolean hasPotion = Inventory.first(i -> {
+            String itemName = i.name().toLowerCase();
+            return itemName.contains("prayer potion(4)") || itemName.contains("super restore(4)");
+        }) != null;
+        return (hasRanged && hasVenom && hasPotion && Inventory.containsAll(inventory))
                 && (Inventory.containsAll(rangedIds) || Inventory.containsAll(mageIds));
     }
 
@@ -147,19 +152,23 @@ public class Gear {
         return Time.sleep(() -> Equipment.equipped(ids), Random.nextInt(1500, 1800));
     }
 
-    public static int[] getRangedIds() {
+    public static int[] rangedIds() {
         return rangedIds;
     }
 
-    public static int[] getMageIds() {
+    public static int[] mageIds() {
         return mageIds;
     }
 
-    public static int[] getInvetoryIds() {
+    public static int[] inventoryIds() {
         return inventory;
     }
 
-    public static int[] getAmounts() {
+    public static int[] amounts() {
         return stacks;
+    }
+
+    public static Potions.Potion potion() {
+        return potion;
     }
 }

@@ -32,7 +32,8 @@ public class ClanWars {
                         }
                     }
                 }
-                String[] force = {"Prayer potion(1)", "Prayer potion(2)", "Prayer potion(3)", "Anti-venom+(1)", "Vial"};
+                String[] force = {"Super restore(1)", "Super restore(2)", "Super restore(3)", "Prayer potion(1)",
+                        "Prayer potion(2)", "Prayer potion(3)", "Anti-venom+(1)", "Vial"};
                 for (String name : force) {
                     Item i = Inventory.first(item -> item.name().equals(name));
                     if (i != null) {
@@ -49,9 +50,14 @@ public class ClanWars {
                 if (Inventory.first(i -> i.name().equals("Ring of recoil")) == null) {
                     Bank.withdraw("Ring of recoil", 1);
                 }
-                String[] withdraw = {"prayer potion(4)", "venom", "ranging", "dueling", "zul-andra"};
+                String[] withdraw = {"super restore(4)", "prayer potion(4)", "venom", "ranging", "dueling", "zul-andra"};
                 for (String str : withdraw) {
                     if (Inventory.first(i -> {
+                        if (Gear.potion() == Potions.Potion.PRAYER && str.equals("super restore(4)")) {
+                            return false;
+                        } else if (Gear.potion() == Potions.Potion.RESTORE && str.equals("prayer potion(4)")) {
+                            return false;
+                        }
                         String itemName = i.name();
                         return !(str.equals("venom") && itemName.contains("1")) && itemName.toLowerCase().contains(str);
                     }) == null) {
