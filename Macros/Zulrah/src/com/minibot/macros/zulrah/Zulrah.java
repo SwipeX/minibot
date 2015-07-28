@@ -30,6 +30,12 @@ import java.util.List;
 /**
  * @author Tim Dekker
  * @since 7/14/15
+ *
+ * TODO:
+ *  - fix bug where eating walks
+ *  - death walk
+ *  - prayer disables super fast and gets hit once (range stage)
+ *  - better tiles for getting away from venom clouds
  */
 @Manifest(name = "Zulrah", author = "Tyler/Tim/Jacob", version = "1.0.0", description = "Kills Zulrah")
 public class Zulrah extends Macro implements Renderable, ChatboxListener {
