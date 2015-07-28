@@ -4,6 +4,7 @@ import com.minibot.Minibot;
 import com.minibot.api.method.*;
 import com.minibot.api.util.*;
 import com.minibot.api.wrapper.Item;
+import com.minibot.api.wrapper.WidgetComponent;
 import com.minibot.api.wrapper.locatable.Character;
 import com.minibot.api.wrapper.locatable.Npc;
 import com.minibot.bot.macro.Macro;
@@ -22,6 +23,7 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
     private static final int TEXT_FORMAT = ValueFormat.THOUSANDS | ValueFormat.COMMAS | ValueFormat.PRECISION(1);
 
     private static int startExp;
+    private static long lastSpec = -1;
     private static boolean force;
     private static boolean recharge;
 
@@ -31,6 +33,18 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
             interrupt();
         }
         startExp = Game.experiences()[Skills.RANGED];
+    }
+
+    private static void specialAttack() {
+        if ((lastSpec == -1 || Time.millis() - lastSpec > 5000) && Equipment.equipped("Toxic blowpipe") && !recharge) {
+            if (Game.varp(300) / 10 >= 50) {
+                WidgetComponent comp = Widgets.get(593, 30);
+                if (comp != null) {
+                    comp.processAction("Use <col=00ff00>Special Attack</col>");
+                }
+                lastSpec = Time.millis();
+            }
+        }
     }
 
     private static boolean attack() {
@@ -44,6 +58,7 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
                 return !(n.health() <= 0 && n.maxHealth() > 0) && n.name().equals("Ogre");
             });
             if (npc != null) {
+                specialAttack();
                 npc.processAction("Attack");
                 Time.sleep(2250, 3000);
                 if (Time.sleep(() -> {
@@ -71,22 +86,18 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
             Item scales = Inventory.first(i -> i.name().equals("Zulrah's scales"));
             Item darts = Inventory.first(i -> i.name().contains("dart"));
             if (scales != null && darts != null) {
-                if (Equipment.equipped("Toxic blowpipe (empty)")) {
-                    Equipment.unequip("Toxic blowpipe (empty)");
+                if (Equipment.equipped("Toxic blowpipe")) {
+                    Equipment.unequip("Toxic blowpipe");
                     Time.sleep(1500, 2000);
                 } else {
-                    Item blowpipe = Inventory.first(i -> i.name().equals("Toxic blowpipe (empty)"));
+                    Item blowpipe = Inventory.first(i -> i.name().equals("Toxic blowpipe"));
                     if (blowpipe != null) {
                         darts.use(blowpipe);
                         Time.sleep(900, 1800);
                         scales.use(blowpipe);
-                        Time.sleep(() -> Inventory.first(i -> i.name().equals("Toxic blowpipe")) != null, Random.nextInt(2500, 5000));
-                    } else {
-                        Item chargedBp = Inventory.first(i -> i.name().equals("Toxic blowpipe"));
-                        if (chargedBp != null) {
-                            Equipment.equip(chargedBp.id());
-                            recharge = !Time.sleep(() -> Equipment.equipped(chargedBp.id()), Random.nextInt(5000, 7500));
-                        }
+                        Time.sleep(1500, 2500);
+                        Equipment.equip("Toxic blowpipe");
+                        recharge = !Time.sleep(() -> Equipment.equipped("Toxic blowpipe"), Random.nextInt(5000, 7500));
                     }
                 }
             } else {

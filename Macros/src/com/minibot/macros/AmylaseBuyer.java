@@ -13,6 +13,10 @@ import com.minibot.bot.macro.Manifest;
 
 import java.util.List;
 
+/**
+ * @author Jacob Doiron
+ * @since dunno
+ */
 @Manifest(name = "AmylaseBuyer", author = "Jacob", version = "1.0.0", description = "Buys and opens amylase packs")
 public class AmylaseBuyer extends Macro {
 
@@ -38,7 +42,7 @@ public class AmylaseBuyer extends Macro {
             if (amylase != null) {
                 List<Item> items = Inventory.items();
                 for (int i = 0; i < items.size(); i++) {
-                    if (items != null && !items.isEmpty()) {
+                    if (!items.isEmpty()) {
                         Item item = items.get(i);
                         if (item != null && item.name().equals("Amylase pack")) {
                             item.processAction("Open");

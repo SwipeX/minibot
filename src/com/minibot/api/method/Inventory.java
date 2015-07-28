@@ -102,6 +102,7 @@ public class Inventory {
         return null;
     }
 
+    @SafeVarargs
     public static boolean containsAll(Filter<Item>... filters) {
         for (Filter<Item> filter : filters) {
             if (first(filter) == null) {
