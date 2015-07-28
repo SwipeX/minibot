@@ -33,7 +33,6 @@ import java.util.List;
  * <p>
  * TODO:
  * - fix bug where eating walks
- * - death walk
  * - prayer disables super fast and gets hit once (range stage)
  * - better tiles for getting away from venom clouds
  */
