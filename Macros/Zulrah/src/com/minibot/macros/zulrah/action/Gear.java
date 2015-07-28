@@ -58,7 +58,8 @@ public class Gear {
                         continue slots;
                     }
                 }
-                equip.add(slot.itemId());
+                if (!name.contains("ring"))
+                    equip.add(slot.itemId());
             }
         }
 

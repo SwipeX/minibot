@@ -72,6 +72,15 @@ public class Equipment {
         }
     }
 
+    public static boolean equipped(Filter<Slot> filter) {
+        for (Slot slot : Slot.values()) {
+            if (filter.accept(slot)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static boolean equipped(String name) {
         for (Slot slot : Slot.values()) {
             if (name.equals(slot.getName())) {

@@ -50,6 +50,12 @@ public class ClanWars {
                 if (Inventory.first(i -> i.name().equals("Ring of recoil")) == null) {
                     Bank.withdraw("Ring of recoil", 1);
                 }
+                if (!Equipment.equipped(slot -> {
+                    return slot.getName().toLowerCase().contains("ava's");
+                })) {
+                    Item ava = Bank.first(i -> i.name().toLowerCase().contains("ava's"));
+                    Bank.withdraw(ava, 1);
+                }
                 String[] withdraw = {"super restore(4)", "prayer potion(4)", "venom", "ranging", "dueling", "zul-andra"};
                 for (String str : withdraw) {
                     if (Gear.potion() == Potions.Potion.PRAYER && str.equals("super restore(4)")) {
@@ -88,6 +94,10 @@ public class ClanWars {
             if (ring != null && !Equipment.equipped("Ring of recoil")) {
                 Equipment.equip("Ring of recoil");
                 Time.sleep(1000);
+            }
+            Item accumulator = Inventory.first(i -> i.name().toLowerCase().contains("ava's"));
+            if (accumulator != null && !Equipment.equipped(accumulator.name())) {
+                Equipment.equip(accumulator);
             }
             Tile cw = new Tile(3388, 3161, 0);
             GameObject chest = Objects.nearestByName("Bank chest");
