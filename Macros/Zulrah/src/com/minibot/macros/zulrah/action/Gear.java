@@ -106,6 +106,14 @@ public class Gear {
         return Equipment.equipped(other) && (Equipment.equipped(rangedIds) || Equipment.equipped(mageIds));
     }
 
+    public static boolean equipAll() {
+        int[] ids = other;
+        for (int i : ids) {
+            Equipment.equip(i);
+        }
+        return equip() && Equipment.equipped(ids);
+    }
+
     public static boolean equip() {
         if (!Bank.viewing()) {
             if (!Equipment.equipped("Ring of recoil")) {

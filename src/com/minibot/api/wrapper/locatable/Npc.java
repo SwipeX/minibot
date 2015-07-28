@@ -23,7 +23,14 @@ public class Npc extends Character<RSNpc> implements Identifiable {
         if (rawDef == null) {
             throw new IllegalStateException("bad npc definition!");
         }
-        definition = DefinitionLoader.findNpcDefinition(rawDef.getId());
+        String name = rawDef.getName();
+        if (name == null || name.equals("null")) {
+            rawDef = rawDef.transform();
+            if (rawDef == null) {
+                throw new IllegalStateException("bad npc definition!");
+            }
+        }
+        definition = rawDef;
     }
 
     public int arrayIndex() {

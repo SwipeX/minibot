@@ -86,7 +86,7 @@ public class ClanWars {
         } else {
             Item ring = Inventory.first(i -> i.name().contains("recoil"));
             if (ring != null && !Equipment.equipped("Ring of recoil")) {
-                ring.processAction("Equip");
+                Equipment.equip("Ring of recoil");
                 Time.sleep(1000);
             }
             Tile cw = new Tile(3388, 3161, 0);

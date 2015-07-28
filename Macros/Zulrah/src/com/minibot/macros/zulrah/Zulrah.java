@@ -22,7 +22,7 @@ import com.minibot.macros.zulrah.phase.Stage;
 import com.minibot.macros.zulrah.util.Paint;
 import com.minibot.macros.zulrah.util.Price;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
@@ -30,12 +30,12 @@ import java.util.List;
 /**
  * @author Tim Dekker
  * @since 7/14/15
- *
+ * <p>
  * TODO:
- *  - fix bug where eating walks
- *  - death walk
- *  - prayer disables super fast and gets hit once (range stage)
- *  - better tiles for getting away from venom clouds
+ * - fix bug where eating walks
+ * - death walk
+ * - prayer disables super fast and gets hit once (range stage)
+ * - better tiles for getting away from venom clouds
  */
 @Manifest(name = "Zulrah", author = "Tyler/Tim/Jacob", version = "1.0.0", description = "Kills Zulrah")
 public class Zulrah extends Macro implements Renderable, ChatboxListener {
@@ -57,15 +57,18 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
     private static ZulrahEvent lastEvent;
     private static long lastRan = -1, lastAttack = -1;
     private static int total;
+    private static int kills, deaths;
 
     private final ZulrahListener zulrahListener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
-            int stage = phase.advance();
-            changed = true;
-            lastEvent = event;
-            System.out.println("Advancing on: " + event.previousId + " -> " + (event.id + "/" + event.npc.id()));
-            System.out.println(" ^ " + event.previousTile + " -> " + event.tile);
-            System.out.println(" ^ " + (stage - 1) + " -> " + stage);
+            if (!dead) {
+                int stage = phase.advance();
+                changed = true;
+                lastEvent = event;
+                System.out.println("Advancing on: " + event.previousId + " -> " + (event.id + "/" + event.npc.id()));
+                System.out.println(" ^ " + event.previousTile + " -> " + event.tile);
+                System.out.println(" ^ " + (stage - 1) + " -> " + stage);
+            }
         }
     };
 
@@ -76,6 +79,7 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
             }
         }
     };
+
 
     @Override
     public void atStart() {
@@ -210,15 +214,11 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
                         total += (item.stackSize() * price);
                     }
                     System.out.println("Total kill estimated @ " + total + " gp");
+                    kills++;
                     items.forEach(GroundItem::take);
                 }
             } else {
-                origin = null;
-                walkedOrigin = false;
-                dodge = null;
-                Potions.reset();
-                Phase.reset();
-                previous.clear();
+                fullyReset();
                 // check if lumbridge/falador death spot, check message listener for dead or not, etc.
                 // you need to go to a bank regardless
             }
@@ -259,6 +259,17 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
         phase = Phase.PHASE_1;
     }
 
+    public static void fullyReset() {
+        origin = null;
+        walkedOrigin = false;
+        dodge = null;
+        Potions.reset();
+        Phase.reset();
+        previous.clear();
+        resetPhase();
+        Prayer.deactivateAll();
+    }
+
     public int total() {
         return total;
     }
@@ -275,6 +286,15 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
     public void messageReceived(int type, String sender, String message, String clan) {
         if (message != null && message.equals("Oh dear, you are dead!")) {
             dead = true;
+            deaths++;
         }
+    }
+
+    public static int kills() {
+        return kills;
+    }
+
+    public static int deaths() {
+        return deaths;
     }
 }

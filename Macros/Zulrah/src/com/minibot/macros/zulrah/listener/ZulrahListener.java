@@ -34,9 +34,11 @@ public abstract class ZulrahListener extends LoopTask {
                     onChange(new ZulrahEvent(npc, previousTile, tile, previousId, id));
                 } else if (previousTile.distance(tile) > 0) {
                     int cachedId = id;
-                    Time.sleep(() -> npc.id() != cachedId, 3000);
-                    id = npc.id();
-                    onChange(new ZulrahEvent(npc, previousTile, tile, previousId, id));
+                    Time.sleep(() -> npc != null && npc.id() != cachedId, 3000);
+                    if(npc!=null) {
+                        id = npc.id();
+                        onChange(new ZulrahEvent(npc, previousTile, tile, previousId, id));
+                    }
                 }
             }
             previousId = id;

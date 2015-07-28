@@ -4,6 +4,7 @@ import com.minibot.api.method.*;
 import com.minibot.api.method.web.TilePath;
 import com.minibot.api.util.Random;
 import com.minibot.api.util.Time;
+import com.minibot.api.util.filter.Filter;
 import com.minibot.api.wrapper.Item;
 import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Player;
@@ -32,11 +33,12 @@ public class DeathWalk {
     }
 
     private static void handleBank() {
-        if (!Bank.viewing() && Inventory.first(i -> i.name().equals("Zul-andra teleport")) == null) {
+        Filter<Item> itemFilter = i -> i.name().equals("Zul-andra teleport");
+        if (!Bank.viewing() && Inventory.first(itemFilter) == null) {
             Bank.openBooth();
         } else {
-            if (Inventory.first(i -> i.name().equals("Zul-andra teleport")) == null) {
-                Item teleport = Bank.first(i -> i.name().equals("Zul-andra teleport"));
+            if (Inventory.first(itemFilter) == null) {
+                Item teleport = Bank.first(itemFilter);
                 if (teleport != null) {
                     teleport.processAction("Withdraw-1");
                     Time.sleep(150, 500);
@@ -44,17 +46,24 @@ public class DeathWalk {
                     System.err.println("Out of zul teleports");
                 }
             } else {
-                Item teleport = Inventory.first(i -> i.name().equals("Zul-andra teleport"));
+                Item teleport = Inventory.first(itemFilter);
                 if (teleport != null) {
                     if (Bank.close()) {
                         ClanWars.teleCamp();
-                        Camp.act();
-                        Teleport.act();
-                        Zulrah.setDead(false);
                     }
                 }
             }
         }
+    }
+
+    private static boolean handleCollect() {
+        if (Camp.atCamp()) {
+            if (Camp.collect()) {
+                Gear.equipAll();
+                return Gear.hasEquip();
+            }
+        }
+        return false;
     }
 
     private static void handleStairs() {
@@ -95,9 +104,14 @@ public class DeathWalk {
 
     public static void handle() {
         if (atFalador()) {
+            Zulrah.fullyReset();
             handleFalador();
         } else if (atLumbridge()) {
+            Zulrah.fullyReset();
             handleLumbridge();
+        } else if (handleCollect()) {
+            Zulrah.setDead(false);
+            Teleport.act();
         }
     }
 }

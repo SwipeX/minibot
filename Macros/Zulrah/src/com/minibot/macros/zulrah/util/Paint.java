@@ -22,6 +22,7 @@ public class Paint {
 
     private static final Font FONT = new Font("Arial", Font.BOLD, 9);
     private static final Rectangle PAINT_BOUNDS = new Rectangle(7, 345, 490, 18);
+    private static final Rectangle PAINT_BOUNDS_2 = new Rectangle(7, 363, 490, 18);
     private static final int SETTINGS = ValueFormat.COMMAS | ValueFormat.PRECISION(1) | ValueFormat.THOUSANDS;
     private static final int COMMA = ValueFormat.COMMAS;
 
@@ -57,7 +58,7 @@ public class Paint {
                         ((potion.lifetime() + potion.lastDrink()) - System.currentTimeMillis()), 20, y += 13);
             }
         }
-        g.drawString("Gear: "+Gear.hasEquip()+" "+Gear.hasInventory(), 20, y += 13);
+        g.drawString("Gear: " + Gear.hasEquip() + " " + Gear.hasInventory(), 20, y += 13);
         g.drawString("Range Ids: " + Arrays.toString(Gear.rangedIds()), 20, y += 13);
         g.drawString("Magic Ids: " + Arrays.toString(Gear.mageIds()), 20, y += 13);
         g.drawString("HP: " + (zulrah != null ? zulrah.health() : "-1"), 20, y += 13);
@@ -67,6 +68,7 @@ public class Paint {
     public static void paint(Zulrah zulrah, Graphics2D g) {
         g.setColor(Color.BLACK);
         g.fill(PAINT_BOUNDS);
+        g.fill(PAINT_BOUNDS_2);
         g.setColor(Color.WHITE);
         g.setFont(FONT);
         Npc npc = Zulrah.monster();
@@ -76,5 +78,14 @@ public class Paint {
                 ValueFormat.format(Time.hourly(zulrah.runtime(), zulrah.total()), SETTINGS),
                 npc != null ? (npc.health() > 0 ? (npc.healthPercent() + "%") : "N/A") : "N/A");
         g.drawString(label, 242 - (g.getFontMetrics().stringWidth(label) / 2), PAINT_BOUNDS.y + 13);
+
+        String label2 = String.format("KILLS: %s (%s/HR)    DEATHS: %s (%s/HR)     K/D: %s",
+                Zulrah.kills(),
+                Time.hourly(zulrah.runtime(), Zulrah.kills()),
+                Zulrah.deaths(),
+                Time.hourly(zulrah.runtime(), Zulrah.deaths()),
+                (Zulrah.deaths() == 0 ? 100 : (int) (((double) Zulrah.kills()) / ((double) Zulrah.deaths()) * 100D)) + "%");
+        g.drawString(label2, 242 - (g.getFontMetrics().stringWidth(label2) / 2), PAINT_BOUNDS.y + 13 + PAINT_BOUNDS.height);
+
     }
 }

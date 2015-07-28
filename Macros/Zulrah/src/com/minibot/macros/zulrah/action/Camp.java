@@ -16,7 +16,6 @@ import com.minibot.macros.zulrah.Zulrah;
 public class Camp {
 
     public static final Tile CAMP = new Tile(2199, 3056, 0);
-    public static final String PRIESTEST = "Priestest Zul-Gwenwynig";
     public static final String BOAT = "Sacrificial boat";
 
     public static void act() { // will need to check interface for npc saying if she has more items or not
@@ -36,10 +35,18 @@ public class Camp {
     }
 
     public static Npc findCollector() {
-        return Npcs.nearestByName(PRIESTEST);
+        return Npcs.nearestByFilter(npc -> npc.name().startsWith("Priest"));
     }
 
     public static boolean collect() {
+        GameObject boat = Objects.nearestByName(BOAT);
+        if (boat != null) {
+            Tile tile = boat.location();
+            if (tile.distance() > 7) {
+                Walking.walkTo(tile);
+                Time.sleep(2200, 3000);
+            }
+        }
         Npc npc = findCollector();
         if (npc != null) {
             int count = Inventory.count();
