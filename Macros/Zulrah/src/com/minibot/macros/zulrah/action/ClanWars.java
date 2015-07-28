@@ -50,23 +50,35 @@ public class ClanWars {
                 if (Inventory.first(i -> i.name().equals("Ring of recoil")) == null) {
                     Bank.withdraw("Ring of recoil", 1);
                 }
-                if (!Equipment.equipped(slot -> {
-                    String name = null;
-                    if (slot != null) {
-                        name = slot.getName();
+                if (Inventory.first(i -> i.name().toLowerCase().contains("ava's")) == null) {
+                    String name = Equipment.Slot.CAPE.getName();
+                    if (name == null && !name.toLowerCase().contains("ava's")) {
+                        Item ava = Bank.first(i -> i.name().toLowerCase().contains("ava's"));
+                        if (ava != null) {
+                            Bank.withdraw(ava, 1);
+                            Time.sleep(150, 400);
+                            Bank.close();
+                            return;
+                        }
                     }
-                    Item accumulator = Inventory.first(i -> i.name().toLowerCase().contains("ava's"));
-                    return name != null && name.toLowerCase().contains("ava's") && accumulator == null;
-                })) {
-                    Item ava = Bank.first(i -> i.name().toLowerCase().contains("ava's"));
-                    if (ava != null) {
-                        System.out.println("COOL I GUES WE HAVE AN AVAS IN BANK NOW");
-                        Bank.withdraw(ava, 1);
+                }
+                String[] withdraw = {"super restore(4)", "prayer potion(4)", "venom", "ranging", "dueling", "zul-andra"};
+                for (String str : withdraw) {
+                    if (Gear.potion() == Potions.Potion.PRAYER && str.equals("super restore(4)")) {
+                        continue;
+                    } else if (Gear.potion() == Potions.Potion.RESTORE && str.equals("prayer potion(4)")) {
+                        continue;
+                    }
+                    if (Inventory.first(i -> i.name().toLowerCase().contains(str)) == null) {
+                        Bank.withdraw(Bank.first(i -> {
+                            String itemName = i.name();
+                            return !itemName.contains("1") && !(str.equals("venom") && itemName.length() != 14) &&
+                                    itemName.toLowerCase().contains(str);
+                        }), 1);
                         Time.sleep(150, 400);
-                        Bank.close();
                     }
-                } else {
-                    String[] withdraw = {"super restore(4)", "prayer potion(4)", "venom", "ranging", "dueling", "zul-andra"};
+                }
+                if (Time.sleep(() -> {
                     for (String str : withdraw) {
                         if (Gear.potion() == Potions.Potion.PRAYER && str.equals("super restore(4)")) {
                             continue;
@@ -74,30 +86,13 @@ public class ClanWars {
                             continue;
                         }
                         if (Inventory.first(i -> i.name().toLowerCase().contains(str)) == null) {
-                            Bank.withdraw(Bank.first(i -> {
-                                String itemName = i.name();
-                                return !itemName.contains("1") && !(str.equals("venom") && itemName.length() != 14) &&
-                                        itemName.toLowerCase().contains(str);
-                            }), 1);
-                            Time.sleep(150, 400);
+                            return false;
                         }
                     }
-                    if (Time.sleep(() -> {
-                        for (String str : withdraw) {
-                            if (Gear.potion() == Potions.Potion.PRAYER && str.equals("super restore(4)")) {
-                                continue;
-                            } else if (Gear.potion() == Potions.Potion.RESTORE && str.equals("prayer potion(4)")) {
-                                continue;
-                            }
-                            if (Inventory.first(i -> i.name().toLowerCase().contains(str)) == null) {
-                                return false;
-                            }
-                        }
-                        return true;
-                    }, 2000)) {
-                        Bank.withdraw("Shark", Bank.WITHDRAW_ALL);
-                        Time.sleep(() -> Inventory.count() == 28, 2000);
-                    }
+                    return true;
+                }, 2000)) {
+                    Bank.withdraw("Shark", Bank.WITHDRAW_ALL);
+                    Time.sleep(() -> Inventory.count() == 28, 2000);
                 }
             }
         } else {
