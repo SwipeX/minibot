@@ -52,16 +52,16 @@ public class ClanWars {
                 }
                 String[] withdraw = {"super restore(4)", "prayer potion(4)", "venom", "ranging", "dueling", "zul-andra"};
                 for (String str : withdraw) {
-                    if (Inventory.first(i -> {
-                        if (Gear.potion() == Potions.Potion.PRAYER && str.equals("super restore(4)")) {
-                            return false;
-                        } else if (Gear.potion() == Potions.Potion.RESTORE && str.equals("prayer potion(4)")) {
-                            return false;
-                        }
-                        String itemName = i.name();
-                        return !(str.equals("venom") && itemName.contains("1")) && itemName.toLowerCase().contains(str);
-                    }) == null) {
-                        Bank.withdraw(Bank.first(i -> i.name().toLowerCase().contains(str)), 1);
+                    if (Gear.potion() == Potions.Potion.PRAYER && str.equals("super restore(4)")) {
+                        continue;
+                    } else if (Gear.potion() == Potions.Potion.RESTORE && str.equals("prayer potion(4)")) {
+                        continue;
+                    }
+                    if (Inventory.first(i -> i.name().toLowerCase().contains(str)) == null) {
+                        Bank.withdraw(Bank.first(i -> {
+                            String itemName = i.name();
+                            return !(str.equals("venom") && itemName.contains("1")) && itemName.toLowerCase().contains(str);
+                        }), 1);
                         Time.sleep(150, 400);
                     }
                 }
