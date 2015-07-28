@@ -19,12 +19,12 @@ public class Camp {
     public static final String PRIESTEST = "Priestest Zul-Gwenwynig";
     public static final String BOAT = "Sacrificial boat";
 
-    private static boolean dead;
-
-    public static void act() {
+    public static void act() { // will need to check interface for npc saying if she has more items or not
         if (atCamp()) {
-            if (dead) {
-                collect();
+            if (Zulrah.isDead()) {
+                if (collect()) {
+                    Gear.equip();
+                }
             } else {
                 boardBoat();
             }

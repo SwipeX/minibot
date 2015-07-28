@@ -120,14 +120,11 @@ public class ClanWars {
         }
     }
 
-    private static void teleCamp() {
-        Player local = Players.local();
-        if (local != null) {
-            Item teleport = Inventory.first(i -> i.name().equals("Zul-andra teleport"));
-            if (teleport != null) {
-                teleport.processAction("Teleport");
-                Time.sleep(Camp::atCamp, Random.nextInt(5000, 7500));
-            }
+    public static void teleCamp() {
+        Item teleport = Inventory.first(i -> i.name().equals("Zul-andra teleport"));
+        if (teleport != null) {
+            teleport.processAction("Teleport");
+            Time.sleep(Camp::atCamp, Random.nextInt(5000, 7500));
         }
     }
 }

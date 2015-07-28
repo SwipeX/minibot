@@ -47,9 +47,9 @@ public class DeathWalk {
                 Item teleport = Inventory.first(i -> i.name().equals("Zul-andra teleport"));
                 if (teleport != null) {
                     if (Bank.close()) {
-                        Time.sleep(() -> Inventory.count() == 4, Random.nextInt(5000, 7500));
-                        teleport.processAction("Teleport");
-                        Time.sleep(Camp::atCamp, Random.nextInt(5000, 7500));
+                        ClanWars.teleCamp();
+                        Camp.act();
+                        Teleport.act();
                         Zulrah.setDead(false);
                     }
                 }
@@ -63,6 +63,7 @@ public class DeathWalk {
             int plane = Game.plane();
             stairs.processAction("Climb-up", stairs.localX() - 1, stairs.localY() - 1);
             Time.sleep(() -> Game.plane() == plane + 1, Random.nextInt(5000, 7500));
+            Time.sleep(500, 1500);
         }
     }
 

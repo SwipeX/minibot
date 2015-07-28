@@ -47,7 +47,7 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
     private static Phase phase = Phase.PHASE_1;
     private static Tile origin, dodge;
     public static int projectileType = -1;
-    private static boolean changed, walkedOrigin, dead = true;
+    private static boolean changed, walkedOrigin, dead;
     private static ZulrahEvent lastEvent;
     private static long lastRan = -1, lastAttack = -1;
     private static int total;
@@ -255,6 +255,10 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
 
     public int total() {
         return total;
+    }
+
+    public static boolean isDead() {
+        return dead;
     }
 
     public static void setDead(boolean dead) {

@@ -32,7 +32,7 @@ public class Teleport {
         }
     }
 
-    private static void act() {
+    public static void act() {
         Item ring = Inventory.first(item -> item.name().contains("dueling"));
         if (ring != null) {
             ring.processAction("Rub");
