@@ -15,7 +15,7 @@ public enum Stage {
     MELEE_WEST(SnakeType.MELEE, -5, 0),
 
     MAGIC_EAST(SnakeType.MAGIC, 4, 3),
-    MAGIC_SOUTH_EAST(SnakeType.MAGIC, 5, -3),
+    MAGIC_SOUTH_EAST(SnakeType.MAGIC, 5, -2),
     MAGIC_SOUTH_WEST(SnakeType.MAGIC, -6, -2),
 
     RANGE_EAST(SnakeType.RANGE, 4, 3),
