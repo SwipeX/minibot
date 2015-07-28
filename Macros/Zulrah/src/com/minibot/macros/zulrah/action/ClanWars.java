@@ -80,7 +80,7 @@ public class ClanWars {
                     return true;
                 }, 2000)) {
                     Bank.withdraw("Shark", Bank.WITHDRAW_ALL);
-                    Time.sleep(() -> Inventory.first(i -> i.name().equals("Shark")) != null, 2000);
+                    Time.sleep(() -> Inventory.count() == 28, 2000);
                 }
             }
         } else {
