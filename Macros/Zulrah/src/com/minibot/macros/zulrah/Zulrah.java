@@ -45,6 +45,7 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
     public static final int PROJECTILE_SNAKELING = 1230;
     public static final int PROJECTILE_RANGED = 1044;
     public static final int PROJECTILE_MAGE = 1046;
+    public static final int PROJECTILE_TRIDENT = 1040;
     public static final int ZUL_TELEPORT = 12938;
     public static final int AVAS_ACCUMULATOR = 10499;
 
@@ -58,6 +59,7 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
     private static long lastRan = -1, lastAttack = -1;
     private static int total;
     private static int kills, deaths;
+    private static int castPrice = 0;
 
     private final ZulrahListener zulrahListener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
@@ -76,6 +78,8 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
         public void onProjectileLoaded(ProjectileEvent evt) {
             if (evt.id == PROJECTILE_RANGED || evt.id == PROJECTILE_MAGE) {
                 projectileType = evt.id;
+            } else if (evt.id == PROJECTILE_TRIDENT) {
+                total -= castPrice;
             }
         }
     };
@@ -86,6 +90,11 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
         zulrahListener.start();
         projectileListener.start();
         Gear.setup();
+        int chaos = Price.lookup(562);
+        int death = Price.lookup(560);
+        int scale = Price.lookup(12934);
+        int fire = Price.lookup(554);
+        castPrice = (chaos + death + scale + (fire * 5));
     }
 
     private void handleStats() {
@@ -209,7 +218,7 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
                         if (item.id() != ZUL_TELEPORT && !lootIds.contains(item.id())) {
                             lootIds.add(item.id());
                         }
-                        int price = Price.getPrice(item.id());
+                        int price = Price.lookup(item.id());
                         System.out.println(item.name() + " (" + item.stackSize() + ") x " + price + " = " + (price * item.stackSize()));
                         total += (item.stackSize() * price);
                     }
