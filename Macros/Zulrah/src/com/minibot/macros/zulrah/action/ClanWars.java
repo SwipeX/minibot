@@ -32,7 +32,7 @@ public class ClanWars {
                         }
                     }
                 }
-                String[] force = {"Prayer potion(1)", "Prayer potion(2)", "Prayer potion(3)", "Vial"};
+                String[] force = {"Prayer potion(1)", "Prayer potion(2)", "Prayer potion(3)", "Anti-venom+(1)", "Vial"};
                 for (String name : force) {
                     Item i = Inventory.first(item -> item.name().equals(name));
                     if (i != null) {
