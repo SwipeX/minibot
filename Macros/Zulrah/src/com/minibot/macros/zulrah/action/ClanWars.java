@@ -55,10 +55,12 @@ public class ClanWars {
                     if (slot != null) {
                         name = slot.getName();
                     }
-                    return name != null && name.toLowerCase().contains("ava's");
+                    Item accumulator = Inventory.first(i -> i.name().toLowerCase().contains("ava's"));
+                    return name != null && name.toLowerCase().contains("ava's") && accumulator == null;
                 })) {
                     Item ava = Bank.first(i -> i.name().toLowerCase().contains("ava's"));
                     if (ava != null) {
+                        System.out.println("COOL I GUES WE HAVE AN AVAS IN BANK NOW");
                         Bank.withdraw(ava, 1);
                         Time.sleep(150, 400);
                         Bank.close();

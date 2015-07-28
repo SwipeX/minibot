@@ -93,17 +93,12 @@ public enum Prayer {
             deactivateAll();
         } else {
             for (Prayer prayer : prayers) {
-                if (prayer == Prayer.MYSTIC_MIGHT && Game.realLevels()[Skills.PRAYER] < 45)
-                    prayer = MYSTIC_LORE;
                 if (!prayer.toggled()) {
-                    System.out.println("TOGGLED " + prayer);
                     prayer.setActive(true);
                 }
             }
             return Time.sleep(() -> {
                 for (Prayer prayer : prayers) {
-                    if (prayer == Prayer.MYSTIC_MIGHT && Game.realLevels()[Skills.PRAYER] < 45)
-                        prayer = MYSTIC_LORE;
                     if (!prayer.toggled()) {
                         return false;
                     }
@@ -117,18 +112,13 @@ public enum Prayer {
     public static boolean deactivateAll() {
         List<Prayer> untoggled = new ArrayList<>();
         for (Prayer prayer : values()) {
-            if (prayer == Prayer.MYSTIC_MIGHT && Game.realLevels()[Skills.PRAYER] < 45)
-                prayer = MYSTIC_LORE;
-            if (prayer.toggled()) {
-                System.out.println("UNTOGGLED " + prayer);
+            if (prayer.toggled()) {;
                 prayer.setActive(false);
                 untoggled.add(prayer);
             }
         }
         return Time.sleep(() -> {
             for (Prayer prayer : untoggled) {
-                if (prayer == Prayer.MYSTIC_MIGHT && Game.realLevels()[Skills.PRAYER] < 45)
-                    prayer = MYSTIC_LORE;
                 if (prayer.toggled()) {
                     return false;
                 }
