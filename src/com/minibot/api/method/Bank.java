@@ -21,6 +21,8 @@ public class Bank {
     public static final int DEPOSIT_EQUIPMENT = 29;
     public static final int SLOT_CONTAINER = 6;
 
+    public static final int WITHDRAW_ALL = 0;
+
     private static Filter<Item> itemFilter(String itemName) {
         return item -> item.name().equals(itemName);
     }
@@ -73,22 +75,26 @@ public class Bank {
      *               TODO - withdraw-x without presetting it before starting script
      */
     public static void withdraw(Item item, int amount) {
-        if (item != null && amount > 0) {
-            String[] actions = item.owner().actions();
-            if (actions == null) {
-                return;
-            }
-            String targetAction = "Withdraw-" + amount;
-            for (String string : actions) {
-                if (string == null) {
-                    continue;
-                }
-                if (string.contains(targetAction)) {
-                    item.processAction(targetAction);
+        if (item != null) {
+            if (amount > 0) {
+                String[] actions = item.owner().actions();
+                if (actions == null) {
                     return;
                 }
+                String targetAction = "Withdraw-" + amount;
+                for (String string : actions) {
+                    if (string == null) {
+                        continue;
+                    }
+                    if (string.contains(targetAction)) {
+                        item.processAction(targetAction);
+                        return;
+                    }
+                }
+                item.processAction("Withdraw-All"); // fix to actuall Withdraw-X
+            } else {
+                item.processAction("Withdraw-All");
             }
-            item.processAction("Withdraw-All");
         }
     }
 

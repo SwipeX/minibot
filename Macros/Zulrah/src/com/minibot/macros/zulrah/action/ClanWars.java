@@ -66,7 +66,21 @@ public class ClanWars {
                         Time.sleep(150, 400);
                     }
                 }
-                Bank.withdraw("Shark", 1000);
+                if (Time.sleep(() -> {
+                    for (String str : withdraw) {
+                        if (Gear.potion() == Potions.Potion.PRAYER && str.equals("super restore(4)")) {
+                            continue;
+                        } else if (Gear.potion() == Potions.Potion.RESTORE && str.equals("prayer potion(4)")) {
+                            continue;
+                        }
+                        if (Inventory.first(i -> i.name().toLowerCase().contains(str)) == null) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }, 2000)) {
+                    Bank.withdraw("Shark", Bank.WITHDRAW_ALL);
+                }
             }
         } else {
             Item ring = Inventory.first(i -> i.name().contains("recoil"));
