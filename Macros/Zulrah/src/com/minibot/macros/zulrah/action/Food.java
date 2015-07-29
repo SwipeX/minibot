@@ -15,7 +15,7 @@ public class Food {
     private static long lastEatTime = -1;
 
     public static void eat() {
-        if (lastEatTime != -1 && Time.millis() - lastEatTime < 150) {
+        if (lastEatTime != -1 && Time.millis() - lastEatTime < 450) {
             return;
         }
         if (Game.levels()[Skills.HITPOINTS] <= 45) {
