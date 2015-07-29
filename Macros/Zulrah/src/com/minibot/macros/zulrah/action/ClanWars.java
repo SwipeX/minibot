@@ -19,6 +19,9 @@ public class ClanWars {
     // needs support for recharging tridents
 
     public static void handle() {
+        Tile cw = new Tile(3388, 3161, 0);
+        if (Zulrah.monster() != null)
+            return;
         if (Bank.viewing()) {
             if (Inventory.count() == 28) {
                 handlePortal();
@@ -57,8 +60,6 @@ public class ClanWars {
                         if (ava != null) {
                             Bank.withdraw(ava, 1);
                             Time.sleep(150, 400);
-                            Bank.close();
-                            return;
                         }
                     }
                 }
@@ -101,11 +102,6 @@ public class ClanWars {
                 Equipment.equip("Ring of recoil");
                 Time.sleep(1000);
             }
-            Item accumulator = Inventory.first(i -> i.name().toLowerCase().contains("ava's"));
-            if (accumulator != null && !Equipment.equipped(accumulator.name())) {
-                Equipment.equip(accumulator);
-            }
-            Tile cw = new Tile(3388, 3161, 0);
             GameObject chest = Objects.nearestByName("Bank chest");
             if (chest == null && cw.distance() <= 15) {
                 Walking.walkTo(new Tile(3377 + Random.nextInt(-2, 2), 3168 + Random.nextInt(-2, 2), 0));
