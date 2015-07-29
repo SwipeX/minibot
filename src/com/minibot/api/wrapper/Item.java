@@ -9,7 +9,8 @@ import com.minibot.api.wrapper.locatable.GroundItem;
 import com.minibot.client.natives.RSItemDefinition;
 import com.minibot.util.DefinitionLoader;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Rectangle;
 
 /**
  * @author Tyler Sedlar
@@ -153,8 +154,9 @@ public class Item implements Identifiable {
         } else {
             int index = Action.indexOf(comp.actions(), action) + 1;
             Point point = point();
-            if (point != null)
-                RuneScape.processAction(new WidgetAction(index > 4, index, this.index, comp.raw.getId()), action, name(), point.x, point.y);
+            int x = (point != null ? point.x : 50);
+            int y = (point != null ? point.y : 50);
+            RuneScape.processAction(new WidgetAction(index > 4, index, this.index, comp.raw.getId()), action, name(), x, y);
         }
     }
 
