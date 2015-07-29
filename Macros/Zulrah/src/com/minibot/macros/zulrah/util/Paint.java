@@ -84,7 +84,7 @@ public class Paint {
                 Time.hourly(zulrah.runtime(), Zulrah.kills()),
                 Zulrah.deaths(),
                 Time.hourly(zulrah.runtime(), Zulrah.deaths()),
-                (Zulrah.deaths() == 0 ? 100 : String.format("%.2f", 100D / (((double) Zulrah.kills()) / ((double) Zulrah.deaths()))) + "%"));
+                (Zulrah.deaths() == 0 ? 100 : String.format("%.2f", 100 - (100D / (((double) Zulrah.kills()) / ((double) Zulrah.deaths()))) + "%")));
         g.drawString(label2, 242 - (g.getFontMetrics().stringWidth(label2) / 2), PAINT_BOUNDS.y + 13 + PAINT_BOUNDS.height);
 
     }
