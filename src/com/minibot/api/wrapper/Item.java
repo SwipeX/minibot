@@ -153,7 +153,10 @@ public class Item implements Identifiable {
             }
         } else {
             int index = Action.indexOf(comp.actions(), action) + 1;
-            RuneScape.processAction(new WidgetAction(index > 4, index, this.index, comp.raw.getId()), action, name(), 50, 50);
+            Point point = point();
+            int x = (point != null ? point.x : 50);
+            int y = (point != null ? point.y : 50);
+            RuneScape.processAction(new WidgetAction(index > 4, index, this.index, comp.raw.getId()), action, name(), x, y);
         }
     }
 
