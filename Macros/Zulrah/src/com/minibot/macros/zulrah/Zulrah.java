@@ -59,7 +59,7 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
     private static int total;
     private static int kills, deaths;
     private static int castPrice = 0;
-    private static boolean logout;
+    private static boolean logout, charge;
 
     private final ZulrahListener zulrahListener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
@@ -132,6 +132,10 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
         }
         if (dead) {
             DeathWalk.handle();
+            return;
+        }
+        if (charge && origin == null) {
+            // check if at camp, Trident.setToggle(true);
             return;
         }
         Npc zulrah = monster();
@@ -306,9 +310,13 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
 
     @Override
     public void messageReceived(int type, String sender, String message, String clan) {
-        if (message != null && message.equals("Oh dear, you are dead!")) {
-            dead = true;
-            deaths++;
+        if (message != null) {
+            if (message.equals("Oh dear, you are dead!")) {
+                dead = true;
+                deaths++;
+            } else if (message.equals("Your weapon has 100 charges left.")) {
+                charge = true;
+            }
         }
     }
 
