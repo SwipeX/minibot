@@ -59,8 +59,9 @@ public class DeathWalk {
     private static boolean handleCollect() {
         if (Camp.atCamp()) {
             if (Camp.collect()) {
-                Gear.equipAll();
-                return Gear.hasEquip();
+                if (Gear.equipAll()) {
+                    return Gear.hasEquip();
+                }
             }
         }
         return false;
