@@ -960,10 +960,10 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
-                public void visitMethod(MethodMemberNode mmn) {
-                    if (mmn.opcode() == INVOKEVIRTUAL && mmn.desc().matches(reg("\\(III[PRED]\\)V"))) {
-                        FieldMemberNode fmn = (FieldMemberNode) mmn.layer(IMUL, GETSTATIC);
-                        if (fmn != null && fmn.owner().equals("client") && fmn.desc().equals("I")) {
+                public void visitField(FieldMemberNode fmn) {
+                    if (fmn.opcode() == PUTFIELD && fmn.desc().equals("I")) {
+                        fmn = (FieldMemberNode) fmn.layer(IMUL, IAND, D2I, DMUL, INVOKESTATIC, DDIV, I2D, IMUL, GETSTATIC);
+                        if (fmn != null && fmn.desc().equals("I")) {
                             addHook(new FieldHook("cycle", fmn.fin()));
                             lock.set(true);
                         }
