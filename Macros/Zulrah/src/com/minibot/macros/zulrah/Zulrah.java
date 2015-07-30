@@ -228,6 +228,7 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
                     }
                     System.out.println("Total kill estimated @ " + total + " gp");
                     kills++;
+                    total -= (Price.lookup(2434) + (Price.lookup(385) * 12)); // subtract roughly 1 pray pot and 12 sharks
                     items.forEach(GroundItem::take);
                 }
             } else {
@@ -237,7 +238,7 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
             }
         }
         Equipment.Slot weapon = Equipment.Slot.WEAPON;
-        if (weapon != null) {
+        if (!weapon.empty()) {
             String name = weapon.getName();
             if (name != null) {
                 if (name.toLowerCase().contains("uncharged"))
