@@ -79,12 +79,11 @@ public class Paint {
                 npc != null ? (npc.health() > 0 ? (npc.healthPercent() + "%") : "N/A") : "N/A");
         g.drawString(label, 242 - (g.getFontMetrics().stringWidth(label) / 2), PAINT_BOUNDS.y + 13);
 
-        String label2 = String.format("KILLS: %s (%s/HR)    DEATHS: %s (%s/HR)     K/D: %s",
+        String label2 = String.format("KILLS: %s (%s/HR)    DEATHS: %s (%s/HR)",
                 Zulrah.kills(),
                 Time.hourly(zulrah.runtime(), Zulrah.kills()),
                 Zulrah.deaths(),
-                Time.hourly(zulrah.runtime(), Zulrah.deaths()),
-                (Zulrah.deaths() == 0 ? 100 : String.format("%.2f", 100 - (100D / (((double) Zulrah.kills()) / ((double) Zulrah.deaths()))) + "%")));
+                Time.hourly(zulrah.runtime(), Zulrah.deaths()));
         g.drawString(label2, 242 - (g.getFontMetrics().stringWidth(label2) / 2), PAINT_BOUNDS.y + 13 + PAINT_BOUNDS.height);
 
     }

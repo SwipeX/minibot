@@ -22,6 +22,7 @@ public class Bank {
     public static final int SLOT_CONTAINER = 6;
 
     public static final int WITHDRAW_ALL = 0;
+    public static final int WITHDRAW_ALL_BUT_ONE = -1;
 
     private static Filter<Item> itemFilter(String itemName) {
         return item -> item.name().equals(itemName);
@@ -92,8 +93,10 @@ public class Bank {
                     }
                 }
                 item.processAction("Withdraw-All"); // fix to actuall Withdraw-X
-            } else {
+            } else if (amount == 0) {
                 item.processAction("Withdraw-All");
+            } else if (amount == -1) {
+                item.processAction("Withdraw-All-but-one");
             }
         }
     }

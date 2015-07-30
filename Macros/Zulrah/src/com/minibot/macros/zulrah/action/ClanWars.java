@@ -15,11 +15,12 @@ import com.minibot.macros.zulrah.Zulrah;
  */
 public class ClanWars {
 
+    public static final Tile CAMP = new Tile(3388, 3161, 0);
+
     // needs to support Gear.hasEquip and hasInventory
     // needs support for recharging tridents
 
     public static void handle() {
-        Tile cw = new Tile(3388, 3161, 0);
         if (Zulrah.monster() != null)
             return;
         if (Bank.viewing()) {
@@ -103,7 +104,7 @@ public class ClanWars {
                 Time.sleep(1000);
             }
             GameObject chest = Objects.nearestByName("Bank chest");
-            if (chest == null && cw.distance() <= 15) {
+            if (chest == null && CAMP.distance() <= 15) {
                 Walking.walkTo(new Tile(3377 + Random.nextInt(-2, 2), 3168 + Random.nextInt(-2, 2), 0));
                 Time.sleep(4500, 6000);
                 chest = Objects.nearestByName("Bank chest");
@@ -116,7 +117,7 @@ public class ClanWars {
         }
     }
 
-    private static void openChest() {
+    public static void openChest() {
         GameObject chest = Objects.nearestByName("Bank chest");
         if (chest != null) {
             chest.processAction("Use");
