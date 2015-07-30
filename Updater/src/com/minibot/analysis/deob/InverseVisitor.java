@@ -9,12 +9,10 @@ import org.objectweb.asm.commons.wrapper.ClassField;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Tyler Sedlar
@@ -43,32 +41,41 @@ public class InverseVisitor extends MethodVisitor implements Opcodes {
                 return;
             }
             AbstractInsnNode third = second.next();
-            if (third == null || third.opcode() == PUTSTATIC || third.opcode() == PUTFIELD) {
+            if (third == null || third.opcode() == PUTSTATIC || third.opcode() == PUTFIELD || third.opcode() == ILOAD) {
                 return;
             }
-            if (second.opcode() == IMUL && third.opcode() == IMUL) {
-                return;
-            }
-            LdcInsnNode ldc = Assembly.previous(fin, LDC, 2);
-            if (ldc == null && fin.opcode() != PUTFIELD && fin.opcode() != PUTSTATIC) {
-                ldc = Assembly.next(fin, LDC, 2);
-            }
-            if (ldc == null || !(ldc.cst instanceof Integer)) {
-                return;
-            }
-            int multiplier = (int) ldc.cst;
-            if (multiplier % 2 == 0) {
-                return;
-            }
-            Modulus mod = new Modulus(BigInteger.valueOf(multiplier), 32);
-            if (mod.validate()) {
-                String key = fin.owner + "." + fin.name;
-                boolean getting = fin.opcode() == GETFIELD || fin.opcode() == GETSTATIC;
-                Map<String, List<BigInteger>> map = getting ? decoders : encoders;
-                if (!map.containsKey(key)) {
-                    map.put(key, new LinkedList<>());
+            AbstractInsnNode fourth = third.next();
+            if (fourth != null) {
+                fourth = fourth.next();
+                if (fourth != null) {
+                    fourth = fourth.next();
+                    if (fourth != null && fourth.opcode() == ALOAD) {
+                        if (((VarInsnNode) fourth).var != 0) {
+                            return;
+                        }
+                    }
                 }
-                map.get(key).add(mod.quotient);
+            }
+            List<LdcInsnNode> ldcs = new ArrayList<>();
+            LdcInsnNode ldc = Assembly.next(fin, LDC, 2);
+            if (ldc != null && ldc.cst instanceof Integer && ((int) ldc.cst) % 2 != 0) {
+                ldcs.add(ldc);
+            }
+            ldc = Assembly.previous(fin, LDC, 2);
+            if (ldc != null && ldc.cst instanceof Integer && ((int) ldc.cst) % 2 != 0) {
+                ldcs.add(ldc);
+            }
+            for (LdcInsnNode ldcInsn : ldcs) {
+                Modulus mod = new Modulus(BigInteger.valueOf((int) ldcInsn.cst), 32);
+                if (mod.validate()) {
+                    String key = fin.owner + "." + fin.name;
+                    boolean getting = fin.opcode() == GETFIELD || fin.opcode() == GETSTATIC;
+                    Map<String, List<BigInteger>> map = getting ? decoders : encoders;
+                    if (!map.containsKey(key)) {
+                        map.put(key, new LinkedList<>());
+                    }
+                    map.get(key).add(mod.quotient);
+                }
             }
         }
     }
