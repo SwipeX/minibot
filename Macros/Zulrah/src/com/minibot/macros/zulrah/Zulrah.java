@@ -94,6 +94,8 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
         int scale = Price.lookup(12934);
         int fire = Price.lookup(554);
         castPrice = (chaos + death + scale + (fire * 5));
+        fullyReset();
+        dead = false;
     }
 
     private void handleStats() {
