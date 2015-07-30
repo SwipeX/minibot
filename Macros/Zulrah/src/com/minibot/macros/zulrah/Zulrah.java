@@ -59,6 +59,7 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
     private static int total;
     private static int kills, deaths;
     private static int castPrice = 0;
+    private static boolean logout;
 
     private final ZulrahListener zulrahListener = new ZulrahListener() {
         public void onChange(ZulrahEvent event) {
@@ -126,7 +127,9 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
 
     @Override
     public void run() {
-        //Minibot.instance().setVerbose(false);
+        if (logout) {
+            return;
+        }
         if (dead) {
             DeathWalk.handle();
             return;
@@ -231,6 +234,14 @@ public class Zulrah extends Macro implements Renderable, ChatboxListener {
                 fullyReset();
                 // check if lumbridge/falador death spot, check message listener for dead or not, etc.
                 // you need to go to a bank regardless
+            }
+        }
+        Equipment.Slot weapon = Equipment.Slot.WEAPON;
+        if (weapon != null) {
+            String name = weapon.getName();
+            if (name != null) {
+                if (name.toLowerCase().contains("uncharged"))
+                    logout = true;
             }
         }
         Minibot.instance().client().resetMouseIdleTime();
