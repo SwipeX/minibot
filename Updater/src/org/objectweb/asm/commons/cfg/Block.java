@@ -180,4 +180,44 @@ public class Block implements Comparable<Block> {
     public AbstractInsnNode get(InsnQuery query) {
         return get(query, 0);
     }
+
+
+    public boolean follow(BlockHandler handler) {
+        List<Block> followed = new ArrayList<>();
+        int followIndex = 0;
+        Block next = this;
+        followed.add(next);
+        while (next.next != null) {
+            next = next.next;
+            if (followed.contains(next)) {
+                break;
+            }
+            followed.add(next);
+            if (!handler.handle(followIndex++, next)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void addInstructionsTo(Block block, List<AbstractInsnNode> list) {
+        for (AbstractInsnNode ain : block.instructions) {
+            if (ain instanceof LabelNode) {
+                continue;
+            }
+            list.add(ain);
+        }
+    }
+
+    public Block followedBlock() {
+        List<AbstractInsnNode> instructions = new LinkedList<>();
+        addInstructionsTo(this, instructions);
+        follow((i, b) -> {
+            addInstructionsTo(b, instructions);
+            return true;
+        });
+        Block block = new Block(null);
+        block.instructions.addAll(instructions);
+        return block;
+    }
 }

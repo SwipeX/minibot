@@ -9,6 +9,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.cfg.Block;
 import org.objectweb.asm.commons.cfg.BlockVisitor;
 import org.objectweb.asm.commons.cfg.query.InsnQuery;
+import org.objectweb.asm.commons.cfg.query.MemberQuery;
 import org.objectweb.asm.commons.cfg.tree.NodeTree;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.*;
@@ -858,42 +859,44 @@ public class Client extends GraphVisitor {
 
     private class HoveredRegionTiles extends BlockVisitor {
 
-        private int added;
-
         @Override
         public boolean validate() {
-            return added < 2;
+            return !lock.get();
         }
 
         @Override
         public void visit(Block block) {
-            List<AbstractNode> layer = block.tree().layerAll(ISTORE, GETSTATIC);
+            NodeTree tree = block.followedBlock().tree();
+            List<AbstractNode> layer = tree.layerAll(ISTORE, GETSTATIC);
             if (layer != null && layer.size() == 2) {
-                VariableNode load = (VariableNode) block.tree().layer(INVOKEVIRTUAL, IADD, ILOAD);
-                if (load != null) {
-                    FieldMemberNode base = (FieldMemberNode) load.parent().layer(IMUL, GETSTATIC);
-                    if (base != null) {
-                        String loadTypeA = base.key().equals(getHookKey("baseX")) ? "hoveredRegionTileX" : "hoveredRegionTileY";
-                        String loadTypeB = loadTypeA.equals("hoveredRegionTileX") ? "hoveredRegionTileY" : "hoveredRegionTileX";
-                        block.tree().accept(new NodeVisitor(this) {
-                            @Override
-                            public void visitVariable(VariableNode vn) {
-                                if (vn.opcode() == ISTORE) {
-                                    FieldMemberNode fmn = vn.firstField();
-                                    if (fmn != null) {
-                                        String name;
-                                        name = vn.var() == load.var() ? loadTypeA : loadTypeB;
-                                        if (getHooks().containsKey(name)) {
-                                            return;
-                                        }
-                                        addHook(new FieldHook(name, fmn.fin()));
-                                        added++;
-                                    }
-                                }
-                            }
-                        });
+                tree.accept(new NodeVisitor() {
+                    private boolean valid = false;
+
+                    @Override
+                    public void visit(AbstractNode n) {
+                        if (n.opcode() == BALOAD) {
+                            FieldMemberNode fmn = n.firstField();
+                            if (fmn != null && fmn.desc().equals("[Z"))
+                                valid = true;
+                        }
                     }
-                }
+
+                    @Override
+                    public void visitEnd() {
+                        if (valid) {
+                            layer.sort((a, b) -> {
+                                VariableNode vA = (VariableNode) a.parent();
+                                VariableNode vB = (VariableNode) b.parent();
+                                return vA.var() - vB.var();
+                            });
+                            FieldMemberNode x = (FieldMemberNode) layer.get(0);
+                            FieldMemberNode y = (FieldMemberNode) layer.get(1);
+                            addHook(new FieldHook("hoveredRegionTileX", x.fin()));
+                            addHook(new FieldHook("hoveredRegionTileY", y.fin()));
+                            lock.set(true);
+                        }
+                    }
+                });
             }
         }
     }
