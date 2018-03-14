@@ -10,9 +10,7 @@ public interface RSCharacter extends RSRenderableNode {
 
     int getInteractingIndex();
 
-    int getHealth();
+    int getOrienatation();
 
-    int getMaxHealth();
-
-    int getOrientation();
+    RSLinkedList getHealthBars();
 }

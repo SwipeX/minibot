@@ -76,7 +76,7 @@ public class Paint {
                 Time.format(zulrah.runtime()),
                 ValueFormat.format(zulrah.total(), SETTINGS),
                 ValueFormat.format(Time.hourly(zulrah.runtime(), zulrah.total()), SETTINGS),
-                npc != null ? (npc.health() > 0 ? (npc.healthPercent() + "%") : "N/A") : "N/A");
+                npc != null ? (npc.health() > 0 ? (npc.health() + "%") : "N/A") : "N/A");
         g.drawString(label, 242 - (g.getFontMetrics().stringWidth(label) / 2), PAINT_BOUNDS.y + 13);
 
         String label2 = String.format("KILLS: %s (%s/HR)    DEATHS: %s (%s/HR)",

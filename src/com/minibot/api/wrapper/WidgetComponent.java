@@ -140,11 +140,6 @@ public class WidgetComponent extends Wrapper<RSWidget> {
         return new Rectangle(x(), y(), width(), height());
     }
 
-    public boolean hidden() {
-        WidgetComponent owner = owner();
-        return (owner != null && owner.hidden()) || raw.isHidden();
-    }
-
     public boolean visible() {
         return boundsIndex() != -1;
     }

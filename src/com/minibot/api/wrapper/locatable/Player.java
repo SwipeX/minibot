@@ -4,6 +4,7 @@ import com.minibot.api.action.ActionOpcodes;
 import com.minibot.api.action.tree.PlayerAction;
 import com.minibot.api.method.Players;
 import com.minibot.api.method.RuneScape;
+import com.minibot.client.natives.RSNamePair;
 import com.minibot.client.natives.RSPlayer;
 
 import java.awt.Point;
@@ -49,6 +50,7 @@ public class Player extends Character<RSPlayer> {
     }
 
     public String name() {
-        return raw.getName();
+        RSNamePair pair = raw.getNamePair();
+        return pair != null ? pair.getFormatted() : "";
     }
 }

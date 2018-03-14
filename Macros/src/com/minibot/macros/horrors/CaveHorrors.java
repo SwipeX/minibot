@@ -118,7 +118,7 @@ public class CaveHorrors extends Macro implements Renderable {
                 if (Game.energy() >= 20) {
                     Game.setRun(true);
                 }
-                int health = player.healthPercent();
+                int health = player.health();
                 if (health != -1 && health < 35 && !Bank.viewing()) {
                     Item food = Inventory.firstFood();
                     if (food != null) {
@@ -128,7 +128,7 @@ public class CaveHorrors extends Macro implements Renderable {
                         status = "Eating";
                         foodId = food.id();
                         food.processAction("Eat");
-                        Time.sleep(() -> player.healthPercent() != health, 2000);
+                        Time.sleep(() -> player.health() != health, 2000);
                     }
                 }
                 if (Inventory.foodCount() > 1) {

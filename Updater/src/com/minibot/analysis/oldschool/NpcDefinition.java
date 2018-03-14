@@ -61,6 +61,7 @@ public class NpcDefinition extends GraphVisitor {
         }
     }
 
+
     private class TransformIds extends BlockVisitor {
 
         @Override
@@ -71,15 +72,12 @@ public class NpcDefinition extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
-                @Override
-                public void visitMethod(MethodMemberNode mmn) {
-                    if (mmn.opcode() == INVOKESTATIC && mmn.desc().startsWith("(I")) {
-                        FieldMemberNode fmn = (FieldMemberNode) mmn.layer(IALOAD, GETFIELD);
-                        if (fmn != null && fmn.owner().equals(getCn().name) && fmn.desc().equals("[I")) {
-                            if (fmn.first(ALOAD) != null) {
-                                getHooks().put("transformIds", new FieldHook("transformIds", fmn.fin()));
-                                lock.set(true);
-                            }
+                public void visit(AbstractNode n) {
+                    if (n.opcode() == IALOAD) {
+                        FieldMemberNode fmn = (FieldMemberNode) n.layer(ISUB, ARRAYLENGTH, GETFIELD);
+                        if (fmn != null && fmn.owner().equals(getCn().name)) {
+                            addHook(new FieldHook("transformIds", fmn.fin()));
+                            lock.set(true);
                         }
                     }
                 }

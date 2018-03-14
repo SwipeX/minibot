@@ -11,19 +11,21 @@ import org.objectweb.asm.tree.ClassNode;
 
 import java.util.List;
 
-@VisitorInfo(hooks = {"x", "y", "health", "maxHealth", "interactingIndex", "animation", "orientation"})
+@VisitorInfo(hooks = {"x", "y", "healthBars", "interactingIndex", "animation", "orientation"})
 public class Character extends GraphVisitor {
 
     @Override
     public boolean validate(ClassNode cn) {
-        return cn.superName.equals(clazz("RenderableNode")) && cn.fieldCount("[I") == 5 && cn.fieldCount("Z") >= 1 &&
-                cn.fieldCount("Ljava/lang/String;") == 1;
+        return cn.superName.equals(clazz("RenderableNode"))
+                && cn.fieldCount("[B") == 1
+                && cn.fieldCount("Z") > 1;
     }
 
     @Override
     public void visit() {
+        add("healthBars", getCn().getField(null, desc("LinkedList")));
         visitIfM(new PositionHooks(), m -> m.desc.startsWith("(L" + getCn().name + ";I") && (m.access & ACC_STATIC) != 0);
-        visitAll(new HealthHooks());
+        //visitAll(new HealthHooks());
         visitAll(new InteractingIndex());
         visitAll(new Animation());
         visitAll(new Orientation());

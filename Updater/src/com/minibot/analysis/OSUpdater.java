@@ -28,9 +28,11 @@ public class OSUpdater extends Updater {
     private static GraphVisitor[] createVisitors() {
         return new GraphVisitor[]{
                 new Node(), new CacheableNode(), new RenderableNode(), new HashTable(),
-                new Cache(), new NodeDeque(), new Queue(), new Tile(), new Model(),
-                new AnimationSequence(), new Projectile(), new Character(), new NpcDefinition(), new Npc(),
-                new Player(), new Item(), new ItemContainer(), new ItemDefinition(), new InteractableObject(),
+                new Cache(), new NodeDeque(), new Queue(), new LinkedList(), new Tile(),
+                new Model(), new NamePair(), new AnimationSequence(), new Projectile(),
+                new HealthBar(), new HitUpdate(),
+                new Character(), new NpcDefinition(), new Npc(), new Player(), new Item(),
+                new ItemContainer(), new ItemDefinition(), new InteractableObject(),
                 new WallDecoration(), new FloorDecoration(), new Boundary(),
                 new ObjectDefinition(), new Region(), new Canvas(), new WidgetNode(),
                 new Widget(), new Varpbits(), new Client()

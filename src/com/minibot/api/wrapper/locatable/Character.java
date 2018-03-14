@@ -10,7 +10,7 @@ import com.minibot.client.natives.RSCharacter;
 import com.minibot.client.natives.RSNpc;
 import com.minibot.client.natives.RSPlayer;
 
-import java.awt.Point;
+import java.awt.*;
 
 /**
  * @author Tyler Sedlar
@@ -47,17 +47,7 @@ public abstract class Character<T extends RSCharacter> extends Wrapper<T> implem
     }
 
     public int health() {
-        return raw.getHealth();
-    }
-
-    public int maxHealth() {
-        return raw.getMaxHealth();
-    }
-
-    public int healthPercent() {
-        int health = health();
-        int maxHealth = maxHealth();
-        return maxHealth == 0 ? -1 : (int) (((double) health / (double) maxHealth) * 100D);
+        return -1; //TODO
     }
 
     public int targetIndex() {
@@ -93,11 +83,11 @@ public abstract class Character<T extends RSCharacter> extends Wrapper<T> implem
     }
 
     public boolean dead() {
-        return maxHealth() > 0 && health() == 0;
+        return health() == 0;
     }
 
     public int getOrientation() {
-        return raw.getOrientation();
+        return raw.getOrienatation();
     }
 
     public final Character target() {

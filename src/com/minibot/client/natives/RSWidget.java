@@ -34,8 +34,6 @@ public interface RSWidget extends ClientNative {
 
     int getTextureId();
 
-    boolean isHidden();
-
     RSWidget[] getChildren();
 
     String[] getActions();

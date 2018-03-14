@@ -25,10 +25,8 @@ import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Frame;
+import java.applet.Applet;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -145,10 +143,12 @@ public class Minibot extends JFrame implements Runnable {
         ModScript.setClassLoader(classloader);
         Container container = getContentPane();
         container.setBackground(Color.BLACK);
-        client = (RSClient) crawler.start(classloader);
-        container.add(client.asApplet());
+        client = (RSClient) crawler.start(classloader, this);
+        container.add((Component) client);
         container.add(GameMenu.component(), BorderLayout.NORTH);
         pack();
+        ((Applet) client).init();
+        ((Applet) client).start();
         setLocationRelativeTo(null);
         setVisible(true);
         while (Game.state() < Game.STATE_CREDENTIALS) {

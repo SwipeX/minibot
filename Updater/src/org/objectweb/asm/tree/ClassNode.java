@@ -460,6 +460,20 @@ public class ClassNode extends ClassVisitor {
         return count;
     }
 
+    public int fieldCount(boolean ignoreStatic) {
+        int count = 0;
+        for (FieldNode fn : fields) {
+            if (ignoreStatic && (fn.access & Opcodes.ACC_STATIC) == Opcodes.ACC_STATIC)
+                continue;
+            count++;
+        }
+        return count;
+    }
+
+    public int fieldCount() {
+        return fieldCount(true);
+    }
+
     public int fieldCount(String desc) {
         return fieldCount(desc, true);
     }

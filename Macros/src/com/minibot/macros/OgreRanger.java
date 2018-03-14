@@ -49,13 +49,13 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
 
     private static boolean attack() {
         Character target = Players.local().target();
-        if (target == null || (target.maxHealth() > 0 && target.health() <= 0)) {
+        if (target == null || (target.health() <= 0)) {
             Npc npc = Npcs.nearestByFilter(n -> {
                 Character npcTarget = n.target();
                 if (npcTarget != null) {
                     return npcTarget.equals(Players.local());
                 }
-                return !(n.health() <= 0 && n.maxHealth() > 0) && n.name().equals("Ogre");
+                return !(n.health() <= 0) && n.name().equals("Ogre");
             });
             if (npc != null) {
                 specialAttack();
@@ -63,7 +63,7 @@ public class OgreRanger extends Macro implements Renderable, ChatboxListener {
                 Time.sleep(2250, 3000);
                 if (Time.sleep(() -> {
                     Character playerTarget = Players.local().target();
-                    return !Game.playing() || force || (playerTarget != null && playerTarget.maxHealth() > 0) || Widgets.viewingContinue();
+                    return !Game.playing() || force || (playerTarget != null) || Widgets.viewingContinue();
                 }, Random.nextInt(25000, 32500))) {
                     force = false;
                     if (Widgets.viewingContinue()) {

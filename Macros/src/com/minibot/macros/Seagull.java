@@ -21,13 +21,13 @@ public class Seagull extends Macro {
     private static boolean attack() {
         boolean force = (lastAttack != -1 && (Time.millis() - lastAttack) > 8000);
         Character target = Players.local().target();
-        if (force || target == null || (target.maxHealth() > 0 && target.health() <= 0)) {
+        if (force || target == null || (target.health() <= 0)) {
             Npc npc = Npcs.nearestByFilter(n -> {
                 Character npcTarget = n.target();
                 if (npcTarget != null) {
                     return npcTarget == Players.local();
                 }
-                if (n.health() <= 0 && n.maxHealth() > 0) {
+                if (n.health() <= 0) {
                     return false;
                 }
                 String name = n.name();
@@ -38,7 +38,7 @@ public class Seagull extends Macro {
                 lastAttack = Time.millis();
                 if (Time.sleep(() -> {
                     Character playerTarget = Players.local().target();
-                    return playerTarget != null && playerTarget.maxHealth() > 0;
+                    return playerTarget != null;
                 }, 5000)) {
                     Time.sleep(600, 800);
                     return true;

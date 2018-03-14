@@ -47,13 +47,13 @@ public class ManKiller extends Macro implements Renderable {
 
     private boolean attack() {
         Character target = Players.local().target();
-        if (target == null || (target.maxHealth() > 0 && target.health() <= 0)) {
+        if (target == null || target.health() <= 0) {
             Npc npc = Npcs.nearestByFilter(n -> {
                 Character npcTarget = n.target();
                 if (npcTarget != null) {
                     return npcTarget.equals(Players.local());
                 }
-                if (n.health() <= 0 && n.maxHealth() > 0) {
+                if (n.health() <= 0) {
                     return false;
                 }
                 String name = n.name();
@@ -63,7 +63,7 @@ public class ManKiller extends Macro implements Renderable {
                 npc.processAction("Attack");
                 if (Time.sleep(() -> {
                     Character playerTarget = Players.local().target();
-                    return (playerTarget != null && playerTarget.maxHealth() > 0) || level();
+                    return playerTarget != null || level();
                 }, Random.nextInt(25000, 32500))) {
                     if (level()) {
                         RuneScape.processAction(new DialogButtonAction(15269890, -1));

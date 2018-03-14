@@ -2,11 +2,11 @@ package com.minibot.util.io;
 
 import com.minibot.util.Configuration;
 
+import javax.swing.*;
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,7 +35,7 @@ public class Crawler {
         config = home + "jav_config.ws";
     }
 
-    public Applet start(ClassLoader classloader) {
+    public Applet start(ClassLoader classloader, JFrame container) {
         try {
             String main = parameters.get("initial_class").replace(".class", "");
             Applet applet = (Applet) classloader.loadClass(main).newInstance();
@@ -43,8 +43,6 @@ public class Crawler {
             applet.setPreferredSize(getAppletSize());
             applet.setLayout(null);
             applet.setStub(getEnvironment(applet));
-            applet.init();
-            applet.start();
             applet.setVisible(true);
             return applet;
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {

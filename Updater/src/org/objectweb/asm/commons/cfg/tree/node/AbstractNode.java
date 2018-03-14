@@ -5,6 +5,7 @@ import org.objectweb.asm.commons.cfg.tree.NodeTree;
 import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.Tree;
 import org.objectweb.asm.commons.util.Assembly;
+import org.objectweb.asm.commons.util.Filter;
 import org.objectweb.asm.tree.*;
 
 import java.util.ArrayList;
@@ -255,6 +256,14 @@ public class AbstractNode extends Tree<AbstractNode> implements Opcodes {
 
     public int index() {
         return method().instructions.indexOf(insn());//insn.insnIndex;
+    }
+
+    public AbstractNode first(Filter<AbstractNode> filter) {
+        for (AbstractNode n : this) {
+            if (filter.accept(n))
+                return n;
+        }
+        return null;
     }
 
     public AbstractNode first(int opcode) {

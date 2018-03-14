@@ -43,6 +43,10 @@ public class FieldHook extends Hook {
         this(name, fn.owner.name, fn.name, fn.desc, (fn.access & ACC_STATIC) > 0);
     }
 
+    public static FieldHook raw(String name, String desc) {
+        return new FieldHook(name, null, null, desc);
+    }
+
     @Override
     public byte getType() {
         return Hook.Type.FIELD;

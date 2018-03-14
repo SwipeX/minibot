@@ -47,8 +47,7 @@ public class Client extends GraphVisitor {
         visitDefLoader("loadNpcDefinition", "NpcDefinition", false);
         visitDefLoader("loadItemDefinition", "ItemDefinition", false);
         visitStaticFields();
-        visitAll(new HintPlayerIndex());
-        visitAll(new HintNpcIndex());
+        //visitAll(new HintPlayerIndex());
         visitAll(new ExperienceHooks());
         visitAll(new CameraXY());
         visitAll(new CameraZ());
@@ -63,6 +62,7 @@ public class Client extends GraphVisitor {
         visitAll(new HintHooks());
         visitAll(new NpcIndices());
         visitAll(new PlayerIndices());
+        visitIfM(new HintNpcIndex(), m -> m.desc.startsWith("(" + desc("Character") + "IIII"));
         visitAll(new Plane());
         visitAll(new GameState());
         visitAll(new Username());
@@ -130,12 +130,13 @@ public class Client extends GraphVisitor {
         String dequeDesc = desc("NodeDeque");
         for (ClassNode node : getUpdater().getClassnodes().values()) {
             for (FieldNode fn : node.fields) {
+                if (fn.desc.equals("Ljava/awt/Canvas;")) {
+                    add("canvas", fn); //they made this nonstatic
+                }
                 if ((fn.access & Opcodes.ACC_STATIC) == 0) {
                     continue;
                 }
-                if (fn.desc.equals("Ljava/awt/Canvas;")) {
-                    add("canvas", fn);
-                } else if (playerDesc != null && fn.desc.equals(playerDesc)) {
+                if (playerDesc != null && fn.desc.equals(playerDesc)) {
                     add("player", fn);
                 } else if (regionDesc != null && fn.desc.equals(regionDesc)) {
                     add("region", fn);
@@ -503,17 +504,28 @@ public class Client extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
-                @Override
                 public void visitJump(JumpNode jn) {
                     if (jn.opcode() == IF_ICMPNE) {
                         FieldMemberNode fmn = (FieldMemberNode) jn.layer(IMUL, GETSTATIC);
-                        if (fmn != null && fmn.opcode() == GETSTATIC && fmn.owner().equals("client")) {
-                            FieldMemberNode array = (FieldMemberNode) jn.layer(IALOAD, GETSTATIC);
-                            if (array != null && array.desc().equals("[I")) {
-                                AbstractNode an = array.next(ISUB);
-                                if (an != null && an.layer(IMUL, GETSTATIC) != null) {
-                                    addHook(new FieldHook("hintNpcIndex", fmn.fin()));
-                                    lock.set(true);
+                        if (fmn != null && fmn.opcode() == GETSTATIC && fmn.owner().equals("client")) { //bad
+                            AbstractNode target = jn.layer(IALOAD, GETSTATIC);
+                            if (target != null) {
+                                FieldMemberNode array = (FieldMemberNode) target;
+                                if (array.desc().equals("[I") && array.key().equals(getHookKey("npcIndices"))) {
+                                    //System.out.println("mayb hintnpcidx ");
+                                    //System.out.println(array.tree());
+                                    AbstractNode an = array.next(ISUB);
+                                    if (an != null && an.layer(ILOAD) != null) {
+                                        addHook(new FieldHook("hintNpcIndex", fmn.fin()));
+                                    }
+                                }
+                            } else if ((target = jn.layer(IMUL, GETSTATIC)) != null) {
+                                FieldMemberNode value = (FieldMemberNode) target;
+                                if (value.desc().equals("I")) {
+                                    AbstractNode an = jn.layer(IALOAD);
+                                    if (an != null && an.hasChild(ILOAD) && an.hasChild(ALOAD)) {
+                                        addHook(new FieldHook("hintPlayerIndex", fmn.fin()));
+                                    }
                                 }
                             }
                         }

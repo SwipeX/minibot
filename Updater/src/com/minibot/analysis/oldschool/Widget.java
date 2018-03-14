@@ -19,8 +19,11 @@ import java.util.Set;
 
 @VisitorInfo(hooks = {"owner", "children", "x", "y", "width", "height", "itemId", "itemAmount",
         "id", "type", "itemIds", "stackSizes", "scrollX", "scrollY", "textureId", "index",
-        "text", "ownerId", "hidden", "boundsIndex", "actions"})
+        "text", "ownerId", "boundsIndex", "actions"})
 public class Widget extends GraphVisitor {
+
+    //removed hidden cos it broke but if we need, easy hook is runescript opcode 1504
+    //(it wasnt rly used in the bot anyway)
 
     @Override
     public boolean validate(ClassNode cn) {
@@ -42,7 +45,6 @@ public class Widget extends GraphVisitor {
         visitAll(new TextureId());
         visitAll(new Index());
         visitAll(new Text());
-        visitAll(new Hidden());
         visitAll(new BoundsIndex());
         visitAll(new Actions());
     }
@@ -220,13 +222,13 @@ public class Widget extends GraphVisitor {
 
         @Override
         public void visit(Block block) {
-            if (block.count(AASTORE) == 1 && block.count(DUP_X1) == 1) {
+            if (block.count(AALOAD) == 2) {
                 block.tree().accept(new NodeVisitor() {
                     @Override
                     public void visitField(FieldMemberNode fmn) {
-                        if (fmn.owner().equals(getCn().name) && fmn.desc().equals("I")) {
-                            VariableNode vn = (VariableNode) fmn.layer(IMUL, ILOAD);
-                            if (vn != null && vn.var() == 17) {
+                        if (fmn.owner().equals(getCn().name) && fmn.desc().equals("I") && fmn.opcode() == GETFIELD) {
+                            FieldMemberNode vn = (FieldMemberNode) fmn.layer(AALOAD, AALOAD, GETSTATIC);
+                            if (vn != null) {
                                 addHook(new FieldHook("type", fmn.fin()));
                                 lock.set(true);
                             }
@@ -421,30 +423,6 @@ public class Widget extends GraphVisitor {
                         FieldMemberNode fmn = mmn.firstField();
                         if (fmn != null && fmn.owner().equals(getCn().name) && fmn.first(ALOAD) != null) {
                             addHook(new FieldHook("text", fmn.fin()));
-                            lock.set(true);
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    private class Hidden extends BlockVisitor {
-
-        @Override
-        public boolean validate() {
-            return !lock.get();
-        }
-
-        @Override
-        public void visit(Block block) {
-            block.tree().accept(new NodeVisitor(this) {
-                @Override
-                public void visit(AbstractNode n) {
-                    if (n.opcode() == IRETURN) {
-                        FieldMemberNode fmn = n.firstField();
-                        if (fmn != null && fmn.owner().equals(getCn().name) && fmn.desc().equals("Z")) {
-                            addHook(new FieldHook("hidden", fmn.fin()));
                             lock.set(true);
                         }
                     }

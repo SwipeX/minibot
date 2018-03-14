@@ -1,6 +1,7 @@
 package com.minibot.analysis.oldschool;
 
 import com.minibot.analysis.visitor.GraphVisitor;
+import com.minibot.analysis.visitor.OpcodeParsingVisitor;
 import com.minibot.analysis.visitor.VisitorInfo;
 import com.minibot.mod.hooks.FieldHook;
 import com.minibot.mod.hooks.InvokeHook;
@@ -11,10 +12,14 @@ import org.objectweb.asm.commons.cfg.tree.NodeVisitor;
 import org.objectweb.asm.commons.cfg.tree.node.AbstractNode;
 import org.objectweb.asm.commons.cfg.tree.node.FieldMemberNode;
 import org.objectweb.asm.commons.cfg.tree.node.VariableNode;
+import org.objectweb.asm.commons.cfg.tree.util.TreeBuilder;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -24,7 +29,9 @@ public class ObjectDefinition extends GraphVisitor {
 
     @Override
     public boolean validate(ClassNode cn) {
-        return cn.getFieldTypeCount() == 6 && cn.fieldCount("[S") == 4 && cn.fieldCount("[I") == 4;
+        return cn.getFieldTypeCount() == 7
+                && cn.fieldCount("[S") == 4
+                && cn.fieldCount("[I") == 4;
     }
 
     @Override
@@ -38,6 +45,15 @@ public class ObjectDefinition extends GraphVisitor {
         visitAll(new SizeHooks());
         getCn().methods.stream().filter(mn -> !Modifier.isStatic(mn.access) &&
                 mn.desc.endsWith("L" + getCn().name + ";")).forEach(mn -> addHook(new InvokeHook("transform", mn)));
+
+        Map<Integer, FieldHook> opcodes = new HashMap<>();
+        opcodes.put(14, FieldHook.raw("sizeX", "I"));
+        opcodes.put(15, FieldHook.raw("sizeY", "I"));
+        for (MethodNode mn : getCn().methods) {
+            if ((mn.access & ACC_STATIC) == 0 && mn.desc.startsWith("(L") && mn.desc.contains(";I")) {
+                TreeBuilder.build(mn).accept(new OpcodeParsingVisitor(this, opcodes));
+            }
+        }
     }
 
     private class Id extends BlockVisitor {
@@ -73,12 +89,11 @@ public class ObjectDefinition extends GraphVisitor {
         @Override
         public void visit(Block block) {
             block.tree().accept(new NodeVisitor(this) {
-                @Override
                 public void visit(AbstractNode n) {
-                    if (n.opcode() == ARETURN) {
-                        FieldMemberNode fmn = (FieldMemberNode) n.layer(INVOKESTATIC, IALOAD, GETFIELD);
-                        if (fmn != null && fmn.owner().equals(getCn().name) && fmn.desc().equals("[I")) {
-                            getHooks().put("transformIds", new FieldHook("transformIds", fmn.fin()));
+                    if (n.opcode() == IALOAD) {
+                        FieldMemberNode fmn = (FieldMemberNode) n.layer(ISUB, ARRAYLENGTH, GETFIELD);
+                        if (fmn != null && fmn.owner().equals(getCn().name)) {
+                            addHook(new FieldHook("transformIds", fmn.fin()));
                             lock.set(true);
                         }
                     }
