@@ -64,12 +64,12 @@ public class DefinitionLoader {
             for (int i = 0; i < 30000; i++) {
                 RSObjectDefinition raw = client.loadObjectDefinition(i);
                 if (raw != null) {
-                    RSObjectDefinition transformed = raw.transform();
+                    /*RSObjectDefinition transformed = raw.transform();
                     if (transformed != null) {
                         data.put(transformed.getId(), raw);
-                    } else {
+                    } else {*/
                         data.put(raw.getId(), raw);
-                    }
+                    //}
                 }
             }
             OBJECT_DEFINITIONS.putAll(data);
@@ -91,12 +91,12 @@ public class DefinitionLoader {
             for (int i = 0; i < 20000; i++) {
                 RSNpcDefinition raw = client.loadNpcDefinition(i);
                 if (raw != null) {
-                    RSNpcDefinition transformed = raw.transform();
+                    /*RSNpcDefinition transformed = raw.transform();
                     if (transformed != null) {
                         data.put(transformed.getId(), raw);
-                    } else {
+                    } else {*/
                         data.put(raw.getId(), raw);
-                    }
+                    //}
                 }
             }
             NPC_DEFINITIONS.putAll(data);

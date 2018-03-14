@@ -168,7 +168,7 @@ public class Minibot extends JFrame implements Runnable {
                     } else if (e.getKeyCode() == KeyEvent.VK_R) {
                         RuneScape.LANDSCAPE_RENDERING_ENABLED = !RuneScape.LANDSCAPE_RENDERING_ENABLED;
                         RuneScape.MODEL_RENDERING_ENABLED = !RuneScape.MODEL_RENDERING_ENABLED;
-                        RuneScape.WIDGET_RENDERING_ENABLED = !RuneScape.WIDGET_RENDERING_ENABLED;
+                       // RuneScape.WIDGET_RENDERING_ENABLED = !RuneScape.WIDGET_RENDERING_ENABLED; //disabled for now cos this fucks with some scripts
                         GameMenu.setRender();
                     } else if (e.getKeyCode() == KeyEvent.VK_F) {
                         instance.setFarming(!Minibot.instance().farming());
