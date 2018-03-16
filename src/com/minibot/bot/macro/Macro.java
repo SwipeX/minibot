@@ -5,6 +5,7 @@ import com.minibot.api.util.EMail;
 import com.minibot.api.util.FileParser;
 import com.minibot.api.util.SMS;
 import com.minibot.api.util.Time;
+import com.minibot.bot.input.MouseDriver;
 import com.minibot.bot.random.RandomEvent;
 import com.minibot.ui.MacroSelector;
 import com.minibot.util.Configuration;
@@ -23,6 +24,8 @@ public abstract class Macro {
         thread = new Thread() {
             @Override
             public void run() {
+                MouseDriver driver = MouseDriver.getInstance();
+                driver.randomMouse();
                 username = Minibot.instance().client().getUsername();
                 password = Minibot.instance().client().getPassword();
                 atStart();

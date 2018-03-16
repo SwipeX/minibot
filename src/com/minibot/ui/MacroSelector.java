@@ -4,6 +4,7 @@ import com.minibot.Minibot;
 import com.minibot.api.method.Players;
 import com.minibot.api.util.Renderable;
 import com.minibot.api.wrapper.locatable.Player;
+import com.minibot.bot.input.MouseDriver;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.MacroDefinition;
 import com.minibot.bot.macro.Manifest;
@@ -52,6 +53,7 @@ public class MacroSelector extends JDialog {
             current.stop();
         }
         current = null;
+        MouseDriver.getInstance().alive = false;
         Minibot.instance().setMacroRunning(false);
         GameMenu.setEnabled();
         System.out.println("Stopped " + selected.def.manifest().name() + " by " + selected.def.manifest().author());
