@@ -2,6 +2,7 @@ package com.minibot.api.method;
 
 import com.minibot.Minibot;
 import com.minibot.api.action.tree.Action;
+import com.minibot.bot.input.MouseDriver;
 
 import java.util.Iterator;
 import java.util.Queue;
@@ -81,6 +82,8 @@ public class RuneScape {
         private String targetText;
 
         private void fire() {
+            //This will cause the mouse to click -- will be located on top inv bar
+            MouseDriver.getInstance().clickMouse();
             Minibot.instance().client().processAction(arg1, arg2, opcode, arg0, actionText, targetText, x, y);
         }
     }
