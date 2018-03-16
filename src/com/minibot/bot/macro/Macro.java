@@ -25,6 +25,7 @@ public abstract class Macro {
             @Override
             public void run() {
                 MouseDriver driver = MouseDriver.getInstance();
+                driver.alive = true;
                 driver.randomMouse();
                 username = Minibot.instance().client().getUsername();
                 password = Minibot.instance().client().getPassword();

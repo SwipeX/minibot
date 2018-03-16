@@ -10,6 +10,7 @@ import com.minibot.api.wrapper.locatable.GameObject;
 import com.minibot.api.wrapper.locatable.Tile;
 import com.minibot.bot.macro.Macro;
 import com.minibot.bot.macro.Manifest;
+import com.minibot.client.GameCanvas;
 
 import java.awt.*;
 
@@ -17,7 +18,7 @@ import java.awt.*;
  * @author Tyler Sedlar
  * @since 6/28/2015
  */
-@Manifest(name = "Log Chopper", author = "Tim", version = "1.0.0", description = "Chops logs")
+@Manifest(name = "Log Chopper", author = "Tim", version = "1.0.0", description = "Chops logs bruh")
 public class LogChopper extends Macro implements Renderable {
 
     private static final int COMMA_FORMAT = ValueFormat.COMMAS;
@@ -73,5 +74,7 @@ public class LogChopper extends Macro implements Renderable {
         String fExp = ValueFormat.format(gained, COMMA_FORMAT);
         String fExpHr = ValueFormat.format(hourly(gained), THOUSAND_FORMAT);
         g.drawString("Experience: " + fExp + " (" + fExpHr + "/HR)", 13, yOff + 15);
+        GameCanvas canvas = Minibot.instance().canvas();
+        g.drawRect(canvas.getMouseX(), canvas.getMouseY(), 3, 3);
     }
 }
